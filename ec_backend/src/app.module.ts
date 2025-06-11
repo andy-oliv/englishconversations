@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { LoggerModule } from 'nestjs-pino';
+import { StudentModule } from './student/student.module';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { LoggerModule } from 'nestjs-pino';
       },
     }),
     PrismaModule,
+    StudentModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

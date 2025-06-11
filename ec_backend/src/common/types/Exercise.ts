@@ -1,8 +1,15 @@
+import {
+  CEFRLevels,
+  Difficulty,
+  ExerciseTypes,
+} from '../../../generated/prisma';
+
 export default interface Exercise {
   id?: number;
-  type: string;
+  type: ExerciseTypes;
   description: string;
-  level: string;
-  answers?: string[] | number[]; //optional field because the 'match the columns' exercises don't have predefined answers
+  level: CEFRLevels;
+  difficulty: Difficulty;
+  options?: string[] | number[]; //optional field because the 'match the columns' exercises don't have predefined answers
   correctAnswer: string | number[];
 }

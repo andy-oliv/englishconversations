@@ -7,3 +7,125 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
+
+model Student {
+  id String @id @default(uuid())
+  name String @db.VarChar(100)
+  age Int
+  birthdate DateTime @db.Date
+  city String @db.VarChar(50)
+  state String @db.VarChar(50)
+  country String @db.VarChar(50)
+  answeredExercises AnsweredExercise[]
+  answeredQuizzes AnsweredQuiz[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([city])
+  @@index([state])
+  @@index([country])
+}
+
+model Exercise {
+  id Int @id @default(autoincrement())
+  type ExerciseTypes
+  description String @db.Text
+  level CEFRLevels
+  difficulty Difficulty
+  options Json
+  correctAnswer Json
+  quiz Quiz? @relation(fields: [quizId], references: [id])
+  quizId String?
+  studentAnswers AnsweredExercise[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([level])
+  @@index([difficulty])
+  @@index([quizId])
+}
+
+model AnsweredExercise {
+  id String @id @default(uuid())
+  exercise Exercise @relation(fields: [exerciseId], references: [id])
+  exerciseId Int
+  student Student @relation(fields: [studentId], references: [id])
+  studentId String
+  quiz AnsweredQuiz? @relation(fields: [quizId], references: [id])
+  quizId String?
+  isRetry Boolean @default(false)
+  selectedAnswers Json?
+  textAnswer String? @db.VarChar(255)
+  audioUrl String? @db.VarChar(150)
+  isCorrectAnswer Boolean @default(false)
+  feedback String? @db.Text
+  elapsedTime Int @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([studentId])
+  @@index([exerciseId])
+  @@index([quizId])
+}
+
+model Quiz {
+  id String @id @default(uuid())
+  isTest Boolean @default(false)
+  title String @db.VarChar(50)
+  description String @db.Text
+  imageUrl String? @db.VarChar(150)
+  level CEFRLevels
+  difficulty Difficulty
+  exercises Exercise[]
+  answers AnsweredQuiz[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([level])
+  @@index([difficulty])
+}
+
+model AnsweredQuiz {
+  id String @id @default(uuid())
+  quiz Quiz @relation(fields: [quizId], references: [id])
+  quizId String
+  student Student @relation(fields: [studentId], references: [id])
+  studentId String
+  answers AnsweredExercise[]
+  score Int 
+  feedback String? @db.Text
+  elapsedTime Int @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([studentId])
+  @@index([quizId])
+  @@index([studentId, quizId])
+}
+
+
+enum ExerciseTypes {
+  FILL_IN_THE_BLANKS
+  MULTIPLE_CHOICE_QUESTION
+  CORRECT_OR_INCORRECT
+  MATCH_THE_COLUMNS
+  UNSCRAMBLE_WORD
+  UNSCRAMBLE_SENTENCE
+  LISTENING_COMPREHENSION
+  PICTIONARY
+  FREE_ANSWER_QUESTION
+}
+
+enum CEFRLevels {
+  A1
+  A2
+  B1
+  B2
+  C1
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+}

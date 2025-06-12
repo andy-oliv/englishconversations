@@ -26,6 +26,7 @@ model User {
   resetPasswordExpires DateTime? @db.DateTime()
   role UserRoles
   lastLogin DateTime? @db.DateTime()
+  units UserUnit[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -100,6 +101,8 @@ model Quiz {
   imageUrl String? @db.VarChar(150)
   level CEFRLevels
   difficulty Difficulty
+  unit Unit? @relation(fields: [unitId], references: [id])
+  unitId Int
   exercises Exercise[]
   answers AnsweredQuiz[]
   createdAt DateTime @default(now())
@@ -127,6 +130,33 @@ model AnsweredQuiz {
   @@index([studentId, quizId])
 }
 
+model Unit {
+  id Int @id @default(autoincrement())
+  name String @db.VarChar(150)
+  description String @db.VarChar(250)
+  grammarTopics String? @db.Text
+  quizContent Quiz[]
+  users UserUnit[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserUnit {
+  id String @id @default(uuid())
+  user User @relation(fields: [userId], references: [id])
+  userId String
+  unit Unit @relation(fields: [unitId], references: [id])
+  unitId Int
+  status UnitStatus @default(LOCKED)
+  progress Float @default(0)
+  completedAt DateTime? @db.DateTime()
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([userId, status])
+  @@index([userId, unitId])
+}
 
 enum ExerciseTypes {
   FILL_IN_THE_BLANKS
@@ -160,4 +190,10 @@ enum Difficulty {
 enum UserRoles {
   ADMIN
   STUDENT
+}
+
+enum UnitStatus {
+  LOCKED
+  IN_PROGRESS
+  COMPLETED
 }

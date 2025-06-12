@@ -18,7 +18,7 @@ import validationMessages_EN from '../helper/messages/validationMessages.en';
 import updateStudentDTO from './dto/UpdateStudent.dto';
 
 @ApiTags('Students')
-@Controller('students')
+@Controller('api/students')
 export class StudentController {
   constructor(private readonly studentService: StudentService) {}
 

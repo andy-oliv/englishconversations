@@ -4,11 +4,32 @@ const httpMessages_EN = {
       'An unexpected error occurred. Please check the error log for more information.',
   },
   student: {
-    checkStudentExists: {
-      status_409: 'This student already exists.',
+    deleteStudent: {
+      status_200: 'The student has been successfully deleted!',
+      status_404: 'The student was not found or the ID is invalid.',
+    },
+    fetchStudents: {
+      status_200: 'The students were successfully fetched!',
+      status_404: 'There are no students to show.',
+    },
+    fetchStudentById: {
+      status_200: 'The student was successfully fetched!',
+      status_404: "There's no student to show or the ID is invalid.",
+    },
+    fetchStudentsByQuery: {
+      status_200:
+        'The students that match the query were successfully fetched!',
+      status_404: 'There are no students to show or the query is invalid.',
     },
     registerStudent: {
       status_201: 'Student successfully registered!',
+    },
+    throwIfStudentExists: {
+      status_409: 'This student already exists.',
+    },
+    updateStudent: {
+      status_200: 'The student was successfully updated!',
+      status_404: "There's no student to show or the ID is invalid.",
     },
   },
 };

@@ -224,7 +224,7 @@ export class StudentService {
       if (error.code === 'P2025') {
         throw new NotFoundException(
           generateExceptionMessage(
-            httpMessages_EN.student.updateStudent.status_404,
+            httpMessages_EN.student.deleteStudent.status_404,
           ),
         );
       }

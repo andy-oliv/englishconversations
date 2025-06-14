@@ -10,6 +10,7 @@ import {
   CEFRLevels,
   Difficulty,
   ExerciseTypes,
+  Prisma,
 } from '../../../generated/prisma';
 import { ApiProperty } from '@nestjs/swagger';
 import validationMessages_EN from '../../helper/messages/validationMessages.en';
@@ -69,7 +70,7 @@ export default class CreateExerciseDTO {
         validationMessages_EN.exercises.createExerciseDTO.contentUrl.isUrl,
     },
   )
-  contentUrl: string;
+  contentUrl?: string;
 
   @ApiProperty({
     title: 'Level',
@@ -110,7 +111,7 @@ export default class CreateExerciseDTO {
   @IsArray({
     message: validationMessages_EN.exercises.createExerciseDTO.options.isArray,
   })
-  options: string[] | number[];
+  options?: Prisma.JsonValue;
 
   @ApiProperty({
     title: 'CorrectAnswer',
@@ -127,5 +128,5 @@ export default class CreateExerciseDTO {
     message:
       validationMessages_EN.exercises.createExerciseDTO.correctAnswer.isArray,
   })
-  correctAnswer: string[] | number[];
+  correctAnswer: Prisma.JsonValue;
 }

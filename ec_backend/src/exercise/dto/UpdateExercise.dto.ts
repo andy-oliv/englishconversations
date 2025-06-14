@@ -11,6 +11,7 @@ import {
   CEFRLevels,
   Difficulty,
   ExerciseTypes,
+  Prisma,
 } from '../../../generated/prisma';
 import { ApiProperty } from '@nestjs/swagger';
 import validationMessages_EN from '../../helper/messages/validationMessages.en';
@@ -42,7 +43,7 @@ export default class UpdateExerciseDTO {
       message: validationMessages_EN.exercises.createExerciseDTO.type.isIn,
     },
   )
-  type: ExerciseTypes;
+  type?: ExerciseTypes;
 
   @ApiProperty({
     title: 'Description',
@@ -55,7 +56,7 @@ export default class UpdateExerciseDTO {
     message:
       validationMessages_EN.exercises.createExerciseDTO.description.isString,
   })
-  description: string;
+  description?: string;
 
   @IsOptional()
   @IsUrl(
@@ -65,7 +66,7 @@ export default class UpdateExerciseDTO {
         validationMessages_EN.exercises.createExerciseDTO.contentUrl.isUrl,
     },
   )
-  contentUrl: string;
+  contentUrl?: string;
 
   @ApiProperty({
     title: 'Level',
@@ -77,7 +78,7 @@ export default class UpdateExerciseDTO {
   @IsIn(['A1', 'A2', 'B1', 'B2', 'C1'], {
     message: validationMessages_EN.exercises.createExerciseDTO.level.isIn,
   })
-  level: CEFRLevels;
+  level?: CEFRLevels;
 
   @ApiProperty({
     title: 'Difficulty',
@@ -89,7 +90,7 @@ export default class UpdateExerciseDTO {
   @IsIn(['EASY', 'MEDIUM', 'HARD'], {
     message: validationMessages_EN.exercises.createExerciseDTO.difficulty.isIn,
   })
-  difficulty: Difficulty;
+  difficulty?: Difficulty;
 
   @ApiProperty({
     title: 'Options',
@@ -101,7 +102,7 @@ export default class UpdateExerciseDTO {
   @IsArray({
     message: validationMessages_EN.exercises.createExerciseDTO.options.isArray,
   })
-  options: string[] | number[];
+  options?: Prisma.JsonValue;
 
   @ApiProperty({
     title: 'CorrectAnswer',
@@ -114,7 +115,7 @@ export default class UpdateExerciseDTO {
     message:
       validationMessages_EN.exercises.createExerciseDTO.correctAnswer.isArray,
   })
-  correctAnswer: string[] | number[];
+  correctAnswer?: Prisma.JsonValue;
 
   @ApiProperty({
     title: 'QuizID',
@@ -127,5 +128,5 @@ export default class UpdateExerciseDTO {
     message:
       validationMessages_EN.exercises.fetchExercisesByQuery.quizId.isUUID,
   })
-  quizId: string;
+  quizId?: string;
 }

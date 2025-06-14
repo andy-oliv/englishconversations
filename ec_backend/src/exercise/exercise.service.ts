@@ -14,7 +14,6 @@ import handleInternalErrorException from '../helper/functions/handleErrorExcepti
 import { CEFRLevels, Difficulty, ExerciseTypes } from '../../generated/prisma';
 import generateExceptionMessage from '../helper/functions/generateExceptionMessage';
 import ExceptionMessage from '../common/types/ExceptionMessage';
-import FetchByQueryDTO from './dto/FetchByQuery.exercise.dto';
 import UpdateExerciseDTO from './dto/UpdateExercise.dto';
 
 @Injectable()

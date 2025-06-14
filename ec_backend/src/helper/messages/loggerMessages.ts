@@ -1,4 +1,35 @@
 const loggerMessages = {
+  exercise: {
+    createExercise: {
+      status_201: 'An exercise has just been created!',
+      status_500:
+        'An internal error occurred while creating the exercise. Check the error log for more information.',
+    },
+    deleteExercise: {
+      status_500:
+        'An internal error occurred while deleting the exercise. Check the error log for more information.',
+    },
+    fetchExercises: {
+      status_500:
+        'An internal error occurred while creating the exercise. Check the error log for more information.',
+    },
+    fetchExerciseById: {
+      status_500:
+        'An internal error occurred while fetching the exercise. Check the error log for more information.',
+    },
+    fetchExercisesByQuery: {
+      status_500:
+        'An internal error occurred while fetching the exercise. Check the error log for more information.',
+    },
+    throwIfExerciseExists: {
+      status_409:
+        "There's another exercise with the same definitions. Check the error log for more details.",
+    },
+    updateExercise: {
+      status_500:
+        'An internal error occurred while updating the exercise. Check the error log for more information.',
+    },
+  },
   student: {
     deleteStudent: {
       status_200: 'A student has been successfully deleted.',

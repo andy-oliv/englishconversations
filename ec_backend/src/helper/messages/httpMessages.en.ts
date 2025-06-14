@@ -1,4 +1,30 @@
 const httpMessages_EN = {
+  exercise: {
+    createExercise: {
+      status_201: 'The exercise has been successfully created!',
+      status_409: 'The exercise already exists.',
+    },
+    deleteExercise: {
+      status_200: 'The exercise has been deleted.',
+      status_404: 'The exercise was not found or the ID is invalid.',
+    },
+    fetchExercises: {
+      status_200: 'The exercises have been fetched.',
+      status_404: 'There are no exercises to show.',
+    },
+    fetchExerciseById: {
+      status_200: 'The exercise has been successfully fetched.',
+      status_404: 'The exercise was not found or the ID is invalid.',
+    },
+    fetchExercisesByQuery: {
+      status_200: 'The exercise has been successfully fetched.',
+      status_404: 'The exercise was not found or the ID is invalid.',
+    },
+    updateExercise: {
+      status_200: 'The exercise has been successfully updated!',
+      status_404: 'The exercise was not found or the ID is invalid.',
+    },
+  },
   general: {
     status_500:
       'An unexpected error occurred. Please check the error log for more information.',

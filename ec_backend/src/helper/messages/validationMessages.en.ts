@@ -1,4 +1,39 @@
 const validationMessages_EN = {
+  exercises: {
+    createExerciseDTO: {
+      type: {
+        isNotEmpty: 'The type field cannot be empty.',
+        isIn: 'The type is invalid.',
+      },
+      description: {
+        isNotEmpty: 'The description field cannot be empty.',
+        isString: 'The description must be a string',
+      },
+      contentUrl: {
+        isUrl: 'The contentUrl field must be a valid URL.',
+      },
+      level: {
+        isNotEmpty: 'The level field cannot be empty.',
+        isIn: 'The level is invalid.',
+      },
+      difficulty: {
+        isNotEmpty: 'The difficulty field cannot be empty.',
+        isIn: 'The difficulty is invalid.',
+      },
+      options: {
+        isArray: 'The options field must be an array of items.',
+      },
+      correctAnswer: {
+        isNotEmpty: 'The correctAnswer field cannot be empty.',
+        isArray: 'The correctAnswer field must be an array of items.',
+      },
+    },
+    fetchExercisesByQuery: {
+      quizId: {
+        isUUID: 'The quizId value is invalid.',
+      },
+    },
+  },
   students: {
     registerStudentDTO: {
       name: {

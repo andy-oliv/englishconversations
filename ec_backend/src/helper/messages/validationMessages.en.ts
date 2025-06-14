@@ -34,6 +34,39 @@ const validationMessages_EN = {
       },
     },
   },
+  quizzes: {
+    createQuizDTO: {
+      isTest: {
+        isBoolean: 'The isTest field must be a boolean.',
+      },
+      title: {
+        isNotEmpty: 'The title field must not be empty.',
+        isString: 'The title field must be a string.',
+      },
+      description: {
+        isNotEmpty: 'The description field must not be empty.',
+        isString: 'The difficulty field must be a string.',
+      },
+      imageUrl: {
+        isUrl: 'The imageUrl field must be a valid URL.',
+      },
+      level: {
+        isIn: 'The level is invalid.',
+      },
+      difficulty: {
+        isIn: 'The difficulty is invalid.',
+        isNotEmpty: 'The difficulty field must not be empty.',
+      },
+    },
+    fetchQuizzesByQueryDTO: {
+      level: {
+        isIn: 'The level is invalid.',
+      },
+      difficulty: {
+        isIn: 'The difficulty is invalid.',
+      },
+    },
+  },
   students: {
     registerStudentDTO: {
       name: {

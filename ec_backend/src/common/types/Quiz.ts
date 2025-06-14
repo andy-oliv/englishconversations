@@ -6,6 +6,7 @@ export default interface Quiz {
   title: string;
   description: string;
   imageUrl?: string;
-  level: CEFRLevels;
+  level?: CEFRLevels;
   difficulty: Difficulty;
+  unitId?: number;
 }

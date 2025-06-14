@@ -9,6 +9,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { LoggerModule } from 'nestjs-pino';
 import { StudentModule } from './student/student.module';
 import { ExerciseModule } from './exercise/exercise.module';
+import { QuizModule } from './quiz/quiz.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { ExerciseModule } from './exercise/exercise.module';
     PrismaModule,
     StudentModule,
     ExerciseModule,
+    QuizModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

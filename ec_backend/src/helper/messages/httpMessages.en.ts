@@ -29,6 +29,34 @@ const httpMessages_EN = {
     status_500:
       'An unexpected error occurred. Please check the error log for more information.',
   },
+  quiz: {
+    createQuiz: {
+      status_201: 'The quiz has been successfully created!',
+    },
+    deleteQuiz: {
+      status_200: 'The quiz was successfully deleted.',
+      status_404: 'The quiz was not found or the ID is invalid.',
+    },
+    fetchQuizzes: {
+      status_200: 'The quizzes have been successfully fetched!',
+      status_404: 'The are no quizzes to show.',
+    },
+    fetchQuizById: {
+      status_200: 'The quiz has been successfully fetched!',
+      status_404: 'The quiz was not found or the ID is invalid.',
+    },
+    fetchQuizzesByQuery: {
+      status_200: 'The quizzes have been successfully fetched!',
+      status_404: 'There are no quizzes to show.',
+    },
+    updateQuiz: {
+      status_200: 'The quiz was successfully updated.',
+      status_404: 'The quiz was not found or the ID is invalid.',
+    },
+    throwIfQuizExists: {
+      status_409: 'This quiz already exists.',
+    },
+  },
   student: {
     deleteStudent: {
       status_200: 'The student has been successfully deleted!',

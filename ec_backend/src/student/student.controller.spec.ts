@@ -16,6 +16,7 @@ describe('StudentController', () => {
   let studentService: StudentService;
   let student: Student;
   let studentList: Student[];
+  let query: { city: string; state: string; country: string };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -40,6 +41,11 @@ describe('StudentController', () => {
 
     student = generateMockStudent();
     studentList = [generateMockStudent(), generateMockStudent()];
+    query = {
+      city: student.city,
+      state: student.state,
+      country: student.country,
+    };
   });
 
   it('should be defined', () => {
@@ -96,11 +102,7 @@ describe('StudentController', () => {
         data: studentList,
       });
 
-      const result: Return = await studentController.fetchStudentByQuery(
-        student.city,
-        student.state,
-        student.country,
-      );
+      const result: Return = await studentController.fetchStudentByQuery(query);
 
       expect(result).toMatchObject({
         message: httpMessages_EN.student.fetchStudentsByQuery.status_200,
@@ -108,9 +110,9 @@ describe('StudentController', () => {
       });
 
       expect(studentService.fetchStudentsByQuery).toHaveBeenCalledWith(
-        student.city,
-        student.state,
-        student.country,
+        query.city,
+        query.state,
+        query.country,
       );
     });
 
@@ -122,11 +124,7 @@ describe('StudentController', () => {
       );
 
       await expect(
-        studentController.fetchStudentByQuery(
-          student.city,
-          student.state,
-          student.country,
-        ),
+        studentController.fetchStudentByQuery(query),
       ).rejects.toThrow(
         new NotFoundException(
           httpMessages_EN.student.fetchStudentsByQuery.status_404,
@@ -134,9 +132,9 @@ describe('StudentController', () => {
       );
 
       expect(studentService.fetchStudentsByQuery).toHaveBeenCalledWith(
-        student.city,
-        student.state,
-        student.country,
+        query.city,
+        query.state,
+        query.country,
       );
     });
 
@@ -146,19 +144,15 @@ describe('StudentController', () => {
       );
 
       await expect(
-        studentController.fetchStudentByQuery(
-          student.city,
-          student.state,
-          student.country,
-        ),
+        studentController.fetchStudentByQuery(query),
       ).rejects.toThrow(
         new InternalServerErrorException(httpMessages_EN.general.status_500),
       );
 
       expect(studentService.fetchStudentsByQuery).toHaveBeenCalledWith(
-        student.city,
-        student.state,
-        student.country,
+        query.city,
+        query.state,
+        query.country,
       );
     });
   });

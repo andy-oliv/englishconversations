@@ -100,10 +100,10 @@ model Quiz {
   title String @db.VarChar(50)
   description String @db.Text
   imageUrl String? @db.VarChar(150)
-  level CEFRLevels
+  level CEFRLevels?
   difficulty Difficulty
   unit Unit? @relation(fields: [unitId], references: [id])
-  unitId Int
+  unitId Int?
   exercises Exercise[]
   answers AnsweredQuiz[]
   createdAt DateTime @default(now())

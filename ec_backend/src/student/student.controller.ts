@@ -16,6 +16,7 @@ import RegisterStudentDTO from './dto/RegisterStudent.dto';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
 import validationMessages_EN from '../helper/messages/validationMessages.en';
 import updateStudentDTO from './dto/UpdateStudent.dto';
+import FetchByQueryDTO from './dto/FetchByQuery.student.dto';
 
 @ApiTags('Students')
 @Controller('api/students')
@@ -63,12 +64,12 @@ export class StudentController {
     description: 'Internal Server Error',
     example: httpMessages_EN.general.status_500,
   })
-  async fetchStudentByQuery(
-    @Query('city') city: string,
-    @Query('state') state: string,
-    @Query('country') country: string,
-  ): Promise<Return> {
-    return this.studentService.fetchStudentsByQuery(city, state, country);
+  async fetchStudentByQuery(@Query() query: FetchByQueryDTO): Promise<Return> {
+    return this.studentService.fetchStudentsByQuery(
+      query.city,
+      query.state,
+      query.country,
+    );
   }
 
   @Get(':id')

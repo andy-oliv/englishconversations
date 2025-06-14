@@ -13,6 +13,7 @@ import ExceptionMessage from '../common/types/ExceptionMessage';
 import generateExceptionMessage from '../helper/functions/generateExceptionMessage';
 import handleInternalErrorException from '../helper/functions/handleErrorException';
 import UpdateStudentDTO from './dto/UpdateStudent.dto';
+import FetchByQueryDTO from './dto/FetchByQuery.student.dto';
 
 @Injectable()
 export class StudentService {
@@ -32,10 +33,15 @@ export class StudentService {
       );
 
       if (studentExists) {
-        const message: ExceptionMessage = generateExceptionMessage(
+        const errorMessage: ExceptionMessage = generateExceptionMessage(
           httpMessages_EN.student.throwIfStudentExists.status_409,
         );
-        throw new ConflictException(message);
+        this.logger.warn({
+          message: errorMessage,
+          data: studentExists,
+        });
+
+        throw new ConflictException(errorMessage);
       }
     } catch (error) {
       if (error instanceof ConflictException) {

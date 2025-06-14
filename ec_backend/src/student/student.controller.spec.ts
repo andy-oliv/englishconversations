@@ -138,7 +138,7 @@ describe('StudentController', () => {
       );
     });
 
-    it('should throw a InternalServerErrorException', async () => {
+    it('should throw an InternalServerErrorException', async () => {
       (studentService.fetchStudentsByQuery as jest.Mock).mockRejectedValue(
         new InternalServerErrorException(httpMessages_EN.general.status_500),
       );
@@ -194,7 +194,7 @@ describe('StudentController', () => {
       expect(studentService.fetchStudentById).toHaveBeenCalledWith(student.id);
     });
 
-    it('should throw a InternalServerErrorException', async () => {
+    it('should throw an InternalServerErrorException', async () => {
       (studentService.fetchStudentById as jest.Mock).mockRejectedValue(
         new InternalServerErrorException(httpMessages_EN.general.status_500),
       );
@@ -238,7 +238,7 @@ describe('StudentController', () => {
       expect(studentService.fetchStudents).toHaveBeenCalled();
     });
 
-    it('should throw a InternalServerErrorException', async () => {
+    it('should throw an InternalServerErrorException', async () => {
       (studentService.fetchStudents as jest.Mock).mockRejectedValue(
         new InternalServerErrorException(httpMessages_EN.general.status_500),
       );
@@ -291,7 +291,7 @@ describe('StudentController', () => {
       );
     });
 
-    it('should throw a InternalServerErrorException', async () => {
+    it('should throw an InternalServerErrorException', async () => {
       (studentService.updateStudent as jest.Mock).mockRejectedValue(
         new InternalServerErrorException(httpMessages_EN.general.status_500),
       );
@@ -338,7 +338,7 @@ describe('StudentController', () => {
       expect(studentService.deleteStudent).toHaveBeenCalledWith(student.id);
     });
 
-    it('should throw a InternalServerErrorException', async () => {
+    it('should throw an InternalServerErrorException', async () => {
       (studentService.deleteStudent as jest.Mock).mockRejectedValue(
         new InternalServerErrorException(httpMessages_EN.general.status_500),
       );

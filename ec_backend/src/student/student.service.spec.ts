@@ -123,7 +123,7 @@ describe('StudentService', () => {
       );
     });
 
-    it('should throw an InternalServerErrorException when creating the new student', async () => {
+    it('should throw an InternalServerErrorException when registering a new student', async () => {
       jest
         .spyOn(studentService, 'throwIfStudentExists')
         .mockResolvedValue(undefined);

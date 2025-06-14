@@ -58,7 +58,7 @@ model Exercise {
   contentUrl String? @db.VarChar(255)
   level CEFRLevels
   difficulty Difficulty
-  options Json
+  options Json?
   correctAnswer Json
   quiz Quiz? @relation(fields: [quizId], references: [id])
   quizId String?

@@ -211,6 +211,31 @@ describe('StudentService', () => {
         where: {
           id: student.id,
         },
+        include: {
+          answeredExercises: {
+            select: {
+              id: true,
+              exercise: {
+                select: {
+                  type: true,
+                  description: true,
+                },
+              },
+              selectedAnswers: true,
+              isCorrectAnswer: true,
+            },
+          },
+          answeredQuizzes: {
+            include: {
+              quiz: {
+                select: {
+                  title: true,
+                  description: true,
+                },
+              },
+            },
+          },
+        },
       });
     });
 
@@ -229,6 +254,31 @@ describe('StudentService', () => {
         where: {
           id: student.id,
         },
+        include: {
+          answeredExercises: {
+            select: {
+              id: true,
+              exercise: {
+                select: {
+                  type: true,
+                  description: true,
+                },
+              },
+              selectedAnswers: true,
+              isCorrectAnswer: true,
+            },
+          },
+          answeredQuizzes: {
+            include: {
+              quiz: {
+                select: {
+                  title: true,
+                  description: true,
+                },
+              },
+            },
+          },
+        },
       });
     });
 
@@ -244,6 +294,31 @@ describe('StudentService', () => {
       expect(prismaService.student.findUniqueOrThrow).toHaveBeenCalledWith({
         where: {
           id: student.id,
+        },
+        include: {
+          answeredExercises: {
+            select: {
+              id: true,
+              exercise: {
+                select: {
+                  type: true,
+                  description: true,
+                },
+              },
+              selectedAnswers: true,
+              isCorrectAnswer: true,
+            },
+          },
+          answeredQuizzes: {
+            include: {
+              quiz: {
+                select: {
+                  title: true,
+                  description: true,
+                },
+              },
+            },
+          },
         },
       });
     });

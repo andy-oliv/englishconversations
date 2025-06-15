@@ -13,7 +13,6 @@ import ExceptionMessage from '../common/types/ExceptionMessage';
 import generateExceptionMessage from '../helper/functions/generateExceptionMessage';
 import handleInternalErrorException from '../helper/functions/handleErrorException';
 import UpdateStudentDTO from './dto/UpdateStudent.dto';
-import FetchByQueryDTO from './dto/FetchByQuery.student.dto';
 
 @Injectable()
 export class StudentService {
@@ -21,6 +20,30 @@ export class StudentService {
     private readonly prismaService: PrismaService,
     private readonly logger: Logger,
   ) {}
+
+  async throwIfNotStudent(studentId: string): Promise<void> {
+    try {
+      await this.prismaService.student.findUniqueOrThrow({
+        where: {
+          id: studentId,
+        },
+      });
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(
+          generateExceptionMessage(
+            httpMessages_EN.student.fetchStudentById.status_404,
+          ),
+        );
+      }
+
+      handleInternalErrorException(
+        loggerMessages.student.fetchStudentById.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
 
   async throwIfStudentExists(studentName: string): Promise<void> {
     try {
@@ -117,6 +140,31 @@ export class StudentService {
         await this.prismaService.student.findUniqueOrThrow({
           where: {
             id,
+          },
+          include: {
+            answeredExercises: {
+              select: {
+                id: true,
+                exercise: {
+                  select: {
+                    type: true,
+                    description: true,
+                  },
+                },
+                selectedAnswers: true,
+                isCorrectAnswer: true,
+              },
+            },
+            answeredQuizzes: {
+              include: {
+                quiz: {
+                  select: {
+                    title: true,
+                    description: true,
+                  },
+                },
+              },
+            },
           },
         });
       return {

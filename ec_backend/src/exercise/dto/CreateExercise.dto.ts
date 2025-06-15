@@ -5,6 +5,7 @@ import {
   IsOptional,
   IsString,
   IsUrl,
+  IsUUID,
 } from 'class-validator';
 import {
   CEFRLevels,
@@ -129,4 +130,16 @@ export default class CreateExerciseDTO {
       validationMessages_EN.exercises.createExerciseDTO.correctAnswer.isArray,
   })
   correctAnswer: Prisma.JsonValue;
+
+  @ApiProperty({
+    title: 'QuizID',
+    required: false,
+    type: 'string',
+    example: '6fa615a3-77af-4926-8bb8-da92d44e0d03',
+  })
+  @IsOptional()
+  @IsUUID('all', {
+    message: validationMessages_EN.exercises.createExerciseDTO.quizId.isUUID,
+  })
+  quizId?: string;
 }

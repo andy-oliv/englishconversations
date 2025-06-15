@@ -23,6 +23,32 @@ export class ExerciseService {
     private readonly logger: Logger,
   ) {}
 
+  /*Ideally, this method should be part of QuizService. However, to avoid a circular dependency,
+  since QuizModule already imports ExerciseModule, we define a local version here.*/
+  async throwIfNotQuiz(quizId: string): Promise<void> {
+    try {
+      await this.prismaService.quiz.findFirstOrThrow({
+        where: {
+          id: quizId,
+        },
+      });
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(
+          generateExceptionMessage(
+            httpMessages_EN.exercise.throwIfNotQuiz.status_404,
+          ),
+        );
+      }
+
+      handleInternalErrorException(
+        loggerMessages.exercise.throwIfNotQuiz.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
   async fetchExercise(exerciseId: number): Promise<Exercise> {
     try {
       const exercise: Exercise =
@@ -102,6 +128,10 @@ export class ExerciseService {
   }
 
   async createExercise(exerciseData: CreateExerciseDTO): Promise<Return> {
+    if (exerciseData.quizId) {
+      await this.throwIfNotQuiz(exerciseData.quizId);
+    }
+
     await this.throwIfExerciseExists(
       exerciseData.type,
       exerciseData.description,

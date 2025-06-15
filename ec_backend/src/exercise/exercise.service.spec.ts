@@ -68,6 +68,7 @@ describe('ExerciseService', () => {
 
   describe('createExercise()', () => {
     it('should create a new exercise', async () => {
+      jest.spyOn(exerciseService, 'throwIfNotQuiz').mockReturnValue(undefined);
       jest
         .spyOn(exerciseService, 'throwIfExerciseExists')
         .mockResolvedValue(undefined);
@@ -82,6 +83,9 @@ describe('ExerciseService', () => {
         message: httpMessages_EN.exercise.createExercise.status_201,
         data: exercise,
       });
+      expect(exerciseService.throwIfNotQuiz).toHaveBeenCalledWith(
+        exercise.quizId,
+      );
       expect(exerciseService.throwIfExerciseExists).toHaveBeenCalledWith(
         exercise.type,
         exercise.description,
@@ -97,7 +101,44 @@ describe('ExerciseService', () => {
       });
     });
 
+    it('should throw a NotFoundException if the quiz is not found', async () => {
+      jest
+        .spyOn(exerciseService, 'throwIfNotQuiz')
+        .mockRejectedValue(
+          new NotFoundException(
+            httpMessages_EN.exercise.throwIfNotQuiz.status_404,
+          ),
+        );
+
+      await expect(exerciseService.createExercise(exercise)).rejects.toThrow(
+        new NotFoundException(
+          httpMessages_EN.exercise.throwIfNotQuiz.status_404,
+        ),
+      );
+
+      expect(exerciseService.throwIfNotQuiz).toHaveBeenCalledWith(
+        exercise.quizId,
+      );
+    });
+
+    it('should throw an internal error while validating the quizId', async () => {
+      jest
+        .spyOn(exerciseService, 'throwIfNotQuiz')
+        .mockRejectedValue(
+          new InternalServerErrorException(httpMessages_EN.general.status_500),
+        );
+
+      await expect(exerciseService.createExercise(exercise)).rejects.toThrow(
+        new InternalServerErrorException(httpMessages_EN.general.status_500),
+      );
+
+      expect(exerciseService.throwIfNotQuiz).toHaveBeenCalledWith(
+        exercise.quizId,
+      );
+    });
+
     it('should return a ConflictException because the exercise already exists', async () => {
+      jest.spyOn(exerciseService, 'throwIfNotQuiz').mockReturnValue(undefined);
       jest
         .spyOn(exerciseService, 'throwIfExerciseExists')
         .mockRejectedValue(new ConflictException());
@@ -106,6 +147,9 @@ describe('ExerciseService', () => {
         new ConflictException(),
       );
 
+      expect(exerciseService.throwIfNotQuiz).toHaveBeenCalledWith(
+        exercise.quizId,
+      );
       expect(exerciseService.throwIfExerciseExists).toHaveBeenCalledWith(
         exercise.type,
         exercise.description,
@@ -115,6 +159,7 @@ describe('ExerciseService', () => {
     });
 
     it('should return an InternalServerErrorException when calling the throwIfExerciseExists() function', async () => {
+      jest.spyOn(exerciseService, 'throwIfNotQuiz').mockReturnValue(undefined);
       jest
         .spyOn(exerciseService, 'throwIfExerciseExists')
         .mockRejectedValue(new InternalServerErrorException());
@@ -123,6 +168,9 @@ describe('ExerciseService', () => {
         new InternalServerErrorException(),
       );
 
+      expect(exerciseService.throwIfNotQuiz).toHaveBeenCalledWith(
+        exercise.quizId,
+      );
       expect(exerciseService.throwIfExerciseExists).toHaveBeenCalledWith(
         exercise.type,
         exercise.description,
@@ -132,6 +180,7 @@ describe('ExerciseService', () => {
     });
 
     it('should throw an InternalServerErrorException when creating a new exercise', async () => {
+      jest.spyOn(exerciseService, 'throwIfNotQuiz').mockReturnValue(undefined);
       jest
         .spyOn(exerciseService, 'throwIfExerciseExists')
         .mockResolvedValue(undefined);
@@ -146,6 +195,9 @@ describe('ExerciseService', () => {
         message: httpMessages_EN.exercise.createExercise.status_201,
         data: exercise,
       });
+      expect(exerciseService.throwIfNotQuiz).toHaveBeenCalledWith(
+        exercise.quizId,
+      );
       expect(exerciseService.throwIfExerciseExists).toHaveBeenCalledWith(
         exercise.type,
         exercise.description,

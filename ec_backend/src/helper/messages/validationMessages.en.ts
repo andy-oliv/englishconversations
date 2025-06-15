@@ -1,4 +1,41 @@
 const validationMessages_EN = {
+  answeredExercise: {
+    saveAnswerDTO: {
+      exerciseId: {
+        isNotEmpty: 'The exerciseId field must not be empty.',
+        isInt: 'The exerciseId must be an INT.',
+      },
+      studentId: {
+        isNotEmpty: 'The studentId field must not be empty.',
+        isUUID: 'The studentId field is not a valid UUID.',
+      },
+      quizId: {
+        isUUID: 'The quizId is not a valid UUID.',
+      },
+      isRetry: {
+        isBoolean: 'The isRetry field must be a boolean.',
+      },
+      selectedAnswers: {
+        isArray: 'The selectedAnswers field must be an array of items.',
+      },
+      textAnswer: {
+        isString: 'The textAnswer field must be a string.',
+      },
+      audioUrl: {
+        isUrl: 'The audioUrl field is not a valid URL.',
+      },
+      isCorrectAnswer: {
+        isBoolean: 'The isCorrectAnswer field must be a boolean.',
+      },
+      feedback: {
+        isString: 'The feedback must be a string.',
+      },
+      elapsedTime: {
+        isNotEmpty: 'The elapsedTime field must not be empty.',
+        isInt: 'The elapsedTime field must be a value in miliseconds.',
+      },
+    },
+  },
   exercises: {
     createExerciseDTO: {
       type: {

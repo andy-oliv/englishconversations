@@ -1,4 +1,9 @@
 const httpMessages_EN = {
+  answeredExercise: {
+    saveAnswer: {
+      status_201: 'The answer has been successfully saved.',
+    },
+  },
   exercise: {
     createExercise: {
       status_201: 'The exercise has been successfully created!',

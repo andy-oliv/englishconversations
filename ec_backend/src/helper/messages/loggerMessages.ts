@@ -1,4 +1,14 @@
 const loggerMessages = {
+  answeredExercise: {
+    checkIfAnswered: {
+      status_500:
+        'An internal error occurred while checking for previous answers to the exercise. Check the error log for more information.',
+    },
+    saveAnswer: {
+      status_500:
+        'An internal error occurred while generating the answer to the exercise. Check the error log for more information.',
+    },
+  },
   exercise: {
     createExercise: {
       status_201: 'An exercise has just been created!',

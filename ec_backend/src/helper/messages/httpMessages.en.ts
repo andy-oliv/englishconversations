@@ -64,6 +64,10 @@ const httpMessages_EN = {
     removeExercise: {
       status_200: 'The exercise has been successfully removed!',
     },
+    throwIfExerciseAdded: {
+      status_409: 'The exercise has already been added to a different quiz.',
+      status_4092: 'The exercise has already been added to this quiz',
+    },
     throwIfExerciseNotAdded: {
       status_404: 'The exercise does not exist in the quiz.',
     },

@@ -79,6 +79,10 @@ const loggerMessages = {
       status_500:
         'An internal error occurred while adding the exercise. Check the error log for more information.',
     },
+    throwIfExerciseAdded: {
+      status_500:
+        'An internal error occurred while checking if the exercise exists in a quiz. Check the error log for more information.',
+    },
     throwIfExerciseNotAdded: {
       status_500:
         'An internal error occurred while checking if the exercise exists in the quiz. Check the error log for more information.',

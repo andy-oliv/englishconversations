@@ -14,6 +14,7 @@ import handleInternalErrorException from '../helper/functions/handleErrorExcepti
 import { CEFRLevels, Difficulty } from '../../generated/prisma';
 import UpdateQuizDTO from './dto/updateQuiz.dto';
 import { ExerciseService } from '../exercise/exercise.service';
+import Exercise from '../common/types/Exercise';
 
 @Injectable()
 export class QuizService {
@@ -32,6 +33,18 @@ export class QuizService {
     private readonly logger: Logger,
     private readonly exerciseService: ExerciseService,
   ) {}
+
+  async validateAddition(quizId: string, exerciseId: number): Promise<void> {
+    await this.throwIfNotQuiz(quizId);
+    await this.exerciseService.throwIfNotExercise(exerciseId);
+    await this.throwIfExerciseAdded(quizId, exerciseId);
+  }
+
+  async validateRemoval(quizId: string, exerciseId: number): Promise<void> {
+    await this.throwIfNotQuiz(quizId);
+    await this.exerciseService.throwIfNotExercise(exerciseId);
+    await this.throwIfExerciseNotAdded(quizId, exerciseId);
+  }
 
   async fetchQuizWithExercises(id: string): Promise<Quiz> {
     try {
@@ -54,6 +67,39 @@ export class QuizService {
 
       handleInternalErrorException(
         loggerMessages.quiz.fetchQuizWithExercises.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  async throwIfExerciseAdded(
+    quizId: string,
+    exerciseId: number,
+  ): Promise<void> {
+    try {
+      const check: Exercise = await this.prismaService.exercise.findFirst({
+        where: {
+          id: exerciseId,
+        },
+      });
+
+      if (check.quizId === quizId) {
+        throw new ConflictException(
+          httpMessages_EN.quiz.throwIfExerciseAdded.status_4092,
+        );
+      } else if (check.quizId !== quizId && check.quizId !== null) {
+        throw new ConflictException(
+          httpMessages_EN.quiz.throwIfExerciseAdded.status_409,
+        );
+      }
+    } catch (error) {
+      if (error instanceof ConflictException) {
+        throw error;
+      }
+
+      handleInternalErrorException(
+        loggerMessages.quiz.throwIfExerciseAdded.status_500,
         this.logger,
         error,
       );
@@ -336,8 +382,7 @@ export class QuizService {
   }
 
   async addExercise(quizId: string, exerciseId: number): Promise<Return> {
-    await this.throwIfNotQuiz(quizId);
-    await this.exerciseService.throwIfNotExercise(exerciseId);
+    await this.validateAddition(quizId, exerciseId);
 
     try {
       await this.prismaService.exercise.update({
@@ -361,12 +406,6 @@ export class QuizService {
         data: updatedQuiz,
       };
     } catch (error) {
-      if (error.code === 'P2002') {
-        throw new ConflictException(
-          generateExceptionMessage(httpMessages_EN.quiz.addExercise.status_409),
-        );
-      }
-
       handleInternalErrorException(
         loggerMessages.quiz.addExercise.status_500,
         this.logger,
@@ -376,9 +415,7 @@ export class QuizService {
   }
 
   async removeExercise(quizId: string, exerciseId: number): Promise<Return> {
-    await this.throwIfNotQuiz(quizId);
-    await this.exerciseService.throwIfNotExercise(exerciseId);
-    await this.throwIfExerciseNotAdded(quizId, exerciseId);
+    await this.validateRemoval(quizId, exerciseId);
 
     try {
       await this.prismaService.exercise.update({

@@ -424,10 +424,7 @@ describe('quizService', () => {
 
   describe('addExercise()', () => {
     it('should add an exercise to an existing quiz', async () => {
-      jest.spyOn(quizService, 'throwIfNotQuiz').mockResolvedValue(undefined);
-      (exerciseService.throwIfNotExercise as jest.Mock).mockResolvedValue(
-        undefined,
-      );
+      jest.spyOn(quizService, 'validateAddition').mockResolvedValue(undefined);
       (prismaService.exercise.update as jest.Mock).mockResolvedValue(undefined);
       jest.spyOn(quizService, 'fetchQuizWithExercises').mockResolvedValue(quiz);
 
@@ -437,8 +434,8 @@ describe('quizService', () => {
         message: httpMessages_EN.quiz.addExercise.status_200,
         data: quiz,
       });
-      expect(quizService.throwIfNotQuiz).toHaveBeenCalledWith(quiz.id);
-      expect(exerciseService.throwIfNotExercise).toHaveBeenCalledWith(
+      expect(quizService.validateAddition).toHaveBeenCalledWith(
+        quiz.id,
         exerciseId,
       );
       expect(prismaService.exercise.update).toHaveBeenCalledWith({
@@ -452,9 +449,9 @@ describe('quizService', () => {
       expect(quizService.fetchQuizWithExercises).toHaveBeenCalledWith(quiz.id);
     });
 
-    it('should throw a NotFoundException for not finding the quiz', async () => {
+    it('should throw not found exception while validating', async () => {
       jest
-        .spyOn(quizService, 'throwIfNotQuiz')
+        .spyOn(quizService, 'validateAddition')
         .mockRejectedValue(
           new NotFoundException(httpMessages_EN.quiz.fetchQuizById.status_404),
         );
@@ -465,12 +462,15 @@ describe('quizService', () => {
         new NotFoundException(httpMessages_EN.quiz.fetchQuizById.status_404),
       );
 
-      expect(quizService.throwIfNotQuiz).toHaveBeenCalledWith(quiz.id);
+      expect(quizService.validateAddition).toHaveBeenCalledWith(
+        quiz.id,
+        exerciseId,
+      );
     });
 
-    it('should throw an InternalServerErrorException while fetching the quiz', async () => {
+    it('should throw an internal server error while validating', async () => {
       jest
-        .spyOn(quizService, 'throwIfNotQuiz')
+        .spyOn(quizService, 'validateAddition')
         .mockRejectedValue(
           new InternalServerErrorException(httpMessages_EN.general.status_500),
         );
@@ -481,80 +481,14 @@ describe('quizService', () => {
         new InternalServerErrorException(httpMessages_EN.general.status_500),
       );
 
-      expect(quizService.throwIfNotQuiz).toHaveBeenCalledWith(quiz.id);
-    });
-
-    it('should throw a NotFoundException for not finding the exercise register', async () => {
-      jest.spyOn(quizService, 'throwIfNotQuiz').mockResolvedValue(undefined);
-      (exerciseService.throwIfNotExercise as jest.Mock).mockRejectedValue(
-        new NotFoundException(
-          httpMessages_EN.exercise.fetchExerciseById.status_404,
-        ),
-      );
-
-      await expect(
-        quizService.addExercise(quiz.id, exerciseId),
-      ).rejects.toThrow(
-        new NotFoundException(
-          httpMessages_EN.exercise.fetchExerciseById.status_404,
-        ),
-      );
-
-      expect(quizService.throwIfNotQuiz).toHaveBeenCalledWith(quiz.id);
-      expect(exerciseService.throwIfNotExercise).toHaveBeenCalledWith(
+      expect(quizService.validateAddition).toHaveBeenCalledWith(
+        quiz.id,
         exerciseId,
       );
-    });
-
-    it('should throw an InternalServerErrorException while fetching the exercise register', async () => {
-      jest.spyOn(quizService, 'throwIfNotQuiz').mockResolvedValue(undefined);
-      (exerciseService.throwIfNotExercise as jest.Mock).mockRejectedValue(
-        new InternalServerErrorException(httpMessages_EN.general.status_500),
-      );
-
-      await expect(
-        quizService.addExercise(quiz.id, exerciseId),
-      ).rejects.toThrow(
-        new InternalServerErrorException(httpMessages_EN.general.status_500),
-      );
-
-      expect(quizService.throwIfNotQuiz).toHaveBeenCalledWith(quiz.id);
-      expect(exerciseService.throwIfNotExercise).toHaveBeenCalledWith(
-        exerciseId,
-      );
-    });
-
-    it('should throw a conflict error while adding the exercise', async () => {
-      jest.spyOn(quizService, 'throwIfNotQuiz').mockResolvedValue(undefined);
-      (exerciseService.throwIfNotExercise as jest.Mock).mockResolvedValue(
-        undefined,
-      );
-      (prismaService.exercise.update as jest.Mock).mockRejectedValue({
-        code: 'P2002',
-      });
-
-      await expect(
-        quizService.addExercise(quiz.id, exerciseId),
-      ).rejects.toThrow(
-        new ConflictException(httpMessages_EN.quiz.addExercise.status_409),
-      );
-
-      expect(quizService.throwIfNotQuiz).toHaveBeenCalledWith(quiz.id);
-      expect(exerciseService.throwIfNotExercise).toHaveBeenCalledWith(
-        exerciseId,
-      );
-      expect(prismaService.exercise.update).toHaveBeenCalledWith({
-        where: {
-          id: exerciseId,
-        },
-        data: {
-          quizId: quiz.id,
-        },
-      });
     });
 
     it('should throw an internal server error while adding the exercise', async () => {
-      jest.spyOn(quizService, 'throwIfNotQuiz').mockResolvedValue(undefined);
+      jest.spyOn(quizService, 'validateAddition').mockResolvedValue(undefined);
       (exerciseService.throwIfNotExercise as jest.Mock).mockResolvedValue(
         undefined,
       );
@@ -568,8 +502,8 @@ describe('quizService', () => {
         new InternalServerErrorException(httpMessages_EN.general.status_500),
       );
 
-      expect(quizService.throwIfNotQuiz).toHaveBeenCalledWith(quiz.id);
-      expect(exerciseService.throwIfNotExercise).toHaveBeenCalledWith(
+      expect(quizService.validateAddition).toHaveBeenCalledWith(
+        quiz.id,
         exerciseId,
       );
       expect(prismaService.exercise.update).toHaveBeenCalledWith({
@@ -585,13 +519,7 @@ describe('quizService', () => {
 
   describe('removeExercise()', () => {
     it('should remove an exercise from an existing quiz', async () => {
-      jest.spyOn(quizService, 'throwIfNotQuiz').mockResolvedValue(undefined);
-      (exerciseService.throwIfNotExercise as jest.Mock).mockResolvedValue(
-        undefined,
-      );
-      jest
-        .spyOn(quizService, 'throwIfExerciseNotAdded')
-        .mockResolvedValue(undefined);
+      jest.spyOn(quizService, 'validateRemoval').mockResolvedValue(undefined);
       (prismaService.exercise.update as jest.Mock).mockResolvedValue(undefined);
       jest.spyOn(quizService, 'fetchQuizWithExercises').mockResolvedValue(quiz);
 
@@ -604,11 +532,7 @@ describe('quizService', () => {
         message: httpMessages_EN.quiz.removeExercise.status_200,
         data: quiz,
       });
-      expect(quizService.throwIfNotQuiz).toHaveBeenCalledWith(quiz.id);
-      expect(exerciseService.throwIfNotExercise).toHaveBeenCalledWith(
-        exerciseId,
-      );
-      expect(quizService.throwIfExerciseNotAdded).toHaveBeenCalledWith(
+      expect(quizService.validateRemoval).toHaveBeenCalledWith(
         quiz.id,
         exerciseId,
       );
@@ -623,9 +547,9 @@ describe('quizService', () => {
       expect(quizService.fetchQuizWithExercises).toHaveBeenCalledWith(quiz.id);
     });
 
-    it('should throw a NotFoundException for not finding the quiz', async () => {
+    it('should throw a NotFoundException during validation', async () => {
       jest
-        .spyOn(quizService, 'throwIfNotQuiz')
+        .spyOn(quizService, 'validateRemoval')
         .mockRejectedValue(
           new NotFoundException(httpMessages_EN.quiz.fetchQuizById.status_404),
         );
@@ -636,103 +560,15 @@ describe('quizService', () => {
         new NotFoundException(httpMessages_EN.quiz.fetchQuizById.status_404),
       );
 
-      expect(quizService.throwIfNotQuiz).toHaveBeenCalledWith(quiz.id);
-    });
-
-    it('should throw an InternalServerErrorException while fetching the quiz', async () => {
-      jest
-        .spyOn(quizService, 'throwIfNotQuiz')
-        .mockRejectedValue(
-          new InternalServerErrorException(httpMessages_EN.general.status_500),
-        );
-
-      await expect(
-        quizService.removeExercise(quiz.id, exerciseId),
-      ).rejects.toThrow(
-        new InternalServerErrorException(httpMessages_EN.general.status_500),
-      );
-
-      expect(quizService.throwIfNotQuiz).toHaveBeenCalledWith(quiz.id);
-    });
-
-    it('should throw a NotFoundException for not finding the exercise register', async () => {
-      jest.spyOn(quizService, 'throwIfNotQuiz').mockResolvedValue(undefined);
-      (exerciseService.throwIfNotExercise as jest.Mock).mockRejectedValue(
-        new NotFoundException(
-          httpMessages_EN.exercise.fetchExerciseById.status_404,
-        ),
-      );
-
-      await expect(
-        quizService.removeExercise(quiz.id, exerciseId),
-      ).rejects.toThrow(
-        new NotFoundException(
-          httpMessages_EN.exercise.fetchExerciseById.status_404,
-        ),
-      );
-
-      expect(quizService.throwIfNotQuiz).toHaveBeenCalledWith(quiz.id);
-      expect(exerciseService.throwIfNotExercise).toHaveBeenCalledWith(
-        exerciseId,
-      );
-    });
-
-    it('should throw an InternalServerErrorException while fetching the exercise register', async () => {
-      jest.spyOn(quizService, 'throwIfNotQuiz').mockResolvedValue(undefined);
-      (exerciseService.throwIfNotExercise as jest.Mock).mockRejectedValue(
-        new InternalServerErrorException(httpMessages_EN.general.status_500),
-      );
-
-      await expect(
-        quizService.removeExercise(quiz.id, exerciseId),
-      ).rejects.toThrow(
-        new InternalServerErrorException(httpMessages_EN.general.status_500),
-      );
-
-      expect(quizService.throwIfNotQuiz).toHaveBeenCalledWith(quiz.id);
-      expect(exerciseService.throwIfNotExercise).toHaveBeenCalledWith(
-        exerciseId,
-      );
-    });
-
-    it('should throw a not found exception if the exercise was not found in the quiz', async () => {
-      jest.spyOn(quizService, 'throwIfNotQuiz').mockResolvedValue(undefined);
-      (exerciseService.throwIfNotExercise as jest.Mock).mockResolvedValue(
-        undefined,
-      );
-      jest
-        .spyOn(quizService, 'throwIfExerciseNotAdded')
-        .mockRejectedValue(
-          new NotFoundException(
-            httpMessages_EN.quiz.throwIfExerciseNotAdded.status_404,
-          ),
-        );
-
-      await expect(
-        quizService.removeExercise(quiz.id, exerciseId),
-      ).rejects.toThrow(
-        new NotFoundException(
-          httpMessages_EN.quiz.throwIfExerciseNotAdded.status_404,
-        ),
-      );
-
-      expect(quizService.throwIfNotQuiz).toHaveBeenCalledWith(quiz.id);
-      expect(exerciseService.throwIfNotExercise).toHaveBeenCalledWith(
-        exerciseId,
-      );
-      expect(quizService.throwIfExerciseNotAdded).toHaveBeenCalledWith(
+      expect(quizService.validateRemoval).toHaveBeenCalledWith(
         quiz.id,
         exerciseId,
       );
     });
 
-    it('should throw an internal server error while fetching the exercise in the quiz', async () => {
-      jest.spyOn(quizService, 'throwIfNotQuiz').mockResolvedValue(undefined);
-      (exerciseService.throwIfNotExercise as jest.Mock).mockResolvedValue(
-        undefined,
-      );
+    it('should throw an InternalServerErrorException during validation', async () => {
       jest
-        .spyOn(quizService, 'throwIfExerciseNotAdded')
+        .spyOn(quizService, 'validateRemoval')
         .mockRejectedValue(
           new InternalServerErrorException(httpMessages_EN.general.status_500),
         );
@@ -743,24 +579,14 @@ describe('quizService', () => {
         new InternalServerErrorException(httpMessages_EN.general.status_500),
       );
 
-      expect(quizService.throwIfNotQuiz).toHaveBeenCalledWith(quiz.id);
-      expect(exerciseService.throwIfNotExercise).toHaveBeenCalledWith(
-        exerciseId,
-      );
-      expect(quizService.throwIfExerciseNotAdded).toHaveBeenCalledWith(
+      expect(quizService.validateRemoval).toHaveBeenCalledWith(
         quiz.id,
         exerciseId,
       );
     });
 
     it('should throw an internal server error while adding the exercise', async () => {
-      jest.spyOn(quizService, 'throwIfNotQuiz').mockResolvedValue(undefined);
-      (exerciseService.throwIfNotExercise as jest.Mock).mockResolvedValue(
-        undefined,
-      );
-      jest
-        .spyOn(quizService, 'throwIfExerciseNotAdded')
-        .mockResolvedValue(undefined);
+      jest.spyOn(quizService, 'validateRemoval').mockResolvedValue(undefined);
       (prismaService.exercise.update as jest.Mock).mockRejectedValue(
         new InternalServerErrorException(httpMessages_EN.general.status_500),
       );
@@ -771,11 +597,7 @@ describe('quizService', () => {
         new InternalServerErrorException(httpMessages_EN.general.status_500),
       );
 
-      expect(quizService.throwIfNotQuiz).toHaveBeenCalledWith(quiz.id);
-      expect(exerciseService.throwIfNotExercise).toHaveBeenCalledWith(
-        exerciseId,
-      );
-      expect(quizService.throwIfExerciseNotAdded).toHaveBeenCalledWith(
+      expect(quizService.validateRemoval).toHaveBeenCalledWith(
         quiz.id,
         exerciseId,
       );

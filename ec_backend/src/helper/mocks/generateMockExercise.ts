@@ -1,5 +1,9 @@
 import { faker } from '@faker-js/faker/.';
 import Exercise from '../../common/types/Exercise';
+import {
+  generateRandomDifficulty,
+  generateRandomLevel,
+} from './generateRandomValues';
 
 export default function generateMockExercise(): Exercise {
   const exercise: Exercise = {
@@ -40,19 +44,4 @@ function generateRandomExerciseType(): any {
   const selectedExerciseType: any =
     exerciseTypes[Math.floor(Math.random() * exerciseTypes.length)];
   return selectedExerciseType;
-}
-
-function generateRandomLevel(): any {
-  const levels: string[] = ['A1', 'A2', 'B1', 'B2', 'C1'];
-
-  const selectedLevel: any = levels[Math.floor(Math.random() * levels.length)];
-  return selectedLevel;
-}
-
-function generateRandomDifficulty(): any {
-  const difficulties: string[] = ['EASY', 'MEDIUM', 'HARD'];
-
-  const selectedDifficulty: any =
-    difficulties[Math.floor(Math.random() * difficulties.length)];
-  return selectedDifficulty;
 }

@@ -17,13 +17,7 @@ import { ExerciseService } from '../exercise/exercise.service';
 
 @Injectable()
 export class QuizService {
-  constructor(
-    private readonly prismaService: PrismaService,
-    private readonly logger: Logger,
-    private readonly exerciseService: ExerciseService,
-  ) {}
-
-  private quizWithExercises = {
+  private includeExercises = {
     exercises: {
       select: {
         id: true,
@@ -33,13 +27,19 @@ export class QuizService {
     },
   };
 
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly logger: Logger,
+    private readonly exerciseService: ExerciseService,
+  ) {}
+
   async fetchQuizWithExercises(id: string): Promise<Quiz> {
     try {
       const quiz: Quiz = await this.prismaService.quiz.findFirstOrThrow({
         where: {
           id,
         },
-        include: this.quizWithExercises,
+        include: this.includeExercises,
       });
 
       return quiz;
@@ -206,7 +206,7 @@ export class QuizService {
         where: {
           id,
         },
-        include: this.quizWithExercises,
+        include: this.includeExercises,
       });
 
       return {

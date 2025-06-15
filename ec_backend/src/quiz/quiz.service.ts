@@ -63,7 +63,10 @@ export class QuizService {
         data: quizData,
       });
 
-      this.logger.log(loggerMessages.quiz.createQuiz.status_201);
+      this.logger.log({
+        message: loggerMessages.quiz.createQuiz.status_201,
+        data: quiz,
+      });
 
       return {
         message: httpMessages_EN.quiz.createQuiz.status_201,

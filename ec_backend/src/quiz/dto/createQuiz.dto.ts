@@ -74,7 +74,7 @@ export default class CreateQuizDTO {
   @IsIn(['A1', 'A2', 'B1', 'B2', 'C1'], {
     message: validationMessages_EN.quizzes.createQuizDTO.level.isIn,
   })
-  level: CEFRLevels;
+  level?: CEFRLevels;
 
   @ApiProperty({
     title: 'Difficulty',

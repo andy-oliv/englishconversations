@@ -12,15 +12,19 @@ import {
 import { QuizService } from './quiz.service';
 import Quiz from '../common/types/Quiz';
 import generateMockQuiz from '../helper/mocks/generateMockQuiz';
+import { ExerciseService } from '../exercise/exercise.service';
+import { faker } from '@faker-js/faker/.';
 
 describe('quizService', () => {
   let quizService: QuizService;
+  let exerciseService: ExerciseService;
   let prismaService: PrismaService;
   let logger: Logger;
   let quizzes: Quiz[];
   let emptyQuizList: Quiz[];
   let quiz: Quiz;
   let error: any;
+  let exerciseId: number;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -37,6 +41,9 @@ describe('quizService', () => {
               update: jest.fn(),
               delete: jest.fn(),
             },
+            exercise: {
+              update: jest.fn(),
+            },
           },
         },
         {
@@ -47,10 +54,17 @@ describe('quizService', () => {
             warn: jest.fn(),
           },
         },
+        {
+          provide: ExerciseService,
+          useValue: {
+            throwIfNotExercise: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
     quizService = module.get<QuizService>(QuizService);
+    exerciseService = module.get<ExerciseService>(ExerciseService);
     prismaService = module.get<PrismaService>(PrismaService);
     logger = module.get<Logger>(Logger);
 
@@ -60,6 +74,7 @@ describe('quizService', () => {
       code: 'P2025',
     };
     emptyQuizList = [];
+    exerciseId = faker.number.int();
   });
 
   it('should be defined', () => {
@@ -205,6 +220,15 @@ describe('quizService', () => {
         where: {
           id: quiz.id,
         },
+        include: {
+          exercises: {
+            select: {
+              id: true,
+              type: true,
+              description: true,
+            },
+          },
+        },
       });
     });
 
@@ -221,6 +245,15 @@ describe('quizService', () => {
         where: {
           id: quiz.id,
         },
+        include: {
+          exercises: {
+            select: {
+              id: true,
+              type: true,
+              description: true,
+            },
+          },
+        },
       });
     });
 
@@ -236,6 +269,15 @@ describe('quizService', () => {
       expect(prismaService.quiz.findFirstOrThrow).toHaveBeenCalledWith({
         where: {
           id: quiz.id,
+        },
+        include: {
+          exercises: {
+            select: {
+              id: true,
+              type: true,
+              description: true,
+            },
+          },
         },
       });
     });
@@ -375,6 +417,374 @@ describe('quizService', () => {
       expect(prismaService.quiz.delete).toHaveBeenCalledWith({
         where: {
           id: quiz.id,
+        },
+      });
+    });
+  });
+
+  describe('addExercise()', () => {
+    it('should add an exercise to an existing quiz', async () => {
+      jest.spyOn(quizService, 'throwIfNotQuiz').mockResolvedValue(undefined);
+      (exerciseService.throwIfNotExercise as jest.Mock).mockResolvedValue(
+        undefined,
+      );
+      (prismaService.exercise.update as jest.Mock).mockResolvedValue(undefined);
+      jest.spyOn(quizService, 'fetchQuizWithExercises').mockResolvedValue(quiz);
+
+      const result: Return = await quizService.addExercise(quiz.id, exerciseId);
+
+      expect(result).toMatchObject({
+        message: httpMessages_EN.quiz.addExercise.status_200,
+        data: quiz,
+      });
+      expect(quizService.throwIfNotQuiz).toHaveBeenCalledWith(quiz.id);
+      expect(exerciseService.throwIfNotExercise).toHaveBeenCalledWith(
+        exerciseId,
+      );
+      expect(prismaService.exercise.update).toHaveBeenCalledWith({
+        where: {
+          id: exerciseId,
+        },
+        data: {
+          quizId: quiz.id,
+        },
+      });
+      expect(quizService.fetchQuizWithExercises).toHaveBeenCalledWith(quiz.id);
+    });
+
+    it('should throw a NotFoundException for not finding the quiz', async () => {
+      jest
+        .spyOn(quizService, 'throwIfNotQuiz')
+        .mockRejectedValue(
+          new NotFoundException(httpMessages_EN.quiz.fetchQuizById.status_404),
+        );
+
+      await expect(
+        quizService.addExercise(quiz.id, exerciseId),
+      ).rejects.toThrow(
+        new NotFoundException(httpMessages_EN.quiz.fetchQuizById.status_404),
+      );
+
+      expect(quizService.throwIfNotQuiz).toHaveBeenCalledWith(quiz.id);
+    });
+
+    it('should throw an InternalServerErrorException while fetching the quiz', async () => {
+      jest
+        .spyOn(quizService, 'throwIfNotQuiz')
+        .mockRejectedValue(
+          new InternalServerErrorException(httpMessages_EN.general.status_500),
+        );
+
+      await expect(
+        quizService.addExercise(quiz.id, exerciseId),
+      ).rejects.toThrow(
+        new InternalServerErrorException(httpMessages_EN.general.status_500),
+      );
+
+      expect(quizService.throwIfNotQuiz).toHaveBeenCalledWith(quiz.id);
+    });
+
+    it('should throw a NotFoundException for not finding the exercise register', async () => {
+      jest.spyOn(quizService, 'throwIfNotQuiz').mockResolvedValue(undefined);
+      (exerciseService.throwIfNotExercise as jest.Mock).mockRejectedValue(
+        new NotFoundException(
+          httpMessages_EN.exercise.fetchExerciseById.status_404,
+        ),
+      );
+
+      await expect(
+        quizService.addExercise(quiz.id, exerciseId),
+      ).rejects.toThrow(
+        new NotFoundException(
+          httpMessages_EN.exercise.fetchExerciseById.status_404,
+        ),
+      );
+
+      expect(quizService.throwIfNotQuiz).toHaveBeenCalledWith(quiz.id);
+      expect(exerciseService.throwIfNotExercise).toHaveBeenCalledWith(
+        exerciseId,
+      );
+    });
+
+    it('should throw an InternalServerErrorException while fetching the exercise register', async () => {
+      jest.spyOn(quizService, 'throwIfNotQuiz').mockResolvedValue(undefined);
+      (exerciseService.throwIfNotExercise as jest.Mock).mockRejectedValue(
+        new InternalServerErrorException(httpMessages_EN.general.status_500),
+      );
+
+      await expect(
+        quizService.addExercise(quiz.id, exerciseId),
+      ).rejects.toThrow(
+        new InternalServerErrorException(httpMessages_EN.general.status_500),
+      );
+
+      expect(quizService.throwIfNotQuiz).toHaveBeenCalledWith(quiz.id);
+      expect(exerciseService.throwIfNotExercise).toHaveBeenCalledWith(
+        exerciseId,
+      );
+    });
+
+    it('should throw a conflict error while adding the exercise', async () => {
+      jest.spyOn(quizService, 'throwIfNotQuiz').mockResolvedValue(undefined);
+      (exerciseService.throwIfNotExercise as jest.Mock).mockResolvedValue(
+        undefined,
+      );
+      (prismaService.exercise.update as jest.Mock).mockRejectedValue({
+        code: 'P2002',
+      });
+
+      await expect(
+        quizService.addExercise(quiz.id, exerciseId),
+      ).rejects.toThrow(
+        new ConflictException(httpMessages_EN.quiz.addExercise.status_409),
+      );
+
+      expect(quizService.throwIfNotQuiz).toHaveBeenCalledWith(quiz.id);
+      expect(exerciseService.throwIfNotExercise).toHaveBeenCalledWith(
+        exerciseId,
+      );
+      expect(prismaService.exercise.update).toHaveBeenCalledWith({
+        where: {
+          id: exerciseId,
+        },
+        data: {
+          quizId: quiz.id,
+        },
+      });
+    });
+
+    it('should throw an internal server error while adding the exercise', async () => {
+      jest.spyOn(quizService, 'throwIfNotQuiz').mockResolvedValue(undefined);
+      (exerciseService.throwIfNotExercise as jest.Mock).mockResolvedValue(
+        undefined,
+      );
+      (prismaService.exercise.update as jest.Mock).mockRejectedValue(
+        new InternalServerErrorException(httpMessages_EN.general.status_500),
+      );
+
+      await expect(
+        quizService.addExercise(quiz.id, exerciseId),
+      ).rejects.toThrow(
+        new InternalServerErrorException(httpMessages_EN.general.status_500),
+      );
+
+      expect(quizService.throwIfNotQuiz).toHaveBeenCalledWith(quiz.id);
+      expect(exerciseService.throwIfNotExercise).toHaveBeenCalledWith(
+        exerciseId,
+      );
+      expect(prismaService.exercise.update).toHaveBeenCalledWith({
+        where: {
+          id: exerciseId,
+        },
+        data: {
+          quizId: quiz.id,
+        },
+      });
+    });
+  });
+
+  describe('removeExercise()', () => {
+    it('should remove an exercise from an existing quiz', async () => {
+      jest.spyOn(quizService, 'throwIfNotQuiz').mockResolvedValue(undefined);
+      (exerciseService.throwIfNotExercise as jest.Mock).mockResolvedValue(
+        undefined,
+      );
+      jest
+        .spyOn(quizService, 'throwIfExerciseNotAdded')
+        .mockResolvedValue(undefined);
+      (prismaService.exercise.update as jest.Mock).mockResolvedValue(undefined);
+      jest.spyOn(quizService, 'fetchQuizWithExercises').mockResolvedValue(quiz);
+
+      const result: Return = await quizService.removeExercise(
+        quiz.id,
+        exerciseId,
+      );
+
+      expect(result).toMatchObject({
+        message: httpMessages_EN.quiz.removeExercise.status_200,
+        data: quiz,
+      });
+      expect(quizService.throwIfNotQuiz).toHaveBeenCalledWith(quiz.id);
+      expect(exerciseService.throwIfNotExercise).toHaveBeenCalledWith(
+        exerciseId,
+      );
+      expect(quizService.throwIfExerciseNotAdded).toHaveBeenCalledWith(
+        quiz.id,
+        exerciseId,
+      );
+      expect(prismaService.exercise.update).toHaveBeenCalledWith({
+        where: {
+          id: exerciseId,
+        },
+        data: {
+          quizId: null,
+        },
+      });
+      expect(quizService.fetchQuizWithExercises).toHaveBeenCalledWith(quiz.id);
+    });
+
+    it('should throw a NotFoundException for not finding the quiz', async () => {
+      jest
+        .spyOn(quizService, 'throwIfNotQuiz')
+        .mockRejectedValue(
+          new NotFoundException(httpMessages_EN.quiz.fetchQuizById.status_404),
+        );
+
+      await expect(
+        quizService.removeExercise(quiz.id, exerciseId),
+      ).rejects.toThrow(
+        new NotFoundException(httpMessages_EN.quiz.fetchQuizById.status_404),
+      );
+
+      expect(quizService.throwIfNotQuiz).toHaveBeenCalledWith(quiz.id);
+    });
+
+    it('should throw an InternalServerErrorException while fetching the quiz', async () => {
+      jest
+        .spyOn(quizService, 'throwIfNotQuiz')
+        .mockRejectedValue(
+          new InternalServerErrorException(httpMessages_EN.general.status_500),
+        );
+
+      await expect(
+        quizService.removeExercise(quiz.id, exerciseId),
+      ).rejects.toThrow(
+        new InternalServerErrorException(httpMessages_EN.general.status_500),
+      );
+
+      expect(quizService.throwIfNotQuiz).toHaveBeenCalledWith(quiz.id);
+    });
+
+    it('should throw a NotFoundException for not finding the exercise register', async () => {
+      jest.spyOn(quizService, 'throwIfNotQuiz').mockResolvedValue(undefined);
+      (exerciseService.throwIfNotExercise as jest.Mock).mockRejectedValue(
+        new NotFoundException(
+          httpMessages_EN.exercise.fetchExerciseById.status_404,
+        ),
+      );
+
+      await expect(
+        quizService.removeExercise(quiz.id, exerciseId),
+      ).rejects.toThrow(
+        new NotFoundException(
+          httpMessages_EN.exercise.fetchExerciseById.status_404,
+        ),
+      );
+
+      expect(quizService.throwIfNotQuiz).toHaveBeenCalledWith(quiz.id);
+      expect(exerciseService.throwIfNotExercise).toHaveBeenCalledWith(
+        exerciseId,
+      );
+    });
+
+    it('should throw an InternalServerErrorException while fetching the exercise register', async () => {
+      jest.spyOn(quizService, 'throwIfNotQuiz').mockResolvedValue(undefined);
+      (exerciseService.throwIfNotExercise as jest.Mock).mockRejectedValue(
+        new InternalServerErrorException(httpMessages_EN.general.status_500),
+      );
+
+      await expect(
+        quizService.removeExercise(quiz.id, exerciseId),
+      ).rejects.toThrow(
+        new InternalServerErrorException(httpMessages_EN.general.status_500),
+      );
+
+      expect(quizService.throwIfNotQuiz).toHaveBeenCalledWith(quiz.id);
+      expect(exerciseService.throwIfNotExercise).toHaveBeenCalledWith(
+        exerciseId,
+      );
+    });
+
+    it('should throw a not found exception if the exercise was not found in the quiz', async () => {
+      jest.spyOn(quizService, 'throwIfNotQuiz').mockResolvedValue(undefined);
+      (exerciseService.throwIfNotExercise as jest.Mock).mockResolvedValue(
+        undefined,
+      );
+      jest
+        .spyOn(quizService, 'throwIfExerciseNotAdded')
+        .mockRejectedValue(
+          new NotFoundException(
+            httpMessages_EN.quiz.throwIfExerciseNotAdded.status_404,
+          ),
+        );
+
+      await expect(
+        quizService.removeExercise(quiz.id, exerciseId),
+      ).rejects.toThrow(
+        new NotFoundException(
+          httpMessages_EN.quiz.throwIfExerciseNotAdded.status_404,
+        ),
+      );
+
+      expect(quizService.throwIfNotQuiz).toHaveBeenCalledWith(quiz.id);
+      expect(exerciseService.throwIfNotExercise).toHaveBeenCalledWith(
+        exerciseId,
+      );
+      expect(quizService.throwIfExerciseNotAdded).toHaveBeenCalledWith(
+        quiz.id,
+        exerciseId,
+      );
+    });
+
+    it('should throw an internal server error while fetching the exercise in the quiz', async () => {
+      jest.spyOn(quizService, 'throwIfNotQuiz').mockResolvedValue(undefined);
+      (exerciseService.throwIfNotExercise as jest.Mock).mockResolvedValue(
+        undefined,
+      );
+      jest
+        .spyOn(quizService, 'throwIfExerciseNotAdded')
+        .mockRejectedValue(
+          new InternalServerErrorException(httpMessages_EN.general.status_500),
+        );
+
+      await expect(
+        quizService.removeExercise(quiz.id, exerciseId),
+      ).rejects.toThrow(
+        new InternalServerErrorException(httpMessages_EN.general.status_500),
+      );
+
+      expect(quizService.throwIfNotQuiz).toHaveBeenCalledWith(quiz.id);
+      expect(exerciseService.throwIfNotExercise).toHaveBeenCalledWith(
+        exerciseId,
+      );
+      expect(quizService.throwIfExerciseNotAdded).toHaveBeenCalledWith(
+        quiz.id,
+        exerciseId,
+      );
+    });
+
+    it('should throw an internal server error while adding the exercise', async () => {
+      jest.spyOn(quizService, 'throwIfNotQuiz').mockResolvedValue(undefined);
+      (exerciseService.throwIfNotExercise as jest.Mock).mockResolvedValue(
+        undefined,
+      );
+      jest
+        .spyOn(quizService, 'throwIfExerciseNotAdded')
+        .mockResolvedValue(undefined);
+      (prismaService.exercise.update as jest.Mock).mockRejectedValue(
+        new InternalServerErrorException(httpMessages_EN.general.status_500),
+      );
+
+      await expect(
+        quizService.removeExercise(quiz.id, exerciseId),
+      ).rejects.toThrow(
+        new InternalServerErrorException(httpMessages_EN.general.status_500),
+      );
+
+      expect(quizService.throwIfNotQuiz).toHaveBeenCalledWith(quiz.id);
+      expect(exerciseService.throwIfNotExercise).toHaveBeenCalledWith(
+        exerciseId,
+      );
+      expect(quizService.throwIfExerciseNotAdded).toHaveBeenCalledWith(
+        quiz.id,
+        exerciseId,
+      );
+      expect(prismaService.exercise.update).toHaveBeenCalledWith({
+        where: {
+          id: exerciseId,
+        },
+        data: {
+          quizId: null,
         },
       });
     });

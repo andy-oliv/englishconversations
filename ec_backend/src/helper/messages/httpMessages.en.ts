@@ -35,6 +35,10 @@ const httpMessages_EN = {
       'An unexpected error occurred. Please check the error log for more information.',
   },
   quiz: {
+    addExercise: {
+      status_200: 'The exercise has been successfully added!',
+      status_409: 'Exercise already added to this quiz',
+    },
     createQuiz: {
       status_201: 'The quiz has been successfully created!',
     },
@@ -54,12 +58,21 @@ const httpMessages_EN = {
       status_200: 'The quizzes have been successfully fetched!',
       status_404: 'There are no quizzes to show.',
     },
-    updateQuiz: {
-      status_200: 'The quiz was successfully updated.',
-      status_404: 'The quiz was not found or the ID is invalid.',
+    fetchQuizWithExercises: {
+      status_404: 'The quiz was not found.',
+    },
+    removeExercise: {
+      status_200: 'The exercise has been successfully removed!',
+    },
+    throwIfExerciseNotAdded: {
+      status_404: 'The exercise does not exist in the quiz.',
     },
     throwIfQuizExists: {
       status_409: 'This quiz already exists.',
+    },
+    updateQuiz: {
+      status_200: 'The quiz was successfully updated.',
+      status_404: 'The quiz was not found or the ID is invalid.',
     },
   },
   student: {

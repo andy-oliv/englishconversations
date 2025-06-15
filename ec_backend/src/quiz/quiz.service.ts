@@ -13,13 +13,79 @@ import httpMessages_EN from '../helper/messages/httpMessages.en';
 import handleInternalErrorException from '../helper/functions/handleErrorException';
 import { CEFRLevels, Difficulty } from '../../generated/prisma';
 import UpdateQuizDTO from './dto/updateQuiz.dto';
+import { ExerciseService } from '../exercise/exercise.service';
 
 @Injectable()
 export class QuizService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly logger: Logger,
+    private readonly exerciseService: ExerciseService,
   ) {}
+
+  private quizWithExercises = {
+    exercises: {
+      select: {
+        id: true,
+        type: true,
+        description: true,
+      },
+    },
+  };
+
+  async fetchQuizWithExercises(id: string): Promise<Quiz> {
+    try {
+      const quiz: Quiz = await this.prismaService.quiz.findFirstOrThrow({
+        where: {
+          id,
+        },
+        include: this.quizWithExercises,
+      });
+
+      return quiz;
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(
+          generateExceptionMessage(
+            httpMessages_EN.quiz.fetchQuizWithExercises.status_404,
+          ),
+        );
+      }
+
+      handleInternalErrorException(
+        loggerMessages.quiz.fetchQuizWithExercises.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  async throwIfExerciseNotAdded(
+    quizId: string,
+    exerciseId: number,
+  ): Promise<void> {
+    try {
+      await this.prismaService.exercise.findFirstOrThrow({
+        where: {
+          AND: [{ id: exerciseId }, { quizId }],
+        },
+      });
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(
+          generateExceptionMessage(
+            httpMessages_EN.quiz.throwIfExerciseNotAdded.status_404,
+          ),
+        );
+      }
+
+      handleInternalErrorException(
+        loggerMessages.quiz.throwIfExerciseNotAdded.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
 
   async throwIfNotQuiz(quizId: string): Promise<void> {
     try {
@@ -140,6 +206,7 @@ export class QuizService {
         where: {
           id,
         },
+        include: this.quizWithExercises,
       });
 
       return {
@@ -262,6 +329,81 @@ export class QuizService {
 
       handleInternalErrorException(
         loggerMessages.quiz.deleteQuiz.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  async addExercise(quizId: string, exerciseId: number): Promise<Return> {
+    await this.throwIfNotQuiz(quizId);
+    await this.exerciseService.throwIfNotExercise(exerciseId);
+
+    try {
+      await this.prismaService.exercise.update({
+        where: {
+          id: exerciseId,
+        },
+        data: {
+          quizId,
+        },
+      });
+
+      const updatedQuiz: Quiz = await this.fetchQuizWithExercises(quizId);
+
+      this.logger.log({
+        message: loggerMessages.quiz.addExercise.status_200,
+        data: updatedQuiz,
+      });
+
+      return {
+        message: httpMessages_EN.quiz.addExercise.status_200,
+        data: updatedQuiz,
+      };
+    } catch (error) {
+      if (error.code === 'P2002') {
+        throw new ConflictException(
+          generateExceptionMessage(httpMessages_EN.quiz.addExercise.status_409),
+        );
+      }
+
+      handleInternalErrorException(
+        loggerMessages.quiz.addExercise.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  async removeExercise(quizId: string, exerciseId: number): Promise<Return> {
+    await this.throwIfNotQuiz(quizId);
+    await this.exerciseService.throwIfNotExercise(exerciseId);
+    await this.throwIfExerciseNotAdded(quizId, exerciseId);
+
+    try {
+      await this.prismaService.exercise.update({
+        where: {
+          id: exerciseId,
+        },
+        data: {
+          quizId: null,
+        },
+      });
+
+      const updatedQuiz: Quiz = await this.fetchQuizWithExercises(quizId);
+
+      this.logger.warn({
+        message: loggerMessages.quiz.removeExercise.status_200,
+        data: updatedQuiz,
+      });
+
+      return {
+        message: httpMessages_EN.quiz.removeExercise.status_200,
+        data: updatedQuiz,
+      };
+    } catch (error) {
+      handleInternalErrorException(
+        loggerMessages.quiz.removeExercise.status_500,
         this.logger,
         error,
       );

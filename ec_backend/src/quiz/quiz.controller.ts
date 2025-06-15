@@ -17,6 +17,7 @@ import httpMessages_EN from '../helper/messages/httpMessages.en';
 import validationMessages_EN from '../helper/messages/validationMessages.en';
 import fetchQuizzesByQueryDTO from './dto/fetchQuizzesByQuery.dto';
 import UpdateQuizDTO from './dto/updateQuiz.dto';
+import AddOrRemoveExerciseDTO from './dto/addOrRemoveExercise.dto';
 
 @ApiTags('Quizzes')
 @Controller('api/quizzes')
@@ -121,6 +122,58 @@ export class QuizController {
   })
   async fetchQuizzes(): Promise<Return> {
     return this.quizService.fetchQuizzes();
+  }
+
+  @Patch('exercise/add')
+  @ApiResponse({
+    status: 200,
+    description: 'Success',
+    example: httpMessages_EN.quiz.addExercise.status_200,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request',
+    example:
+      validationMessages_EN.quizzes.addOrRemoveExerciseDTO.quizId.isNotEmpty,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Not Found',
+    example: httpMessages_EN.quiz.fetchQuizById.status_404,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal Server Error',
+    example: httpMessages_EN.general.status_500,
+  })
+  addExercise(@Query() query: AddOrRemoveExerciseDTO): Promise<Return> {
+    return this.quizService.addExercise(query.quizId, query.exerciseId);
+  }
+
+  @Delete('exercise/remove')
+  @ApiResponse({
+    status: 200,
+    description: 'Success',
+    example: httpMessages_EN.quiz.removeExercise.status_200,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request',
+    example:
+      validationMessages_EN.quizzes.addOrRemoveExerciseDTO.quizId.isNotEmpty,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Not Found',
+    example: httpMessages_EN.quiz.fetchQuizById.status_404,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal Server Error',
+    example: httpMessages_EN.general.status_500,
+  })
+  removeExercise(@Query() query: AddOrRemoveExerciseDTO): Promise<Return> {
+    return this.quizService.removeExercise(query.quizId, query.exerciseId);
   }
 
   @Patch(':id')

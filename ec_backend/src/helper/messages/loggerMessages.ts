@@ -43,6 +43,11 @@ const loggerMessages = {
     },
   },
   quiz: {
+    addExercise: {
+      status_200: 'An exercise has been added to a quiz.',
+      status_500:
+        'An internal error occurred while adding the exercise. Check the error log for more information.',
+    },
     createQuiz: {
       status_201: 'A quiz has been successfully created.',
       status_500:
@@ -65,16 +70,29 @@ const loggerMessages = {
       status_500:
         'An internal error occurred while fetching the quizzes. Check the error log for more information.',
     },
-    updateQuiz: {
-      status_200: 'A quiz has been updated.',
+    fetchQuizWithExercises: {
       status_500:
-        'An internal error occurred while updating the quiz. Check the error log for more information.',
+        'An internal error occurred while fetching the quiz. Check the error log for more information.',
+    },
+    removeExercise: {
+      status_200: 'An exercises was removed from a quiz.',
+      status_500:
+        'An internal error occurred while adding the exercise. Check the error log for more information.',
+    },
+    throwIfExerciseNotAdded: {
+      status_500:
+        'An internal error occurred while checking if the exercise exists in the quiz. Check the error log for more information.',
     },
     throwIfQuizExists: {
       status_409:
         "There's another quiz with the same definitions. Check the error log for more details.",
       status_500:
         'An internal error occurred while checking if the quiz exists. Check the error log for more information.',
+    },
+    updateQuiz: {
+      status_200: 'A quiz has been updated.',
+      status_500:
+        'An internal error occurred while updating the quiz. Check the error log for more information.',
     },
   },
   student: {

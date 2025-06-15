@@ -72,6 +72,16 @@ const validationMessages_EN = {
     },
   },
   quizzes: {
+    addOrRemoveExerciseDTO: {
+      quizId: {
+        isNotEmpty: 'The quizId field must not be empty.',
+        isUUID: 'The quizId field is not a valid UUID.',
+      },
+      exerciseId: {
+        isNotEmpty: 'The quizId field must not be empty.',
+        isInt: 'The exerciseId must be a number.',
+      },
+    },
     createQuizDTO: {
       isTest: {
         isBoolean: 'The isTest field must be a boolean.',

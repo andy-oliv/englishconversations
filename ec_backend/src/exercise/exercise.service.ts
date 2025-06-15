@@ -50,6 +50,30 @@ export class ExerciseService {
     }
   }
 
+  async throwIfNotExercise(exerciseId: number): Promise<void> {
+    try {
+      await this.prismaService.exercise.findUniqueOrThrow({
+        where: {
+          id: exerciseId,
+        },
+      });
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(
+          generateExceptionMessage(
+            httpMessages_EN.exercise.fetchExerciseById.status_404,
+          ),
+        );
+      }
+
+      handleInternalErrorException(
+        loggerMessages.exercise.fetchExerciseById.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
   async throwIfExerciseExists(
     type: ExerciseTypes,
     description: string,

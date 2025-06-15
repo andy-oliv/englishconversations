@@ -61,7 +61,7 @@ model Exercise {
   options Json?
   correctAnswer Json
   quiz Quiz? @relation(fields: [quizId], references: [id])
-  quizId String?
+  quizId String? @unique
   studentAnswers AnsweredExercise[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

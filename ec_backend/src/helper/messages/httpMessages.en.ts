@@ -3,6 +3,22 @@ const httpMessages_EN = {
     saveAnswer: {
       status_201: 'The answer has been successfully saved.',
     },
+    deleteAnswer: {
+      status_200: 'The answer was successfully deleted.',
+      status_404: 'The answer was not found or the ID is invalid.',
+    },
+    fetchAnswers: {
+      status_200: 'The answers have been successfully fetched.',
+      status_404: 'There are no answers to show.',
+    },
+    fetchAnswerById: {
+      status_200: 'The answer was successfully fetched.',
+      status_404: 'The answer was not found or the ID is invalid.',
+    },
+    fetchAnswerByQuery: {
+      status_200: 'The answers were successfully fetched.',
+      status_404: 'There are no answers to show.',
+    },
   },
   exercise: {
     createExercise: {
@@ -24,6 +40,9 @@ const httpMessages_EN = {
     fetchExercisesByQuery: {
       status_200: 'The exercise has been successfully fetched.',
       status_404: 'The exercise was not found or the ID is invalid.',
+    },
+    throwIfNotQuiz: {
+      status_404: 'The quiz was not found or the ID is invalid.',
     },
     updateExercise: {
       status_200: 'The exercise has been successfully updated!',

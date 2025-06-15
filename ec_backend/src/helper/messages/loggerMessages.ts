@@ -8,6 +8,23 @@ const loggerMessages = {
       status_500:
         'An internal error occurred while generating the answer to the exercise. Check the error log for more information.',
     },
+    deleteAnswer: {
+      status_200: 'An answer has been deleted.',
+      status_500:
+        'An internal error occurred while deleting the answer. Check the error log for more information.',
+    },
+    fetchAnswers: {
+      status_500:
+        'An internal error occurred while fetching the list of answers. Check the error log for more information.',
+    },
+    fetchAnswerById: {
+      status_500:
+        'An internal error occurred while fetching the answer. Check the error log for more information.',
+    },
+    fetchAnswerByQuery: {
+      status_500:
+        'An internal error occurred while fetching the answers. Check the error log for more information.',
+    },
   },
   exercise: {
     createExercise: {
@@ -35,6 +52,10 @@ const loggerMessages = {
     throwIfExerciseExists: {
       status_409:
         "There's another exercise with the same definitions. Check the error log for more details.",
+    },
+    throwIfNotQuiz: {
+      status_500:
+        'An internal error occurred while fetching the quiz. Check the error log for more information.',
     },
     updateExercise: {
       status_200: 'An exercise has been updated.',

@@ -64,6 +64,9 @@ const validationMessages_EN = {
         isNotEmpty: 'The correctAnswer field cannot be empty.',
         isArray: 'The correctAnswer field must be an array of items.',
       },
+      quizId: {
+        isUUID: 'The quizId is not valid.',
+      },
     },
     fetchExercisesByQuery: {
       quizId: {

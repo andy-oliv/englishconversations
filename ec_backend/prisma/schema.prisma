@@ -134,7 +134,7 @@ model AnsweredQuiz {
 model Unit {
   id Int @id @default(autoincrement())
   name String @db.VarChar(150)
-  description String @db.VarChar(250)
+  description String @db.VarChar(200)
   grammarTopics String? @db.Text
   quizContent Quiz[]
   users UserUnit[]

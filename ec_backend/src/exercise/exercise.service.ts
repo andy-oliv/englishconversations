@@ -23,6 +23,33 @@ export class ExerciseService {
     private readonly logger: Logger,
   ) {}
 
+  async fetchExercise(exerciseId: number): Promise<Exercise> {
+    try {
+      const exercise: Exercise =
+        await this.prismaService.exercise.findUniqueOrThrow({
+          where: {
+            id: exerciseId,
+          },
+        });
+
+      return exercise;
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(
+          generateExceptionMessage(
+            httpMessages_EN.exercise.fetchExerciseById.status_404,
+          ),
+        );
+      }
+
+      handleInternalErrorException(
+        loggerMessages.exercise.fetchExerciseById.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
   async throwIfExerciseExists(
     type: ExerciseTypes,
     description: string,

@@ -21,6 +21,30 @@ export class QuizService {
     private readonly logger: Logger,
   ) {}
 
+  async throwIfNotQuiz(quizId: string): Promise<void> {
+    try {
+      await this.prismaService.quiz.findUniqueOrThrow({
+        where: {
+          id: quizId,
+        },
+      });
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(
+          generateExceptionMessage(
+            httpMessages_EN.quiz.fetchQuizById.status_404,
+          ),
+        );
+      }
+
+      handleInternalErrorException(
+        loggerMessages.quiz.fetchQuizById.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
   async throwIfQuizExists(title: string, description: string) {
     try {
       const quizExists: Quiz = await this.prismaService.quiz.findFirst({

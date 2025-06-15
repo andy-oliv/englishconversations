@@ -191,6 +191,13 @@ export class ExerciseService {
           data: exerciseData,
         });
 
+      this.logger.log({
+        message: generateExceptionMessage(
+          loggerMessages.exercise.updateExercise.status_200,
+        ),
+        data: updatedExercise,
+      });
+
       return {
         message: httpMessages_EN.exercise.updateExercise.status_200,
         data: updatedExercise,
@@ -219,6 +226,13 @@ export class ExerciseService {
             id,
           },
         });
+
+      this.logger.warn({
+        message: generateExceptionMessage(
+          loggerMessages.exercise.deleteExercise.status_200,
+        ),
+        data: deletedExercise,
+      });
 
       return {
         message: httpMessages_EN.exercise.deleteExercise.status_200,

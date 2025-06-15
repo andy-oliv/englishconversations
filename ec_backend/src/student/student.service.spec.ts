@@ -44,6 +44,7 @@ describe('StudentService', () => {
           useValue: {
             log: jest.fn(),
             error: jest.fn(),
+            warn: jest.fn(),
           },
         },
       ],
@@ -61,6 +62,10 @@ describe('StudentService', () => {
     emptyStudentList = [];
   });
 
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should be defined', () => {
     expect(studentService).toBeDefined();
   });
@@ -75,9 +80,9 @@ describe('StudentService', () => {
         loggerMessages.student.registerStudent.status_201,
       );
 
-      const resolution: Return = await studentService.registerStudent(student);
+      const result: Return = await studentService.registerStudent(student);
 
-      expect(resolution).toMatchObject({
+      expect(result).toMatchObject({
         message: httpMessages_EN.student.registerStudent.status_201,
         data: student,
       });
@@ -132,9 +137,9 @@ describe('StudentService', () => {
         loggerMessages.student.registerStudent.status_201,
       );
 
-      const resolution: Return = await studentService.registerStudent(student);
+      const result: Return = await studentService.registerStudent(student);
 
-      expect(resolution).toMatchObject({
+      expect(result).toMatchObject({
         message: httpMessages_EN.student.registerStudent.status_201,
         data: student,
       });
@@ -155,9 +160,9 @@ describe('StudentService', () => {
     it('should fetch all students', async () => {
       (prismaService.student.findMany as jest.Mock).mockResolvedValue(students);
 
-      const resolution: Return = await studentService.fetchStudents();
+      const result: Return = await studentService.fetchStudents();
 
-      expect(resolution).toMatchObject({
+      expect(result).toMatchObject({
         message: httpMessages_EN.student.fetchStudents.status_200,
         data: students,
       });
@@ -196,11 +201,9 @@ describe('StudentService', () => {
         student,
       );
 
-      const resolution: Return = await studentService.fetchStudentById(
-        student.id,
-      );
+      const result: Return = await studentService.fetchStudentById(student.id);
 
-      expect(resolution).toMatchObject({
+      expect(result).toMatchObject({
         message: httpMessages_EN.student.fetchStudentById.status_200,
         data: student,
       });
@@ -250,13 +253,13 @@ describe('StudentService', () => {
     it('should throw students by query', async () => {
       (prismaService.student.findMany as jest.Mock).mockResolvedValue(students);
 
-      const resolution: Return = await studentService.fetchStudentsByQuery(
+      const result: Return = await studentService.fetchStudentsByQuery(
         student.city,
         student.state,
         student.country,
       );
 
-      expect(resolution).toMatchObject({
+      expect(result).toMatchObject({
         message: httpMessages_EN.student.fetchStudentsByQuery.status_200,
         data: students,
       });
@@ -304,12 +307,12 @@ describe('StudentService', () => {
     it('should update a student register', async () => {
       (prismaService.student.update as jest.Mock).mockResolvedValue(student);
 
-      const resolution: Return = await studentService.updateStudent(
+      const result: Return = await studentService.updateStudent(
         student.id,
         student,
       );
 
-      expect(resolution).toMatchObject({
+      expect(result).toMatchObject({
         message: httpMessages_EN.student.updateStudent.status_200,
         data: student,
       });
@@ -359,9 +362,9 @@ describe('StudentService', () => {
     it('should delete a student register', async () => {
       (prismaService.student.delete as jest.Mock).mockResolvedValue(student);
 
-      const resolution: Return = await studentService.deleteStudent(student.id);
+      const result: Return = await studentService.deleteStudent(student.id);
 
-      expect(resolution).toMatchObject({
+      expect(result).toMatchObject({
         message: httpMessages_EN.student.deleteStudent.status_200,
         data: student,
       });

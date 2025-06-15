@@ -215,7 +215,7 @@ export class QuizService {
         },
       });
 
-      this.logger.log({
+      this.logger.warn({
         message: generateExceptionMessage(
           loggerMessages.quiz.deleteQuiz.status_200,
         ),

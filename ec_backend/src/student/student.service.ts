@@ -189,7 +189,9 @@ export class StudentService {
       });
 
       this.logger.log({
-        message: loggerMessages.student.updateStudent.status_200,
+        message: generateExceptionMessage(
+          loggerMessages.student.updateStudent.status_200,
+        ),
         data: updatedStudent,
       });
 
@@ -220,6 +222,13 @@ export class StudentService {
         where: {
           id,
         },
+      });
+
+      this.logger.warn({
+        message: generateExceptionMessage(
+          loggerMessages.student.deleteStudent.status_200,
+        ),
+        data: deletedStudent,
       });
 
       return {

@@ -44,6 +44,7 @@ describe('ExerciseService', () => {
           useValue: {
             log: jest.fn(),
             error: jest.fn(),
+            warn: jest.fn(),
           },
         },
       ],

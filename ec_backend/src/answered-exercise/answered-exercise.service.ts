@@ -143,6 +143,21 @@ export class AnsweredExerciseService {
           where: {
             id,
           },
+          include: {
+            student: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+            exercise: {
+              select: {
+                id: true,
+                type: true,
+                description: true,
+              },
+            },
+          },
         });
 
       return {

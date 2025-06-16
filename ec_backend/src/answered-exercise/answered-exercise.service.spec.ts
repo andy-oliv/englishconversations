@@ -255,6 +255,21 @@ describe('AnsweredExerciseService', () => {
         where: {
           id: answer.id,
         },
+        include: {
+          student: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          exercise: {
+            select: {
+              id: true,
+              type: true,
+              description: true,
+            },
+          },
+        },
       });
     });
 
@@ -275,6 +290,21 @@ describe('AnsweredExerciseService', () => {
       ).toHaveBeenCalledWith({
         where: {
           id: answer.id,
+        },
+        include: {
+          student: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          exercise: {
+            select: {
+              id: true,
+              type: true,
+              description: true,
+            },
+          },
         },
       });
     });

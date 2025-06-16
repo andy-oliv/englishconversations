@@ -23,6 +23,27 @@ export class AnsweredExerciseService {
     private readonly quizService: QuizService,
   ) {}
 
+  async validateAnswer(
+    studentId: string,
+    quizId: string,
+    exerciseId: number,
+  ): Promise<{ exercise: Exercise; alreadyAnswered: boolean }> {
+    await this.studentService.throwIfNotStudent(studentId);
+
+    if (quizId) {
+      await this.quizService.throwIfNotQuiz(quizId);
+    }
+
+    const exercise: Exercise =
+      await this.exerciseService.fetchExercise(exerciseId);
+    const alreadyAnswered: boolean = await this.checkIfAnswered(
+      exerciseId,
+      studentId,
+    );
+
+    return { exercise, alreadyAnswered };
+  }
+
   async checkIfAnswered(
     exerciseId: number,
     studentId: string,
@@ -49,19 +70,8 @@ export class AnsweredExerciseService {
   }
 
   async saveAnswer(data: AnsweredExercise): Promise<Return> {
-    await this.studentService.throwIfNotStudent(data.studentId);
-
-    if (data.quizId) {
-      await this.quizService.throwIfNotQuiz(data.quizId);
-    }
-
-    const exercise: Exercise = await this.exerciseService.fetchExercise(
-      data.exerciseId,
-    );
-    const alreadyAnswered: boolean = await this.checkIfAnswered(
-      data.exerciseId,
-      data.studentId,
-    );
+    const answerValidation: { exercise: Exercise; alreadyAnswered: boolean } =
+      await this.validateAnswer(data.studentId, data.quizId, data.exerciseId);
 
     try {
       const exerciseAnswer: AnsweredExercise =
@@ -70,12 +80,12 @@ export class AnsweredExerciseService {
             exerciseId: data.exerciseId,
             studentId: data.studentId,
             quizId: data.quizId,
-            isRetry: alreadyAnswered,
+            isRetry: answerValidation.alreadyAnswered,
             selectedAnswers: data.selectedAnswers,
             textAnswer: data.textAnswer,
             audioUrl: data.audioUrl,
             isCorrectAnswer: isEqual(
-              exercise.correctAnswer,
+              answerValidation.exercise.correctAnswer,
               data.selectedAnswers,
             ),
             feedback: data.feedback,

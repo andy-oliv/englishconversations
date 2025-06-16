@@ -189,7 +189,7 @@ export class AnsweredExerciseService {
       const answerList: AnsweredExercise[] =
         await this.prismaService.answeredExercise.findMany({
           where: {
-            OR: [{ studentId }, { exerciseId }, { quizId }],
+            AND: [{ studentId }, { exerciseId }, { quizId }],
           },
         });
 

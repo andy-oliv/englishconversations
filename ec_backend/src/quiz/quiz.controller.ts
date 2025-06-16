@@ -49,7 +49,7 @@ export class QuizController {
     return this.quizService.createQuiz(quizData);
   }
 
-  @Get('q')
+  @Get('query')
   @ApiResponse({
     status: 200,
     description: 'Success',

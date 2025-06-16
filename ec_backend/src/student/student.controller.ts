@@ -48,7 +48,7 @@ export class StudentController {
     return this.studentService.registerStudent(userData);
   }
 
-  @Get('q')
+  @Get('query')
   @ApiResponse({
     status: 200,
     description: 'Success',

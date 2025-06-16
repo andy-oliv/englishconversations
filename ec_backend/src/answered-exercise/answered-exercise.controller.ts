@@ -45,7 +45,7 @@ export class AnsweredExerciseController {
     return this.answeredExerciseService.saveAnswer(data);
   }
 
-  @Get('q')
+  @Get('query')
   @ApiResponse({
     status: 200,
     description: 'Success',

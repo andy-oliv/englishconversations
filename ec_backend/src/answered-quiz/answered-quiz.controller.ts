@@ -42,7 +42,7 @@ export class AnsweredQuizController {
     return this.answerQuizService.saveAnswer(data);
   }
 
-  @Get('q')
+  @Get('query')
   @ApiResponse({
     status: 200,
     description: 'Success',

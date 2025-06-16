@@ -53,7 +53,7 @@ export class ExerciseController {
     return this.exerciseService.createExercise(exerciseData);
   }
 
-  @Get('q')
+  @Get('query')
   @ApiResponse({
     status: 200,
     description: 'Success',

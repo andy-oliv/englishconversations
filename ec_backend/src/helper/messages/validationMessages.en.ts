@@ -43,6 +43,12 @@ const validationMessages_EN = {
     },
   },
   answeredQuiz: {
+    addFeedback: {
+      feedback: {
+        isNotEmpty: 'The feedback field must not be empty.',
+        isString: 'The feedback field must be a string.',
+      },
+    },
     quizId: {
       isNotEmpty: 'The quizId field must not be empty.',
       isUUID: 'The quizId field must be a valid UUID.',

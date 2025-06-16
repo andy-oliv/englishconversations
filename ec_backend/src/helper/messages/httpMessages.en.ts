@@ -25,6 +25,26 @@ const httpMessages_EN = {
     },
   },
   answeredQuiz: {
+    addFeedback: {
+      status_200: 'The answer has been successfully updated!',
+      status_404: 'The answer was not found or the ID is invalid.',
+    },
+    deleteAnswer: {
+      status_200: 'The answer has been successfully deleted.',
+      status_404: 'The answer was not found or the ID is invalid.',
+    },
+    fetchAnswers: {
+      status_200: 'The answers have been successfully fetched!',
+      status_404: 'There are no answers to show or the ID is invalid.',
+    },
+    fetchAnswerById: {
+      status_200: 'The answer has been successfully fetched!',
+      status_404: 'The answer was not found or the ID is invalid.',
+    },
+    fetchAnswersByQuery: {
+      status_200: 'The answers have been successfully fetched!',
+      status_404: 'There are no answers to show or the ID is invalid.',
+    },
     saveAnswer: {
       status_201: 'The answer has been successfully saved.',
     },

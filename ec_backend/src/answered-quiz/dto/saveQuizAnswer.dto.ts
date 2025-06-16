@@ -11,7 +11,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export default class SaveQuizAnswerDTO {
   @ApiProperty({
-    title: 'QuizID',
+    title: 'Quiz ID',
     required: true,
     type: 'string',
     example: 'f0aaa9ad-ee8e-42f0-a823-c90f2d255f5a',
@@ -23,7 +23,7 @@ export default class SaveQuizAnswerDTO {
   quizId: string;
 
   @ApiProperty({
-    title: 'StudentID',
+    title: 'Student ID',
     required: true,
     type: 'string',
     example: 'f0aaa9ad-ee8e-42f0-a823-c90f2d255f5a',
@@ -61,7 +61,7 @@ export default class SaveQuizAnswerDTO {
   feedback?: string;
 
   @ApiProperty({
-    title: 'ElapsedTime',
+    title: 'Elapsed Time',
     required: true,
     type: 'number',
     example: 15000,
@@ -75,7 +75,7 @@ export default class SaveQuizAnswerDTO {
   elapsedTime: number;
 
   @ApiProperty({
-    title: 'IsRetry',
+    title: 'Is Retry',
     required: false,
     type: 'boolean',
     example: false,

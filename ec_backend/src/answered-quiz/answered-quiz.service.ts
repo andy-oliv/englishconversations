@@ -82,4 +82,199 @@ export class AnsweredQuizService {
       );
     }
   }
+
+  async fetchAnswers(): Promise<Return> {
+    try {
+      const answers: AnsweredQuiz[] =
+        await this.prismaService.answeredQuiz.findMany();
+
+      if (answers.length === 0) {
+        throw new NotFoundException(
+          generateExceptionMessage(
+            httpMessages_EN.answeredQuiz.fetchAnswers.status_404,
+          ),
+        );
+      }
+
+      return {
+        message: httpMessages_EN.answeredQuiz.fetchAnswers.status_200,
+        data: answers,
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+
+      handleInternalErrorException(
+        loggerMessages.answeredQuiz.fetchAnswers.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  async fetchAnswerById(id: string): Promise<Return> {
+    try {
+      const answer: AnsweredQuiz =
+        await this.prismaService.answeredQuiz.findFirstOrThrow({
+          where: {
+            id,
+          },
+          include: {
+            student: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+            quiz: {
+              select: {
+                id: true,
+                title: true,
+                description: true,
+              },
+            },
+            answers: {
+              select: {
+                id: true,
+                isRetry: true,
+                elapsedTime: true,
+                textAnswer: true,
+                selectedAnswers: true,
+                audioUrl: true,
+                isCorrectAnswer: true,
+                feedback: true,
+              },
+            },
+          },
+        });
+
+      return {
+        message: httpMessages_EN.answeredQuiz.fetchAnswerById.status_200,
+        data: answer,
+      };
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(
+          generateExceptionMessage(
+            httpMessages_EN.answeredQuiz.fetchAnswerById.status_404,
+          ),
+        );
+      }
+
+      handleInternalErrorException(
+        loggerMessages.answeredQuiz.fetchAnswerById.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  async fetchAnswersByQuery(
+    quizId: string,
+    studentId: string,
+  ): Promise<Return> {
+    try {
+      const answers: AnsweredQuiz[] =
+        await this.prismaService.answeredQuiz.findMany({
+          where: {
+            AND: [{ quizId }, { studentId }],
+          },
+          include: {
+            student: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        });
+
+      if (answers.length === 0) {
+        throw new NotFoundException(
+          generateExceptionMessage(
+            httpMessages_EN.answeredQuiz.fetchAnswersByQuery.status_404,
+          ),
+        );
+      }
+
+      return {
+        message: httpMessages_EN.answeredQuiz.fetchAnswersByQuery.status_200,
+        data: answers,
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+
+      handleInternalErrorException(
+        loggerMessages.answeredQuiz.fetchAnswersByQuery.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  async addFeedback(id: string, feedback: string): Promise<Return> {
+    try {
+      const updatedAnswer: AnsweredQuiz =
+        await this.prismaService.answeredQuiz.update({
+          where: {
+            id,
+          },
+          data: {
+            feedback,
+          },
+        });
+
+      return {
+        message: httpMessages_EN.answeredQuiz.addFeedback.status_200,
+        data: updatedAnswer,
+      };
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(
+          generateExceptionMessage(
+            httpMessages_EN.answeredQuiz.addFeedback.status_404,
+          ),
+        );
+      }
+
+      handleInternalErrorException(
+        loggerMessages.answeredQuiz.addFeedback.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  async deleteAnswer(id: string): Promise<Return> {
+    try {
+      const deletedAnswer: AnsweredQuiz =
+        await this.prismaService.answeredQuiz.delete({
+          where: {
+            id,
+          },
+        });
+
+      return {
+        message: httpMessages_EN.answeredQuiz.deleteAnswer.status_200,
+        data: deletedAnswer,
+      };
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(
+          generateExceptionMessage(
+            httpMessages_EN.answeredQuiz.deleteAnswer.status_404,
+          ),
+        );
+      }
+
+      handleInternalErrorException(
+        loggerMessages.answeredQuiz.deleteAnswer.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
 }

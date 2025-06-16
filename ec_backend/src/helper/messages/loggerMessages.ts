@@ -32,9 +32,29 @@ const loggerMessages = {
     },
   },
   answeredQuiz: {
+    addFeedback: {
+      status_500:
+        'An internal error occurred while updating the answer. Check the error log for more information.',
+    },
     checkIsRetry: {
       status_500:
         'An internal error occurred while checking if the student has answered the quiz before. Check the error log for more information.',
+    },
+    deleteAnswer: {
+      status_500:
+        'An internal error occurred while deleting the answer. Check the error log for more information.',
+    },
+    fetchAnswers: {
+      status_500:
+        'An internal error occurred while fetching the answers. Check the error log for more information.',
+    },
+    fetchAnswerById: {
+      status_500:
+        'An internal error occurred while fetching the answer. Check the error log for more information.',
+    },
+    fetchAnswersByQuery: {
+      status_500:
+        'An internal error occurred while fetching the answers. Check the error log for more information.',
     },
     saveAnswer: {
       status_500:

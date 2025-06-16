@@ -12,6 +12,7 @@ import { ExerciseModule } from './exercise/exercise.module';
 import { QuizModule } from './quiz/quiz.module';
 import { AnsweredExerciseModule } from './answered-exercise/answered-exercise.module';
 import { AnsweredQuizModule } from './answered-quiz/answered-quiz.module';
+import { UnitModule } from './unit/unit.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { AnsweredQuizModule } from './answered-quiz/answered-quiz.module';
     QuizModule,
     AnsweredExerciseModule,
     AnsweredQuizModule,
+    UnitModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

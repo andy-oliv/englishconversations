@@ -156,6 +156,11 @@ const httpMessages_EN = {
       status_404: "There's no student to show or the ID is invalid.",
     },
   },
+  unit: {
+    createUnit: {
+      status_200: 'The unit has been successfully created!',
+    },
+  },
 };
 
 export default httpMessages_EN;

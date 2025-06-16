@@ -190,6 +190,12 @@ const loggerMessages = {
         'An internal error occurred while fetching the student. Check the error log for more information.',
     },
   },
+  unit: {
+    createUnit: {
+      status_500:
+        'An internal error occurred while creating the student. Check the error log for more information.',
+    },
+  },
 };
 
 export default loggerMessages;

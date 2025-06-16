@@ -26,6 +26,16 @@ const loggerMessages = {
         'An internal error occurred while fetching the answers. Check the error log for more information.',
     },
   },
+  answeredQuiz: {
+    saveAnswer: {
+      status_500:
+        'An internal error occurred while saving the answer. Check the error log for more information.',
+    },
+    checkIsRetry: {
+      status_500:
+        'An internal error occurred while checking if the student has answered the quiz before. Check the error log for more information.',
+    },
+  },
   exercise: {
     createExercise: {
       status_201: 'An exercise has just been created!',

@@ -32,8 +32,32 @@ const validationMessages_EN = {
       },
       elapsedTime: {
         isNotEmpty: 'The elapsedTime field must not be empty.',
-        isInt: 'The elapsedTime field must be a value in miliseconds.',
+        isInt: 'The elapsedTime field must be a value in seconds.',
       },
+    },
+  },
+  answeredQuiz: {
+    quizId: {
+      isNotEmpty: 'The quizId field must not be empty.',
+      isUUID: 'The quizId field must be a valid UUID.',
+    },
+    studentId: {
+      isNotEmpty: 'The studentId field must not be empty.',
+      isUUID: 'The studentId field must be a valid UUID.',
+    },
+    score: {
+      isNotEmpty: 'The score field must not be empty.',
+      isInt: 'The score field must be a number.',
+    },
+    feedback: {
+      isString: 'The feedback field must be a string.',
+    },
+    elapsedTime: {
+      isNotEmpty: 'The elapsedTime field must not be empty.',
+      isInt: 'The elapsedTime field must be a number in seconds.',
+    },
+    isRetry: {
+      isBoolean: 'The isRetry field must be a boolean.',
     },
   },
   exercises: {

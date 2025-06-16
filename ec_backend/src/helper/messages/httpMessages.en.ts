@@ -20,6 +20,11 @@ const httpMessages_EN = {
       status_404: 'There are no answers to show.',
     },
   },
+  answeredQuiz: {
+    saveAnswer: {
+      status_201: 'The answer has been successfully saved.',
+    },
+  },
   exercise: {
     createExercise: {
       status_201: 'The exercise has been successfully created!',

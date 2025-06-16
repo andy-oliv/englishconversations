@@ -11,6 +11,7 @@ import { StudentModule } from './student/student.module';
 import { ExerciseModule } from './exercise/exercise.module';
 import { QuizModule } from './quiz/quiz.module';
 import { AnsweredExerciseModule } from './answered-exercise/answered-exercise.module';
+import { AnsweredQuizModule } from './answered-quiz/answered-quiz.module';
 
 @Module({
   imports: [
@@ -47,6 +48,7 @@ import { AnsweredExerciseModule } from './answered-exercise/answered-exercise.mo
     ExerciseModule,
     QuizModule,
     AnsweredExerciseModule,
+    AnsweredQuizModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

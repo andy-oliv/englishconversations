@@ -11,5 +11,5 @@ export default interface AnsweredExercise {
   audioUrl?: string;
   isCorrectAnswer?: boolean;
   feedback?: string;
-  elapsedTime: number; //in miliseconds
+  elapsedTime: number; //in seconds
 }

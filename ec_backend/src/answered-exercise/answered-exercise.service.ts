@@ -203,6 +203,46 @@ export class AnsweredExerciseService {
     }
   }
 
+  async addFeedback(id: string, feedback: string): Promise<Return> {
+    try {
+      const updatedAnswer: AnsweredExercise =
+        await this.prismaService.answeredExercise.update({
+          where: {
+            id,
+          },
+          data: {
+            feedback,
+          },
+        });
+
+      this.logger.log({
+        message: generateExceptionMessage(
+          loggerMessages.answeredExercise.addFeedback.status_200,
+        ),
+        data: updatedAnswer,
+      });
+
+      return {
+        message: httpMessages_EN.answeredExercise.addFeedback.status_200,
+        data: updatedAnswer,
+      };
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(
+          generateExceptionMessage(
+            httpMessages_EN.answeredExercise.addFeedback.status_404,
+          ),
+        );
+      }
+
+      handleInternalErrorException(
+        loggerMessages.answeredExercise.addFeedback.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
   async deleteAnswer(id: string): Promise<Return> {
     try {
       const deletedAnswer: AnsweredExercise =

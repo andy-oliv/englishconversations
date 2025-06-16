@@ -19,6 +19,10 @@ const httpMessages_EN = {
       status_200: 'The answers were successfully fetched.',
       status_404: 'There are no answers to show.',
     },
+    addFeedback: {
+      status_200: 'The answer was successfully updated.',
+      status_404: 'The answer was not found or the ID is invalid.',
+    },
   },
   answeredQuiz: {
     saveAnswer: {

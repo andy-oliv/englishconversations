@@ -24,6 +24,7 @@ describe('answeredExercise', () => {
         {
           provide: AnsweredExerciseService,
           useValue: {
+            addFeedback: jest.fn(),
             saveAnswer: jest.fn(),
             fetchAnswers: jest.fn(),
             fetchAnswerByQuery: jest.fn(),
@@ -258,6 +259,72 @@ describe('answeredExercise', () => {
       );
 
       expect(answeredExerciseService.fetchAnswers).toHaveBeenCalled();
+    });
+  });
+
+  describe('addFeedback()', () => {
+    it('should add feedback to an answer', async () => {
+      (answeredExerciseService.addFeedback as jest.Mock).mockResolvedValue({
+        message: httpMessages_EN.answeredExercise.addFeedback.status_200,
+        data: answer,
+      });
+
+      const result: Return = await answeredExerciseController.addFeedback(
+        answer.id,
+        { feedback: answer.feedback },
+      );
+
+      expect(result).toMatchObject({
+        message: httpMessages_EN.answeredExercise.addFeedback.status_200,
+        data: answer,
+      });
+
+      expect(answeredExerciseService.addFeedback).toHaveBeenCalledWith(
+        answer.id,
+        answer.feedback,
+      );
+    });
+
+    it('should throw a NotFoundException', async () => {
+      (answeredExerciseService.addFeedback as jest.Mock).mockRejectedValue(
+        new NotFoundException(
+          httpMessages_EN.answeredExercise.addFeedback.status_404,
+        ),
+      );
+
+      await expect(
+        answeredExerciseController.addFeedback(answer.id, {
+          feedback: answer.feedback,
+        }),
+      ).rejects.toThrow(
+        new NotFoundException(
+          httpMessages_EN.answeredExercise.addFeedback.status_404,
+        ),
+      );
+
+      expect(answeredExerciseService.addFeedback).toHaveBeenCalledWith(
+        answer.id,
+        answer.feedback,
+      );
+    });
+
+    it('should throw an InternalServerErrorException', async () => {
+      (answeredExerciseService.addFeedback as jest.Mock).mockRejectedValue(
+        new InternalServerErrorException(httpMessages_EN.general.status_500),
+      );
+
+      await expect(
+        answeredExerciseController.addFeedback(answer.id, {
+          feedback: answer.feedback,
+        }),
+      ).rejects.toThrow(
+        new InternalServerErrorException(httpMessages_EN.general.status_500),
+      );
+
+      expect(answeredExerciseService.addFeedback).toHaveBeenCalledWith(
+        answer.id,
+        answer.feedback,
+      );
     });
   });
 

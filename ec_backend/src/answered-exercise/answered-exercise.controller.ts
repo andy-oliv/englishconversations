@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   ParseUUIDPipe,
+  Patch,
   Post,
   Query,
 } from '@nestjs/common';
@@ -15,6 +16,7 @@ import SaveAnswerDTO from './dto/saveAnswer.dto';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
 import validationMessages_EN from '../helper/messages/validationMessages.en';
 import fetchAnswerByQuery from './dto/fetchAnswerByQuery.dto';
+import UpdateFeedbackDTO from './dto/updateAnsweredExercise.dto';
 
 @ApiTags('AnsweredExercise')
 @Controller('api/answers/e')
@@ -112,6 +114,34 @@ export class AnsweredExerciseController {
   })
   async fetchAnswers(): Promise<Return> {
     return this.answeredExerciseService.fetchAnswers();
+  }
+
+  @Patch(':id')
+  @ApiResponse({
+    status: 200,
+    description: 'Success',
+    example: httpMessages_EN.answeredExercise.addFeedback.status_200,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request',
+    example: 'Validation failed (uuid is expected)',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Not Found',
+    example: httpMessages_EN.answeredExercise.addFeedback.status_404,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal Server Error',
+    example: httpMessages_EN.general.status_500,
+  })
+  async addFeedback(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() { feedback }: UpdateFeedbackDTO,
+  ): Promise<Return> {
+    return this.answeredExerciseService.addFeedback(id, feedback);
   }
 
   @Delete(':id')

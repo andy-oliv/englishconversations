@@ -25,15 +25,20 @@ const loggerMessages = {
       status_500:
         'An internal error occurred while fetching the answers. Check the error log for more information.',
     },
+    addFeedback: {
+      status_200: 'An answer has been updated.',
+      status_500:
+        'An internal error occurred while updating the answer. Check the error log for more information.',
+    },
   },
   answeredQuiz: {
-    saveAnswer: {
-      status_500:
-        'An internal error occurred while saving the answer. Check the error log for more information.',
-    },
     checkIsRetry: {
       status_500:
         'An internal error occurred while checking if the student has answered the quiz before. Check the error log for more information.',
+    },
+    saveAnswer: {
+      status_500:
+        'An internal error occurred while saving the answer. Check the error log for more information.',
     },
   },
   exercise: {

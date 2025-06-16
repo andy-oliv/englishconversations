@@ -35,6 +35,12 @@ const validationMessages_EN = {
         isInt: 'The elapsedTime field must be a value in seconds.',
       },
     },
+    addFeedback: {
+      feedback: {
+        isNotEmpty: 'The feedback field must not be empty.',
+        isString: 'The feedback field must be a string.',
+      },
+    },
   },
   answeredQuiz: {
     quizId: {

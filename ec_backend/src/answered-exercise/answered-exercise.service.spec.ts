@@ -360,63 +360,130 @@ describe('AnsweredExerciseService', () => {
         },
       });
     });
+  });
+  describe('addFeedback()', () => {
+    it('should addFeedback an answer', async () => {
+      (prismaService.answeredExercise.update as jest.Mock).mockResolvedValue(
+        answer,
+      );
 
-    describe('deleteAnswer()', () => {
-      it('should delete an answer', async () => {
-        (prismaService.answeredExercise.delete as jest.Mock).mockResolvedValue(
-          answer,
-        );
+      const result: Return = await answeredExerciseService.addFeedback(
+        answer.id,
+        answer.feedback,
+      );
 
-        const result: Return = await answeredExerciseService.deleteAnswer(
-          answer.id,
-        );
-
-        expect(result).toMatchObject({
-          message: httpMessages_EN.answeredExercise.deleteAnswer.status_200,
-          data: answer,
-        });
-        expect(prismaService.answeredExercise.delete).toHaveBeenCalledWith({
-          where: {
-            id: answer.id,
-          },
-        });
+      expect(result).toMatchObject({
+        message: httpMessages_EN.answeredExercise.addFeedback.status_200,
+        data: answer,
       });
+      expect(prismaService.answeredExercise.update).toHaveBeenCalledWith({
+        where: {
+          id: answer.id,
+        },
+        data: {
+          feedback: answer.feedback,
+        },
+      });
+    });
 
-      it('should throw a NotFoundException', async () => {
-        (prismaService.answeredExercise.delete as jest.Mock).mockRejectedValue(
-          error,
-        );
+    it('should throw a NotFoundException', async () => {
+      (prismaService.answeredExercise.update as jest.Mock).mockRejectedValue(
+        error,
+      );
 
-        await expect(
-          answeredExerciseService.deleteAnswer(answer.id),
-        ).rejects.toThrow(
-          new NotFoundException(
-            httpMessages_EN.answeredExercise.deleteAnswer.status_404,
-          ),
-        );
-        expect(prismaService.answeredExercise.delete).toHaveBeenCalledWith({
-          where: {
-            id: answer.id,
-          },
-        });
+      await expect(
+        answeredExerciseService.addFeedback(answer.id, answer.feedback),
+      ).rejects.toThrow(
+        new NotFoundException(
+          httpMessages_EN.answeredExercise.addFeedback.status_404,
+        ),
+      );
+      expect(prismaService.answeredExercise.update).toHaveBeenCalledWith({
+        where: {
+          id: answer.id,
+        },
+        data: {
+          feedback: answer.feedback,
+        },
       });
     });
 
     it('should throw an InternalServerErrorException', async () => {
-      (prismaService.answeredExercise.delete as jest.Mock).mockRejectedValue(
+      (prismaService.answeredExercise.update as jest.Mock).mockRejectedValue(
         new InternalServerErrorException(httpMessages_EN.general.status_500),
+      );
+
+      await expect(
+        answeredExerciseService.addFeedback(answer.id, answer.feedback),
+      ).rejects.toThrow(
+        new InternalServerErrorException(httpMessages_EN.general.status_500),
+      );
+      expect(prismaService.answeredExercise.update).toHaveBeenCalledWith({
+        where: {
+          id: answer.id,
+        },
+        data: {
+          feedback: answer.feedback,
+        },
+      });
+    });
+  });
+
+  describe('deleteAnswer()', () => {
+    it('should delete an answer', async () => {
+      (prismaService.answeredExercise.delete as jest.Mock).mockResolvedValue(
+        answer,
+      );
+
+      const result: Return = await answeredExerciseService.deleteAnswer(
+        answer.id,
+      );
+
+      expect(result).toMatchObject({
+        message: httpMessages_EN.answeredExercise.deleteAnswer.status_200,
+        data: answer,
+      });
+      expect(prismaService.answeredExercise.delete).toHaveBeenCalledWith({
+        where: {
+          id: answer.id,
+        },
+      });
+    });
+
+    it('should throw a NotFoundException', async () => {
+      (prismaService.answeredExercise.delete as jest.Mock).mockRejectedValue(
+        error,
       );
 
       await expect(
         answeredExerciseService.deleteAnswer(answer.id),
       ).rejects.toThrow(
-        new InternalServerErrorException(httpMessages_EN.general.status_500),
+        new NotFoundException(
+          httpMessages_EN.answeredExercise.deleteAnswer.status_404,
+        ),
       );
       expect(prismaService.answeredExercise.delete).toHaveBeenCalledWith({
         where: {
           id: answer.id,
         },
       });
+    });
+  });
+
+  it('should throw an InternalServerErrorException', async () => {
+    (prismaService.answeredExercise.delete as jest.Mock).mockRejectedValue(
+      new InternalServerErrorException(httpMessages_EN.general.status_500),
+    );
+
+    await expect(
+      answeredExerciseService.deleteAnswer(answer.id),
+    ).rejects.toThrow(
+      new InternalServerErrorException(httpMessages_EN.general.status_500),
+    );
+    expect(prismaService.answeredExercise.delete).toHaveBeenCalledWith({
+      where: {
+        id: answer.id,
+      },
     });
   });
 });

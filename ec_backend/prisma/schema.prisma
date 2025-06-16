@@ -123,6 +123,7 @@ model AnsweredQuiz {
   score Int 
   feedback String? @db.Text
   elapsedTime Int @default(0)
+  isRetry Boolean @default(false)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

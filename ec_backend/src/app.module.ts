@@ -13,6 +13,7 @@ import { QuizModule } from './quiz/quiz.module';
 import { AnsweredExerciseModule } from './answered-exercise/answered-exercise.module';
 import { AnsweredQuizModule } from './answered-quiz/answered-quiz.module';
 import { UnitModule } from './unit/unit.module';
+import { TagModule } from './tag/tag.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { UnitModule } from './unit/unit.module';
     AnsweredExerciseModule,
     AnsweredQuizModule,
     UnitModule,
+    TagModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

@@ -60,6 +60,7 @@ model Exercise {
   difficulty Difficulty
   options Json?
   correctAnswer Json
+  tags ExerciseTag[]
   quiz Quiz? @relation(fields: [quizId], references: [id])
   quizId String?
   studentAnswers AnsweredExercise[]
@@ -102,6 +103,7 @@ model Quiz {
   imageUrl String? @db.VarChar(150)
   level CEFRLevels?
   difficulty Difficulty
+  tags QuizTag[]
   unit Unit? @relation(fields: [unitId], references: [id])
   unitId Int?
   exercises Exercise[]
@@ -132,11 +134,50 @@ model AnsweredQuiz {
   @@index([studentId, quizId])
 }
 
+model Tag {
+  id Int @id @default(autoincrement())
+  title String @db.VarChar(100) @unique
+  exerciseTags ExerciseTag[]
+  quizTags QuizTag[]
+  unitTags UnitTag[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+}
+
+model ExerciseTag {
+  exercise Exercise @relation(fields: [exerciseId], references: [id])
+  exerciseId Int
+  tag Tag @relation(fields: [tagId], references: [id])
+  tagId Int
+
+  @@id([exerciseId, tagId])
+}
+
+model QuizTag {
+  quiz Quiz @relation(fields: [quizId], references: [id])
+  quizId String
+  tag Tag @relation(fields: [tagId], references: [id])
+  tagId Int
+
+  @@id([quizId, tagId])
+}
+
+model UnitTag {
+  unit Unit @relation(fields: [unitId], references: [id])
+  unitId Int
+  tag Tag @relation(fields: [tagId], references: [id])
+  tagId Int
+
+  @@id([unitId, tagId])
+}
+
 model Unit {
   id Int @id @default(autoincrement())
   name String @db.VarChar(150)
   description String @db.VarChar(200)
   grammarTopics String? @db.Text
+  tags UnitTag[]
   quizContent Quiz[]
   users UserUnit[]
   createdAt DateTime @default(now())

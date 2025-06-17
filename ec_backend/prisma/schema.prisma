@@ -55,7 +55,8 @@ model Exercise {
   id Int @id @default(autoincrement())
   type ExerciseTypes
   description String @db.Text
-  contentUrl String? @db.VarChar(255)
+  file File? @relation(fields: [fileId], references: [id])
+  fileId String? @unique
   level CEFRLevels
   difficulty Difficulty
   options Json?
@@ -83,7 +84,8 @@ model AnsweredExercise {
   isRetry Boolean @default(false)
   selectedAnswers Json?
   textAnswer String? @db.VarChar(255)
-  audioUrl String? @db.VarChar(150)
+  file File? @relation(fields: [fileId], references: [id])
+  fileId String? @unique
   isCorrectAnswer Boolean @default(false)
   feedback String? @db.Text
   elapsedTime Int @default(0)
@@ -100,7 +102,8 @@ model Quiz {
   isTest Boolean @default(false)
   title String @db.VarChar(50)
   description String @db.Text
-  imageUrl String? @db.VarChar(150)
+  file File? @relation(fields: [fileId], references: [id])
+  fileId String? @unique
   level CEFRLevels?
   difficulty Difficulty
   tags QuizTag[]
@@ -223,6 +226,25 @@ model Video {
   unitId Int?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model File {
+  id String @id @default(uuid())
+  name String @db.VarChar(250)
+  type FileTypes
+  url String @db.VarChar(250)
+  size Int
+  exercise Exercise?
+  exerciseAnswer AnsweredExercise?
+  quiz Quiz?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum FileTypes {
+  PDF
+  AUDIO
+  IMAGE
 }
 
 enum ExerciseTypes {

@@ -183,7 +183,7 @@ const httpMessages_EN = {
       status_200: 'The tag has been successfully fetched.',
       status_404: 'The tag was not found or the ID is invalid.',
     },
-    fetchTagByTitle: {
+    fetchContentByTag: {
       status_200: 'The tag has been successfully fetched.',
       status_404: 'The tag was not found or the title is invalid.',
     },

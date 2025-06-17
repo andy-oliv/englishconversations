@@ -23,6 +23,110 @@ type TagHandler = {
 
 @Injectable()
 export class TagService {
+  private tagIncludesAll = {
+    exerciseTags: {
+      include: {
+        exercise: {
+          select: {
+            id: true,
+            type: true,
+            description: true,
+          },
+        },
+      },
+    },
+    quizTags: {
+      include: {
+        quiz: {
+          select: {
+            id: true,
+            title: true,
+            description: true,
+          },
+        },
+      },
+    },
+    unitTags: {
+      include: {
+        unit: {
+          select: {
+            id: true,
+            name: true,
+            description: true,
+          },
+        },
+      },
+    },
+    videoTags: {
+      include: {
+        video: {
+          select: {
+            id: true,
+            title: true,
+            description: true,
+            duration: true,
+          },
+        },
+      },
+    },
+  };
+
+  private tagIncludes: Record<ContentType, object> = {
+    exercise: {
+      exerciseTags: {
+        include: {
+          exercise: {
+            select: {
+              id: true,
+              type: true,
+              description: true,
+            },
+          },
+        },
+      },
+    },
+    quiz: {
+      quizTags: {
+        include: {
+          quiz: {
+            select: {
+              id: true,
+              title: true,
+              description: true,
+            },
+          },
+        },
+      },
+    },
+    unit: {
+      unitTags: {
+        include: {
+          unit: {
+            select: {
+              id: true,
+              name: true,
+              description: true,
+            },
+          },
+        },
+      },
+    },
+    video: {
+      videoTags: {
+        include: {
+          video: {
+            select: {
+              id: true,
+              title: true,
+              description: true,
+              duration: true,
+            },
+          },
+        },
+      },
+    },
+  };
+
   private tagActions: Record<ContentType, TagHandler> = {
     exercise: {
       add: (exerciseId: number, tagId: number) =>
@@ -210,6 +314,7 @@ export class TagService {
         where: {
           id,
         },
+        include: this.tagIncludesAll,
       });
 
       return {
@@ -231,29 +336,46 @@ export class TagService {
     }
   }
 
-  async fetchTagByTitle(title: string): Promise<Return> {
+  async fetchContentByTag(
+    title: string,
+    contentType?: ContentType,
+  ): Promise<Return> {
     try {
+      if (contentType) {
+        const tag: Tag = await this.prismaService.tag.findUniqueOrThrow({
+          where: {
+            title,
+          },
+          include: this.tagIncludes[contentType],
+        });
+
+        return {
+          message: httpMessages_EN.tag.fetchContentByTag.status_200,
+          data: tag,
+        };
+      }
       const tag: Tag = await this.prismaService.tag.findUniqueOrThrow({
         where: {
           title,
         },
+        include: this.tagIncludesAll,
       });
 
       return {
-        message: httpMessages_EN.tag.fetchTagByTitle.status_200,
+        message: httpMessages_EN.tag.fetchContentByTag.status_200,
         data: tag,
       };
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException(
           generateExceptionMessage(
-            httpMessages_EN.tag.fetchTagByTitle.status_404,
+            httpMessages_EN.tag.fetchContentByTag.status_404,
           ),
         );
       }
 
       handleInternalErrorException(
-        loggerMessages.tag.fetchTagByTitle.status_500,
+        loggerMessages.tag.fetchContentByTag.status_500,
         this.logger,
         error,
       );
@@ -296,6 +418,8 @@ export class TagService {
   1. Add it to the ContentType union
   2. Add the corresponding property to TagRelations (e.g., 'articleId')
   3. Extend the tagActions map with add, remove, and fetch methods for this content
+  4. Extend the fetchActions map with the findFirstOrthrow method for this content
+  5. Update the tagIncludes private constants to show the new content
   This ensures addTag and removeTag continue to work properly.
 */
   async addTag(

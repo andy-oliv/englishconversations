@@ -213,7 +213,7 @@ const loggerMessages = {
       status_500:
         'An internal error occurred while fetching the tag. Check the error log for more information.',
     },
-    fetchTagByTitle: {
+    fetchContentByTag: {
       status_500:
         'An internal error occurred while fetching the tag. Check the error log for more information.',
     },

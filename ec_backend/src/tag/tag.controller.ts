@@ -15,6 +15,7 @@ import httpMessages_EN from '../helper/messages/httpMessages.en';
 import validationMessages_EN from '../helper/messages/validationMessages.en';
 import CreateTagDTO from './dto/createTag.dto';
 import AddOrRemoveTagDTO from './dto/addOrRemoveTag.dto';
+import FetchContentByTag from './dto/fetchContentByTag.dto';
 
 @ApiTags('Tags')
 @Controller('api/tags')
@@ -70,7 +71,7 @@ export class TagController {
   @ApiResponse({
     status: 200,
     description: 'Success',
-    example: httpMessages_EN.tag.fetchTagByTitle.status_200,
+    example: httpMessages_EN.tag.fetchContentByTag.status_200,
   })
   @ApiResponse({
     status: 400,
@@ -80,15 +81,18 @@ export class TagController {
   @ApiResponse({
     status: 404,
     description: 'Not Found',
-    example: httpMessages_EN.tag.fetchTagByTitle.status_404,
+    example: httpMessages_EN.tag.fetchContentByTag.status_404,
   })
   @ApiResponse({
     status: 500,
     description: 'Internal Server Error',
     example: httpMessages_EN.general.status_500,
   })
-  async fetchTagByTitle(@Query() { title }: CreateTagDTO): Promise<Return> {
-    return this.tagService.fetchTagByTitle(title);
+  async fetchContentByTag(
+    @Query()
+    { title, contentType }: FetchContentByTag,
+  ): Promise<Return> {
+    return this.tagService.fetchContentByTag(title, contentType);
   }
 
   @Get(':id')

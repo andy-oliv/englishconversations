@@ -214,6 +214,15 @@ const validationMessages_EN = {
         isString: 'The title field must be a string.',
       },
     },
+    fetchContentByTag: {
+      title: {
+        isNotEmpty: 'The title field cannot be empty.',
+        isString: 'The title field must be a string.',
+      },
+      contentType: {
+        isIn: 'The contentType field is invalid.',
+      },
+    },
   },
 };
 

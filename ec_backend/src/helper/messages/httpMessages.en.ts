@@ -160,6 +160,8 @@ const httpMessages_EN = {
     addTag: {
       status_200: 'The tag has been successfully added.',
       status_400: 'Invalid content type.',
+      status_404:
+        'Check the request, either the tag or the desired content do not exist',
       status_409: 'The tag has already been added.',
     },
     createTag: {

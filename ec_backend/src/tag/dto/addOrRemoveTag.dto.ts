@@ -7,6 +7,7 @@ import {
   ValidateIf,
 } from 'class-validator';
 import validationMessages_EN from '../../helper/messages/validationMessages.en';
+import { ContentType } from '../../common/types/ContentType';
 
 export default class AddOrRemoveTagDTO {
   @IsNotEmpty({
@@ -15,7 +16,7 @@ export default class AddOrRemoveTagDTO {
   @IsIn(['exercise', 'quiz', 'unit', 'video'], {
     message: validationMessages_EN.tag.addOrRemoveTagDTO.contentType.isIn,
   })
-  contentType: string;
+  contentType: ContentType;
 
   @IsNotEmpty({
     message: validationMessages_EN.tag.addOrRemoveTagDTO.tagId.isNotEmpty,
@@ -52,11 +53,11 @@ export default class AddOrRemoveTagDTO {
   })
   unitId?: number;
 
-  @ValidateIf((request) => request.contentType.toLowerCase() === 'unit')
+  @ValidateIf((request) => request.contentType.toLowerCase() === 'video')
   @IsNotEmpty({
     message: validationMessages_EN.tag.addOrRemoveTagDTO.videoId.isNotEmpty,
   })
-  @IsInt({
+  @IsUUID('all', {
     message: validationMessages_EN.tag.addOrRemoveTagDTO.videoId.isUUID,
   })
   videoId?: string;

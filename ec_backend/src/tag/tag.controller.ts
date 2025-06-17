@@ -24,15 +24,21 @@ export class TagController {
   @Post('add')
   async addTag(
     @Body()
-    { contentType, tagId, exerciseId, quizId, unitId }: AddOrRemoveTagDTO,
-  ): Promise<Return> {
-    return this.tagService.addTag(
+    {
       contentType,
       tagId,
       exerciseId,
       quizId,
       unitId,
-    );
+      videoId,
+    }: AddOrRemoveTagDTO,
+  ): Promise<Return> {
+    return this.tagService.addTag(contentType, tagId, {
+      exerciseId,
+      quizId,
+      unitId,
+      videoId,
+    });
   }
 
   @Post()
@@ -135,15 +141,21 @@ export class TagController {
   @Delete('remove')
   async removeTag(
     @Body()
-    { contentType, tagId, exerciseId, quizId, unitId }: AddOrRemoveTagDTO,
-  ): Promise<Return> {
-    return this.tagService.removeTag(
+    {
       contentType,
       tagId,
       exerciseId,
       quizId,
       unitId,
-    );
+      videoId,
+    }: AddOrRemoveTagDTO,
+  ): Promise<Return> {
+    return this.tagService.removeTag(contentType, tagId, {
+      exerciseId,
+      quizId,
+      unitId,
+      videoId,
+    });
   }
 
   @Delete(':id')

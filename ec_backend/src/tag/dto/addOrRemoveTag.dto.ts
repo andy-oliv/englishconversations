@@ -8,7 +8,7 @@ import {
 } from 'class-validator';
 import validationMessages_EN from '../../helper/messages/validationMessages.en';
 
-export default class AddTagDTO {
+export default class AddOrRemoveTagDTO {
   @IsNotEmpty({
     message: validationMessages_EN.tag.addTagDTO.contentType.isNotEmpty,
   })

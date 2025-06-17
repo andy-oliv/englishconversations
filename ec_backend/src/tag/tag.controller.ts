@@ -14,7 +14,7 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
 import validationMessages_EN from '../helper/messages/validationMessages.en';
 import CreateTagDTO from './dto/createTag.dto';
-import AddTagDTO from './dto/addTag.dto';
+import AddOrRemoveTagDTO from './dto/addOrRemoveTag.dto';
 
 @ApiTags('Tags')
 @Controller('api/tags')
@@ -23,7 +23,8 @@ export class TagController {
 
   @Post('add')
   async addTag(
-    @Body() { contentType, tagId, exerciseId, quizId, unitId }: AddTagDTO,
+    @Body()
+    { contentType, tagId, exerciseId, quizId, unitId }: AddOrRemoveTagDTO,
   ): Promise<Return> {
     return this.tagService.addTag(
       contentType,
@@ -133,7 +134,8 @@ export class TagController {
 
   @Delete('remove')
   async removeTag(
-    @Body() { contentType, tagId, exerciseId, quizId, unitId }: AddTagDTO,
+    @Body()
+    { contentType, tagId, exerciseId, quizId, unitId }: AddOrRemoveTagDTO,
   ): Promise<Return> {
     return this.tagService.removeTag(
       contentType,

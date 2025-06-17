@@ -27,9 +27,9 @@ export class TagService {
       );
     }
     try {
-      const tag: Tag = await this.prismaService.tag.findUniqueOrThrow({
+      const tag: Tag = await this.prismaService.tag.findFirstOrThrow({
         where: {
-          id,
+          OR: [{ id }, { title }],
         },
       });
 

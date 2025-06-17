@@ -8,7 +8,7 @@ export default interface AnsweredExercise {
   isRetry?: boolean;
   selectedAnswers?: Prisma.JsonValue;
   textAnswer?: string;
-  audioUrl?: string;
+  fileId?: string;
   isCorrectAnswer?: boolean;
   feedback?: string;
   elapsedTime: number; //in seconds

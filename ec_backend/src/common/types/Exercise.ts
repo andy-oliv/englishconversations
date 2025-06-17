@@ -9,7 +9,7 @@ export default interface Exercise {
   id?: number;
   type: ExerciseTypes;
   description: string;
-  contentUrl?: string;
+  fileId?: string;
   level: CEFRLevels;
   difficulty: Difficulty;
   options?: Prisma.JsonValue; //optional field because the 'match the columns' exercises don't have predefined answers

@@ -5,7 +5,7 @@ export default interface Quiz {
   isTest?: boolean;
   title: string;
   description: string;
-  imageUrl?: string;
+  fileId?: string;
   level?: CEFRLevels;
   difficulty: Difficulty;
   unitId?: number;

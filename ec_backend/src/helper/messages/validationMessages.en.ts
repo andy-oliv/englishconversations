@@ -21,8 +21,8 @@ const validationMessages_EN = {
       textAnswer: {
         isString: 'The textAnswer field must be a string.',
       },
-      audioUrl: {
-        isUrl: 'The audioUrl field is not a valid URL.',
+      fileId: {
+        isUrl: 'The fileId field is not a valid URL.',
       },
       isCorrectAnswer: {
         isBoolean: 'The isCorrectAnswer field must be a boolean.',
@@ -82,8 +82,8 @@ const validationMessages_EN = {
         isNotEmpty: 'The description field cannot be empty.',
         isString: 'The description must be a string',
       },
-      contentUrl: {
-        isUrl: 'The contentUrl field must be a valid URL.',
+      fileId: {
+        isUrl: 'The fileId field must be a valid URL.',
       },
       level: {
         isNotEmpty: 'The level field cannot be empty.',
@@ -133,7 +133,7 @@ const validationMessages_EN = {
         isNotEmpty: 'The description field must not be empty.',
         isString: 'The difficulty field must be a string.',
       },
-      imageUrl: {
+      fileId: {
         isUrl: 'The imageUrl field must be a valid URL.',
       },
       level: {

@@ -99,7 +99,7 @@ export default class SaveAnswerDTO {
   textAnswer?: string;
 
   @ApiProperty({
-    title: 'AudioURL',
+    title: 'FileId',
     required: false,
     type: 'string',
     example: 'http://google.com/audio/1401f0SIx',
@@ -109,10 +109,10 @@ export default class SaveAnswerDTO {
     {},
     {
       message:
-        validationMessages_EN.answeredExercise.saveAnswerDTO.audioUrl.isUrl,
+        validationMessages_EN.answeredExercise.saveAnswerDTO.fileId.isUrl,
     },
   )
-  audioUrl?: string;
+  fileId?: string;
 
   @ApiProperty({
     title: 'IsCorrectAnswer',

@@ -63,15 +63,20 @@ export default class CreateExerciseDTO {
   })
   description: string;
 
+  @ApiProperty({
+    title: 'FileID',
+    required: false,
+    type: 'string',
+    example: 'https://google.com',
+  })
   @IsOptional()
   @IsUrl(
     {},
     {
-      message:
-        validationMessages_EN.exercises.createExerciseDTO.contentUrl.isUrl,
+      message: validationMessages_EN.exercises.createExerciseDTO.fileId.isUrl,
     },
   )
-  contentUrl?: string;
+  fileId?: string;
 
   @ApiProperty({
     title: 'Level',

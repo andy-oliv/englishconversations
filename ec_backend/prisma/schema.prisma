@@ -140,6 +140,7 @@ model Tag {
   exerciseTags ExerciseTag[]
   quizTags QuizTag[]
   unitTags UnitTag[]
+  videoTags VideoTag[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -172,11 +173,20 @@ model UnitTag {
   @@id([unitId, tagId])
 }
 
+model VideoTag {
+  video Video @relation(fields: [videoId], references: [id])
+  videoId String
+  tag Tag @relation(fields: [tagId], references: [id])
+  tagId Int
+
+  @@id([videoId, tagId])
+}
+
 model Unit {
   id Int @id @default(autoincrement())
   name String @db.VarChar(150)
   description String @db.VarChar(200)
-  grammarTopics String? @db.Text
+  videos Video[]
   tags UnitTag[]
   quizContent Quiz[]
   users UserUnit[]
@@ -199,6 +209,20 @@ model UserUnit {
   @@index([userId])
   @@index([userId, status])
   @@index([userId, unitId])
+}
+
+model Video {
+  id String @id @default(uuid())
+  title String
+  description String?
+  url String  
+  duration Int? 
+  thumbnail String? 
+  videoTags VideoTag[]
+  unit Unit? @relation(fields: [unitId], references: [id])
+  unitId Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum ExerciseTypes {

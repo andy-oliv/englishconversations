@@ -10,45 +10,54 @@ import validationMessages_EN from '../../helper/messages/validationMessages.en';
 
 export default class AddOrRemoveTagDTO {
   @IsNotEmpty({
-    message: validationMessages_EN.tag.addTagDTO.contentType.isNotEmpty,
+    message: validationMessages_EN.tag.addOrRemoveTagDTO.contentType.isNotEmpty,
   })
-  @IsIn(['exercise', 'quiz', 'unit'], {
-    message: validationMessages_EN.tag.addTagDTO.contentType.isIn,
+  @IsIn(['exercise', 'quiz', 'unit', 'video'], {
+    message: validationMessages_EN.tag.addOrRemoveTagDTO.contentType.isIn,
   })
   contentType: string;
 
   @IsNotEmpty({
-    message: validationMessages_EN.tag.addTagDTO.tagId.isNotEmpty,
+    message: validationMessages_EN.tag.addOrRemoveTagDTO.tagId.isNotEmpty,
   })
   @IsInt({
-    message: validationMessages_EN.tag.addTagDTO.tagId.isInt,
+    message: validationMessages_EN.tag.addOrRemoveTagDTO.tagId.isInt,
   })
   tagId: number;
 
-  @ValidateIf((object) => object.contentType.toLowerCase() === 'exercise')
+  @ValidateIf((request) => request.contentType.toLowerCase() === 'exercise')
   @IsNotEmpty({
-    message: validationMessages_EN.tag.addTagDTO.exerciseId.isNotEmpty,
+    message: validationMessages_EN.tag.addOrRemoveTagDTO.exerciseId.isNotEmpty,
   })
   @IsInt({
-    message: validationMessages_EN.tag.addTagDTO.exerciseId.isInt,
+    message: validationMessages_EN.tag.addOrRemoveTagDTO.exerciseId.isInt,
   })
   exerciseId?: number;
 
-  @ValidateIf((object) => object.contentType.toLowerCase() === 'quiz')
+  @ValidateIf((request) => request.contentType.toLowerCase() === 'quiz')
   @IsNotEmpty({
-    message: validationMessages_EN.tag.addTagDTO.quizId.isNotEmpty,
+    message: validationMessages_EN.tag.addOrRemoveTagDTO.quizId.isNotEmpty,
   })
   @IsUUID('all', {
-    message: validationMessages_EN.tag.addTagDTO.quizId.isUUID,
+    message: validationMessages_EN.tag.addOrRemoveTagDTO.quizId.isUUID,
   })
   quizId?: string;
 
-  @ValidateIf((object) => object.contentType.toLowerCase() === 'unit')
+  @ValidateIf((request) => request.contentType.toLowerCase() === 'unit')
   @IsNotEmpty({
-    message: validationMessages_EN.tag.addTagDTO.unitId.isNotEmpty,
+    message: validationMessages_EN.tag.addOrRemoveTagDTO.unitId.isNotEmpty,
   })
   @IsInt({
-    message: validationMessages_EN.tag.addTagDTO.unitId.isInt,
+    message: validationMessages_EN.tag.addOrRemoveTagDTO.unitId.isInt,
   })
   unitId?: number;
+
+  @ValidateIf((request) => request.contentType.toLowerCase() === 'unit')
+  @IsNotEmpty({
+    message: validationMessages_EN.tag.addOrRemoveTagDTO.videoId.isNotEmpty,
+  })
+  @IsInt({
+    message: validationMessages_EN.tag.addOrRemoveTagDTO.videoId.isUUID,
+  })
+  videoId?: string;
 }

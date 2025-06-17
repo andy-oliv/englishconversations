@@ -193,6 +193,7 @@ export class TagService {
     exerciseId?: number,
     quizId?: string,
     unitId?: number,
+    videoId?: string,
   ): Promise<Return> {
     try {
       switch (contentType.toLowerCase()) {
@@ -216,6 +217,14 @@ export class TagService {
           await this.prismaService.unitTag.create({
             data: {
               unitId,
+              tagId,
+            },
+          });
+          break;
+        case 'video':
+          await this.prismaService.videoTag.create({
+            data: {
+              videoId,
               tagId,
             },
           });
@@ -248,6 +257,7 @@ export class TagService {
     exerciseId?: number,
     quizId?: string,
     unitId?: number,
+    videoId?: string,
   ): Promise<Return> {
     try {
       switch (contentType.toLowerCase()) {
@@ -277,6 +287,16 @@ export class TagService {
               unitId_tagId: {
                 tagId,
                 unitId,
+              },
+            },
+          });
+          break;
+        case 'video':
+          await this.prismaService.videoTag.delete({
+            where: {
+              videoId_tagId: {
+                tagId,
+                videoId,
               },
             },
           });

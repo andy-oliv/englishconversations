@@ -182,7 +182,7 @@ const validationMessages_EN = {
     },
   },
   tag: {
-    addTagDTO: {
+    addOrRemoveTagDTO: {
       contentType: {
         isNotEmpty: 'The contentType field must not be empty.',
         isIn: 'The contentType field is invalid.',
@@ -202,6 +202,10 @@ const validationMessages_EN = {
       unitId: {
         isNotEmpty: 'The unitId field must not be empty.',
         isInt: 'The unitId field must be a number.',
+      },
+      videoId: {
+        isNotEmpty: 'The videoId field must not be empty.',
+        isUUID: 'The videoId field must be a UUID.',
       },
     },
     createTagDTO: {

@@ -190,6 +190,38 @@ const loggerMessages = {
         'An internal error occurred while fetching the student. Check the error log for more information.',
     },
   },
+  tag: {
+    addTag: {
+      status_500:
+        'An internal error occurred while adding the tag. Check the error log for more information.',
+    },
+    createTag: {
+      status_200: 'A new tag has been created.',
+      status_500:
+        'An internal error occurred while creating the tag. Check the error log for more information.',
+    },
+    deleteTag: {
+      status_200: 'A tag has been deleted.',
+      status_500:
+        'An internal error occurred while deleting the tag. Check the error log for more information.',
+    },
+    fetchTags: {
+      status_500:
+        'An internal error occurred while fetching the tags. Check the error log for more information.',
+    },
+    fetchTagById: {
+      status_500:
+        'An internal error occurred while fetching the tag. Check the error log for more information.',
+    },
+    fetchTagByTitle: {
+      status_500:
+        'An internal error occurred while fetching the tag. Check the error log for more information.',
+    },
+    removeTag: {
+      status_500:
+        'An internal error occurred while removing the tag. Check the error log for more information.',
+    },
+  },
   unit: {
     createUnit: {
       status_500:

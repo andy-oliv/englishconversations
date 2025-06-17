@@ -228,6 +228,16 @@ describe('quizService', () => {
               description: true,
             },
           },
+          tags: {
+            select: {
+              tag: {
+                select: {
+                  id: true,
+                  title: true,
+                },
+              },
+            },
+          },
         },
       });
     });
@@ -253,6 +263,16 @@ describe('quizService', () => {
               description: true,
             },
           },
+          tags: {
+            select: {
+              tag: {
+                select: {
+                  id: true,
+                  title: true,
+                },
+              },
+            },
+          },
         },
       });
     });
@@ -276,6 +296,16 @@ describe('quizService', () => {
               id: true,
               type: true,
               description: true,
+            },
+          },
+          tags: {
+            select: {
+              tag: {
+                select: {
+                  id: true,
+                  title: true,
+                },
+              },
             },
           },
         },

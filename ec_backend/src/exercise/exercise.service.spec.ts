@@ -275,6 +275,25 @@ describe('ExerciseService', () => {
         where: {
           id: exercise.id,
         },
+        include: {
+          quiz: {
+            select: {
+              id: true,
+              title: true,
+              description: true,
+            },
+          },
+          tags: {
+            select: {
+              tag: {
+                select: {
+                  id: true,
+                  title: true,
+                },
+              },
+            },
+          },
+        },
       });
     });
 
@@ -295,6 +314,25 @@ describe('ExerciseService', () => {
         where: {
           id: exercise.id,
         },
+        include: {
+          quiz: {
+            select: {
+              id: true,
+              title: true,
+              description: true,
+            },
+          },
+          tags: {
+            select: {
+              tag: {
+                select: {
+                  id: true,
+                  title: true,
+                },
+              },
+            },
+          },
+        },
       });
     });
 
@@ -312,6 +350,25 @@ describe('ExerciseService', () => {
       expect(prismaService.exercise.findFirstOrThrow).toHaveBeenCalledWith({
         where: {
           id: exercise.id,
+        },
+        include: {
+          quiz: {
+            select: {
+              id: true,
+              title: true,
+              description: true,
+            },
+          },
+          tags: {
+            select: {
+              tag: {
+                select: {
+                  id: true,
+                  title: true,
+                },
+              },
+            },
+          },
         },
       });
     });

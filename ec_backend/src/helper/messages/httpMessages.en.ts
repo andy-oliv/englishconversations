@@ -156,6 +156,41 @@ const httpMessages_EN = {
       status_404: "There's no student to show or the ID is invalid.",
     },
   },
+  tag: {
+    addTag: {
+      status_200: 'The tag has been successfully added.',
+      status_400: 'Invalid content type.',
+      status_409: 'The tag has already been added.',
+    },
+    createTag: {
+      status_201: 'The tag has been successfully created!',
+      status_409: 'There is another tag with the same name.',
+    },
+    deleteTag: {
+      status_200: 'The tag has been successfully deleted.',
+      status_404: 'The tag was not found or the id is invalid.',
+    },
+    fetchTag: {
+      status_400: 'The request cannot be empty. Check the parameters.',
+    },
+    fetchTags: {
+      status_200: 'The tags have been successfully fetched.',
+      status_404: 'There are no tags to show.',
+    },
+    fetchTagById: {
+      status_200: 'The tag has been successfully fetched.',
+      status_404: 'The tag was not found or the ID is invalid.',
+    },
+    fetchTagByTitle: {
+      status_200: 'The tag has been successfully fetched.',
+      status_404: 'The tag was not found or the title is invalid.',
+    },
+    removeTag: {
+      status_200: 'The tag has been successfully deleted.',
+      status_400: 'Invalid content type.',
+      status_404: 'The tag is not added to the content.',
+    },
+  },
   unit: {
     createUnit: {
       status_200: 'The unit has been successfully created!',

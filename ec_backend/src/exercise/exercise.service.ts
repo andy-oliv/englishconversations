@@ -199,6 +199,25 @@ export class ExerciseService {
           where: {
             id,
           },
+          include: {
+            quiz: {
+              select: {
+                id: true,
+                title: true,
+                description: true,
+              },
+            },
+            tags: {
+              select: {
+                tag: {
+                  select: {
+                    id: true,
+                    title: true,
+                  },
+                },
+              },
+            },
+          },
         });
 
       return {

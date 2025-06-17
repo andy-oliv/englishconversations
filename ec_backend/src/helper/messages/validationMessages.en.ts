@@ -181,6 +181,36 @@ const validationMessages_EN = {
       },
     },
   },
+  tag: {
+    addTagDTO: {
+      contentType: {
+        isNotEmpty: 'The contentType field must not be empty.',
+        isIn: 'The contentType field is invalid.',
+      },
+      tagId: {
+        isNotEmpty: 'The tagId field must not be empty.',
+        isInt: 'The tagId field must be a number.',
+      },
+      exerciseId: {
+        isNotEmpty: 'The exerciseId field must not be empty.',
+        isInt: 'The exerciseId field must be a number.',
+      },
+      quizId: {
+        isNotEmpty: 'The quizId field must not be empty.',
+        isUUID: 'The quizId field must be a UUID.',
+      },
+      unitId: {
+        isNotEmpty: 'The unitId field must not be empty.',
+        isInt: 'The unitId field must be a number.',
+      },
+    },
+    createTagDTO: {
+      title: {
+        isNotEmpty: 'The title field cannot be empty.',
+        isString: 'The title field must be a string.',
+      },
+    },
+  },
 };
 
 export default validationMessages_EN;

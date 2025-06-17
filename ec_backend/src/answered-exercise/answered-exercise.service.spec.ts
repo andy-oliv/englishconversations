@@ -328,7 +328,7 @@ describe('AnsweredExerciseService', () => {
       });
       expect(prismaService.answeredExercise.findMany).toHaveBeenCalledWith({
         where: {
-          OR: [
+          AND: [
             { studentId: answer.studentId },
             { exerciseId: answer.exerciseId },
             { quizId: answer.quizId },
@@ -356,7 +356,7 @@ describe('AnsweredExerciseService', () => {
 
       expect(prismaService.answeredExercise.findMany).toHaveBeenCalledWith({
         where: {
-          OR: [
+          AND: [
             { studentId: answer.studentId },
             { exerciseId: answer.exerciseId },
             { quizId: answer.quizId },
@@ -382,7 +382,7 @@ describe('AnsweredExerciseService', () => {
 
       expect(prismaService.answeredExercise.findMany).toHaveBeenCalledWith({
         where: {
-          OR: [
+          AND: [
             { studentId: answer.studentId },
             { exerciseId: answer.exerciseId },
             { quizId: answer.quizId },

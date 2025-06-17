@@ -26,6 +26,16 @@ export class QuizService {
         description: true,
       },
     },
+    tags: {
+      select: {
+        tag: {
+          select: {
+            id: true,
+            title: true,
+          },
+        },
+      },
+    },
   };
 
   constructor(

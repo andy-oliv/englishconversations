@@ -141,7 +141,7 @@ export class AnsweredQuizService {
                 elapsedTime: true,
                 textAnswer: true,
                 selectedAnswers: true,
-                audioUrl: true,
+                fileId: true,
                 isCorrectAnswer: true,
                 feedback: true,
               },

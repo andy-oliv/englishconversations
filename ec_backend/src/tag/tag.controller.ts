@@ -23,6 +23,26 @@ export class TagController {
   constructor(private readonly tagService: TagService) {}
 
   @Post('add')
+  @ApiResponse({
+    status: 200,
+    description: 'Success',
+    example: httpMessages_EN.tag.addTag.status_200,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request',
+    example: httpMessages_EN.tag.addTag.status_404,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Not Found',
+    example: httpMessages_EN.tag.addTag.status_404,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal Server Error',
+    example: httpMessages_EN.general.status_500,
+  })
   async addTag(
     @Body()
     {
@@ -143,6 +163,26 @@ export class TagController {
   }
 
   @Delete('remove')
+  @ApiResponse({
+    status: 200,
+    description: 'Success',
+    example: httpMessages_EN.tag.removeTag.status_200,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request',
+    example: httpMessages_EN.tag.removeTag.status_404,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Not Found',
+    example: httpMessages_EN.tag.removeTag.status_404,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal Server Error',
+    example: httpMessages_EN.general.status_500,
+  })
   async removeTag(
     @Body()
     {

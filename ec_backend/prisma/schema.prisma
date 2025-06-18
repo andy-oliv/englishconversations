@@ -188,10 +188,12 @@ model VideoTag {
 model Unit {
   id Int @id @default(autoincrement())
   name String @db.VarChar(150)
-  description String @db.VarChar(200)
+  description String @db.Text
+  chapter Chapter @relation(fields: [chapterId], references: [id])
+  chapterId String 
   videos Video[]
   tags UnitTag[]
-  quizContent Quiz[]
+  quizzes Quiz[]
   users UserUnit[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -214,13 +216,23 @@ model UserUnit {
   @@index([userId, unitId])
 }
 
+model Chapter {
+  id String @id @default(uuid())
+  name String @db.VarChar(100)
+  description String @db.Text
+  units Unit[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Video {
   id String @id @default(uuid())
-  title String
-  description String?
-  url String  
+  title String @db.VarChar(100)
+  description String? @db.Text
+  url String @db.VarChar(250)
   duration Int? 
-  thumbnail String? 
+  thumbnail File? @relation(fields: [thumbnailId], references: [id])
+  thumbnailId String? @unique
   videoTags VideoTag[]
   unit Unit? @relation(fields: [unitId], references: [id])
   unitId Int?
@@ -237,6 +249,7 @@ model File {
   exercise Exercise?
   exerciseAnswer AnsweredExercise?
   quiz Quiz?
+  video Video?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }

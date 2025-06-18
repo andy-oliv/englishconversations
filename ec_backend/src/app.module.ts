@@ -15,6 +15,7 @@ import { AnsweredQuizModule } from './answered-quiz/answered-quiz.module';
 import { UnitModule } from './unit/unit.module';
 import { TagModule } from './tag/tag.module';
 import { VideoModule } from './video/video.module';
+import { FileModule } from './file/file.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { VideoModule } from './video/video.module';
     UnitModule,
     TagModule,
     VideoModule,
+    FileModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

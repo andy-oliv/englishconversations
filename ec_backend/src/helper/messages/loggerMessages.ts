@@ -98,6 +98,30 @@ const loggerMessages = {
         'An internal error occurred while updating the exercise. Check the error log for more information.',
     },
   },
+  file: {
+    deleteFile: {
+      status_200: 'A file has been deleted.',
+      status_500:
+        'An internal error occurred while deleting the file file. Check the error log for more information.',
+    },
+    fetchFiles: {
+      status_500:
+        'An internal error occurred while fetching the file files. Check the error log for more information.',
+    },
+    fetchFileById: {
+      status_500:
+        'An internal error occurred while fetching the file file. Check the error log for more information.',
+    },
+    generateFile: {
+      status_500:
+        'An internal error occurred while generating the file file. Check the error log for more information.',
+    },
+    updateFile: {
+      status_200: 'A file has been updated.',
+      status_500:
+        'An internal error occurred while updating the file file. Check the error log for more information.',
+    },
+  },
   quiz: {
     addExercise: {
       status_200: 'An exercise has been added to a quiz.',

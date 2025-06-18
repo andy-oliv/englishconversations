@@ -81,6 +81,27 @@ const httpMessages_EN = {
       status_404: 'The exercise was not found or the ID is invalid.',
     },
   },
+  file: {
+    deleteFile: {
+      status_200: 'The file has been successfully deleted!',
+      status_404: 'The file was not found or the ID is invalid.',
+    },
+    fetchFiles: {
+      status_200: 'The files have been successfully fetched!',
+      status_404: 'The are no files to show.',
+    },
+    fetchFileById: {
+      status_200: 'The file has been successfully fetched!',
+      status_404: 'The file was not found or the ID is invalid.',
+    },
+    generateFile: {
+      status_200: 'The file file has been successfully generated!',
+    },
+    updateFile: {
+      status_200: 'The file has been successfully updated!',
+      status_404: 'The file was not found or the ID is invalid.',
+    },
+  },
   general: {
     status_500:
       'An unexpected error occurred. Please check the error log for more information.',
@@ -203,7 +224,7 @@ const httpMessages_EN = {
   },
   video: {
     deleteVideo: {
-      status_200: 'The video have been successfully deleted!',
+      status_200: 'The video has been successfully deleted!',
       status_404: 'The video was not found or the ID is invalid.',
     },
     fetchVideos: {

@@ -110,6 +110,26 @@ const validationMessages_EN = {
       },
     },
   },
+  file: {
+    generateFileDTO: {
+      name: {
+        isNotEmpty: 'The name field must not be empty.',
+        isString: 'The name field must be a string.',
+      },
+      type: {
+        isNotEmpty: 'The type field must not be empty.',
+        isIn: 'The type is invalid.',
+      },
+      url: {
+        isNotEmpty: 'The url field must not be empty.',
+        isUrl: 'The url field must be a valid URL.',
+      },
+      size: {
+        isNotEmpty: 'The size field must not be empty.',
+        isInt: 'The size field must be a number in MB',
+      },
+    },
+  },
   quizzes: {
     addOrRemoveExerciseDTO: {
       quizId: {

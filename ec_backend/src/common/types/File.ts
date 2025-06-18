@@ -5,5 +5,5 @@ export default interface File {
   name: string;
   type: FileTypes;
   url: string;
-  size: string;
+  size: number;
 }

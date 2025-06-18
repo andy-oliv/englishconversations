@@ -49,6 +49,30 @@ const httpMessages_EN = {
       status_201: 'The answer has been successfully saved.',
     },
   },
+  chapter: {
+    deleteChapter: {
+      status_200: 'The chapter has been successfully deleted!',
+      status_404: 'The chapter was not found or the ID is invalid.',
+    },
+    fetchChapters: {
+      status_200: 'The chapters have been successfully fetched!',
+      status_404: 'The are no chapters to show.',
+    },
+    fetchChapterById: {
+      status_200: 'The chapter has been successfully fetched!',
+      status_404: 'The chapter was not found or the ID is invalid.',
+    },
+    generateChapter: {
+      status_200: 'The chapter has been successfully generated!',
+    },
+    throwIfChapterExists: {
+      status_409: 'There is another chapter with the same definitions.',
+    },
+    updateChapter: {
+      status_200: 'The chapter has been successfully updated!',
+      status_404: 'The chapter was not found or the ID is invalid.',
+    },
+  },
   exercise: {
     createExercise: {
       status_201: 'The exercise has been successfully created!',

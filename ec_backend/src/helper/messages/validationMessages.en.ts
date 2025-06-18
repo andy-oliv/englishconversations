@@ -72,6 +72,18 @@ const validationMessages_EN = {
       isBoolean: 'The isRetry field must be a boolean.',
     },
   },
+  chapter: {
+    generateChapterDTO: {
+      name: {
+        isNotEmpty: 'The name field must not be empty.',
+        isString: 'The name field must be a string.',
+      },
+      description: {
+        isNotEmpty: 'The description field must not be empty.',
+        isString: 'The description field must be a string.',
+      },
+    },
+  },
   exercises: {
     createExerciseDTO: {
       type: {

@@ -61,6 +61,34 @@ const loggerMessages = {
         'An internal error occurred while saving the answer. Check the error log for more information.',
     },
   },
+  chapter: {
+    deleteChapter: {
+      status_200: 'A chapter has been deleted.',
+      status_500:
+        'An internal error occurred while deleting the chapter. Check the error log for more information.',
+    },
+    fetchChapters: {
+      status_500:
+        'An internal error occurred while fetching the chapter. Check the error log for more information.',
+    },
+    fetchChapterById: {
+      status_500:
+        'An internal error occurred while fetching the chapter. Check the error log for more information.',
+    },
+    generateChapter: {
+      status_500:
+        'An internal error occurred while generating the chapter. Check the error log for more information.',
+    },
+    throwIfChapterExists: {
+      status_500:
+        'An internal error occurred while checking for conflict with the chapter being created. Check the error log for more information.',
+    },
+    updateChapter: {
+      status_200: 'A chapter has been updated.',
+      status_500:
+        'An internal error occurred while updating the chapter. Check the error log for more information.',
+    },
+  },
   exercise: {
     createExercise: {
       status_201: 'An exercise has just been created!',

@@ -171,7 +171,7 @@ export class TagController {
   @ApiResponse({
     status: 400,
     description: 'Bad Request',
-    example: httpMessages_EN.tag.removeTag.status_404,
+    example: httpMessages_EN.tag.removeTag.status_400,
   })
   @ApiResponse({
     status: 404,

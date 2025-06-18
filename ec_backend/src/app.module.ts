@@ -16,6 +16,7 @@ import { UnitModule } from './unit/unit.module';
 import { TagModule } from './tag/tag.module';
 import { VideoModule } from './video/video.module';
 import { FileModule } from './file/file.module';
+import { ChapterModule } from './chapter/chapter.module';
 
 @Module({
   imports: [
@@ -57,6 +58,7 @@ import { FileModule } from './file/file.module';
     TagModule,
     VideoModule,
     FileModule,
+    ChapterModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

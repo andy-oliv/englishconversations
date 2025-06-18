@@ -127,7 +127,7 @@ export class TagService {
     },
   };
 
-  private tagActions: Record<ContentType, TagHandler> = {
+  tagActions: Record<ContentType, TagHandler> = {
     exercise: {
       add: (exerciseId: number, tagId: number) =>
         this.prismaService.exerciseTag.create({
@@ -300,6 +300,10 @@ export class TagService {
 
       return { message: httpMessages_EN.tag.fetchTags.status_200, data: tags };
     } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+
       handleInternalErrorException(
         loggerMessages.tag.fetchTags.status_500,
         this.logger,

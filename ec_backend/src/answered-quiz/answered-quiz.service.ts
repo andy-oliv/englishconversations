@@ -8,7 +8,6 @@ import handleInternalErrorException from '../helper/functions/handleErrorExcepti
 import loggerMessages from '../helper/messages/loggerMessages';
 import { QuizService } from '../quiz/quiz.service';
 import { StudentService } from '../student/student.service';
-import generateExceptionMessage from '../helper/functions/generateExceptionMessage';
 
 @Injectable()
 export class AnsweredQuizService {
@@ -35,6 +34,8 @@ export class AnsweredQuizService {
       return false;
     } catch (error) {
       handleInternalErrorException(
+        'answeredQuizService',
+        'checkIsRetry',
         loggerMessages.answeredQuiz.checkIsRetry.status_500,
         this.logger,
         error,
@@ -76,6 +77,8 @@ export class AnsweredQuizService {
       };
     } catch (error) {
       handleInternalErrorException(
+        'answeredQuizService',
+        'saveAnswer',
         loggerMessages.answeredQuiz.saveAnswer.status_500,
         this.logger,
         error,
@@ -90,9 +93,7 @@ export class AnsweredQuizService {
 
       if (answers.length === 0) {
         throw new NotFoundException(
-          generateExceptionMessage(
-            httpMessages_EN.answeredQuiz.fetchAnswers.status_404,
-          ),
+          httpMessages_EN.answeredQuiz.fetchAnswers.status_404,
         );
       }
 
@@ -106,6 +107,8 @@ export class AnsweredQuizService {
       }
 
       handleInternalErrorException(
+        'answeredQuizService',
+        'fetchAnswers',
         loggerMessages.answeredQuiz.fetchAnswers.status_500,
         this.logger,
         error,
@@ -156,13 +159,13 @@ export class AnsweredQuizService {
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException(
-          generateExceptionMessage(
-            httpMessages_EN.answeredQuiz.fetchAnswerById.status_404,
-          ),
+          httpMessages_EN.answeredQuiz.fetchAnswerById.status_404,
         );
       }
 
       handleInternalErrorException(
+        'answeredQuizService',
+        'fetchAnswerById',
         loggerMessages.answeredQuiz.fetchAnswerById.status_500,
         this.logger,
         error,
@@ -192,9 +195,7 @@ export class AnsweredQuizService {
 
       if (answers.length === 0) {
         throw new NotFoundException(
-          generateExceptionMessage(
-            httpMessages_EN.answeredQuiz.fetchAnswersByQuery.status_404,
-          ),
+          httpMessages_EN.answeredQuiz.fetchAnswersByQuery.status_404,
         );
       }
 
@@ -208,6 +209,8 @@ export class AnsweredQuizService {
       }
 
       handleInternalErrorException(
+        'answeredQuizService',
+        'fetchAnswersByQuery',
         loggerMessages.answeredQuiz.fetchAnswersByQuery.status_500,
         this.logger,
         error,
@@ -234,13 +237,13 @@ export class AnsweredQuizService {
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException(
-          generateExceptionMessage(
-            httpMessages_EN.answeredQuiz.addFeedback.status_404,
-          ),
+          httpMessages_EN.answeredQuiz.addFeedback.status_404,
         );
       }
 
       handleInternalErrorException(
+        'answeredQuizService',
+        'addFeedback',
         loggerMessages.answeredQuiz.addFeedback.status_500,
         this.logger,
         error,
@@ -264,13 +267,13 @@ export class AnsweredQuizService {
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException(
-          generateExceptionMessage(
-            httpMessages_EN.answeredQuiz.deleteAnswer.status_404,
-          ),
+          httpMessages_EN.answeredQuiz.deleteAnswer.status_404,
         );
       }
 
       handleInternalErrorException(
+        'answeredQuizService',
+        'deleteAnswer',
         loggerMessages.answeredQuiz.deleteAnswer.status_500,
         this.logger,
         error,

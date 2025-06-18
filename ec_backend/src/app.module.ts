@@ -14,6 +14,7 @@ import { AnsweredExerciseModule } from './answered-exercise/answered-exercise.mo
 import { AnsweredQuizModule } from './answered-quiz/answered-quiz.module';
 import { UnitModule } from './unit/unit.module';
 import { TagModule } from './tag/tag.module';
+import { VideoModule } from './video/video.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { TagModule } from './tag/tag.module';
     AnsweredQuizModule,
     UnitModule,
     TagModule,
+    VideoModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

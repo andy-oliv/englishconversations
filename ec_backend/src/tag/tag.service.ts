@@ -230,9 +230,7 @@ export class TagService {
 
   async fetchTag(id?: number, title?: string): Promise<Tag> {
     if (id === undefined && title === undefined) {
-      throw new BadRequestException(
-        generateExceptionMessage(httpMessages_EN.tag.fetchTag.status_400),
-      );
+      throw new BadRequestException(httpMessages_EN.tag.fetchTag.status_400);
     }
     try {
       const tag: Tag = await this.prismaService.tag.findFirstOrThrow({
@@ -245,11 +243,13 @@ export class TagService {
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException(
-          generateExceptionMessage(httpMessages_EN.tag.fetchTagById.status_404),
+          httpMessages_EN.tag.fetchTagById.status_404,
         );
       }
 
       handleInternalErrorException(
+        'tagService',
+        'fetchTag',
         loggerMessages.tag.fetchTagById.status_500,
         this.logger,
         error,
@@ -267,6 +267,8 @@ export class TagService {
 
       this.logger.log({
         message: generateExceptionMessage(
+          'tagService',
+          'createTag',
           loggerMessages.tag.createTag.status_200,
         ),
         data: tag,
@@ -275,12 +277,12 @@ export class TagService {
       return { message: httpMessages_EN.tag.createTag.status_201, data: tag };
     } catch (error) {
       if (error.code === 'P2002') {
-        throw new ConflictException(
-          generateExceptionMessage(httpMessages_EN.tag.createTag.status_409),
-        );
+        throw new ConflictException(httpMessages_EN.tag.createTag.status_409);
       }
 
       handleInternalErrorException(
+        'tagService',
+        'createTag',
         loggerMessages.tag.createTag.status_500,
         this.logger,
         error,
@@ -293,9 +295,7 @@ export class TagService {
       const tags: Tag[] = await this.prismaService.tag.findMany();
 
       if (tags.length === 0) {
-        throw new NotFoundException(
-          generateExceptionMessage(httpMessages_EN.tag.fetchTags.status_404),
-        );
+        throw new NotFoundException(httpMessages_EN.tag.fetchTags.status_404);
       }
 
       return { message: httpMessages_EN.tag.fetchTags.status_200, data: tags };
@@ -305,6 +305,8 @@ export class TagService {
       }
 
       handleInternalErrorException(
+        'tagService',
+        'fetchTags',
         loggerMessages.tag.fetchTags.status_500,
         this.logger,
         error,
@@ -328,11 +330,13 @@ export class TagService {
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException(
-          generateExceptionMessage(httpMessages_EN.tag.fetchTagById.status_404),
+          httpMessages_EN.tag.fetchTagById.status_404,
         );
       }
 
       handleInternalErrorException(
+        'tagService',
+        'fetchTagById',
         loggerMessages.tag.fetchTagById.status_500,
         this.logger,
         error,
@@ -372,13 +376,13 @@ export class TagService {
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException(
-          generateExceptionMessage(
-            httpMessages_EN.tag.fetchContentByTag.status_404,
-          ),
+          httpMessages_EN.tag.fetchContentByTag.status_404,
         );
       }
 
       handleInternalErrorException(
+        'tagService',
+        'fetchContentByTag',
         loggerMessages.tag.fetchContentByTag.status_500,
         this.logger,
         error,
@@ -395,7 +399,11 @@ export class TagService {
       });
 
       this.logger.warn(
-        generateExceptionMessage(loggerMessages.tag.deleteTag.status_200),
+        generateExceptionMessage(
+          'tagService',
+          'deleteTag',
+          loggerMessages.tag.deleteTag.status_200,
+        ),
       );
 
       return {
@@ -404,12 +412,12 @@ export class TagService {
       };
     } catch (error) {
       if (error.code === 'P2025') {
-        throw new NotFoundException(
-          generateExceptionMessage(httpMessages_EN.tag.deleteTag.status_404),
-        );
+        throw new NotFoundException(httpMessages_EN.tag.deleteTag.status_404);
       }
 
       handleInternalErrorException(
+        'tagService',
+        'deleteTag',
         loggerMessages.tag.deleteTag.status_500,
         this.logger,
         error,
@@ -444,18 +452,16 @@ export class TagService {
       return { message: httpMessages_EN.tag.addTag.status_200, data: tag };
     } catch (error) {
       if (error.code === 'P2002') {
-        throw new ConflictException(
-          generateExceptionMessage(httpMessages_EN.tag.addTag.status_409),
-        );
+        throw new ConflictException(httpMessages_EN.tag.addTag.status_409);
       }
 
       if (error.code === 'P2025') {
-        throw new NotFoundException(
-          generateExceptionMessage(httpMessages_EN.tag.addTag.status_404),
-        );
+        throw new NotFoundException(httpMessages_EN.tag.addTag.status_404);
       }
 
       handleInternalErrorException(
+        'tagService',
+        'addTag',
         loggerMessages.tag.addTag.status_500,
         this.logger,
         error,
@@ -480,12 +486,12 @@ export class TagService {
       return { message: httpMessages_EN.tag.removeTag.status_200, data: tag };
     } catch (error) {
       if (error.code === 'P2025') {
-        throw new NotFoundException(
-          generateExceptionMessage(httpMessages_EN.tag.removeTag.status_404),
-        );
+        throw new NotFoundException(httpMessages_EN.tag.removeTag.status_404);
       }
 
       handleInternalErrorException(
+        'tagService',
+        'removeTag',
         loggerMessages.tag.removeTag.status_500,
         this.logger,
         error,

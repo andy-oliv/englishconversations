@@ -62,6 +62,8 @@ export class AnsweredExerciseService {
       return false;
     } catch (error) {
       handleInternalErrorException(
+        'answeredExerciseService',
+        'checkIfAnswered',
         loggerMessages.answeredExercise.checkIfAnswered.status_500,
         this.logger,
         error,
@@ -99,6 +101,8 @@ export class AnsweredExerciseService {
       };
     } catch (error) {
       handleInternalErrorException(
+        'answeredExerciseService',
+        'saveAnswer',
         loggerMessages.answeredExercise.saveAnswer.status_500,
         this.logger,
         error,
@@ -113,9 +117,7 @@ export class AnsweredExerciseService {
 
       if (answerList.length === 0) {
         throw new NotFoundException(
-          generateExceptionMessage(
-            httpMessages_EN.answeredExercise.fetchAnswers.status_404,
-          ),
+          httpMessages_EN.answeredExercise.fetchAnswers.status_404,
         );
       }
 
@@ -129,6 +131,8 @@ export class AnsweredExerciseService {
       }
 
       handleInternalErrorException(
+        'answeredExerciseService',
+        'fetchAnswers',
         loggerMessages.answeredExercise.fetchAnswers.status_500,
         this.logger,
         error,
@@ -167,12 +171,12 @@ export class AnsweredExerciseService {
     } catch (error) {
       if ((error.code = 'P2025')) {
         throw new NotFoundException(
-          generateExceptionMessage(
-            httpMessages_EN.answeredExercise.fetchAnswerById.status_404,
-          ),
+          httpMessages_EN.answeredExercise.fetchAnswerById.status_404,
         );
       }
       handleInternalErrorException(
+        'answeredExerciseService',
+        'fetchAnswerById',
         loggerMessages.answeredExercise.fetchAnswerById.status_500,
         this.logger,
         error,
@@ -195,9 +199,7 @@ export class AnsweredExerciseService {
 
       if (answerList.length === 0) {
         throw new NotFoundException(
-          generateExceptionMessage(
-            httpMessages_EN.answeredExercise.fetchAnswerByQuery.status_404,
-          ),
+          httpMessages_EN.answeredExercise.fetchAnswerByQuery.status_404,
         );
       }
 
@@ -211,6 +213,8 @@ export class AnsweredExerciseService {
       }
 
       handleInternalErrorException(
+        'answeredExerciseService',
+        'fetchAnswerByQuery',
         loggerMessages.answeredExercise.fetchAnswerByQuery.status_500,
         this.logger,
         error,
@@ -232,6 +236,8 @@ export class AnsweredExerciseService {
 
       this.logger.log({
         message: generateExceptionMessage(
+          'answeredExerciseService',
+          'addfeedback',
           loggerMessages.answeredExercise.addFeedback.status_200,
         ),
         data: updatedAnswer,
@@ -244,13 +250,13 @@ export class AnsweredExerciseService {
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException(
-          generateExceptionMessage(
-            httpMessages_EN.answeredExercise.addFeedback.status_404,
-          ),
+          httpMessages_EN.answeredExercise.addFeedback.status_404,
         );
       }
 
       handleInternalErrorException(
+        'answeredExerciseService',
+        'addFeedback',
         loggerMessages.answeredExercise.addFeedback.status_500,
         this.logger,
         error,
@@ -269,6 +275,8 @@ export class AnsweredExerciseService {
 
       this.logger.warn({
         message: generateExceptionMessage(
+          'answeredExerciseService',
+          'deleteAnswer',
           loggerMessages.answeredExercise.deleteAnswer.status_200,
         ),
         data: deletedAnswer,
@@ -281,13 +289,13 @@ export class AnsweredExerciseService {
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException(
-          generateExceptionMessage(
-            httpMessages_EN.answeredExercise.deleteAnswer.status_404,
-          ),
+          httpMessages_EN.answeredExercise.deleteAnswer.status_404,
         );
       }
 
       handleInternalErrorException(
+        'answeredExerciseService',
+        'deleteAnswer',
         loggerMessages.answeredExercise.deleteAnswer.status_500,
         this.logger,
         error,

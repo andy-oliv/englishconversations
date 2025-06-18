@@ -70,6 +70,9 @@ const httpMessages_EN = {
       status_200: 'The exercise has been successfully fetched.',
       status_404: 'The exercise was not found or the ID is invalid.',
     },
+    throwIfExerciseExists: {
+      status_409: 'There is another exercise with the same definitions.',
+    },
     throwIfNotQuiz: {
       status_404: 'The quiz was not found or the ID is invalid.',
     },
@@ -196,6 +199,27 @@ const httpMessages_EN = {
   unit: {
     createUnit: {
       status_200: 'The unit has been successfully created!',
+    },
+  },
+  video: {
+    deleteVideo: {
+      status_200: 'The video have been successfully deleted!',
+      status_404: 'The video was not found or the ID is invalid.',
+    },
+    fetchVideos: {
+      status_200: 'The videos have been successfully fetched!',
+      status_404: 'The are no videos to show.',
+    },
+    fetchVideoById: {
+      status_200: 'The video has been successfully fetched!',
+      status_404: 'The video was not found or the ID is invalid.',
+    },
+    generateVideo: {
+      status_200: 'The video file has been successfully generated!',
+    },
+    updateVideo: {
+      status_200: 'The video has been successfully updated!',
+      status_404: 'The video was not found or the ID is invalid.',
     },
   },
 };

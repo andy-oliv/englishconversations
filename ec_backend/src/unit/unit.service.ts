@@ -26,6 +26,8 @@ export class UnitService {
       };
     } catch (error) {
       handleInternalErrorException(
+        'unitService',
+        'createUnit',
         loggerMessages.unit.createUnit.status_500,
         this.logger,
         error,

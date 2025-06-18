@@ -35,13 +35,13 @@ export class ExerciseService {
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException(
-          generateExceptionMessage(
-            httpMessages_EN.exercise.throwIfNotQuiz.status_404,
-          ),
+          httpMessages_EN.exercise.throwIfNotQuiz.status_404,
         );
       }
 
       handleInternalErrorException(
+        'exerciseService',
+        'throwIfNotQuiz',
         loggerMessages.exercise.throwIfNotQuiz.status_500,
         this.logger,
         error,
@@ -62,13 +62,13 @@ export class ExerciseService {
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException(
-          generateExceptionMessage(
-            httpMessages_EN.exercise.fetchExerciseById.status_404,
-          ),
+          httpMessages_EN.exercise.fetchExerciseById.status_404,
         );
       }
 
       handleInternalErrorException(
+        'exerciseService',
+        'fetchExercise',
         loggerMessages.exercise.fetchExerciseById.status_500,
         this.logger,
         error,
@@ -86,13 +86,13 @@ export class ExerciseService {
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException(
-          generateExceptionMessage(
-            httpMessages_EN.exercise.fetchExerciseById.status_404,
-          ),
+          httpMessages_EN.exercise.fetchExerciseById.status_404,
         );
       }
 
       handleInternalErrorException(
+        'exerciseService',
+        'throwIfNotExercise',
         loggerMessages.exercise.fetchExerciseById.status_500,
         this.logger,
         error,
@@ -114,16 +114,18 @@ export class ExerciseService {
       });
 
     if (exerciseExists) {
-      const errorMessage: ExceptionMessage = generateExceptionMessage(
-        loggerMessages.exercise.throwIfExerciseExists.status_409,
-      );
-
       this.logger.warn({
-        message: errorMessage,
+        message: generateExceptionMessage(
+          'exerciseService',
+          'throwIfExerciseExists',
+          loggerMessages.exercise.throwIfExerciseExists.status_409,
+        ),
         data: exerciseExists,
       });
 
-      throw new ConflictException(errorMessage);
+      throw new ConflictException(
+        httpMessages_EN.exercise.throwIfExerciseExists.status_409,
+      );
     }
   }
 
@@ -145,7 +147,11 @@ export class ExerciseService {
       });
 
       this.logger.log({
-        message: loggerMessages.exercise.createExercise.status_201,
+        message: generateExceptionMessage(
+          'exerciseService',
+          'createExercise',
+          loggerMessages.exercise.createExercise.status_201,
+        ),
         data: newExercise,
       });
 
@@ -155,6 +161,8 @@ export class ExerciseService {
       };
     } catch (error) {
       handleInternalErrorException(
+        'exerciseService',
+        'createExercise',
         loggerMessages.exercise.createExercise.status_500,
         this.logger,
         error,
@@ -169,9 +177,7 @@ export class ExerciseService {
 
       if (exerciseList.length === 0) {
         throw new NotFoundException(
-          generateExceptionMessage(
-            httpMessages_EN.exercise.fetchExercises.status_404,
-          ),
+          httpMessages_EN.exercise.fetchExercises.status_404,
         );
       }
 
@@ -185,6 +191,8 @@ export class ExerciseService {
       }
 
       handleInternalErrorException(
+        'exerciseService',
+        'fetchExercises',
         loggerMessages.exercise.fetchExercises.status_500,
         this.logger,
         error,
@@ -227,13 +235,13 @@ export class ExerciseService {
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException(
-          generateExceptionMessage(
-            httpMessages_EN.exercise.fetchExerciseById.status_404,
-          ),
+          httpMessages_EN.exercise.fetchExerciseById.status_404,
         );
       }
 
       handleInternalErrorException(
+        'exerciseService',
+        'fetchExerciseById',
         loggerMessages.exercise.fetchExerciseById.status_500,
         this.logger,
         error,
@@ -255,9 +263,7 @@ export class ExerciseService {
 
       if (exercises.length === 0) {
         throw new NotFoundException(
-          generateExceptionMessage(
-            httpMessages_EN.exercise.fetchExercisesByQuery.status_404,
-          ),
+          httpMessages_EN.exercise.fetchExercisesByQuery.status_404,
         );
       }
 
@@ -271,6 +277,8 @@ export class ExerciseService {
       }
 
       handleInternalErrorException(
+        'exerciseService',
+        'fetchExercisesByQuery',
         loggerMessages.exercise.fetchExercisesByQuery.status_500,
         this.logger,
         error,
@@ -293,6 +301,8 @@ export class ExerciseService {
 
       this.logger.log({
         message: generateExceptionMessage(
+          'exerciseService',
+          'updateExercise',
           loggerMessages.exercise.updateExercise.status_200,
         ),
         data: updatedExercise,
@@ -305,12 +315,12 @@ export class ExerciseService {
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException(
-          generateExceptionMessage(
-            httpMessages_EN.exercise.updateExercise.status_404,
-          ),
+          httpMessages_EN.exercise.updateExercise.status_404,
         );
       }
       handleInternalErrorException(
+        'exerciseService',
+        'updateExercise',
         loggerMessages.exercise.updateExercise.status_500,
         this.logger,
         error,
@@ -329,6 +339,8 @@ export class ExerciseService {
 
       this.logger.warn({
         message: generateExceptionMessage(
+          'exerciseService',
+          'deleteExercise',
           loggerMessages.exercise.deleteExercise.status_200,
         ),
         data: deletedExercise,
@@ -341,12 +353,12 @@ export class ExerciseService {
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException(
-          generateExceptionMessage(
-            httpMessages_EN.exercise.deleteExercise.status_404,
-          ),
+          httpMessages_EN.exercise.deleteExercise.status_404,
         );
       }
       handleInternalErrorException(
+        'exerciseService',
+        'deleteExercise',
         loggerMessages.exercise.deleteExercise.status_500,
         this.logger,
         error,

@@ -31,13 +31,13 @@ export class StudentService {
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException(
-          generateExceptionMessage(
-            httpMessages_EN.student.fetchStudentById.status_404,
-          ),
+          httpMessages_EN.student.fetchStudentById.status_404,
         );
       }
 
       handleInternalErrorException(
+        'studentService',
+        'throwIfNotStudent',
         loggerMessages.student.fetchStudentById.status_500,
         this.logger,
         error,
@@ -56,15 +56,18 @@ export class StudentService {
       );
 
       if (studentExists) {
-        const errorMessage: ExceptionMessage = generateExceptionMessage(
-          httpMessages_EN.student.throwIfStudentExists.status_409,
-        );
-        this.logger.warn({
-          message: errorMessage,
+        this.logger.log({
+          message: generateExceptionMessage(
+            'studentService',
+            'throwIfStudentExists',
+            loggerMessages.student.throwIfStudentExists.status_409,
+          ),
           data: studentExists,
         });
 
-        throw new ConflictException(errorMessage);
+        throw new ConflictException(
+          httpMessages_EN.student.throwIfStudentExists.status_409,
+        );
       }
     } catch (error) {
       if (error instanceof ConflictException) {
@@ -72,6 +75,8 @@ export class StudentService {
       }
 
       handleInternalErrorException(
+        'studentService',
+        'throwIfStudentExists',
         loggerMessages.student.throwIfStudentExists.status_500,
         this.logger,
         error,
@@ -98,6 +103,8 @@ export class StudentService {
       };
     } catch (error) {
       handleInternalErrorException(
+        'studentService',
+        'registerStudent',
         loggerMessages.student.registerStudent.status_500,
         this.logger,
         error,
@@ -111,9 +118,7 @@ export class StudentService {
 
       if (students.length === 0) {
         throw new NotFoundException(
-          generateExceptionMessage(
-            httpMessages_EN.student.fetchStudents.status_404,
-          ),
+          httpMessages_EN.student.fetchStudents.status_404,
         );
       }
 
@@ -127,6 +132,8 @@ export class StudentService {
       }
 
       handleInternalErrorException(
+        'studentService',
+        'fetchStudents',
         loggerMessages.student.fetchStudents.status_500,
         this.logger,
         error,
@@ -174,13 +181,13 @@ export class StudentService {
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException(
-          generateExceptionMessage(
-            httpMessages_EN.student.fetchStudentById.status_404,
-          ),
+          httpMessages_EN.student.fetchStudentById.status_404,
         );
       }
 
       handleInternalErrorException(
+        'studentService',
+        'fetchStudentById',
         loggerMessages.student.fetchStudentById.status_500,
         this.logger,
         error,
@@ -202,9 +209,7 @@ export class StudentService {
 
       if (students.length === 0) {
         throw new NotFoundException(
-          generateExceptionMessage(
-            httpMessages_EN.student.fetchStudentsByQuery.status_404,
-          ),
+          httpMessages_EN.student.fetchStudentsByQuery.status_404,
         );
       }
       return {
@@ -217,6 +222,8 @@ export class StudentService {
       }
 
       handleInternalErrorException(
+        'studentService',
+        'fetchStudentsByQuery',
         loggerMessages.student.fetchStudentsByQuery.status_500,
         this.logger,
         error,
@@ -238,6 +245,8 @@ export class StudentService {
 
       this.logger.log({
         message: generateExceptionMessage(
+          'studentService',
+          'updateStudent',
           loggerMessages.student.updateStudent.status_200,
         ),
         data: updatedStudent,
@@ -250,13 +259,13 @@ export class StudentService {
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException(
-          generateExceptionMessage(
-            httpMessages_EN.student.updateStudent.status_404,
-          ),
+          httpMessages_EN.student.updateStudent.status_404,
         );
       }
 
       handleInternalErrorException(
+        'studentService',
+        'updateStudent',
         loggerMessages.student.updateStudent.status_500,
         this.logger,
         error,
@@ -274,6 +283,8 @@ export class StudentService {
 
       this.logger.warn({
         message: generateExceptionMessage(
+          'studentService',
+          'deleteStudent',
           loggerMessages.student.deleteStudent.status_200,
         ),
         data: deletedStudent,
@@ -286,13 +297,13 @@ export class StudentService {
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException(
-          generateExceptionMessage(
-            httpMessages_EN.student.deleteStudent.status_404,
-          ),
+          httpMessages_EN.student.deleteStudent.status_404,
         );
       }
 
       handleInternalErrorException(
+        'studentService',
+        'deleteStudent',
         loggerMessages.student.deleteStudent.status_500,
         this.logger,
         error,

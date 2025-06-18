@@ -43,11 +43,7 @@ export class VideoService {
 
       if (videos.length === 0) {
         throw new NotFoundException(
-          generateExceptionMessage(
-            'videoService',
-            'fetchVideos',
-            httpMessages_EN.video.fetchVideos.status_404,
-          ),
+          httpMessages_EN.video.fetchVideos.status_404,
         );
       }
 
@@ -85,11 +81,7 @@ export class VideoService {
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException(
-          generateExceptionMessage(
-            'videoService',
-            'fetchVideoById',
-            httpMessages_EN.video.fetchVideoById.status_404,
-          ),
+          httpMessages_EN.video.fetchVideoById.status_404,
         );
       }
 
@@ -128,11 +120,7 @@ export class VideoService {
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException(
-          generateExceptionMessage(
-            'videoService',
-            'updateVideo',
-            httpMessages_EN.video.updateVideo.status_404,
-          ),
+          httpMessages_EN.video.updateVideo.status_404,
         );
       }
 
@@ -170,11 +158,7 @@ export class VideoService {
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException(
-          generateExceptionMessage(
-            'videoService',
-            'deleteVideo',
-            httpMessages_EN.video.deleteVideo.status_404,
-          ),
+          httpMessages_EN.video.deleteVideo.status_404,
         );
       }
 

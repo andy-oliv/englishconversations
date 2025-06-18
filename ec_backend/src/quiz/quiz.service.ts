@@ -69,13 +69,13 @@ export class QuizService {
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException(
-          generateExceptionMessage(
-            httpMessages_EN.quiz.fetchQuizWithExercises.status_404,
-          ),
+          httpMessages_EN.quiz.fetchQuizWithExercises.status_404,
         );
       }
 
       handleInternalErrorException(
+        'quizService',
+        'fetchQuizWithExercises',
         loggerMessages.quiz.fetchQuizWithExercises.status_500,
         this.logger,
         error,
@@ -109,6 +109,8 @@ export class QuizService {
       }
 
       handleInternalErrorException(
+        'quizService',
+        'throwIfExerciseAdded',
         loggerMessages.quiz.throwIfExerciseAdded.status_500,
         this.logger,
         error,
@@ -129,13 +131,13 @@ export class QuizService {
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException(
-          generateExceptionMessage(
-            httpMessages_EN.quiz.throwIfExerciseNotAdded.status_404,
-          ),
+          httpMessages_EN.quiz.throwIfExerciseNotAdded.status_404,
         );
       }
 
       handleInternalErrorException(
+        'quizService',
+        'throwIfExerciseNotAdded',
         loggerMessages.quiz.throwIfExerciseNotAdded.status_500,
         this.logger,
         error,
@@ -153,13 +155,13 @@ export class QuizService {
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException(
-          generateExceptionMessage(
-            httpMessages_EN.quiz.fetchQuizById.status_404,
-          ),
+          httpMessages_EN.quiz.fetchQuizById.status_404,
         );
       }
 
       handleInternalErrorException(
+        'quizService',
+        'throwIfNotQuiz',
         loggerMessages.quiz.fetchQuizById.status_500,
         this.logger,
         error,
@@ -178,15 +180,15 @@ export class QuizService {
       if (quizExists) {
         this.logger.warn({
           message: generateExceptionMessage(
+            'quizService',
+            'throwIfQuizExists',
             loggerMessages.quiz.throwIfQuizExists.status_409,
           ),
           data: quizExists,
         });
 
         throw new ConflictException(
-          generateExceptionMessage(
-            httpMessages_EN.quiz.throwIfQuizExists.status_409,
-          ),
+          httpMessages_EN.quiz.throwIfQuizExists.status_409,
         );
       }
     } catch (error) {
@@ -195,6 +197,8 @@ export class QuizService {
       }
 
       handleInternalErrorException(
+        'quizService',
+        'throwIfQuizExists',
         loggerMessages.quiz.throwIfQuizExists.status_500,
         this.logger,
         error,
@@ -220,6 +224,8 @@ export class QuizService {
       };
     } catch (error) {
       handleInternalErrorException(
+        'quizService',
+        'createQuiz',
         loggerMessages.quiz.createQuiz.status_500,
         this.logger,
         error,
@@ -233,9 +239,7 @@ export class QuizService {
 
       if (quizzes.length === 0) {
         throw new NotFoundException(
-          generateExceptionMessage(
-            httpMessages_EN.quiz.fetchQuizzes.status_404,
-          ),
+          httpMessages_EN.quiz.fetchQuizzes.status_404,
         );
       }
 
@@ -249,6 +253,8 @@ export class QuizService {
       }
 
       handleInternalErrorException(
+        'quizService',
+        'fetchQuizzes',
         loggerMessages.quiz.fetchQuizzes.status_500,
         this.logger,
         error,
@@ -272,13 +278,13 @@ export class QuizService {
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException(
-          generateExceptionMessage(
-            httpMessages_EN.quiz.fetchQuizById.status_404,
-          ),
+          httpMessages_EN.quiz.fetchQuizById.status_404,
         );
       }
 
       handleInternalErrorException(
+        'quizService',
+        'fetchQuizById',
         loggerMessages.quiz.fetchQuizById.status_500,
         this.logger,
         error,
@@ -299,9 +305,7 @@ export class QuizService {
 
       if (quizzes.length === 0) {
         throw new NotFoundException(
-          generateExceptionMessage(
-            httpMessages_EN.quiz.fetchQuizzesByQuery.status_404,
-          ),
+          httpMessages_EN.quiz.fetchQuizzesByQuery.status_404,
         );
       }
 
@@ -315,6 +319,8 @@ export class QuizService {
       }
 
       handleInternalErrorException(
+        'quizService',
+        'fetchQuizzesByQuery',
         loggerMessages.quiz.fetchQuizzesByQuery.status_500,
         this.logger,
         error,
@@ -333,6 +339,8 @@ export class QuizService {
 
       this.logger.log({
         message: generateExceptionMessage(
+          'quizService',
+          'updateQuiz',
           loggerMessages.quiz.updateQuiz.status_200,
         ),
         data: updatedQuiz,
@@ -344,12 +352,12 @@ export class QuizService {
       };
     } catch (error) {
       if (error.code === 'P2025') {
-        throw new NotFoundException(
-          generateExceptionMessage(httpMessages_EN.quiz.updateQuiz.status_404),
-        );
+        throw new NotFoundException(httpMessages_EN.quiz.updateQuiz.status_404);
       }
 
       handleInternalErrorException(
+        'quizService',
+        'updateQuiz',
         loggerMessages.quiz.updateQuiz.status_500,
         this.logger,
         error,
@@ -367,6 +375,8 @@ export class QuizService {
 
       this.logger.warn({
         message: generateExceptionMessage(
+          'quizService',
+          'deleteQuiz',
           loggerMessages.quiz.deleteQuiz.status_200,
         ),
         data: deletedQuiz,
@@ -378,12 +388,12 @@ export class QuizService {
       };
     } catch (error) {
       if (error.code === 'P2025') {
-        throw new NotFoundException(
-          generateExceptionMessage(httpMessages_EN.quiz.deleteQuiz.status_404),
-        );
+        throw new NotFoundException(httpMessages_EN.quiz.deleteQuiz.status_404);
       }
 
       handleInternalErrorException(
+        'quizService',
+        'deleteQuiz',
         loggerMessages.quiz.deleteQuiz.status_500,
         this.logger,
         error,
@@ -417,6 +427,8 @@ export class QuizService {
       };
     } catch (error) {
       handleInternalErrorException(
+        'quizService',
+        'addExercise',
         loggerMessages.quiz.addExercise.status_500,
         this.logger,
         error,
@@ -450,6 +462,8 @@ export class QuizService {
       };
     } catch (error) {
       handleInternalErrorException(
+        'quizService',
+        'removeExercise',
         loggerMessages.quiz.removeExercise.status_500,
         this.logger,
         error,

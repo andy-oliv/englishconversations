@@ -224,6 +224,30 @@ const validationMessages_EN = {
       },
     },
   },
+  video: {
+    generateVideoDTO: {
+      title: {
+        isNotEmpty: 'The title field must not be empty.',
+        isString: 'The title field must be a string.',
+      },
+      description: {
+        isString: 'The description field must be a string.',
+      },
+      url: {
+        isNotEmpty: 'The url field must not be empty.',
+        isUrl: 'The url field must be a valid URL.',
+      },
+      duration: {
+        isInt: 'The duration field must be a number in seconds.',
+      },
+      thumbnailId: {
+        isUUID: 'The thumbnailId must be a UUID.',
+      },
+      unitId: {
+        isInt: 'The unitId must be a number.',
+      },
+    },
+  },
 };
 
 export default validationMessages_EN;

@@ -228,6 +228,30 @@ const loggerMessages = {
         'An internal error occurred while creating the student. Check the error log for more information.',
     },
   },
+  video: {
+    deleteVideo: {
+      status_200: 'A video has been deleted.',
+      status_500:
+        'An internal error occurred while deleting the video file. Check the error log for more information.',
+    },
+    fetchVideos: {
+      status_500:
+        'An internal error occurred while fetching the video files. Check the error log for more information.',
+    },
+    fetchVideoById: {
+      status_500:
+        'An internal error occurred while fetching the video file. Check the error log for more information.',
+    },
+    generateVideo: {
+      status_500:
+        'An internal error occurred while generating the video file. Check the error log for more information.',
+    },
+    updateVideo: {
+      status_200: 'A video has been updated.',
+      status_500:
+        'An internal error occurred while updating the video file. Check the error log for more information.',
+    },
+  },
 };
 
 export default loggerMessages;

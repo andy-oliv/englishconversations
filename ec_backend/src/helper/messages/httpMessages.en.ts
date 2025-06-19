@@ -246,6 +246,34 @@ const httpMessages_EN = {
       status_200: 'The unit has been successfully created!',
     },
   },
+  user: {
+    deleteUser: {
+      status_200: 'The user has been successfully deleted.',
+      status_404: 'The user was not found or the ID is invalid.',
+    },
+    fetchUsers: {
+      status_200: 'The user list has been successfully fetched!',
+      status_404: 'There are no users to show.',
+    },
+    fetchUserById: {
+      status_200: 'The user has been successfully fetched!',
+      status_404: 'The user was not found or the ID is invalid.',
+    },
+    fetchUserByEmail: {
+      status_200: 'The user has been successfully fetched!',
+      status_404: 'The user was not found or the ID is invalid.',
+    },
+    registerUser: {
+      status_201: 'The user has been successfully registered!',
+    },
+    updateUser: {
+      status_200: 'The user has been successfully updated.',
+      status_404: 'The user was not found or the ID is invalid.',
+    },
+    validateUserAvailability: {
+      status_409: 'The user already exists.',
+    },
+  },
   video: {
     deleteVideo: {
       status_200: 'The video has been successfully deleted!',

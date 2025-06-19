@@ -259,6 +259,59 @@ const validationMessages_EN = {
       },
     },
   },
+  user: {
+    registerUserDTO: {
+      name: {
+        isNotEmpty: 'The name field must not be empty.',
+        isString: 'The name field must be a string.',
+      },
+      bio: {
+        isString: 'The bio field must be a string.',
+      },
+      city: {
+        isString: 'The city field must be a string.',
+      },
+      state: {
+        isString: 'The state field must be a string.',
+      },
+      country: {
+        isString: 'The country field must be a string.',
+      },
+      avatarUrl: {
+        isUrl: 'The avatarUrl field must be filled with a valid URL.',
+      },
+      email: {
+        isNotEmpty: 'The email field must not be empty.',
+        isEmail:
+          'The email field must be a valid email (example: user@mail.com)',
+      },
+      password: {
+        isNotEmpty: 'The password field must not be empty.',
+        isStrongPassword:
+          'The password must be at least 8 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number and 1 symbol.',
+      },
+    },
+    updateUserDTO: {
+      name: {
+        isString: 'The name field must be a string.',
+      },
+      bio: {
+        isString: 'The bio field must be a string.',
+      },
+      city: {
+        isString: 'The city field must be a string.',
+      },
+      state: {
+        isString: 'The state field must be a string.',
+      },
+      country: {
+        isString: 'The country field must be a string.',
+      },
+      avatarUrl: {
+        isUrl: 'The avatarUrl field must be filled with a valid URL.',
+      },
+    },
+  },
   video: {
     generateVideoDTO: {
       title: {

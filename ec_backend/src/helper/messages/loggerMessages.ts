@@ -280,6 +280,47 @@ const loggerMessages = {
         'An internal error occurred while creating the student. Check the error log for more information.',
     },
   },
+  user: {
+    deleteUser: {
+      status_200: 'A user register has been deleted.',
+      status_500:
+        'An internal error occurred while deleting the user. Check the error log for more information.',
+    },
+    fetchUsers: {
+      status_500:
+        'An internal error occurred while fetching the users. Check the error log for more information.',
+    },
+    fetchUserById: {
+      status_500:
+        'An internal error occurred while fetching the user. Check the error log for more information.',
+    },
+    fetchUserByEmail: {
+      status_500:
+        'An internal error occurred while fetching the user. Check the error log for more information.',
+    },
+    hashPassword: {
+      status_500:
+        'An internal error occurred while hashing the password. Check the error log for more information.',
+    },
+    getSaltRounds: {
+      status_500:
+        'An internal error occurred while getting the salt rounds. Check the error log for more information.',
+    },
+    registerUser: {
+      status_200: 'A new user has been successfully registered.',
+      status_500:
+        'An internal error occurred while registering the user. Check the error log for more information.',
+    },
+    updateUser: {
+      status_200: 'A user register has been updated.',
+      status_500:
+        'An internal error occurred while updating the user. Check the error log for more information.',
+    },
+    validateUserAvailability: {
+      status_500:
+        'An internal error occurred while checking if a user exists. Check the error log for more information.',
+    },
+  },
   video: {
     deleteVideo: {
       status_200: 'A video has been deleted.',

@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PrismaService } from './prisma/prisma.service';
 import { PrismaModule } from './prisma/prisma.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { join } from 'path';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { LoggerModule } from 'nestjs-pino';
@@ -17,6 +17,7 @@ import { TagModule } from './tag/tag.module';
 import { VideoModule } from './video/video.module';
 import { FileModule } from './file/file.module';
 import { ChapterModule } from './chapter/chapter.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -24,29 +25,35 @@ import { ChapterModule } from './chapter/chapter.module';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'src', 'assets', 'images'),
     }),
-    LoggerModule.forRoot({
-      pinoHttp: {
-        level: 'debug',
-        transport: {
-          targets: [
-            {
-              target: 'pino-pretty',
-              level: 'debug',
-              options: { colorize: true },
-            },
-            {
-              target: '@logtail/pino',
-              level: 'debug',
-              options: {
-                sourceToken: process.env.BETTERSTACK_TOKEN,
+    LoggerModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        pinoHttp: {
+          level: 'debug',
+          transport: {
+            targets: [
+              {
+                target: 'pino-pretty',
+                level: 'debug',
+                redact: ['password'],
+                options: { colorize: true },
+              },
+              {
+                target: '@logtail/pino',
+                level: 'debug',
+                redact: ['password'],
                 options: {
-                  endpoint: `https://${process.env.BETTERSTACK_CONNECTION}`,
+                  sourceToken: configService.get<string>('BETTERSTACK_TOKEN'),
+                  options: {
+                    endpoint: `https://${configService.get<string>('BETTERSTACK_CONNECTION')}`,
+                  },
                 },
               },
-            },
-          ],
+            ],
+          },
         },
-      },
+      }),
     }),
     PrismaModule,
     StudentModule,
@@ -59,6 +66,7 @@ import { ChapterModule } from './chapter/chapter.module';
     VideoModule,
     FileModule,
     ChapterModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

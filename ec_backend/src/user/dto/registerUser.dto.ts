@@ -1,0 +1,128 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { CEFRLevels, UserRoles } from '../../../generated/prisma';
+import {
+  IsEmail,
+  IsIn,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsStrongPassword,
+  IsUrl,
+} from 'class-validator';
+import validationMessages_EN from '../../helper/messages/validationMessages.en';
+
+export default class RegisterUserDTO {
+  @ApiProperty({
+    title: 'Name',
+    required: true,
+    type: 'string',
+    example: 'John Doe',
+  })
+  @IsNotEmpty({
+    message: validationMessages_EN.user.registerUserDTO.name.isNotEmpty,
+  })
+  @IsString({
+    message: validationMessages_EN.user.registerUserDTO.name.isString,
+  })
+  name: string;
+
+  @ApiProperty({
+    title: 'Bio',
+    required: false,
+    type: 'string',
+    example: "I'm an engineer trying to learn English.",
+  })
+  @IsOptional()
+  @IsString({
+    message: validationMessages_EN.user.registerUserDTO.bio.isString,
+  })
+  bio?: string;
+
+  @ApiProperty({
+    title: 'City',
+    required: false,
+    type: 'string',
+    example: 'Porto Alegre',
+  })
+  @IsOptional()
+  @IsString({
+    message: validationMessages_EN.user.registerUserDTO.city.isString,
+  })
+  city?: string;
+
+  @ApiProperty({
+    title: 'State',
+    required: false,
+    type: 'string',
+    example: 'Rio Grande do Sul',
+  })
+  @IsOptional()
+  @IsString({
+    message: validationMessages_EN.user.registerUserDTO.state.isString,
+  })
+  state?: string;
+
+  @ApiProperty({
+    title: 'Country',
+    required: false,
+    type: 'string',
+    example: 'Brazil',
+  })
+  @IsOptional()
+  @IsString({
+    message: validationMessages_EN.user.registerUserDTO.country.isString,
+  })
+  country?: string;
+
+  @ApiProperty({
+    title: 'AvatarURL',
+    required: false,
+    type: 'string',
+    example: 'https://google.com',
+  })
+  @IsOptional()
+  @IsUrl(
+    {},
+    {
+      message: validationMessages_EN.user.registerUserDTO.avatarUrl.isUrl,
+    },
+  )
+  avatarUrl?: string;
+
+  @ApiProperty({
+    title: 'Email',
+    required: true,
+    type: 'string',
+    example: 'john.doe@mail.com',
+  })
+  @IsNotEmpty({
+    message: validationMessages_EN.user.registerUserDTO.email.isNotEmpty,
+  })
+  @IsEmail(
+    {},
+    {
+      message: validationMessages_EN.user.registerUserDTO.email.isEmail,
+    },
+  )
+  email: string;
+
+  @ApiProperty({
+    title: 'Password',
+    required: true,
+    type: 'string',
+    example: 'Im4*Sljdm.8&&#',
+  })
+  @IsNotEmpty({
+    message: validationMessages_EN.user.registerUserDTO.password.isNotEmpty,
+  })
+  @IsStrongPassword(
+    {
+      minLength: 8,
+    },
+    {
+      message:
+        validationMessages_EN.user.registerUserDTO.password.isStrongPassword,
+    },
+  )
+  password: string;
+}

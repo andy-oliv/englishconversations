@@ -254,6 +254,33 @@ model File {
   updatedAt DateTime @updatedAt
 }
 
+model Notification {
+  id Int @id @default(autoincrement())
+  type NotificationTypes
+  title String @db.VarChar(150)
+  content String @db.Text
+  actionUrl String? @db.VarChar(250)
+  expirationDate DateTime? @db.Date
+  createdAt DateTime @default(now())
+}
+
+model UserNotification {
+  id String @id @default(uuid())
+  userId Int
+  notificationId Int
+  isRead Boolean @default(false)
+  deliveredAt DateTime @db.DateTime()
+  readAt DateTime? @db.DateTime()
+  deliveredViaEmail Boolean?
+  deliveredViaApp Boolean?
+}
+
+enum NotificationTypes {
+  INFO
+  REMINDER
+  ALERT
+}
+
 enum FileTypes {
   PDF
   AUDIO

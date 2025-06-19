@@ -27,6 +27,7 @@ model User {
   role UserRoles
   lastLogin DateTime? @db.DateTime()
   units UserUnit[]
+  chapters UserChapter[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -41,6 +42,7 @@ model Student {
   city String @db.VarChar(50)
   state String @db.VarChar(50)
   country String @db.VarChar(50)
+  observations String? @db.Text
   answeredExercises AnsweredExercise[]
   answeredQuizzes AnsweredQuiz[]
   createdAt DateTime @default(now())
@@ -205,7 +207,7 @@ model UserUnit {
   userId String
   unit Unit @relation(fields: [unitId], references: [id])
   unitId Int
-  status UnitStatus @default(LOCKED)
+  status Status @default(LOCKED)
   progress Float @default(0)
   completedAt DateTime? @db.DateTime()
   createdAt DateTime @default(now())
@@ -221,8 +223,26 @@ model Chapter {
   name String @db.VarChar(100)
   description String @db.Text
   units Unit[]
+  usersProgress UserChapter[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model UserChapter {
+  id String @id @default(uuid())
+  user User @relation(fields: [userId], references: [id])
+  userId String
+  chapter Chapter @relation(fields: [chapterId], references: [id])
+  chapterId String
+  status Status @default(LOCKED)
+  progress Float @default(0)
+  completedAt DateTime? @db.DateTime()
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([userId, status])
+  @@index([userId, chapterId])
 }
 
 model Video {
@@ -321,7 +341,7 @@ enum UserRoles {
   STUDENT
 }
 
-enum UnitStatus {
+enum Status {
   LOCKED
   IN_PROGRESS
   COMPLETED

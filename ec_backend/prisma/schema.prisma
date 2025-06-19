@@ -24,7 +24,7 @@ model User {
   refreshToken String? @db.Text
   passwordResetToken String? @db.VarChar(64)
   resetPasswordExpires DateTime? @db.DateTime()
-  role UserRoles
+  role UserRoles @default(STUDENT)
   lastLogin DateTime? @db.DateTime()
   units UserUnit[]
   chapters UserChapter[]

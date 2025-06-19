@@ -211,6 +211,9 @@ const validationMessages_EN = {
         isNotEmpty: 'The country field cannot be empty.',
         isString: 'The country field must be a string.',
       },
+      observations: {
+        isString: 'The observations field must be a string.',
+      },
     },
   },
   tag: {

@@ -9,7 +9,6 @@ import Return from '../common/types/Return';
 import Student from '../common/types/Student';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
 import loggerMessages from '../helper/messages/loggerMessages';
-import ExceptionMessage from '../common/types/ExceptionMessage';
 import generateExceptionMessage from '../helper/functions/generateExceptionMessage';
 import handleInternalErrorException from '../helper/functions/handleErrorException';
 import UpdateStudentDTO from './dto/UpdateStudent.dto';

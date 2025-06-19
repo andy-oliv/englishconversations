@@ -75,4 +75,17 @@ export default class UpdateStudentDTO {
     message: validationMessages_EN.students.registerStudentDTO.country.isString,
   })
   country: string;
+
+  @ApiProperty({
+    title: 'Observations',
+    required: false,
+    type: 'string',
+    example: 'The student is interested in music and anime.',
+  })
+  @IsOptional()
+  @IsString({
+    message:
+      validationMessages_EN.students.registerStudentDTO.observations.isString,
+  })
+  observations?: string;
 }

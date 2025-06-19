@@ -1,4 +1,10 @@
-import { IsDate, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import {
+  IsDate,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import validationMessages_EN from '../../helper/messages/validationMessages.en';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -89,4 +95,17 @@ export default class RegisterStudentDTO {
     message: validationMessages_EN.students.registerStudentDTO.country.isString,
   })
   country: string;
+
+  @ApiProperty({
+    title: 'Observations',
+    required: false,
+    type: 'string',
+    example: 'The student is interested in music and anime.',
+  })
+  @IsOptional()
+  @IsString({
+    message:
+      validationMessages_EN.students.registerStudentDTO.observations.isString,
+  })
+  observations?: string;
 }

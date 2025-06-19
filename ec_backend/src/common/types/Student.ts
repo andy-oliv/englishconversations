@@ -6,4 +6,5 @@ export default interface Student {
   city: string;
   state: string;
   country: string;
+  observations?: string;
 }

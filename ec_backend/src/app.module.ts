@@ -19,6 +19,8 @@ import { FileModule } from './file/file.module';
 import { ChapterModule } from './chapter/chapter.module';
 import { UserModule } from './user/user.module';
 import { UserChapterModule } from './user-chapter/user-chapter.module';
+import { NotificationModule } from './notification/notification.module';
+import { UserNotificationModule } from './user-notification/user-notification.module';
 
 @Module({
   imports: [
@@ -69,6 +71,8 @@ import { UserChapterModule } from './user-chapter/user-chapter.module';
     ChapterModule,
     UserModule,
     UserChapterModule,
+    NotificationModule,
+    UserNotificationModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

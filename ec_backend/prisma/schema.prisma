@@ -28,6 +28,7 @@ model User {
   lastLogin DateTime? @db.DateTime()
   units UserUnit[]
   chapters UserChapter[]
+  notifications UserNotification[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -282,11 +283,14 @@ model Notification {
   actionUrl String? @db.VarChar(250)
   expirationDate DateTime? @db.Date
   createdAt DateTime @default(now())
+  notifications UserNotification[]
 }
 
 model UserNotification {
   id String @id @default(uuid())
-  userId Int
+  user User @relation(fields: [userId], references: [id])
+  userId String
+  notification Notification @relation(fields: [notificationId], references: [id])
   notificationId Int
   isRead Boolean @default(false)
   deliveredAt DateTime @db.DateTime()

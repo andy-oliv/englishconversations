@@ -18,6 +18,7 @@ import { VideoModule } from './video/video.module';
 import { FileModule } from './file/file.module';
 import { ChapterModule } from './chapter/chapter.module';
 import { UserModule } from './user/user.module';
+import { UserChapterModule } from './user-chapter/user-chapter.module';
 
 @Module({
   imports: [
@@ -67,6 +68,7 @@ import { UserModule } from './user/user.module';
     FileModule,
     ChapterModule,
     UserModule,
+    UserChapterModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

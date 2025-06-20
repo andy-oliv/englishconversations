@@ -312,6 +312,29 @@ const validationMessages_EN = {
       },
     },
   },
+  userChapter: {
+    generateUserChapterDTO: {
+      userId: {
+        isNotEmpty: 'The userId field must not be empty.',
+        isUUID: 'The userId field must be a UUID.',
+      },
+      chapterId: {
+        isNotEmpty: 'The chapterId field must not be empty.',
+        isUUID: 'The chapterId field must be a UUID.',
+      },
+    },
+    updateUserChapterDTO: {
+      status: {
+        isIn: 'The status field is invalid.',
+      },
+      progress: {
+        isNumber: 'The progress field must be a number.',
+      },
+      completedAt: {
+        isDate: 'The completedAt field must be a date.',
+      },
+    },
+  },
   video: {
     generateVideoDTO: {
       title: {

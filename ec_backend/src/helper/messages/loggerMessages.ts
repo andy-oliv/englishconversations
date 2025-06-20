@@ -321,6 +321,34 @@ const loggerMessages = {
         'An internal error occurred while checking if a user exists. Check the error log for more information.',
     },
   },
+  userChapter: {
+    deleteUserChapter: {
+      status_200: 'A video has been deleted.',
+      status_500:
+        'An internal error occurred while deleting the video file. Check the error log for more information.',
+    },
+    fetchUserChapters: {
+      status_500:
+        'An internal error occurred while fetching the video files. Check the error log for more information.',
+    },
+    fetchUserChapterById: {
+      status_500:
+        'An internal error occurred while fetching the video file. Check the error log for more information.',
+    },
+    generateUserChapter: {
+      status_500:
+        'An internal error occurred while generating the video file. Check the error log for more information.',
+    },
+    throwIfUserChapterExists: {
+      status_500:
+        'An internal error occurred while checking if the user progress exists. Check the error log for more information.',
+    },
+    updateUserChapter: {
+      status_200: 'A video has been updated.',
+      status_500:
+        'An internal error occurred while updating the video file. Check the error log for more information.',
+    },
+  },
   video: {
     deleteVideo: {
       status_200: 'A video has been deleted.',

@@ -274,6 +274,31 @@ const httpMessages_EN = {
       status_409: 'The user already exists.',
     },
   },
+  userChapter: {
+    deleteUserChapter: {
+      status_200: 'The user progress has been successfully deleted!',
+      status_404: 'The user progress was not found or the ID is invalid.',
+    },
+    fetchUserChapters: {
+      status_200: 'The user progresses have been successfully fetched!',
+      status_404: 'The are no user progresses to show.',
+    },
+    fetchUserChapterById: {
+      status_200: 'The user progress has been successfully fetched!',
+      status_404: 'The user progress was not found or the ID is invalid.',
+    },
+    generateUserChapter: {
+      status_200: 'The user progress has been successfully generated!',
+      status_404: 'The userId or the chapterId are invalid.',
+    },
+    throwIfChapterExists: {
+      status_409: 'There is another user progress with the same definitions.',
+    },
+    updateUserChapter: {
+      status_200: 'The user progress has been successfully updated!',
+      status_404: 'The user progress was not found or the ID is invalid.',
+    },
+  },
   video: {
     deleteVideo: {
       status_200: 'The video has been successfully deleted!',

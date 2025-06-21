@@ -279,6 +279,22 @@ const validationMessages_EN = {
       },
     },
   },
+  unit: {
+    createUnitDTO: {
+      name: {
+        isNotEmpty: 'The name field must not be empty.',
+        isString: 'The name field must be a string.',
+      },
+      description: {
+        isNotEmpty: 'The description field must not be empty.',
+        isString: 'The description field must be a string.',
+      },
+      chapterId: {
+        isNotEmpty: 'The chapterId field must not be empty.',
+        isUUID: 'The chapterId field must be a UUID.',
+      },
+    },
+  },
   user: {
     registerUserDTO: {
       name: {

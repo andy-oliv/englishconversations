@@ -299,7 +299,23 @@ const loggerMessages = {
   unit: {
     createUnit: {
       status_500:
-        'An internal error occurred while creating the student. Check the error log for more information.',
+        'An internal error occurred while creating the unit. Check the error log for more information.',
+    },
+    deleteUnit: {
+      status_500:
+        'An internal error occurred while deleting the unit. Check the error log for more information.',
+    },
+    fetchUnits: {
+      status_500:
+        'An internal error occurred while fetching the units. Check the error log for more information.',
+    },
+    fetchUnitById: {
+      status_500:
+        'An internal error occurred while fetching the unit. Check the error log for more information.',
+    },
+    updateUnit: {
+      status_500:
+        'An internal error occurred while updating the unit. Check the error log for more information.',
     },
   },
   user: {

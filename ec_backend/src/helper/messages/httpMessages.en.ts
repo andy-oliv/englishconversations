@@ -265,6 +265,24 @@ const httpMessages_EN = {
   unit: {
     createUnit: {
       status_200: 'The unit has been successfully created!',
+      status_404: 'The chapter was not found or the ID is invalid.',
+    },
+    deleteUnit: {
+      status_200: 'The unit has been successfully deleted!',
+      status_404: 'The unit was not found or the ID is invalid.',
+    },
+    fetchUnits: {
+      status_200: 'The units have been successfully fetched.',
+      status_404: 'There are no units to show.',
+    },
+    fetchUnitById: {
+      status_200: 'The unit has been successfully fetched.',
+      status_404: 'The unit was not found or the ID is invalid.',
+    },
+    updateUnit: {
+      status_200: 'The unit has been successfully updated!',
+      status_404: 'The unit was not found or the ID is invalid.',
+      status_404B: 'The chapterId was not found or the ID is invalid.',
     },
   },
   user: {

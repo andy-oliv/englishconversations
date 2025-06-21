@@ -142,6 +142,26 @@ const validationMessages_EN = {
       },
     },
   },
+  notification: {
+    type: {
+      isNotEmpty: 'The type field must not be empty',
+      isIn: 'The type field is invalid.',
+    },
+    title: {
+      isNotEmpty: 'The title field must not be empty',
+      isString: 'The title field must be a string.',
+    },
+    content: {
+      isNotEmpty: 'The content field must not be empty',
+      isString: 'The content field must be a string.',
+    },
+    actionUrl: {
+      isUrl: 'The actionUrl field must be a valid URL.',
+    },
+    expirationDate: {
+      isDate: 'The expirationDate field must be a valid date.',
+    },
+  },
   quizzes: {
     addOrRemoveExerciseDTO: {
       quizId: {
@@ -333,6 +353,16 @@ const validationMessages_EN = {
       completedAt: {
         isDate: 'The completedAt field must be a date.',
       },
+    },
+  },
+  userNotification: {
+    userId: {
+      isNotEmpty: 'The userId field must not be empty.',
+      isUUID: 'The userId field must be a UUID.',
+    },
+    notificationId: {
+      isNotEmpty: 'The notificationId is must not be empty.',
+      isInt: 'The notificationId must be a number.',
     },
   },
   video: {

@@ -150,6 +150,28 @@ const loggerMessages = {
         'An internal error occurred while updating the file file. Check the error log for more information.',
     },
   },
+  notification: {
+    deleteNotification: {
+      status_500:
+        'An internal error occurred while deleting the notification. Check the error log for more information.',
+    },
+    fetchNotifications: {
+      status_500:
+        'An internal error occurred while fetching the notifications. Check the error log for more information.',
+    },
+    fetchNotificationById: {
+      status_500:
+        'An internal error occurred while fetching the notification. Check the error log for more information.',
+    },
+    generateNotification: {
+      status_500:
+        'An internal error occurred while generating the notification. Check the error log for more information.',
+    },
+    updateNotification: {
+      status_500:
+        'An internal error occurred while updating the notification. Check the error log for more information.',
+    },
+  },
   quiz: {
     addExercise: {
       status_200: 'An exercise has been added to a quiz.',
@@ -347,6 +369,20 @@ const loggerMessages = {
       status_200: 'A video has been updated.',
       status_500:
         'An internal error occurred while updating the video file. Check the error log for more information.',
+    },
+  },
+  userNotification: {
+    deleteUserNotification: {
+      status_500:
+        'An internal error occurred while deleting the notification. Check the error log for more information.',
+    },
+    fetchUserNotifications: {
+      status_500:
+        'An internal error occurred while fetching the notifications. Check the error log for more information.',
+    },
+    generateUserNotification: {
+      status_500:
+        'An internal error occurred while generating the notification. Check the error log for more information.',
     },
   },
   video: {

@@ -130,6 +130,27 @@ const httpMessages_EN = {
     status_500:
       'An unexpected error occurred. Please check the error log for more information.',
   },
+  notification: {
+    deleteNotification: {
+      status_200: 'The notification has been deleted.',
+      status_404: 'The notification was not found or the ID is invalid.',
+    },
+    fetchNotifications: {
+      status_200: 'The notifications have been successfully fetched.',
+      status_404: 'There are no notifications to show.',
+    },
+    fetchNotificationById: {
+      status_200: 'The notification has been successfully fetched.',
+      status_404: 'The notification was not found or the ID is invalid.',
+    },
+    generateNotification: {
+      status_200: 'A new notification has been generated!',
+    },
+    updateNotification: {
+      status_200: 'The notification has been successfully updated.',
+      status_404: 'The notification was not found or the ID is invalid.',
+    },
+  },
   quiz: {
     addExercise: {
       status_200: 'The exercise has been successfully added!',
@@ -209,7 +230,7 @@ const httpMessages_EN = {
       status_200: 'The tag has been successfully added.',
       status_400: 'Invalid content type.',
       status_404:
-        'Check the request, either the tag or the desired content do not exist',
+        'Please, check the request. Either the tag or the desired content do not exist',
       status_409: 'The tag has already been added.',
     },
     createTag: {
@@ -297,6 +318,21 @@ const httpMessages_EN = {
     updateUserChapter: {
       status_200: 'The user progress has been successfully updated!',
       status_404: 'The user progress was not found or the ID is invalid.',
+    },
+  },
+  userNotification: {
+    deleteUserNotification: {
+      status_200: 'The notification has been deleted.',
+      status_404: 'The notification was not found or the ID is invalid.',
+    },
+    fetchUserNotifications: {
+      status_200: 'The notifications have been successfully fetched.',
+      status_404: 'There are no notifications to show.',
+    },
+    generateUserNotification: {
+      status_200: 'A new notification has been generated!',
+      status_404:
+        'Please, check the request. Either the user or the desired notification do not exist',
     },
   },
   video: {

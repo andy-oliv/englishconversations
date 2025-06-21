@@ -186,6 +186,15 @@ describe('ChapterService', () => {
         where: {
           id: chapter.id,
         },
+        include: {
+          units: {
+            select: {
+              id: true,
+              name: true,
+              description: true,
+            },
+          },
+        },
       });
     });
 
@@ -202,6 +211,15 @@ describe('ChapterService', () => {
         where: {
           id: chapter.id,
         },
+        include: {
+          units: {
+            select: {
+              id: true,
+              name: true,
+              description: true,
+            },
+          },
+        },
       });
     });
 
@@ -217,6 +235,15 @@ describe('ChapterService', () => {
       expect(prismaService.chapter.findFirstOrThrow).toHaveBeenCalledWith({
         where: {
           id: chapter.id,
+        },
+        include: {
+          units: {
+            select: {
+              id: true,
+              name: true,
+              description: true,
+            },
+          },
         },
       });
     });

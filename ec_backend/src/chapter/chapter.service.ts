@@ -110,6 +110,15 @@ export class ChapterService {
           where: {
             id,
           },
+          include: {
+            units: {
+              select: {
+                id: true,
+                name: true,
+                description: true,
+              },
+            },
+          },
         });
 
       return {

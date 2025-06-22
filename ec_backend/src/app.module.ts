@@ -21,6 +21,7 @@ import { UserModule } from './user/user.module';
 import { UserChapterModule } from './user-chapter/user-chapter.module';
 import { NotificationModule } from './notification/notification.module';
 import { UserNotificationModule } from './user-notification/user-notification.module';
+import { UserUnitModule } from './user-unit/user-unit.module';
 
 @Module({
   imports: [
@@ -73,6 +74,7 @@ import { UserNotificationModule } from './user-notification/user-notification.mo
     UserChapterModule,
     NotificationModule,
     UserNotificationModule,
+    UserUnitModule,
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

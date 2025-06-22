@@ -353,6 +353,35 @@ const httpMessages_EN = {
         'Please, check the request. Either the user or the desired notification do not exist',
     },
   },
+  userUnit: {
+    deleteUserUnit: {
+      status_200: 'The user progress has been successfully deleted!',
+      status_404: 'The user progress was not found or the ID is invalid.',
+    },
+    fetchUserUnits: {
+      status_200: 'The user progresses have been successfully fetched!',
+      status_404: 'The are no user progresses to show.',
+    },
+    fetchUserUnitById: {
+      status_200: 'The user progress has been successfully fetched!',
+      status_404: 'The user progress was not found or the ID is invalid.',
+    },
+    fetchUserUnitsByQuery: {
+      status_200: 'The user progresses have been successfully fetched!',
+      status_404: 'There are no user progresses to show.',
+    },
+    generateUserUnit: {
+      status_200: 'The user progress has been successfully generated!',
+      status_404: 'The userId or the chapterId are invalid.',
+    },
+    throwIfUserUnitExists: {
+      status_409: 'There is another user progress with the same definitions.',
+    },
+    updateUserUnit: {
+      status_200: 'The user progress has been successfully updated!',
+      status_404: 'The user progress was not found or the ID is invalid.',
+    },
+  },
   video: {
     deleteVideo: {
       status_200: 'The video has been successfully deleted!',

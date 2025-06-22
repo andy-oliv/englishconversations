@@ -381,6 +381,40 @@ const validationMessages_EN = {
       isInt: 'The notificationId must be a number.',
     },
   },
+  userUnit: {
+    generateUserUnitDTO: {
+      userId: {
+        isNotEmpty: 'The userId field must not be empty.',
+        isUUID: 'The userId field must be a UUID.',
+      },
+      unitId: {
+        isNotEmpty: 'The unitId field must not be empty.',
+        isInt: 'The unitId field must be a number.',
+      },
+    },
+    fetchUserUnitsByQueryDTO: {
+      userId: {
+        isUUID: 'The userId field must be a UUID.',
+      },
+      unitId: {
+        isInt: 'The unitId field must be a number.',
+      },
+      status: {
+        isIn: 'The status field is invalid.',
+      },
+    },
+    updateUserUnitDTO: {
+      status: {
+        isIn: 'The status field is invalid.',
+      },
+      progress: {
+        isNumber: 'The progress field must be a number.',
+      },
+      completedAt: {
+        isDate: 'The completedAt field must be a date.',
+      },
+    },
+  },
   video: {
     generateVideoDTO: {
       title: {

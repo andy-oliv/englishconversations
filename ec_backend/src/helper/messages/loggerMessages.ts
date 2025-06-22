@@ -361,30 +361,30 @@ const loggerMessages = {
   },
   userChapter: {
     deleteUserChapter: {
-      status_200: 'A video has been deleted.',
+      status_200: 'A user progress has been deleted.',
       status_500:
-        'An internal error occurred while deleting the video file. Check the error log for more information.',
+        'An internal error occurred while deleting the user progress. Check the error log for more information.',
     },
     fetchUserChapters: {
       status_500:
-        'An internal error occurred while fetching the video files. Check the error log for more information.',
+        'An internal error occurred while fetching the user progresses. Check the error log for more information.',
     },
     fetchUserChapterById: {
       status_500:
-        'An internal error occurred while fetching the video file. Check the error log for more information.',
+        'An internal error occurred while fetching the user progress. Check the error log for more information.',
     },
     generateUserChapter: {
       status_500:
-        'An internal error occurred while generating the video file. Check the error log for more information.',
+        'An internal error occurred while generating the user progress. Check the error log for more information.',
     },
     throwIfUserChapterExists: {
       status_500:
         'An internal error occurred while checking if the user progress exists. Check the error log for more information.',
     },
     updateUserChapter: {
-      status_200: 'A video has been updated.',
+      status_200: 'A chapter has been updated.',
       status_500:
-        'An internal error occurred while updating the video file. Check the error log for more information.',
+        'An internal error occurred while updating the user progress. Check the error log for more information.',
     },
   },
   userNotification: {
@@ -399,6 +399,38 @@ const loggerMessages = {
     generateUserNotification: {
       status_500:
         'An internal error occurred while generating the notification. Check the error log for more information.',
+    },
+  },
+  userUnit: {
+    deleteUserUnit: {
+      status_200: 'A user progress has been deleted.',
+      status_500:
+        'An internal error occurred while deleting the user progress. Check the error log for more information.',
+    },
+    fetchUserUnits: {
+      status_500:
+        'An internal error occurred while fetching the user progresses. Check the error log for more information.',
+    },
+    fetchUserUnitById: {
+      status_500:
+        'An internal error occurred while fetching the user progress. Check the error log for more information.',
+    },
+    fetchUserUnitsByQuery: {
+      status_500:
+        'An internal error occurred while fetching the user progresses. Check the error log for more information.',
+    },
+    generateUserUnit: {
+      status_500:
+        'An internal error occurred while generating the user progress. Check the error log for more information.',
+    },
+    throwIfUserUnitExists: {
+      status_500:
+        'An internal error occurred while checking if the user progress already exists. Check the error log for more information.',
+    },
+    updateUserUnit: {
+      status_200: 'A user progress has been updated.',
+      status_500:
+        'An internal error occurred while updating the user progress. Check the error log for more information.',
     },
   },
   video: {

@@ -23,6 +23,9 @@ import { NotificationModule } from './notification/notification.module';
 import { UserNotificationModule } from './user-notification/user-notification.module';
 import { UserUnitModule } from './user-unit/user-unit.module';
 import { AuthModule } from './auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './auth/guards/auth/auth.guard';
+import { AuthService } from './auth/auth.service';
 
 @Module({
   imports: [
@@ -79,6 +82,13 @@ import { AuthModule } from './auth/auth.module';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService, PrismaService],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+    AppService,
+    PrismaService,
+  ],
 })
 export class AppModule {}

@@ -7,7 +7,10 @@ import * as cookieParser from 'cookie-parser';
 import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: true,
+    cors: { origin: '*' },
+  });
   const configService = app.get(ConfigService);
   app.useGlobalPipes(
     new ValidationPipe({

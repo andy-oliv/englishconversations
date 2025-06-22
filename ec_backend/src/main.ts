@@ -3,9 +3,12 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { Logger } from 'nestjs-pino';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as cookieParser from 'cookie-parser';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  const configService = app.get(ConfigService);
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
@@ -15,6 +18,7 @@ async function bootstrap() {
     }),
   );
   app.useLogger(app.get(Logger));
+  app.use(cookieParser(configService.get<string>('COOKIE_SECRET')));
 
   const config = new DocumentBuilder()
     .setTitle('English Conversations API')

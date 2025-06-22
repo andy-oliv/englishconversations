@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { TagService } from './tag.service';
 import Return from '../common/types/Return';
@@ -16,9 +17,11 @@ import validationMessages_EN from '../helper/messages/validationMessages.en';
 import CreateTagDTO from './dto/createTag.dto';
 import AddOrRemoveTagDTO from './dto/addOrRemoveTag.dto';
 import FetchContentByTag from './dto/fetchContentByTag.dto';
+import { RoleGuard } from '../auth/guards/role/role.guard';
 
 @ApiTags('Tags')
 @Controller('api/tags')
+@UseGuards(RoleGuard)
 export class TagController {
   constructor(private readonly tagService: TagService) {}
 

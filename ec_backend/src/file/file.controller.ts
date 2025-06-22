@@ -7,6 +7,7 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { FileService } from './file.service';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -14,9 +15,11 @@ import httpMessages_EN from '../helper/messages/httpMessages.en';
 import Return from '../common/types/Return';
 import UpdateFileDTO from './dto/updateFile.dto';
 import GenerateFileDTO from './dto/generateFile.dto';
+import { RoleGuard } from '../auth/guards/role/role.guard';
 
 @ApiTags('Files')
 @Controller('api/files')
+@UseGuards(RoleGuard)
 export class FileController {
   constructor(private readonly fileService: FileService) {}
 

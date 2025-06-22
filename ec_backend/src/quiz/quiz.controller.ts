@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { QuizService } from './quiz.service';
@@ -18,9 +19,11 @@ import validationMessages_EN from '../helper/messages/validationMessages.en';
 import fetchQuizzesByQueryDTO from './dto/fetchQuizzesByQuery.dto';
 import UpdateQuizDTO from './dto/updateQuiz.dto';
 import AddOrRemoveExerciseDTO from './dto/addOrRemoveExercise.dto';
+import { RoleGuard } from '../auth/guards/role/role.guard';
 
 @ApiTags('Quizzes')
 @Controller('api/quizzes')
+@UseGuards(RoleGuard)
 export class QuizController {
   constructor(private readonly quizService: QuizService) {}
 

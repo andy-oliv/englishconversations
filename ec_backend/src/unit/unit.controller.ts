@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UnitService } from './unit.service';
@@ -15,9 +16,11 @@ import httpMessages_EN from '../helper/messages/httpMessages.en';
 import validationMessages_EN from '../helper/messages/validationMessages.en';
 import CreateUnitDTO from './dto/createUnit.dto';
 import UpdateUnitDTO from './dto/updateUnit.dto';
+import { RoleGuard } from '../auth/guards/role/role.guard';
 
 @ApiTags('Units')
 @Controller('api/units')
+@UseGuards(RoleGuard)
 export class UnitController {
   constructor(private readonly unitService: UnitService) {}
 

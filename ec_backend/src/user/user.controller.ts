@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import Return from '../common/types/Return';
@@ -17,6 +18,7 @@ import validationMessages_EN from '../helper/messages/validationMessages.en';
 import RegisterUserDTO from './dto/registerUser.dto';
 import FetchUserByEmailDTO from './dto/fetchUserByEmail.dto';
 import UpdateUserDTO from './dto/updateUser.dto';
+import { RoleGuard } from '../auth/guards/role/role.guard';
 
 @ApiTags('Users')
 @Controller('api/users')
@@ -50,6 +52,7 @@ export class UserController {
   }
 
   @Get('query')
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -102,6 +105,7 @@ export class UserController {
   }
 
   @Get()
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',

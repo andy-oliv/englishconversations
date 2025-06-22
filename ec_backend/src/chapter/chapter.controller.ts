@@ -7,6 +7,7 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ChapterService } from './chapter.service';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -14,9 +15,11 @@ import httpMessages_EN from '../helper/messages/httpMessages.en';
 import Return from '../common/types/Return';
 import GenerateChapterDTO from './dto/generateChapter.dto';
 import UpdateChapterDTO from './dto/updateChapter.dto';
+import { RoleGuard } from '../auth/guards/role/role.guard';
 
 @ApiTags('Chapters')
 @Controller('api/chapters')
+@UseGuards(RoleGuard)
 export class ChapterController {
   constructor(private readonly chapterService: ChapterService) {}
 

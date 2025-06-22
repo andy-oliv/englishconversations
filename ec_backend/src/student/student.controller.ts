@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { StudentService } from './student.service';
@@ -17,9 +18,11 @@ import httpMessages_EN from '../helper/messages/httpMessages.en';
 import validationMessages_EN from '../helper/messages/validationMessages.en';
 import updateStudentDTO from './dto/UpdateStudent.dto';
 import FetchByQueryDTO from './dto/FetchByQuery.student.dto';
+import { RoleGuard } from '../auth/guards/role/role.guard';
 
 @ApiTags('Students')
 @Controller('api/students')
+@UseGuards(RoleGuard)
 export class StudentController {
   constructor(private readonly studentService: StudentService) {}
 

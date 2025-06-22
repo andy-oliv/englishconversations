@@ -9,6 +9,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ExerciseService } from './exercise.service';
 import Return from '../common/types/Return';
@@ -18,11 +19,12 @@ import httpMessages_EN from '../helper/messages/httpMessages.en';
 import validationMessages_EN from '../helper/messages/validationMessages.en';
 import loggerMessages from '../helper/messages/loggerMessages';
 import FetchByQueryDTO from './dto/FetchByQuery.exercise.dto';
-import { id_ID } from '@faker-js/faker/.';
 import UpdateExerciseDTO from './dto/UpdateExercise.dto';
+import { RoleGuard } from '../auth/guards/role/role.guard';
 
 @ApiTags('Exercises')
 @Controller('api/exercises')
+@UseGuards(RoleGuard)
 export class ExerciseController {
   constructor(private readonly exerciseService: ExerciseService) {}
 

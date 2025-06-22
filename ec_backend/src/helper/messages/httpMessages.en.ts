@@ -49,6 +49,37 @@ const httpMessages_EN = {
       status_201: 'The answer has been successfully saved.',
     },
   },
+  auth: {
+    fetchUser: {
+      status_401: 'Unauthorized: You must login to see this content.',
+    },
+    login: {
+      status_200: 'User successfully logged in!',
+    },
+    loginDataVerification: {
+      status_400:
+        'Please check the request. Either the user or the password are incorrect.',
+    },
+    logout: {
+      status_200: 'User successfully logged out.',
+    },
+    validateAccessToken: {
+      status_401: 'Unauthorized: You must login to see this content.',
+    },
+    validateRefreshToken: {
+      status_401: 'Unauthorized: You must login to see this content.',
+    },
+    verifyPassword: {
+      status_400:
+        'Please check the request. Either the user or the password are incorrect.',
+    },
+  },
+  authGuard: {
+    status_401: 'Unauthorized: You must login to see this content.',
+  },
+  authRole: {
+    status_403: 'Forbidden: invalid credentials.',
+  },
   chapter: {
     deleteChapter: {
       status_200: 'The chapter has been successfully deleted!',

@@ -72,6 +72,20 @@ const validationMessages_EN = {
       isBoolean: 'The isRetry field must be a boolean.',
     },
   },
+  auth: {
+    loginDTO: {
+      email: {
+        isNotEmpty: 'The email field must not be empty.',
+        isEmail:
+          'The email field must be a valid email (example: user@mail.com)',
+      },
+      password: {
+        isNotEmpty: 'The password field must not be empty.',
+        isStrongPassword:
+          'The password must be at least 8 characters long and contain at least 1 lowercase letter, 1 uppercase letter, 1 number and 1 symbol.',
+      },
+    },
+  },
   chapter: {
     generateChapterDTO: {
       name: {

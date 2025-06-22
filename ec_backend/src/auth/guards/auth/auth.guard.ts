@@ -1,0 +1,81 @@
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { Request, Response } from 'express';
+import { Logger } from 'nestjs-pino';
+import Cookies from '../../../common/types/cookies';
+import getCookies from '../../../helper/functions/getCookies';
+import { AuthService } from '../../auth.service';
+import Payload from '../../../common/types/Payload';
+import loggerMessages from '../../../helper/messages/loggerMessages';
+import httpMessages_EN from '../../../helper/messages/httpMessages.en';
+import { Reflector } from '@nestjs/core';
+import { IS_PUBLIC_KEY } from '../../../common/decorators/public.decorator';
+import RequestWithUser from '../../../common/types/RequestWithUser';
+
+@Injectable()
+export class AuthGuard implements CanActivate {
+  constructor(
+    private readonly logger: Logger,
+    private readonly authService: AuthService,
+    private reflector: Reflector,
+  ) {}
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+
+    if (isPublic) {
+      return true;
+    }
+
+    const request: RequestWithUser = context
+      .switchToHttp()
+      .getRequest<RequestWithUser>();
+    const response: Response = context.switchToHttp().getResponse();
+    const cookies: Cookies = getCookies(request.headers.cookie);
+
+    if (cookies.ec_accessToken) {
+      const payload: Payload = await this.authService.validateAccessToken(
+        cookies.ec_refreshToken,
+      );
+
+      request.user = payload;
+
+      this.logger.log(loggerMessages.authGuard.userHasAccessToken);
+
+      return true;
+    }
+
+    if (cookies.ec_refreshToken) {
+      const payload: Payload = await this.authService.validateRefreshToken(
+        cookies.ec_refreshToken,
+      );
+      const accessToken: string =
+        await this.authService.generateAccessToken(payload);
+      const accessCookieExpiration: number = 1000 * 60 * 30; //30 minutes
+
+      response.cookie('ec_accessToken', accessToken, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'strict',
+        maxAge: accessCookieExpiration,
+      });
+
+      request.user = payload;
+
+      this.logger.log(loggerMessages.authGuard.userHasRefreshToken);
+
+      return true;
+    }
+
+    this.logger.log(loggerMessages.authGuard.userWithoutCredentials);
+
+    throw new UnauthorizedException(httpMessages_EN.authGuard.status_401);
+  }
+}

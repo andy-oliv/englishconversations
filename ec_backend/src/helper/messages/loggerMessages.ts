@@ -61,6 +61,62 @@ const loggerMessages = {
         'An internal error occurred while saving the answer. Check the error log for more information.',
     },
   },
+  auth: {
+    addRefreshTokenToDatabase: {
+      checkEnv:
+        'An internal error occurred because the salt rounds environment variable is not correctly set. Please check the .env file',
+      status_500:
+        'An internal error occurred while adding the refresh token to the database. Check the error log for more information.',
+    },
+    fetchUser: {
+      status_500:
+        'An internal error occurred while fetching the user data from the payload. Check the error log for more information.',
+    },
+    generateAccessToken: {
+      status_500:
+        'An internal error occurred while generating the access token. Check the error log for more information.',
+    },
+    generateRefreshToken: {
+      status_500:
+        'An internal error occurred while generating the refresh token. Check the error log for more information.',
+    },
+    login: {
+      status_500:
+        'An internal error occurred while logging in the user. Check the error log for more information.',
+    },
+    loginDataVerification: {
+      status_500:
+        'An internal error occurred while veryfing the user login information. Check the error log for more information.',
+    },
+    logout: {
+      status_500:
+        'An internal error occurred while logging out the user. Check the error log for more information.',
+    },
+    validateAccessToken: {
+      status_500:
+        'An internal error occurred while validating the access token. Check the error log for more information.',
+    },
+    validateRefreshToken: {
+      status_500:
+        'An internal error occurred while validating the refresh token. Check the error log for more information.',
+    },
+    verifyPassword: {
+      status_500:
+        'An internal error occurred while verifying the password. Check the error log for more information.',
+    },
+  },
+  authGuard: {
+    userHasAccessToken:
+      'The user provided an access token. Moving forward with the request...',
+    userHasRefreshToken:
+      'The user did not provide an access token but they have a refresh token. Generating new access token and moving forward with the request...',
+    userWithoutCredentials:
+      'The user did not provide any credentials. Request denied to access content denied.',
+  },
+  authRole: {
+    status_403:
+      'A user tried to access content without the required credentials.',
+  },
   chapter: {
     deleteChapter: {
       status_200: 'A chapter has been deleted.',

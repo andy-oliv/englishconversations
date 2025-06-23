@@ -22,6 +22,7 @@ Oferecer um curso completo, personalizado e acessível de inglês para falantes 
 ![MySQL](https://img.shields.io/badge/-MySQL-4479A1?style=flat&logo=mysql&logoColor=white)
 ![Jest](https://img.shields.io/badge/-Jest-C21325?style=flat&logo=jest&logoColor=white)
 ![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=flat&logo=swagger&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-black?style=flat&logo=JSON%20web%20tokens)
 
 ## 🔑 Funcionalidades principais (MVP)
 
@@ -43,4 +44,4 @@ Desenvolvido por Andrew Oliveira, professor de inglês e desenvolvedor web apaix
 
 ### Vamos conversar!
 
-<a href="https://github.com/andy-oliv">GitHub</a> • <a href="https://www.linkedin.com/in/andy-oliveira/">LinkedIn</a> • <a href="https://www.instagram.com/_andrew.code/">Instagram</a>
+<a href="https://github.com/andy-oliv">GitHub</a> • <a href="https://www.linkedin.com/in/andy-oliveira/">LinkedIn</a> • <a href="https://www.instagram.com/andrewithw/">Instagram</a>

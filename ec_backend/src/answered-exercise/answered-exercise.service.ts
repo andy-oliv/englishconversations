@@ -2,14 +2,14 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Logger } from 'nestjs-pino';
 import Return from '../common/types/Return';
-import AnsweredExercise from '../common/types/AnsweredExercise';
+import AnsweredExercise from '../entities/AnsweredExercise';
 import handleInternalErrorException from '../helper/functions/handleErrorException';
 import loggerMessages from '../helper/messages/loggerMessages';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
 import { StudentService } from '../student/student.service';
 import { ExerciseService } from '../exercise/exercise.service';
 import { QuizService } from '../quiz/quiz.service';
-import Exercise from '../common/types/Exercise';
+import Exercise from '../entities/Exercise';
 import { isEqual } from 'lodash';
 import generateExceptionMessage from '../helper/functions/generateExceptionMessage';
 

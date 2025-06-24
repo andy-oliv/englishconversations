@@ -1,4 +1,4 @@
-import { FileTypes } from '../../../generated/prisma';
+import { FileTypes } from '../../generated/prisma';
 
 export default interface File {
   id?: string;

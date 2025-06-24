@@ -1,4 +1,4 @@
-import Quiz from '../../common/types/Quiz';
+import Quiz from '../../entities/Quiz';
 import { faker } from '@faker-js/faker/.';
 import {
   generateRandomDifficulty,

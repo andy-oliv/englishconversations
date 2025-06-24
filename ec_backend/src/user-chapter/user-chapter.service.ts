@@ -6,7 +6,7 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { Logger } from 'nestjs-pino';
 import handleInternalErrorException from '../helper/functions/handleErrorException';
-import UserChapter from '../common/types/userChapter';
+import UserChapter from '../entities/userChapter';
 import Return from '../common/types/Return';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
 import loggerMessages from '../helper/messages/loggerMessages';

@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { AnsweredQuizService } from './answered-quiz.service';
 import generateMockAnsweredQuiz from '../helper/mocks/generateMocAnsweredQuiz';
-import AnsweredQuiz from '../common/types/AnsweredQuiz';
+import AnsweredQuiz from '../entities/AnsweredQuiz';
 
 describe('answeredQuizService', () => {
   let answeredQuizService: AnsweredQuizService;

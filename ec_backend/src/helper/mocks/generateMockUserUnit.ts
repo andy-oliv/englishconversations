@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker/.';
 import { Status } from '../../../generated/prisma';
-import UserUnit from '../../common/types/UserUnit';
+import UserUnit from '../../entities/UserUnit';
 
 export default function generateMockUserUnit(): UserUnit {
   const userUnit: UserUnit = {

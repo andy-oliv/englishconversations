@@ -7,7 +7,7 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { Logger } from 'nestjs-pino';
 import * as bcrypt from 'bcrypt';
-import User from '../common/types/User';
+import User from '../entities/User';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
 import handleInternalErrorException from '../helper/functions/handleErrorException';
 import loggerMessages from '../helper/messages/loggerMessages';

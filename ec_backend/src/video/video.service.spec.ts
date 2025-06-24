@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { VideoService } from './video.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { Logger } from 'nestjs-pino';
-import Video from '../common/types/Video';
+import Video from '../entities/Video';
 import generateMockVideo from '../helper/mocks/generateMockVideo';
 import Return from '../common/types/Return';
 import httpMessages_EN from '../helper/messages/httpMessages.en';

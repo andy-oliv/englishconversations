@@ -1,4 +1,4 @@
-import { NotificationTypes } from '../../../generated/prisma';
+import { NotificationTypes } from '../../generated/prisma';
 
 export default interface Notification {
   id?: number;

@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TagController } from './tag.controller';
 import { TagService } from './tag.service';
-import Tag from '../common/types/Tag';
+import Tag from '../entities/Tag';
 import { faker } from '@faker-js/faker/.';
-import Exercise from '../common/types/Exercise';
+import Exercise from '../entities/Exercise';
 import generateMockExercise from '../helper/mocks/generateMockExercise';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
 import Return from '../common/types/Return';

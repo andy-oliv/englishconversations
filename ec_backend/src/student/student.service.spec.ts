@@ -3,7 +3,7 @@ import { StudentService } from './student.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { Logger } from 'nestjs-pino';
 import generateMockStudent from '../helper/mocks/generateMockStudent';
-import Student from '../common/types/Student';
+import Student from '../entities/Student';
 import loggerMessages from '../helper/messages/loggerMessages';
 import Return from '../common/types/Return';
 import httpMessages_EN from '../helper/messages/httpMessages.en';

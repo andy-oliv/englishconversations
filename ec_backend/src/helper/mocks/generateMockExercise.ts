@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker/.';
-import Exercise from '../../common/types/Exercise';
+import Exercise from '../../entities/Exercise';
 import {
   generateRandomDifficulty,
   generateRandomLevel,

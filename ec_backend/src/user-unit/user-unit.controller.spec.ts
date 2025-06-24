@@ -9,7 +9,7 @@ import {
 import { UserUnitController } from './user-unit.controller';
 import { UserUnitService } from './user-unit.service';
 import generateMockUserUnit from '../helper/mocks/generateMockUserUnit';
-import UserUnit from '../common/types/UserUnit';
+import UserUnit from '../entities/UserUnit';
 
 describe('userUnitController', () => {
   let userUnitController: UserUnitController;

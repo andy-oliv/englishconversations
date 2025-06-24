@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Logger } from 'nestjs-pino';
 import Return from '../common/types/Return';
-import Tag from '../common/types/Tag';
+import Tag from '../entities/Tag';
 import { PrismaService } from '../prisma/prisma.service';
 import generateExceptionMessage from '../helper/functions/generateExceptionMessage';
 import httpMessages_EN from '../helper/messages/httpMessages.en';

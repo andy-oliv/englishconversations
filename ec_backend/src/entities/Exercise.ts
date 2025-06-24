@@ -3,7 +3,7 @@ import {
   Difficulty,
   ExerciseTypes,
   Prisma,
-} from '../../../generated/prisma';
+} from '../../generated/prisma';
 
 export default interface Exercise {
   id?: number;

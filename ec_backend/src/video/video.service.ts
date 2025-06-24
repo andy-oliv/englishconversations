@@ -3,7 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { Logger } from 'nestjs-pino';
 import Return from '../common/types/Return';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
-import Video from '../common/types/Video';
+import Video from '../entities/Video';
 import handleInternalErrorException from '../helper/functions/handleErrorException';
 import loggerMessages from '../helper/messages/loggerMessages';
 import generateExceptionMessage from '../helper/functions/generateExceptionMessage';

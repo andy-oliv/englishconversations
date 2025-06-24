@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { UserNotificationController } from './user-notification.controller';
 import { UserNotificationService } from './user-notification.service';
-import UserNotification from '../common/types/UserNotification';
+import UserNotification from '../entities/UserNotification';
 import generateMockUserNotification from '../helper/mocks/generateMockUserNotification';
 
 describe('NotificationController', () => {

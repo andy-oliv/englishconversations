@@ -1,4 +1,4 @@
-import Student from '../../common/types/Student';
+import Student from '../../entities/Student';
 import { faker } from '@faker-js/faker';
 
 export default function generateMockStudent(): Student {

@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { UnitController } from './unit.controller';
 import { UnitService } from './unit.service';
-import Unit from '../common/types/Unit';
+import Unit from '../entities/Unit';
 import generateMockUnit from '../helper/mocks/generateMockUnit';
 
 describe('unitController', () => {

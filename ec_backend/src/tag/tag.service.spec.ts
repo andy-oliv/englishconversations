@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TagService } from './tag.service';
-import Tag from '../common/types/Tag';
-import Exercise from '../common/types/Exercise';
+import Tag from '../entities/Tag';
+import Exercise from '../entities/Exercise';
 import { ContentType } from '../common/types/ContentType';
 import generateMockExercise from '../helper/mocks/generateMockExercise';
 import { faker } from '@faker-js/faker/.';

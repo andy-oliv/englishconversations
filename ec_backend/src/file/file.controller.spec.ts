@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { FileController } from './file.controller';
 import { FileService } from './file.service';
-import File from '../common/types/File';
+import File from '../entities/File';
 import generateMockFile from '../helper/mocks/generateMockFile';
 
 describe('FileController', () => {

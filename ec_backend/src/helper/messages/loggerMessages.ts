@@ -63,8 +63,6 @@ const loggerMessages = {
   },
   auth: {
     addRefreshTokenToDatabase: {
-      checkEnv:
-        'An internal error occurred because the salt rounds environment variable is not correctly set. Please check the .env file',
       status_500:
         'An internal error occurred while adding the refresh token to the database. Check the error log for more information.',
     },
@@ -80,6 +78,16 @@ const loggerMessages = {
       status_500:
         'An internal error occurred while generating the refresh token. Check the error log for more information.',
     },
+    generateResetToken: {
+      status_404:
+        'A user tried resetting their password but the register was not found.',
+      status_500:
+        'An internal error occurred while generating the reset token. Check the error log for more information.',
+    },
+    getSaltRounds: {
+      checkEnv:
+        'The SALT_ROUNDS variable is not correctly set. Check the .env file to fix this issue.',
+    },
     login: {
       status_500:
         'An internal error occurred while logging in the user. Check the error log for more information.',
@@ -92,6 +100,18 @@ const loggerMessages = {
       status_500:
         'An internal error occurred while logging out the user. Check the error log for more information.',
     },
+    sendResetEmail: {
+      status_500:
+        'An internal error occurred while sending the email. Check the error log for more information.',
+    },
+    updateEmail: {
+      status_500:
+        'An internal error occurred while updating the email. Check the error log for more information.',
+    },
+    updatePassword: {
+      status_500:
+        'An internal error occurred while updating the password. Check the error log for more information.',
+    },
     validateAccessToken: {
       status_500:
         'An internal error occurred while validating the access token. Check the error log for more information.',
@@ -103,6 +123,12 @@ const loggerMessages = {
     verifyPassword: {
       status_500:
         'An internal error occurred while verifying the password. Check the error log for more information.',
+    },
+    verifyToken: {
+      status_404:
+        'A user tried updating their password but no user was found connected to the provided token.',
+      status_500:
+        'An internal error occurred while verifying the token. Check the error log for more information.',
     },
   },
   authGuard: {

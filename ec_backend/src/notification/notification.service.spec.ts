@@ -8,7 +8,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { NotificationService } from './notification.service';
-import Notification from '../common/types/Notification';
+import Notification from '../entities/Notification';
 import generateMockNotification from '../helper/mocks/generateMockNotification';
 describe('NotificationService', () => {
   let notificationService: NotificationService;

@@ -6,7 +6,7 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { Logger } from 'nestjs-pino';
 import Return from '../common/types/Return';
-import Quiz from '../common/types/Quiz';
+import Quiz from '../entities/Quiz';
 import generateExceptionMessage from '../helper/functions/generateExceptionMessage';
 import loggerMessages from '../helper/messages/loggerMessages';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
@@ -14,7 +14,7 @@ import handleInternalErrorException from '../helper/functions/handleErrorExcepti
 import { CEFRLevels, Difficulty } from '../../generated/prisma';
 import UpdateQuizDTO from './dto/updateQuiz.dto';
 import { ExerciseService } from '../exercise/exercise.service';
-import Exercise from '../common/types/Exercise';
+import Exercise from '../entities/Exercise';
 
 @Injectable()
 export class QuizService {

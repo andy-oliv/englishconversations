@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ExerciseController } from './exercise.controller';
 import { ExerciseService } from './exercise.service';
-import Exercise from '../common/types/Exercise';
+import Exercise from '../entities/Exercise';
 import { CEFRLevels, Difficulty } from '../../generated/prisma';
 import generateMockExercise from '../helper/mocks/generateMockExercise';
 import httpMessages_EN from '../helper/messages/httpMessages.en';

@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { AnsweredQuizController } from './answered-quiz.controller';
 import { AnsweredQuizService } from './answered-quiz.service';
-import AnsweredQuiz from '../common/types/AnsweredQuiz';
+import AnsweredQuiz from '../entities/AnsweredQuiz';
 import generateMockAnsweredQuiz from '../helper/mocks/generateMocAnsweredQuiz';
 
 describe('answeredQuiz', () => {

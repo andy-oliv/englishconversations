@@ -9,7 +9,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { UserChapterService } from './user-chapter.service';
-import UserChapter from '../common/types/userChapter';
+import UserChapter from '../entities/userChapter';
 import generateMockUserChapter from '../helper/mocks/generateMockUserChapter';
 
 describe('UserChapterService', () => {

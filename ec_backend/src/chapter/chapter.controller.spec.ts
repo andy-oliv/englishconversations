@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { ChapterController } from './chapter.controller';
 import { ChapterService } from './chapter.service';
-import Chapter from '../common/types/Chapter';
+import Chapter from '../entities/Chapter';
 import { faker } from '@faker-js/faker/.';
 
 describe('ChapterController', () => {

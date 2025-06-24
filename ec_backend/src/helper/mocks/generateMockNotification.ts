@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker/.';
-import Notification from '../../common/types/Notification';
+import Notification from '../../entities/Notification';
 import { NotificationTypes } from '../../../generated/prisma';
 
 export default function generateMockNotification(): Notification {

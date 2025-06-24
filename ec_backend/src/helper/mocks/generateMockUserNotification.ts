@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker/.';
-import UserNotification from '../../common/types/UserNotification';
+import UserNotification from '../../entities/UserNotification';
 
 export default function generateMockUserNotification(): UserNotification {
   const notification: UserNotification = {

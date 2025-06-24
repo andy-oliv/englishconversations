@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
 import { PrismaService } from '../prisma/prisma.service';
-import User from '../common/types/User';
+import User from '../entities/User';
 import generateMockUser from '../helper/mocks/generateMockUser';
 import { faker } from '@faker-js/faker/.';
 import Return from '../common/types/Return';

@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker/.';
-import UserChapter from '../../common/types/userChapter';
+import UserChapter from '../../entities/userChapter';
 import { Status } from '../../../generated/prisma';
 
 export default function generateMockUserChapter(): UserChapter {

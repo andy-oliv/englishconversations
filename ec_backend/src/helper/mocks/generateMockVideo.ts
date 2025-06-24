@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker/.';
-import Video from '../../common/types/Video';
+import Video from '../../entities/Video';
 
 export default function generateMockVideo(): Video {
   const video: Video = {

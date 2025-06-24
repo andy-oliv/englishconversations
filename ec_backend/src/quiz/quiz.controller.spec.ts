@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { QuizController } from './quiz.controller';
 import { QuizService } from './quiz.service';
-import Quiz from '../common/types/Quiz';
+import Quiz from '../entities/Quiz';
 import generateMockQuiz from '../helper/mocks/generateMockQuiz';
 
 describe('quizController', () => {

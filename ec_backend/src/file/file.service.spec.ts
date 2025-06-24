@@ -8,7 +8,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { FileService } from './file.service';
-import File from '../common/types/File';
+import File from '../entities/File';
 import generateMockFile from '../helper/mocks/generateMockFile';
 
 describe('FileService', () => {

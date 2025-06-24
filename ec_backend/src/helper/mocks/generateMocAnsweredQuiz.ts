@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker/.';
-import AnsweredQuiz from '../../common/types/AnsweredQuiz';
+import AnsweredQuiz from '../../entities/AnsweredQuiz';
 
 export default function generateMockAnsweredQuiz(): AnsweredQuiz {
   const answer: AnsweredQuiz = {

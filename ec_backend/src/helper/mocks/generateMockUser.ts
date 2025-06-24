@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker/.';
-import User from '../../common/types/User';
+import User from '../../entities/User';
 
 export default function generateMockUser(): User {
   const user: User = {

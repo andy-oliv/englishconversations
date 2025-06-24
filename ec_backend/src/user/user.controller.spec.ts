@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
-import User from '../common/types/User';
+import User from '../entities/User';
 import generateMockUser from '../helper/mocks/generateMockUser';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
 import Return from '../common/types/Return';

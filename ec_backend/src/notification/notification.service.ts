@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Logger } from 'nestjs-pino';
 import { PrismaService } from '../prisma/prisma.service';
-import Notification from '../common/types/Notification';
+import Notification from '../entities/Notification';
 import Return from '../common/types/Return';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
 import handleInternalErrorException from '../helper/functions/handleErrorException';

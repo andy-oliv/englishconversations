@@ -1,4 +1,4 @@
-import { Prisma } from '../../../generated/prisma';
+import { Prisma } from '../../generated/prisma';
 
 export default interface AnsweredExercise {
   id?: string;

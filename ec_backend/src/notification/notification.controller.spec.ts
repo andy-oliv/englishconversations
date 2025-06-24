@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { NotificationController } from './notification.controller';
 import { NotificationService } from './notification.service';
-import Notification from '../common/types/Notification';
+import Notification from '../entities/Notification';
 import generateMockNotification from '../helper/mocks/generateMockNotification';
 import Return from '../common/types/Return';
 import httpMessages_EN from '../helper/messages/httpMessages.en';

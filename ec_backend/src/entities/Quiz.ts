@@ -1,4 +1,4 @@
-import { CEFRLevels, Difficulty } from '../../../generated/prisma';
+import { CEFRLevels, Difficulty } from '../../generated/prisma';
 
 export default interface Quiz {
   id?: string;

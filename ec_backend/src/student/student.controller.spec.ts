@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { StudentController } from './student.controller';
 import { StudentService } from './student.service';
 import Return from '../common/types/Return';
-import Student from '../common/types/Student';
+import Student from '../entities/Student';
 import generateMockStudent from '../helper/mocks/generateMockStudent';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
 import {

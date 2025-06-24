@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { VideoController } from './video.controller';
 import { VideoService } from './video.service';
-import Video from '../common/types/Video';
+import Video from '../entities/Video';
 import generateMockVideo from '../helper/mocks/generateMockVideo';
 import Return from '../common/types/Return';
 import httpMessages_EN from '../helper/messages/httpMessages.en';

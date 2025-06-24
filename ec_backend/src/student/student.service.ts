@@ -6,7 +6,7 @@ import {
 import { PrismaService } from '../prisma/prisma.service';
 import { Logger } from 'nestjs-pino';
 import Return from '../common/types/Return';
-import Student from '../common/types/Student';
+import Student from '../entities/Student';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
 import loggerMessages from '../helper/messages/loggerMessages';
 import generateExceptionMessage from '../helper/functions/generateExceptionMessage';

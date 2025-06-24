@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker/.';
-import Unit from '../../common/types/Unit';
+import Unit from '../../entities/Unit';
 
 export default function generateMockUnit(): Unit {
   const unit: Unit = {

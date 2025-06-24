@@ -1,4 +1,4 @@
-import { CEFRLevels, UserRoles } from '../../../generated/prisma';
+import { CEFRLevels, UserRoles } from '../../generated/prisma';
 
 export default interface User {
   id?: string;

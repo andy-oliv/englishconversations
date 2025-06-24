@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker/.';
-import File from '../../common/types/File';
+import File from '../../entities/File';
 import { FileTypes } from '../../../generated/prisma';
 
 const fileTypes: FileTypes[] = ['PDF', 'AUDIO', 'IMAGE'];

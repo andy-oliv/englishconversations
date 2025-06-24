@@ -53,6 +53,10 @@ const httpMessages_EN = {
     fetchUser: {
       status_401: 'Unauthorized: You must login to see this content.',
     },
+    generateResetToken: {
+      status_200:
+        'If the email is correctly registered, you should have received a link to reset your password.',
+    },
     login: {
       status_200: 'User successfully logged in!',
     },
@@ -63,6 +67,14 @@ const httpMessages_EN = {
     logout: {
       status_200: 'User successfully logged out.',
     },
+    updateEmail: {
+      status_200: 'The email has been successfully updated',
+      status_400: 'Invalid email. Check the request.',
+      status_404: 'The user was not found or the ID is invalid.',
+    },
+    updatePassword: {
+      status_200: 'The passsword has been successfully updated.',
+    },
     validateAccessToken: {
       status_401: 'Unauthorized: You must login to see this content.',
     },
@@ -72,6 +84,9 @@ const httpMessages_EN = {
     verifyPassword: {
       status_400:
         'Please check the request. Either the user or the password are incorrect.',
+    },
+    verifyToken: {
+      status_400: 'The token is expired.',
     },
   },
   authGuard: {

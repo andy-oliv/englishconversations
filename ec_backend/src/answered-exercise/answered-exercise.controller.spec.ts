@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { AnsweredExerciseController } from './answered-exercise.controller';
 import { AnsweredExerciseService } from './answered-exercise.service';
-import AnsweredExercise from '../common/types/AnsweredExercise';
+import AnsweredExercise from '../entities/AnsweredExercise';
 import generateMockAnsweredExercise from '../helper/mocks/generateMockAnsweredExercise';
 
 describe('answeredExercise', () => {

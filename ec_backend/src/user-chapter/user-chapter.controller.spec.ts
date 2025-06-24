@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { UserChapterController } from './user-chapter.controller';
 import { UserChapterService } from './user-chapter.service';
-import UserChapter from '../common/types/userChapter';
+import UserChapter from '../entities/userChapter';
 import generateMockUserChapter from '../helper/mocks/generateMockUserChapter';
 import generateMockUser from '../helper/mocks/generateMockUser';
 

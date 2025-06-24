@@ -10,7 +10,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { QuizService } from './quiz.service';
-import Quiz from '../common/types/Quiz';
+import Quiz from '../entities/Quiz';
 import generateMockQuiz from '../helper/mocks/generateMockQuiz';
 import { ExerciseService } from '../exercise/exercise.service';
 import { faker } from '@faker-js/faker/.';

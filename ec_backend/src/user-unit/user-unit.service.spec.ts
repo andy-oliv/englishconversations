@@ -8,7 +8,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { UserUnitService } from './user-unit.service';
-import UserUnit from '../common/types/UserUnit';
+import UserUnit from '../entities/UserUnit';
 import generateMockUserUnit from '../helper/mocks/generateMockUserUnit';
 
 describe('userUnitService', () => {

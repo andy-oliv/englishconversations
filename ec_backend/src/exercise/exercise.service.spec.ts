@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ExerciseService } from './exercise.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { Logger } from 'nestjs-pino';
-import Exercise from '../common/types/Exercise';
+import Exercise from '../entities/Exercise';
 import generateMockExercise from '../helper/mocks/generateMockExercise';
 import loggerMessages from '../helper/messages/loggerMessages';
 import Return from '../common/types/Return';

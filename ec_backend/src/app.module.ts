@@ -25,7 +25,9 @@ import { UserUnitModule } from './user-unit/user-unit.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/guards/auth/auth.guard';
-import { AuthService } from './auth/auth.service';
+import { S3Module } from './s3/s3.module';
+import { EmailModule } from './email/email.module';
+import { EmailValidationGuard } from './auth/guards/email-validation/email-validation.guard';
 
 @Module({
   imports: [
@@ -80,12 +82,18 @@ import { AuthService } from './auth/auth.service';
     UserNotificationModule,
     UserUnitModule,
     AuthModule,
+    S3Module,
+    EmailModule,
   ],
   controllers: [AppController],
   providers: [
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: EmailValidationGuard,
     },
     AppService,
     PrismaService,

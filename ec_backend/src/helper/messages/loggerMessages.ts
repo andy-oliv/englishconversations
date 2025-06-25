@@ -66,6 +66,10 @@ const loggerMessages = {
       status_500:
         'An internal error occurred while adding the refresh token to the database. Check the error log for more information.',
     },
+    emailConfirmed: {
+      status_500:
+        'An internal error occurred while checking the email confirmation token. Check the error log for more information.',
+    },
     fetchUser: {
       status_500:
         'An internal error occurred while fetching the user data from the payload. Check the error log for more information.',
@@ -73,6 +77,12 @@ const loggerMessages = {
     generateAccessToken: {
       status_500:
         'An internal error occurred while generating the access token. Check the error log for more information.',
+    },
+    generateEmailConfirmationToken: {
+      status_404:
+        'A user tried resetting their password but the register was not found.',
+      status_500:
+        'An internal error occurred while generating the confirmation token. Check the error log for more information.',
     },
     generateRefreshToken: {
       status_500:
@@ -99,10 +109,6 @@ const loggerMessages = {
     logout: {
       status_500:
         'An internal error occurred while logging out the user. Check the error log for more information.',
-    },
-    sendResetEmail: {
-      status_500:
-        'An internal error occurred while sending the email. Check the error log for more information.',
     },
     updateEmail: {
       status_500:
@@ -170,6 +176,16 @@ const loggerMessages = {
       status_500:
         'An internal error occurred while updating the chapter. Check the error log for more information.',
     },
+  },
+  email: {
+    sendEmail: {
+      status_500:
+        'An internal error occurred while sending the email. Check the error log for more information.',
+    },
+  },
+  emailValidationGuard: {
+    status_401:
+      'A user without a confirmed email address has tried to access the system.',
   },
   exercise: {
     createExercise: {

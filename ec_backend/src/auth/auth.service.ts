@@ -2,12 +2,13 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Logger } from 'nestjs-pino';
 import { JwtService } from '@nestjs/jwt';
-import User from '../common/types/User';
+import User from '../entities/User';
 import * as bcrypt from 'bcrypt';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
 import handleInternalErrorException from '../helper/functions/handleErrorException';
@@ -16,6 +17,18 @@ import Payload from '../common/types/Payload';
 import GeneratedTokens from '../common/types/GeneratedTokens';
 import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
+import RequestWithUser from '../common/types/RequestWithUser';
+import * as dayjs from 'dayjs';
+import Return from '../common/types/Return';
+import { randomBytes } from 'crypto';
+import generateExceptionMessage from '../helper/functions/generateExceptionMessage';
+import { EmailService } from '../email/email.service';
+import ResendObject from '../common/types/ResendObject';
+import generateResetTemplate from '../helper/functions/templates/generateResetEmail';
+import generateEmailConfirmationTemplate from '../helper/functions/templates/generateEmailConfirmation';
+import { UserRoles } from '../../generated/prisma';
+import generateWelcomeEmail from '../helper/functions/templates/generateWelcomeEmail';
+import { useReducer } from 'react';
 
 @Injectable()
 export class AuthService {
@@ -24,7 +37,187 @@ export class AuthService {
     private readonly logger: Logger,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly emailService: EmailService,
   ) {}
+
+  async emailConfirmed(token: string): Promise<GeneratedTokens> {
+    try {
+      const payload: Payload = await this.jwtService.verifyAsync(token);
+      const user: User = await this.prismaService.user.update({
+        where: {
+          id: payload.id,
+        },
+        data: {
+          isEmailVerified: true,
+        },
+      });
+      const tokens: GeneratedTokens = await this.handlePayload(
+        {
+          id: payload.id,
+          name: payload.name,
+          email: payload.email,
+          role: payload.role,
+        },
+        user,
+      );
+
+      const template: ResendObject = generateWelcomeEmail(
+        user.name,
+        user.email,
+        this.configService,
+      );
+      this.emailService.sendEmail(template);
+
+      return tokens;
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new BadRequestException(
+          httpMessages_EN.auth.emailConfirmed.status_400,
+        );
+      }
+
+      handleInternalErrorException(
+        'authService',
+        'emailConfirmed',
+        loggerMessages.auth.emailConfirmed.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  async generateEmailConfirmationToken(
+    id: string,
+    name: string,
+    email: string,
+    role: UserRoles,
+  ): Promise<{ message: string }> {
+    try {
+      const payload: Payload = {
+        id,
+        name,
+        email,
+        role,
+      };
+
+      const expirationDate: string = dayjs().add(30, 'minute').toISOString();
+
+      const token: string = await this.jwtService.signAsync(payload, {
+        issuer: this.configService.get<string>('JWT_ISSUER'),
+        expiresIn: this.configService.get<string>(
+          'CONFIRMATION_TOKEN_EXPIRATION',
+        ),
+      });
+
+      await this.prismaService.user.update({
+        where: {
+          email,
+        },
+        data: {
+          emailVerificationToken: token,
+          emailTokenExpires: expirationDate,
+        },
+      });
+      const template: ResendObject = generateEmailConfirmationTemplate(
+        name,
+        email,
+        token,
+        this.configService,
+      );
+      await this.emailService.sendEmail(template);
+
+      return {
+        message: httpMessages_EN.auth.generateEmailConfirmationToken.status_200,
+      };
+    } catch (error) {
+      if (error.code === 'P2025') {
+        this.logger.log({
+          message: generateExceptionMessage(
+            'authService',
+            'generateEmailConfirmationToken',
+            loggerMessages.auth.generateEmailConfirmationToken.status_404,
+          ),
+          data: {
+            email,
+          },
+        });
+        //intentionally returning 200 to avoid exposing an email
+        return {
+          message:
+            httpMessages_EN.auth.generateEmailConfirmationToken.status_200,
+        };
+      }
+
+      handleInternalErrorException(
+        'authService',
+        'generateEmailConfirmationToken',
+        loggerMessages.auth.generateEmailConfirmationToken.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  async generateResetToken(email: string): Promise<{ message: string }> {
+    try {
+      const token: string = randomBytes(32).toString('hex');
+      const expirationDate: Date = dayjs().add(30, 'minute').toDate();
+      await this.prismaService.user.update({
+        where: {
+          email,
+        },
+        data: {
+          passwordResetToken: token,
+          resetPasswordExpires: expirationDate,
+        },
+      });
+      const template: ResendObject = generateResetTemplate(
+        email,
+        token,
+        this.configService,
+      );
+      await this.emailService.sendEmail(template);
+
+      return { message: httpMessages_EN.auth.generateResetToken.status_200 };
+    } catch (error) {
+      if (error.code === 'P2025') {
+        this.logger.log({
+          message: generateExceptionMessage(
+            'authService',
+            'generateResetToken',
+            loggerMessages.auth.generateResetToken.status_404,
+          ),
+          data: {
+            email,
+          },
+        });
+        //intentionally returning 200 to avoid exposing an email
+        return { message: httpMessages_EN.auth.generateResetToken.status_200 };
+      }
+
+      handleInternalErrorException(
+        'authService',
+        'generateResetToken',
+        loggerMessages.auth.generateResetToken.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  private getSaltRounds(): number {
+    const saltRounds: number = Number(
+      this.configService.get<string>('SALT_ROUNDS'),
+    );
+    if (!saltRounds || isNaN(saltRounds)) {
+      this.logger.error(loggerMessages.auth.getSaltRounds.checkEnv);
+      throw new InternalServerErrorException(
+        httpMessages_EN.general.status_500,
+      );
+    }
+
+    return saltRounds;
+  }
 
   async fetchUser(id: string): Promise<User> {
     try {
@@ -52,7 +245,7 @@ export class AuthService {
     }
   }
 
-  async loginDataVerification(email: string, password: string) {
+  async loginDataVerification(email: string, password: string): Promise<User> {
     try {
       const user: User = await this.prismaService.user.findUniqueOrThrow({
         where: {
@@ -111,15 +304,7 @@ export class AuthService {
   }
 
   async addRefreshTokenToDatabase(refreshToken: string, user: User) {
-    const saltRounds: number = Number(
-      this.configService.get<string>('SALT_ROUNDS'),
-    );
-    if (!saltRounds || isNaN(saltRounds)) {
-      this.logger.error(loggerMessages.auth.addRefreshTokenToDatabase.checkEnv);
-      throw new InternalServerErrorException(
-        httpMessages_EN.general.status_500,
-      );
-    }
+    const saltRounds: number = this.getSaltRounds();
 
     const hashedToken: string = await bcrypt.hash(refreshToken, saltRounds);
     try {
@@ -182,15 +367,8 @@ export class AuthService {
   }
 
   async validateAccessToken(token: string): Promise<Payload> {
-    const validatedToken = await this.jwtService.verifyAsync(token);
-    if (!validatedToken) {
-      throw new UnauthorizedException(
-        httpMessages_EN.auth.validateAccessToken.status_401,
-      );
-    }
-
     try {
-      const data: Payload = await this.jwtService.decode(token);
+      const data: Payload = await this.jwtService.verifyAsync(token);
       await this.fetchUser(data.id);
 
       const payload: Payload = {
@@ -202,6 +380,15 @@ export class AuthService {
 
       return payload;
     } catch (error) {
+      if (
+        error.name === 'TokenExpiredError' ||
+        error.name === 'JsonWebTokenError'
+      ) {
+        throw new UnauthorizedException(
+          httpMessages_EN.auth.validateAccessToken.status_401,
+        );
+      }
+
       if (error instanceof UnauthorizedException) {
         throw error;
       }
@@ -217,14 +404,8 @@ export class AuthService {
   }
 
   async validateRefreshToken(token: string): Promise<Payload> {
-    const validatedToken = await this.jwtService.verifyAsync(token);
-    if (!validatedToken) {
-      throw new UnauthorizedException(
-        httpMessages_EN.auth.validateRefreshToken.status_401,
-      );
-    }
     try {
-      const data: Payload = await this.jwtService.decode(token);
+      const data: Payload = await this.jwtService.verifyAsync(token);
       const user: User = await this.fetchUser(data.id);
       const isValid: boolean = await bcrypt.compare(token, user.refreshToken);
 
@@ -243,6 +424,14 @@ export class AuthService {
 
       return payload;
     } catch (error) {
+      if (
+        error.name === 'TokenExpiredError' ||
+        error.name === 'JsonWebTokenError'
+      ) {
+        throw new UnauthorizedException(
+          httpMessages_EN.auth.validateRefreshToken.status_401,
+        );
+      }
       if (error instanceof UnauthorizedException) {
         throw error;
       }
@@ -263,6 +452,54 @@ export class AuthService {
     await this.addRefreshTokenToDatabase(refreshToken, user);
 
     return { accessToken, refreshToken };
+  }
+
+  async verifyToken(token: string, email: string): Promise<void> {
+    try {
+      const user: User = await this.prismaService.user.findFirstOrThrow({
+        where: {
+          AND: [{ email: email }, { passwordResetToken: token }],
+        },
+      });
+
+      const currentDate: dayjs.Dayjs = dayjs();
+      const tokenExpirationDate: dayjs.Dayjs = dayjs(user.resetPasswordExpires);
+
+      if (currentDate.isAfter(tokenExpirationDate)) {
+        throw new BadRequestException(
+          httpMessages_EN.auth.verifyToken.status_400,
+        );
+      }
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+
+      if (error.code === 'P2025') {
+        this.logger.log({
+          message: generateExceptionMessage(
+            'authService',
+            'verifyToken',
+            loggerMessages.auth.verifyToken.status_404,
+          ),
+          data: {
+            email,
+            token,
+          },
+        });
+        throw new BadRequestException(
+          httpMessages_EN.auth.verifyToken.status_400,
+        );
+      }
+
+      handleInternalErrorException(
+        'authService',
+        'verifyToken',
+        loggerMessages.auth.verifyToken.status_500,
+        this.logger,
+        error,
+      );
+    }
   }
 
   async login(email: string, password: string): Promise<GeneratedTokens> {
@@ -301,6 +538,86 @@ export class AuthService {
         'authService',
         'logout',
         loggerMessages.auth.logout.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  async updateEmail(
+    request: RequestWithUser,
+    updatedEmail: string,
+  ): Promise<Return> {
+    try {
+      const updatedUser: User = await this.prismaService.user.update({
+        where: {
+          id: request.user.id,
+        },
+        data: {
+          email: updatedEmail,
+        },
+      });
+      return {
+        message: httpMessages_EN.auth.updateEmail.status_200,
+        data: updatedUser,
+      };
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(
+          httpMessages_EN.auth.updateEmail.status_404,
+        );
+      }
+
+      if (error.code === 'P2002') {
+        throw new BadRequestException(
+          httpMessages_EN.auth.updateEmail.status_400,
+        );
+      }
+
+      handleInternalErrorException(
+        'authService',
+        'updateEmail',
+        loggerMessages.auth.updateEmail.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  async updatePassword(
+    email: string,
+    updatedPassword: string,
+    token: string,
+  ): Promise<Return> {
+    await this.verifyToken(token, email);
+
+    const saltRounds: number = this.getSaltRounds();
+
+    const hashedPassword: string = await bcrypt.hash(
+      updatedPassword,
+      saltRounds,
+    );
+
+    try {
+      const updatedUser: User = await this.prismaService.user.update({
+        where: {
+          email,
+        },
+        data: {
+          password: hashedPassword,
+          passwordResetToken: null,
+          resetPasswordExpires: null,
+        },
+      });
+      return {
+        message: httpMessages_EN.auth.updatePassword.status_200,
+        data: updatedUser,
+      };
+    } catch (error) {
+      handleInternalErrorException(
+        'authService',
+        'updatePassword',
+        loggerMessages.auth.updatePassword.status_500,
         this.logger,
         error,
       );

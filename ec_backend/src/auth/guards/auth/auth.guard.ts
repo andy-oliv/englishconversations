@@ -4,7 +4,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { Logger } from 'nestjs-pino';
 import Cookies from '../../../common/types/cookies';
 import getCookies from '../../../helper/functions/getCookies';
@@ -75,7 +75,8 @@ export class AuthGuard implements CanActivate {
     }
 
     this.logger.log(loggerMessages.authGuard.userWithoutCredentials);
-
+    response.clearCookie('ec_accessToken');
+    response.clearCookie('ec_refreshToken');
     throw new UnauthorizedException(httpMessages_EN.authGuard.status_401);
   }
 }

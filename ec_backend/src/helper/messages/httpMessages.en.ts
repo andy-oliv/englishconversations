@@ -50,8 +50,15 @@ const httpMessages_EN = {
     },
   },
   auth: {
+    emailConfirmed: {
+      status_400: 'The token is expired.',
+    },
     fetchUser: {
       status_401: 'Unauthorized: You must login to see this content.',
+    },
+    generateEmailConfirmationToken: {
+      status_200:
+        'We have sent you an email with a link to confirm your email address.',
     },
     generateResetToken: {
       status_200:
@@ -118,6 +125,10 @@ const httpMessages_EN = {
       status_200: 'The chapter has been successfully updated!',
       status_404: 'The chapter was not found or the ID is invalid.',
     },
+  },
+  emailValidationGuard: {
+    status_401:
+      'Please confirm your email before trying to access the system. A confirmation email has already been sent to your email address.',
   },
   exercise: {
     createExercise: {

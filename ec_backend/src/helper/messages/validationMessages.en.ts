@@ -73,6 +73,12 @@ const validationMessages_EN = {
     },
   },
   auth: {
+    checkTokenDTO: {
+      token: {
+        isNotEmpty: 'The token field must not be empty',
+        isString: 'The token field must be a string.',
+      },
+    },
     loginDTO: {
       email: {
         isNotEmpty: 'The email field must not be empty.',

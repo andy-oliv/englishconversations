@@ -19,7 +19,8 @@ model User {
   languageLevel CEFRLevels @default(A1)
   email String @db.VarChar(250) @unique
   isEmailVerified Boolean @default(false)
-  emailVerificationToken String? @db.VarChar(64)
+  emailVerificationToken String? @db.Text
+  emailTokenExpires DateTime? @db.DateTime()
   password String @db.VarChar(255)
   refreshToken String? @db.Text
   passwordResetToken String? @db.VarChar(64)

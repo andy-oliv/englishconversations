@@ -82,7 +82,7 @@ export class AuthController {
   @ApiResponse({
     status: 200,
     description: 'Success',
-    example: httpMessages_EN.auth.login.status_200,
+    example: httpMessages_EN.auth.generateEmailConfirmationToken.status_200,
   })
   @ApiResponse({
     status: 409,
@@ -109,6 +109,21 @@ export class AuthController {
 
   @Public()
   @Patch('registered')
+  @ApiResponse({
+    status: 200,
+    description: 'Success',
+    example: httpMessages_EN.auth.login.status_200,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request',
+    example: httpMessages_EN.auth.emailConfirmed.status_400,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal Server Error',
+    example: httpMessages_EN.general.status_500,
+  })
   async emailConfirmed(
     @Query() { token }: CheckTokenDTO,
     @Res({ passthrough: true }) response: Response,
@@ -155,6 +170,21 @@ export class AuthController {
 
   @Public()
   @Patch('reset/password')
+  @ApiResponse({
+    status: 200,
+    description: 'Success',
+    example: httpMessages_EN.auth.updatePassword.status_200,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request',
+    example: httpMessages_EN.auth.updatePassword.status_400,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal Server Error',
+    example: httpMessages_EN.general.status_500,
+  })
   async updatePassword(
     @Query() { token }: CheckTokenDTO,
     @Body() data: updatePasswordDTO,
@@ -163,6 +193,21 @@ export class AuthController {
   }
 
   @Patch('reset/email')
+  @ApiResponse({
+    status: 200,
+    description: 'Success',
+    example: httpMessages_EN.auth.updateEmail.status_200,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request',
+    example: httpMessages_EN.auth.updateEmail.status_400,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal Server Error',
+    example: httpMessages_EN.general.status_500,
+  })
   async updateEmail(
     @Req() request: RequestWithUser,
     @Body() { email }: UpdateEmailDTO,
@@ -172,7 +217,17 @@ export class AuthController {
 
   @Public()
   @Get('reset')
-  async generateToken(
+  @ApiResponse({
+    status: 200,
+    description: 'Success',
+    example: httpMessages_EN.auth.generateResetToken.status_200,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal Server Error',
+    example: httpMessages_EN.general.status_500,
+  })
+  async generateResetToken(
     @Body() data: GenerateResetTokenDTO,
   ): Promise<{ message: string }> {
     return this.authService.generateResetToken(data.email);

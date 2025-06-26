@@ -1,20 +1,20 @@
-# 📚 English Conversations
+<p align="center">
+<img src="https://englishconversations-files.s3.us-east-1.amazonaws.com/images/logo_white.png" alt="English Conversations Logo" width="300">
+</p>
 
-English Conversations é uma plataforma educacional desenvolvida para ajudar estudantes brasileiros a aprender inglês do zero.
+<p align="center">
+English Conversations is an educational platform designed to help Brazilian students learn English from the ground up.
+</p>
 
-## 🧠 Objetivo do Projeto
+## 🚀 Technologies
 
-Oferecer um curso completo, personalizado e acessível de inglês para falantes de português, com uma abordagem prática e progressiva.
-
-## 🚀 Tecnologias Utilizadas
-
-### 🌐 Frontend
+### Frontend
 
 ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)
 ![Angular](https://img.shields.io/badge/angular-%23DD0031.svg?style=flat&logo=angular&logoColor=white)
 ![SASS](https://img.shields.io/badge/SASS-hotpink.svg?style=flat&logo=SASS&logoColor=white)
 
-### 🧩 Backend
+### Backend
 
 ![NestJS](https://img.shields.io/badge/-NestJS-E0234E?style=flat&logo=nestjs&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)
@@ -24,24 +24,36 @@ Oferecer um curso completo, personalizado e acessível de inglês para falantes 
 ![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=flat&logo=swagger&logoColor=white)
 ![JWT](https://img.shields.io/badge/JWT-black?style=flat&logo=JSON%20web%20tokens)
 
-## 🔑 Funcionalidades principais (MVP)
+## 🔑 Key features (MVP)
 
-- Cadastro e login de usuários (JWT)
+- Secure login and registration with JWT
 
-- Organização por níveis do CEFR
+- Interactive videos and exercises
 
-- Vídeos e exercícios por aula
+- Progress tracking system
 
-- Sistema de progresso e gamificação básica
+- Personalized student dashboard
 
-- Dashboard do aluno
+- Admin panel for content and user management
 
-- Área administrativa para gestão de conteúdo
+## 🧑‍💻 Author
 
-## 🧑‍💻 Autor
+<p align="center">
+Developed by Andrew Oliveira — English teacher, web developer, and passionate about technology and education.
+</p>
 
-Desenvolvido por Andrew Oliveira, professor de inglês e desenvolvedor web apaixonado por tecnologia e educação.
+<h3 align="center">Let's connect!</h3>
 
-### Vamos conversar!
-
-<a href="https://github.com/andy-oliv">GitHub</a> • <a href="https://www.linkedin.com/in/andy-oliveira/">LinkedIn</a> • <a href="https://www.instagram.com/andrewithw/">Instagram</a>
+<p align="center">
+  <a href="https://github.com/andy-oliv" target="_blank">
+    <img src="https://img.icons8.com/ios-glyphs/ffffff/github.png" alt="GitHub" width="40" />
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://www.linkedin.com/in/andy-oliveira/" target="_blank">
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/linkedin/linkedin-original.svg" alt="LinkedIn" width="40" />
+  </a>
+  &nbsp;&nbsp;
+  <a href="https://www.instagram.com/andrewithw/" target="_blank">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram" width="40" />
+  </a>
+</p>

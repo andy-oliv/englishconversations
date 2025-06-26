@@ -81,6 +81,7 @@ const httpMessages_EN = {
     },
     updatePassword: {
       status_200: 'The passsword has been successfully updated.',
+      status_400: 'The token is invalid.',
     },
     validateAccessToken: {
       status_401: 'Unauthorized: You must login to see this content.',

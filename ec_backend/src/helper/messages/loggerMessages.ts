@@ -115,6 +115,8 @@ const loggerMessages = {
         'An internal error occurred while updating the email. Check the error log for more information.',
     },
     updatePassword: {
+      status_404:
+        'A user tried updating their password using an email that was not found in the database.',
       status_500:
         'An internal error occurred while updating the password. Check the error log for more information.',
     },

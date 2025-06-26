@@ -28,7 +28,6 @@ import generateResetTemplate from '../helper/functions/templates/generateResetEm
 import generateEmailConfirmationTemplate from '../helper/functions/templates/generateEmailConfirmation';
 import { UserRoles } from '../../generated/prisma';
 import generateWelcomeEmail from '../helper/functions/templates/generateWelcomeEmail';
-import { useReducer } from 'react';
 
 @Injectable()
 export class AuthService {
@@ -205,7 +204,7 @@ export class AuthService {
     }
   }
 
-  private getSaltRounds(): number {
+  getSaltRounds(): number {
     const saltRounds: number = Number(
       this.configService.get<string>('SALT_ROUNDS'),
     );
@@ -568,6 +567,7 @@ export class AuthService {
         );
       }
 
+      //unique constraint error. The email is already in use
       if (error.code === 'P2002') {
         throw new BadRequestException(
           httpMessages_EN.auth.updateEmail.status_400,

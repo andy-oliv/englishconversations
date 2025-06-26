@@ -12,6 +12,7 @@ export default interface User {
   email: string;
   isEmailVerified?: boolean;
   emailVerificationToken?: string;
+  emailTokenExpires?: Date;
   password: string;
   refreshToken?: string;
   passwordResetToken?: string;

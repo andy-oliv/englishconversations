@@ -5,10 +5,14 @@ import {
   Prisma,
 } from '../../generated/prisma';
 
+//since MySQL doesn't accept the use of arrays as valid data types, Prisma.JsonValue is the type that allows the use of arrays
+
 export default interface Exercise {
   id?: number;
   type: ExerciseTypes;
   description: string;
+  columnA?: Prisma.JsonValue; //optional field for 'match the columns' exercises
+  columnB?: Prisma.JsonValue; //optional field for 'match the columns' exercises
   fileId?: string;
   level: CEFRLevels;
   difficulty: Difficulty;

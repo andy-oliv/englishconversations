@@ -193,6 +193,8 @@ model Unit {
   id Int @id @default(autoincrement())
   name String @db.VarChar(150)
   description String @db.Text
+  file File? @relation(fields: [fileId], references: [id])
+  fileId String? @unique
   chapter Chapter @relation(fields: [chapterId], references: [id])
   chapterId String 
   videos Video[]
@@ -224,6 +226,8 @@ model Chapter {
   id String @id @default(uuid())
   name String @db.VarChar(100)
   description String @db.Text
+  file File? @relation(fields: [fileId], references: [id])
+  fileId String? @unique
   units Unit[]
   usersProgress UserChapter[]
   createdAt DateTime @default(now())
@@ -271,6 +275,8 @@ model File {
   exercise Exercise?
   exerciseAnswer AnsweredExercise?
   quiz Quiz?
+  unit Unit?
+  chapter Chapter?
   video Video?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

@@ -128,6 +128,9 @@ const validationMessages_EN = {
         isNotEmpty: 'The description field must not be empty.',
         isString: 'The description field must be a string.',
       },
+      fileId: {
+        isUUID: 'The fileId field must be a valid UUID.',
+      },
     },
   },
   exercises: {
@@ -338,6 +341,9 @@ const validationMessages_EN = {
       chapterId: {
         isNotEmpty: 'The chapterId field must not be empty.',
         isUUID: 'The chapterId field must be a UUID.',
+      },
+      fileId: {
+        isUUID: 'The fileId field must be a valid UUID.',
       },
     },
   },

@@ -29,6 +29,7 @@ model User {
   lastLogin DateTime? @db.DateTime()
   units UserUnit[]
   chapters UserChapter[]
+  videoProgresses VideoProgress[]
   notifications UserNotification[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -261,11 +262,32 @@ model Video {
   duration Int? 
   thumbnail File? @relation(fields: [thumbnailId], references: [id])
   thumbnailId String? @unique
+  feedback Int @default(0)
   videoTags VideoTag[]
   unit Unit? @relation(fields: [unitId], references: [id])
   unitId Int?
+  videoProgresses VideoProgress[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model VideoProgress {
+  id Int @id @default(autoincrement())
+  user User @relation(fields: [userId], references: [id])
+  userId String
+  video Video @relation(fields: [videoId], references: [id])
+  videoId String
+  progress Int @default(0)
+  watchedDuration Int @default(0)
+  watchedCount Int @default(0)
+  lastWatchedAt DateTime? @db.DateTime()
+  startedAt DateTime? @db.DateTime()
+  completedAt DateTime? @db.DateTime()
+  completed Boolean @default(false)
+  isFavorite Boolean @default(false)
+  note String? @db.Text 
+  
+  @@unique([userId, videoId])
 }
 
 model File {

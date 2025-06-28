@@ -10,7 +10,7 @@ export default function generateEmailConfirmationTemplate(
   const template: ResendObject = {
     from: 'Equipe English Conversations <noreply@englishconversations.com.br>',
     to: [email],
-    subject: 'Welcome!',
+    subject: 'Por favor, confirme o seu email',
     html: `<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />

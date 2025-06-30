@@ -36,9 +36,9 @@ export class S3Service {
     this.bucket = this.configService.get<string>('AWS_BUCKET_NAME');
   }
 
-  async putObject(file: any, key?: string): Promise<Return> {
+  async putObject(file: Express.Multer.File, key?: string): Promise<Return> {
     try {
-      const fileName = `${file.originalname.replaceAll(' ', '')}`;
+      const fileName = `${file.originalname.toLowerCase().replaceAll(' ', '')}`;
 
       const command = new PutObjectCommand({
         Bucket: this.bucket,
@@ -50,18 +50,20 @@ export class S3Service {
 
       await this.client.send(command);
 
+      const url: string = `https://${this.bucket}.s3.amazonaws.com/${key ? `${key}/${fileName}` : fileName}`;
+
       this.logger.log({
         message: generateExceptionMessage(
           's3Service',
           'putObject',
           loggerMessages.s3.putObject.status_201,
         ),
-        url: `https://${this.bucket}.s3.amazonaws.com/${key ? `${key}/${fileName}` : fileName}`,
+        url,
       });
       return {
         message: httpMessages_EN.s3.putObject.status_201,
         data: {
-          url: `https://${this.bucket}.s3.amazonaws.com/${key ? `${key}/${fileName}` : fileName}`,
+          url,
         },
       };
     } catch (error) {

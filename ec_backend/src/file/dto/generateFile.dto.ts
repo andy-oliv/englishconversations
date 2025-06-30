@@ -1,4 +1,4 @@
-import { IsIn, IsInt, IsNotEmpty, IsString, IsUrl } from 'class-validator';
+import { IsIn, IsNotEmpty, IsNumber, IsString, IsUrl } from 'class-validator';
 import validationMessages_EN from '../../helper/messages/validationMessages.en';
 import { ApiProperty } from '@nestjs/swagger';
 import { FileTypes } from '../../../generated/prisma';
@@ -58,8 +58,11 @@ export default class GenerateFileDTO {
   @IsNotEmpty({
     message: validationMessages_EN.file.generateFileDTO.size.isNotEmpty,
   })
-  @IsInt({
-    message: validationMessages_EN.file.generateFileDTO.size.isInt,
-  })
+  @IsNumber(
+    {},
+    {
+      message: validationMessages_EN.file.generateFileDTO.size.isNumber,
+    },
+  )
   size: number;
 }

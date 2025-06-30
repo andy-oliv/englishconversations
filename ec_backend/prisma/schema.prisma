@@ -295,7 +295,7 @@ model File {
   name String @db.VarChar(250)
   type FileTypes
   url String @db.VarChar(250)
-  size Int
+  size Float
   exercise Exercise?
   exerciseAnswer AnsweredExercise?
   quiz Quiz?

@@ -1,4 +1,4 @@
-import { IsIn, IsInt, IsOptional, IsString, IsUrl } from 'class-validator';
+import { IsIn, IsNumber, IsOptional, IsString, IsUrl } from 'class-validator';
 import validationMessages_EN from '../../helper/messages/validationMessages.en';
 import { ApiProperty } from '@nestjs/swagger';
 import { FileTypes } from '../../../generated/prisma';
@@ -50,8 +50,11 @@ export default class UpdateFileDTO {
     example: 1000,
   })
   @IsOptional()
-  @IsInt({
-    message: validationMessages_EN.file.generateFileDTO.size.isInt,
-  })
+  @IsNumber(
+    {},
+    {
+      message: validationMessages_EN.file.generateFileDTO.size.isNumber,
+    },
+  )
   size?: number;
 }

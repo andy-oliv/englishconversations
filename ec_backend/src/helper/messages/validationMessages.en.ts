@@ -187,7 +187,7 @@ const validationMessages_EN = {
       },
       size: {
         isNotEmpty: 'The size field must not be empty.',
-        isInt: 'The size field must be a number in MB',
+        isNumber: 'The size field must be a number in MB',
       },
     },
   },

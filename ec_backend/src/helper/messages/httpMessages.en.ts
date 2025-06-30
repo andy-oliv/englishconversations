@@ -283,6 +283,19 @@ const httpMessages_EN = {
       status_404: "There's no student to show or the ID is invalid.",
     },
   },
+  s3: {
+    deleteObject: {
+      status_200: 'The object has been successfully deleted.',
+    },
+    getObject: {
+      checkenv:
+        'Check the PRESIGNED_URL_EXPIRATION environment variable. It is not correctly set.',
+      status_200: 'The object has been successfully fetched.',
+    },
+    putObject: {
+      status_201: 'The object has been successfully uploaded.',
+    },
+  },
   tag: {
     addTag: {
       status_200: 'The tag has been successfully added.',

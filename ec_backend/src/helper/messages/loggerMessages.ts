@@ -364,6 +364,23 @@ const loggerMessages = {
         'An internal error occurred while fetching the student. Check the error log for more information.',
     },
   },
+  s3: {
+    deleteObject: {
+      status_200: 'An object has been deleted.',
+      status_500:
+        'An internal error occurred while deleting the object. Check the error log for more information.',
+    },
+    getObject: {
+      status_200: 'A download link has been generated.',
+      status_500:
+        'An internal error occurred while fetching the object. Check the error log for more information.',
+    },
+    putObject: {
+      status_201: 'An object has been uploaded.',
+      status_500:
+        'An internal error occurred while uploading the object. Check the error log for more information.',
+    },
+  },
   tag: {
     addTag: {
       status_500:

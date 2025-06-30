@@ -491,6 +491,47 @@ const validationMessages_EN = {
       },
     },
   },
+  videoProgress: {
+    generateVideoProgressDTO: {
+      userId: {
+        isNotEmpty: 'The userId field must not be empty.',
+        isUUID: 'The userId field must be a UUID.',
+      },
+      videoId: {
+        isNotEmpty: 'The videoId field must not be empty.',
+        isUUID: 'The videoId field must be a UUID.',
+      },
+    },
+    updateVideoProgressDTO: {
+      progress: {
+        isInt: 'The progress field must be a number.',
+      },
+      watchedDuration: {
+        isInt: 'The watchedDuration field must be a number.',
+      },
+      watchedCount: {
+        isInt: 'The watchedCount field must be a number.',
+      },
+      lastWatchedAt: {
+        isDate: 'The lastWatchedAt field must be a date.',
+      },
+      startedAt: {
+        isDate: 'The startedAt field must be a date.',
+      },
+      completedAt: {
+        isDate: 'The completedAt field must be a date.',
+      },
+      completed: {
+        isBoolean: 'The completed field must be a boolean.',
+      },
+      isFavorite: {
+        isBoolean: 'The isFavorite field must be a boolean.',
+      },
+      note: {
+        isString: 'The note field must be a string.',
+      },
+    },
+  },
 };
 
 export default validationMessages_EN;

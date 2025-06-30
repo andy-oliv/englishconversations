@@ -28,6 +28,7 @@ import { AuthGuard } from './auth/guards/auth/auth.guard';
 import { S3Module } from './s3/s3.module';
 import { EmailModule } from './email/email.module';
 import { EmailValidationGuard } from './auth/guards/email-validation/email-validation.guard';
+import { VideoProgressModule } from './video-progress/video-progress.module';
 
 @Module({
   imports: [
@@ -84,6 +85,7 @@ import { EmailValidationGuard } from './auth/guards/email-validation/email-valid
     AuthModule,
     S3Module,
     EmailModule,
+    VideoProgressModule,
   ],
   controllers: [AppController],
   providers: [

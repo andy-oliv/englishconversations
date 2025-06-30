@@ -557,6 +557,36 @@ const loggerMessages = {
         'An internal error occurred while updating the video file. Check the error log for more information.',
     },
   },
+  videoProgress: {
+    deleteProgress: {
+      status_500:
+        'An internal error occurred while deleting the progress connection. Check the error log for more information.',
+    },
+    fetchVideoProgresses: {
+      status_500:
+        'An internal error occurred while fetching the progress connection. Check the error log for more information.',
+    },
+    fetchVideoProgressById: {
+      status_500:
+        'An internal error occurred while fetching the progress connection. Check the error log for more information.',
+    },
+    fetchVideoProgressesByUser: {
+      status_500:
+        'An internal error occurred while fetching the progress connection. Check the error log for more information.',
+    },
+    generateVideoProgress: {
+      status_500:
+        'An internal error occurred while generating the progress connection. Check the error log for more information.',
+    },
+    throwIfProgressExists: {
+      status_500:
+        'An internal error occurred while checking if the progress connection already exists. Check the error log for more information.',
+    },
+    updateProgress: {
+      status_500:
+        'An internal error occurred while updating the progress connection. Check the error log for more information.',
+    },
+  },
 };
 
 export default loggerMessages;

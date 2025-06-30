@@ -461,6 +461,37 @@ const httpMessages_EN = {
       status_404: 'The video was not found or the ID is invalid.',
     },
   },
+  videoProgress: {
+    deleteProgress: {
+      status_200: 'The progress connection has been successfully deleted.',
+      status_404: 'The progress connection was not found or the ID is invalid.',
+    },
+    fetchVideoProgresses: {
+      status_200: 'The progress connections have been successfully fetched!',
+      status_404: 'There are no progress connections to show.',
+    },
+    fetchVideoProgressById: {
+      status_200: 'The progress connection has been successfully fetched!',
+      status_404: 'The progress connection was not found or the ID is invalid.',
+    },
+    fetchVideoProgressesByUser: {
+      status_200: 'The progress connections have been successfully fetched!',
+      status_404:
+        'There are no progress connections to show or the userId is invalid.',
+    },
+    generateVideoProgress: {
+      status_201: 'Progress connection has been successfully generated.',
+      status_400:
+        'Check the request. Either the userId or the videoId are invalid.',
+    },
+    throwIfProgressExists: {
+      status_409: 'The progress connection already exists.',
+    },
+    updateProgress: {
+      status_200: 'The progress connection has been successfully updated.',
+      status_404: 'The progress connection was not found or the ID is invalid.',
+    },
+  },
 };
 
 export default httpMessages_EN;

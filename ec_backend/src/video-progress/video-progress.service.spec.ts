@@ -307,8 +307,8 @@ describe('VideoProgressService', () => {
     });
 
     it('should throw NotFoundException', async () => {
-      (prismaService.videoProgress.findMany as jest.Mock).mockRejectedValue(
-        p2025,
+      (prismaService.videoProgress.findMany as jest.Mock).mockResolvedValue(
+        emptyVideoProgress,
       );
 
       await expect(

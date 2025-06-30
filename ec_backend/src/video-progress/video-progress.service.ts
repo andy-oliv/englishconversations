@@ -41,7 +41,7 @@ export class VideoProgressService {
 
       handleInternalErrorException(
         'videoProgressService',
-        'ThrowIfProgressExists',
+        'throwIfProgressExists',
         loggerMessages.videoProgress.throwIfProgressExists.status_500,
         this.logger,
         error,
@@ -146,22 +146,26 @@ export class VideoProgressService {
 
   async fetchVideoProgressesByUser(id: string): Promise<Return> {
     try {
-      const videoProgress: VideoProgress[] =
+      const videoProgresses: VideoProgress[] =
         await this.prismaService.videoProgress.findMany({
           where: {
             userId: id,
           },
         });
-      return {
-        message:
-          httpMessages_EN.videoProgress.fetchVideoProgressesByUser.status_200,
-        data: videoProgress,
-      };
-    } catch (error) {
-      if (error.code === 'P2025') {
+
+      if (videoProgresses.length === 0) {
         throw new NotFoundException(
           httpMessages_EN.videoProgress.fetchVideoProgressesByUser.status_404,
         );
+      }
+      return {
+        message:
+          httpMessages_EN.videoProgress.fetchVideoProgressesByUser.status_200,
+        data: videoProgresses,
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
       }
 
       handleInternalErrorException(

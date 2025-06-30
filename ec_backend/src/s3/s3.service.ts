@@ -13,7 +13,6 @@ import Return from '../common/types/Return';
 import loggerMessages from '../helper/messages/loggerMessages';
 import generateExceptionMessage from '../helper/functions/generateExceptionMessage';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
-import * as multer from 'multer';
 
 @Injectable()
 export class S3Service {
@@ -37,7 +36,7 @@ export class S3Service {
     this.bucket = this.configService.get<string>('AWS_BUCKET_NAME');
   }
 
-  async putObject(file: any, key: string): Promise<Return> {
+  async putObject(file: any, key?: string): Promise<Return> {
     try {
       const fileName = `${file.originalname.replaceAll(' ', '')}`;
 
@@ -49,7 +48,7 @@ export class S3Service {
         ACL: 'public-read', //or 'private'
       });
 
-      const upload = await this.client.send(command);
+      await this.client.send(command);
 
       this.logger.log({
         message: generateExceptionMessage(
@@ -57,7 +56,7 @@ export class S3Service {
           'putObject',
           loggerMessages.s3.putObject.status_201,
         ),
-        data: upload,
+        url: `https://${this.bucket}.s3.amazonaws.com/${key ? `${key}/${fileName}` : fileName}`,
       });
       return {
         message: httpMessages_EN.s3.putObject.status_201,

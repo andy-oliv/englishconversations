@@ -52,13 +52,29 @@ export class S3Service {
     ];
   }
 
+  async deleteFileFromS3(databaseUrl: string): Promise<void> {
+    try {
+      const url = new URL(databaseUrl);
+      const key: string = url.pathname.slice(1);
+      await this.deleteObject(key);
+    } catch (error) {
+      handleInternalErrorException(
+        's3Service',
+        'deleteFileFromS3',
+        loggerMessages.s3.deleteFileFromS3.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
   async putObject(file: Express.Multer.File, key?: string): Promise<string> {
     try {
       if (!this.allowedTypes.includes(file.mimetype)) {
         throw new BadRequestException(httpMessages_EN.s3.putObject.status_400);
       }
 
-      const fileName = `${file.originalname
+      const fileName = `${Date.now()}-${file.originalname
         .toLowerCase()
         .replaceAll(' ', '-')
         .normalize('NFD')
@@ -74,7 +90,7 @@ export class S3Service {
 
       await this.client.send(command);
 
-      const url: string = `https://${this.bucket}.s3.amazonaws.com/${key ? `${key}/${Date.now()}-${fileName}` : `${Date.now()}-${fileName}`}`;
+      const url: string = `https://${this.bucket}.s3.amazonaws.com/${key ? `${key}/${fileName}` : `${fileName}`}`;
 
       this.logger.log({
         message: generateExceptionMessage(

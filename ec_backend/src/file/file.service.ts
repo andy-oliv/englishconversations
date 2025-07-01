@@ -18,22 +18,6 @@ export class FileService {
     private readonly s3Service: S3Service,
   ) {}
 
-  async deleteFileFromS3(databaseUrl: string): Promise<void> {
-    try {
-      const url = new URL(databaseUrl);
-      const key: string = url.pathname.slice(1);
-      await this.s3Service.deleteObject(key);
-    } catch (error) {
-      handleInternalErrorException(
-        'fileService',
-        'deleteFileFromS3',
-        loggerMessages.file.deleteFileFromS3.status_500,
-        this.logger,
-        error,
-      );
-    }
-  }
-
   async generateFile(data: File): Promise<Return> {
     try {
       const file: File = await this.prismaService.file.create({
@@ -156,7 +140,7 @@ export class FileService {
         },
       });
 
-      await this.deleteFileFromS3(deletedFile.url);
+      await this.s3Service.deleteFileFromS3(deletedFile.url);
 
       this.logger.log({
         message: generateExceptionMessage(

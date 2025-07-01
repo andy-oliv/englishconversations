@@ -42,19 +42,4 @@ export default class UpdateFileDTO {
     },
   )
   url?: string;
-
-  @ApiProperty({
-    title: 'Size',
-    required: false,
-    type: 'number',
-    example: 1000,
-  })
-  @IsOptional()
-  @IsNumber(
-    {},
-    {
-      message: validationMessages_EN.file.generateFileDTO.size.isNumber,
-    },
-  )
-  size?: number;
 }

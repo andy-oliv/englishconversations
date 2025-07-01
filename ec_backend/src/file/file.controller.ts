@@ -63,8 +63,12 @@ export class FileController {
       this.logger,
       key,
     );
-    const fileData: File = { ...handledFile.data, url: handledFile.fileUrl };
-    return this.fileService.generateFile(fileData);
+
+    return this.fileService.generateFile({
+      ...handledFile.data,
+      url: handledFile.fileUrl,
+      size: file.size,
+    });
   }
 
   @Get(':id')

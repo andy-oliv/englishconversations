@@ -380,9 +380,14 @@ const httpMessages_EN = {
     },
     registerUser: {
       status_201: 'The user has been successfully registered!',
+      status_400:
+        'The file type is invalid. The accepted types are jpeg, png, svg and webp',
     },
     updateUser: {
       status_200: 'The user has been successfully updated.',
+      status_400:
+        'The file type is invalid. The accepted types are jpeg, png, svg and webp',
+      status_4002: 'The request cannot be empty',
       status_404: 'The user was not found or the ID is invalid.',
     },
     validateUserAvailability: {

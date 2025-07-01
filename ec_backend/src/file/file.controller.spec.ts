@@ -62,6 +62,18 @@ describe('FileController', () => {
     file = generateMockFile();
     files = [generateMockFile(), generateMockFile()];
     metadata = 'mock-data';
+    uploadedFile = {
+      fieldname: 'file',
+      originalname: 'test.pdf',
+      encoding: '7bit',
+      mimetype: 'application/pdf',
+      size: 1024,
+      buffer: Buffer.from('dummy content'),
+      stream: null,
+      destination: '',
+      filename: '',
+      path: '',
+    };
   });
 
   it('should be defined', () => {
@@ -88,24 +100,30 @@ describe('FileController', () => {
         message: httpMessages_EN.file.generateFile.status_200,
         data: file,
       });
-      expect(fileService.generateFile).toHaveBeenCalledWith(file);
+      expect(fileService.generateFile).toHaveBeenCalledWith({
+        ...file,
+        size: uploadedFile.size,
+      });
       expect(formDataHandler).toHaveBeenCalled();
     });
 
     it('should throw handleInternalErrorException', async () => {
       (formDataHandler as jest.Mock).mockResolvedValue({
         data: file,
-        url: file.url,
+        fileUrl: file.url,
       });
       (fileService.generateFile as jest.Mock).mockRejectedValue(
         new InternalServerErrorException(httpMessages_EN.general.status_500),
       );
 
-      await expect(fileService.generateFile(file)).rejects.toThrow(
-        InternalServerErrorException,
-      );
+      await expect(
+        fileController.generateFile(uploadedFile, metadata),
+      ).rejects.toThrow(InternalServerErrorException);
 
-      expect(fileService.generateFile).toHaveBeenCalledWith(file);
+      expect(fileService.generateFile).toHaveBeenCalledWith({
+        ...file,
+        size: uploadedFile.size,
+      });
       expect(formDataHandler).toHaveBeenCalled();
     });
   });

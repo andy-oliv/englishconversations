@@ -31,21 +31,4 @@ export default class GenerateFileDTO {
     message: validationMessages_EN.file.generateFileDTO.type.isIn,
   })
   type: FileTypes;
-
-  @ApiProperty({
-    title: 'Size',
-    required: true,
-    type: 'number',
-    example: 1000,
-  })
-  @IsNotEmpty({
-    message: validationMessages_EN.file.generateFileDTO.size.isNotEmpty,
-  })
-  @IsNumber(
-    {},
-    {
-      message: validationMessages_EN.file.generateFileDTO.size.isNumber,
-    },
-  )
-  size: number;
 }

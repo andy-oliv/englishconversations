@@ -33,23 +33,6 @@ export default class GenerateFileDTO {
   type: FileTypes;
 
   @ApiProperty({
-    title: 'URL',
-    required: true,
-    type: 'string',
-    example: 'https://google.com',
-  })
-  @IsNotEmpty({
-    message: validationMessages_EN.file.generateFileDTO.url.isNotEmpty,
-  })
-  @IsUrl(
-    {},
-    {
-      message: validationMessages_EN.file.generateFileDTO.url.isUrl,
-    },
-  )
-  url: string;
-
-  @ApiProperty({
     title: 'Size',
     required: true,
     type: 'number',

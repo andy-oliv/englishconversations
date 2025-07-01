@@ -36,9 +36,13 @@ export class S3Service {
     this.bucket = this.configService.get<string>('AWS_BUCKET_NAME');
   }
 
-  async putObject(file: Express.Multer.File, key?: string): Promise<Return> {
+  async putObject(file: Express.Multer.File, key?: string): Promise<string> {
     try {
-      const fileName = `${file.originalname.toLowerCase().replaceAll(' ', '')}`;
+      const fileName = `${file.originalname
+        .toLowerCase()
+        .replaceAll(' ', '')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')}`; //normalize('NFD').replace(/[\u0300-\u036f]/g, '') = remove accents;
 
       const command = new PutObjectCommand({
         Bucket: this.bucket,
@@ -60,12 +64,7 @@ export class S3Service {
         ),
         url,
       });
-      return {
-        message: httpMessages_EN.s3.putObject.status_201,
-        data: {
-          url,
-        },
-      };
+      return url;
     } catch (error) {
       handleInternalErrorException(
         's3Service',
@@ -77,13 +76,14 @@ export class S3Service {
     }
   }
 
-  async getObject(key: string): Promise<Return> {
-    const command = new GetObjectCommand({
-      Bucket: this.bucket,
-      Key: key,
-    });
-
+  async getObject(receivedUrl: string): Promise<Return> {
     try {
+      const key: string = new URL(receivedUrl).pathname.slice(1);
+      const command = new GetObjectCommand({
+        Bucket: this.bucket,
+        Key: key,
+      });
+
       const expiration: number = Number(
         this.configService.get<string>('PRESIGNED_URL_EXPIRATION'),
       );
@@ -126,15 +126,14 @@ export class S3Service {
   }
 
   async deleteObject(key: string): Promise<{ message: string }> {
-    const command = new DeleteObjectCommand({
-      Bucket: this.bucket,
-      Key: key,
-    });
-
     try {
+      const command = new DeleteObjectCommand({
+        Bucket: this.bucket,
+        Key: key,
+      });
       await this.client.send(command);
 
-      this.logger.warn({
+      this.logger.log({
         message: generateExceptionMessage(
           's3Service',
           'deleteObject',

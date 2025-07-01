@@ -10,6 +10,7 @@ import {
 import { FileService } from './file.service';
 import File from '../entities/File';
 import generateMockFile from '../helper/mocks/generateMockFile';
+import { S3Service } from '../s3/s3.service';
 
 describe('FileService', () => {
   let fileService: FileService;
@@ -42,6 +43,12 @@ describe('FileService', () => {
             log: jest.fn,
             warn: jest.fn(),
             error: jest.fn(),
+          },
+        },
+        {
+          provide: S3Service,
+          useValue: {
+            deleteObject: jest.fn(),
           },
         },
       ],
@@ -232,7 +239,7 @@ describe('FileService', () => {
   describe('deleteFile()', () => {
     it('should fetch a file', async () => {
       (prismaService.file.delete as jest.Mock).mockResolvedValue(file);
-
+      jest.spyOn(fileService, 'deleteFileFromS3').mockResolvedValue(undefined);
       const result: Return = await fileService.deleteFile(file.id);
 
       expect(result).toMatchObject({
@@ -244,11 +251,12 @@ describe('FileService', () => {
           id: file.id,
         },
       });
+      expect(fileService.deleteFileFromS3).toHaveBeenCalledWith(file.url);
     });
 
     it('should throw NotFoundException', async () => {
       (prismaService.file.delete as jest.Mock).mockRejectedValue(error);
-
+      jest.spyOn(fileService, 'deleteFileFromS3').mockResolvedValue(undefined);
       await expect(fileService.deleteFile(file.id)).rejects.toThrow(
         NotFoundException,
       );
@@ -264,6 +272,7 @@ describe('FileService', () => {
       (prismaService.file.delete as jest.Mock).mockRejectedValue(
         new InternalServerErrorException(httpMessages_EN.general.status_500),
       );
+      jest.spyOn(fileService, 'deleteFileFromS3').mockResolvedValue(undefined);
 
       await expect(fileService.deleteFile(file.id)).rejects.toThrow(
         InternalServerErrorException,

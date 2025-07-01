@@ -31,8 +31,8 @@ export class S3Controller {
     description: 'Internal Server Error',
     example: httpMessages_EN.general.status_500,
   })
-  async getObject(@Query() { key }: { key: string }): Promise<Return> {
-    return this.s3Service.getObject(key);
+  async getObject(@Query('url') url: string): Promise<Return> {
+    return this.s3Service.getObject(url);
   }
 
   @Post('upload')
@@ -49,8 +49,8 @@ export class S3Controller {
   @UseInterceptors(FileInterceptor('file', multerMemoryStorage))
   async putObject(
     @UploadedFile() file: Express.Multer.File,
-    @Query('key') key: string,
-  ): Promise<Return> {
+    @Query('key') key?: string,
+  ): Promise<string> {
     return this.s3Service.putObject(file, key);
   }
 
@@ -65,9 +65,7 @@ export class S3Controller {
     description: 'Internal Server Error',
     example: httpMessages_EN.general.status_500,
   })
-  async deleteObject(
-    @Body() { key }: { key: string },
-  ): Promise<{ message: string }> {
+  async deleteObject(@Query('key') key: string): Promise<{ message: string }> {
     return this.s3Service.deleteObject(key);
   }
 }

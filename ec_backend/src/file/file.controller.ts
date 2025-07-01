@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -7,21 +8,33 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { FileService } from './file.service';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
 import Return from '../common/types/Return';
 import UpdateFileDTO from './dto/updateFile.dto';
-import GenerateFileDTO from './dto/generateFile.dto';
 import { RoleGuard } from '../auth/guards/role/role.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { multerMemoryStorage } from '../config/upload.config';
+import { S3Service } from '../s3/s3.service';
+import File from '../entities/File';
+import fileUploadHandler from '../helper/functions/fileUploadHandler';
+import { Logger } from 'nestjs-pino';
+import GenerateFileDTO from './dto/generateFile.dto';
 
 @ApiTags('Files')
 @Controller('api/files')
 @UseGuards(RoleGuard)
 export class FileController {
-  constructor(private readonly fileService: FileService) {}
+  constructor(
+    private readonly fileService: FileService,
+    private readonly s3Service: S3Service,
+    private readonly logger: Logger,
+  ) {}
 
   @Post()
   @ApiResponse({
@@ -34,7 +47,14 @@ export class FileController {
     description: 'Internal Server Error',
     example: httpMessages_EN.general.status_500,
   })
-  async generateFile(@Body() fileData: GenerateFileDTO): Promise<Return> {
+  @UseInterceptors(FileInterceptor('file', multerMemoryStorage))
+  async generateFile(
+    @UploadedFile() file: Express.Multer.File,
+    @Body('metadata') metadata: string,
+  ): Promise<Return> {
+    const handledFile: { data: GenerateFileDTO; url: string } =
+      await fileUploadHandler(file, metadata, this.s3Service, this.logger);
+    const fileData: File = { ...handledFile.data, url: handledFile.url };
     return this.fileService.generateFile(fileData);
   }
 

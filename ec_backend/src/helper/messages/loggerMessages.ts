@@ -232,6 +232,10 @@ const loggerMessages = {
       status_500:
         'An internal error occurred while deleting the file file. Check the error log for more information.',
     },
+    deleteFileFromS3: {
+      status_500:
+        'An internal error occurred while deleting the file from S3 server. Check the error log for more information.',
+    },
     fetchFiles: {
       status_500:
         'An internal error occurred while fetching the file files. Check the error log for more information.',
@@ -248,6 +252,12 @@ const loggerMessages = {
       status_200: 'A file has been updated.',
       status_500:
         'An internal error occurred while updating the file file. Check the error log for more information.',
+    },
+  },
+  helper: {
+    fileUploadHandler: {
+      status_500:
+        'An internal error occurred while validating the new file. Check the error log for more information.',
     },
   },
   notification: {

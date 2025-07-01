@@ -9,12 +9,20 @@ import { FileController } from './file.controller';
 import { FileService } from './file.service';
 import File from '../entities/File';
 import generateMockFile from '../helper/mocks/generateMockFile';
+import fileUploadHandler from '../helper/functions/fileUploadHandler';
+import { Logger } from 'nestjs-pino';
+import { S3Service } from '../s3/s3.service';
 
+jest.mock('../helper/functions/fileUploadHandler');
 describe('FileController', () => {
   let fileController: FileController;
   let fileService: FileService;
+  let logger: Logger;
+  let s3Service: S3Service;
   let file: File;
   let files: File[];
+  let metadata: string;
+  let uploadedFile: Express.Multer.File;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -30,13 +38,30 @@ describe('FileController', () => {
             deleteFile: jest.fn(),
           },
         },
+        {
+          provide: Logger,
+          useValue: {
+            log: jest.fn(),
+            error: jest.fn(),
+            warn: jest.fn(),
+          },
+        },
+        {
+          provide: S3Service,
+          useValue: {
+            deleteObject: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
     fileController = module.get<FileController>(FileController);
     fileService = module.get<FileService>(FileService);
+    logger = module.get<Logger>(Logger);
+    s3Service = module.get<S3Service>(S3Service);
     file = generateMockFile();
     files = [generateMockFile(), generateMockFile()];
+    metadata = 'mock-data';
   });
 
   it('should be defined', () => {
@@ -45,21 +70,33 @@ describe('FileController', () => {
 
   describe('generateFile()', () => {
     it('should generate a file', async () => {
+      (fileUploadHandler as jest.Mock).mockResolvedValue({
+        data: file,
+        url: file.url,
+      });
       (fileService.generateFile as jest.Mock).mockResolvedValue({
         message: httpMessages_EN.file.generateFile.status_200,
         data: file,
       });
 
-      const result: Return = await fileController.generateFile(file);
+      const result: Return = await fileController.generateFile(
+        uploadedFile,
+        metadata,
+      );
 
       expect(result).toMatchObject({
         message: httpMessages_EN.file.generateFile.status_200,
         data: file,
       });
       expect(fileService.generateFile).toHaveBeenCalledWith(file);
+      expect(fileUploadHandler).toHaveBeenCalled();
     });
 
     it('should throw handleInternalErrorException', async () => {
+      (fileUploadHandler as jest.Mock).mockResolvedValue({
+        data: file,
+        url: file.url,
+      });
       (fileService.generateFile as jest.Mock).mockRejectedValue(
         new InternalServerErrorException(httpMessages_EN.general.status_500),
       );
@@ -69,6 +106,7 @@ describe('FileController', () => {
       );
 
       expect(fileService.generateFile).toHaveBeenCalledWith(file);
+      expect(fileUploadHandler).toHaveBeenCalled();
     });
   });
 

@@ -8,13 +8,31 @@ import loggerMessages from '../helper/messages/loggerMessages';
 import Return from '../common/types/Return';
 import UpdateFileDTO from './dto/updateFile.dto';
 import generateExceptionMessage from '../helper/functions/generateExceptionMessage';
+import { S3Service } from '../s3/s3.service';
 
 @Injectable()
 export class FileService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly logger: Logger,
+    private readonly s3Service: S3Service,
   ) {}
+
+  async deleteFileFromS3(databaseUrl: string): Promise<void> {
+    try {
+      const url = new URL(databaseUrl);
+      const key: string = url.pathname.slice(1);
+      await this.s3Service.deleteObject(key);
+    } catch (error) {
+      handleInternalErrorException(
+        'fileService',
+        'deleteFileFromS3',
+        loggerMessages.file.deleteFileFromS3.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
 
   async generateFile(data: File): Promise<Return> {
     try {
@@ -138,7 +156,9 @@ export class FileService {
         },
       });
 
-      this.logger.warn({
+      await this.deleteFileFromS3(deletedFile.url);
+
+      this.logger.log({
         message: generateExceptionMessage(
           'fileService',
           'deleteFile',

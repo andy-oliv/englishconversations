@@ -188,6 +188,9 @@ const httpMessages_EN = {
     status_500:
       'An unexpected error occurred. Please check the error log for more information.',
   },
+  helper: {
+    status_400: 'Validation failed',
+  },
   notification: {
     deleteNotification: {
       status_200: 'The notification has been deleted.',

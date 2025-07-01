@@ -297,6 +297,8 @@ const httpMessages_EN = {
     },
     putObject: {
       status_201: 'The object has been successfully uploaded.',
+      status_400:
+        'Invalid file type. The accepted types are: image(jpeg, png, svg, webp), audio(mpeg, wav, mp4) and pdf',
     },
   },
   tag: {

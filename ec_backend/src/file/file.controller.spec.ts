@@ -9,11 +9,11 @@ import { FileController } from './file.controller';
 import { FileService } from './file.service';
 import File from '../entities/File';
 import generateMockFile from '../helper/mocks/generateMockFile';
-import fileUploadHandler from '../helper/functions/fileUploadHandler';
+import formDataHandler from '../helper/functions/formDataHandler';
 import { Logger } from 'nestjs-pino';
 import { S3Service } from '../s3/s3.service';
 
-jest.mock('../helper/functions/fileUploadHandler');
+jest.mock('../helper/functions/formDataHandler');
 describe('FileController', () => {
   let fileController: FileController;
   let fileService: FileService;
@@ -70,9 +70,9 @@ describe('FileController', () => {
 
   describe('generateFile()', () => {
     it('should generate a file', async () => {
-      (fileUploadHandler as jest.Mock).mockResolvedValue({
+      (formDataHandler as jest.Mock).mockResolvedValue({
         data: file,
-        url: file.url,
+        fileUrl: file.url,
       });
       (fileService.generateFile as jest.Mock).mockResolvedValue({
         message: httpMessages_EN.file.generateFile.status_200,
@@ -89,11 +89,11 @@ describe('FileController', () => {
         data: file,
       });
       expect(fileService.generateFile).toHaveBeenCalledWith(file);
-      expect(fileUploadHandler).toHaveBeenCalled();
+      expect(formDataHandler).toHaveBeenCalled();
     });
 
     it('should throw handleInternalErrorException', async () => {
-      (fileUploadHandler as jest.Mock).mockResolvedValue({
+      (formDataHandler as jest.Mock).mockResolvedValue({
         data: file,
         url: file.url,
       });
@@ -106,7 +106,7 @@ describe('FileController', () => {
       );
 
       expect(fileService.generateFile).toHaveBeenCalledWith(file);
-      expect(fileUploadHandler).toHaveBeenCalled();
+      expect(formDataHandler).toHaveBeenCalled();
     });
   });
 

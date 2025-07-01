@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
   DeleteObjectCommand,
@@ -18,6 +22,7 @@ import httpMessages_EN from '../helper/messages/httpMessages.en';
 export class S3Service {
   private readonly client: S3Client;
   private readonly bucket: string;
+  private readonly allowedTypes: string[];
 
   constructor(
     private readonly configService: ConfigService,
@@ -34,13 +39,28 @@ export class S3Service {
     });
 
     this.bucket = this.configService.get<string>('AWS_BUCKET_NAME');
+
+    this.allowedTypes = [
+      'image/jpeg',
+      'image/png',
+      'image/svg+xml',
+      'image/webp',
+      'audio/mpeg',
+      'audio/wav',
+      'audio/mp4',
+      'application/pdf',
+    ];
   }
 
   async putObject(file: Express.Multer.File, key?: string): Promise<string> {
     try {
+      if (!this.allowedTypes.includes(file.mimetype)) {
+        throw new BadRequestException(httpMessages_EN.s3.putObject.status_400);
+      }
+
       const fileName = `${file.originalname
         .toLowerCase()
-        .replaceAll(' ', '')
+        .replaceAll(' ', '-')
         .normalize('NFD')
         .replace(/[\u0300-\u036f]/g, '')}`; //normalize('NFD').replace(/[\u0300-\u036f]/g, '') = remove accents;
 
@@ -54,7 +74,7 @@ export class S3Service {
 
       await this.client.send(command);
 
-      const url: string = `https://${this.bucket}.s3.amazonaws.com/${key ? `${key}/${fileName}` : fileName}`;
+      const url: string = `https://${this.bucket}.s3.amazonaws.com/${key ? `${key}/${Date.now()}-${fileName}` : `${Date.now()}-${fileName}`}`;
 
       this.logger.log({
         message: generateExceptionMessage(
@@ -66,6 +86,10 @@ export class S3Service {
       });
       return url;
     } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+
       handleInternalErrorException(
         's3Service',
         'putObject',

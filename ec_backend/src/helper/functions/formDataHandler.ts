@@ -1,5 +1,4 @@
 import { validate } from 'class-validator';
-import GenerateFileDTO from '../../file/dto/generateFile.dto';
 import { plainToInstance } from 'class-transformer';
 import { BadRequestException } from '@nestjs/common';
 import { S3Service } from '../../s3/s3.service';
@@ -7,21 +6,25 @@ import handleInternalErrorException from './handleErrorException';
 import loggerMessages from '../messages/loggerMessages';
 import { Logger } from 'nestjs-pino';
 import httpMessages_EN from '../messages/httpMessages.en';
+import FormHandlerReturn from '../../common/types/FormHandlerReturn';
 
-export default async function fileUploadHandler(
+type Constructor<T> = new (...args: any[]) => T;
+
+export default async function FormDataHandler(
+  DTO: Constructor<any>,
   file: Express.Multer.File,
   metadata: string,
   s3Service: S3Service,
   logger: Logger,
-): Promise<{ data: GenerateFileDTO; url: string }> {
+  key?: string,
+): Promise<FormHandlerReturn> {
   try {
     const parsedMetadata = JSON.parse(metadata);
 
-    const dto: GenerateFileDTO = plainToInstance(
-      GenerateFileDTO,
-      parsedMetadata,
-    );
-    const errors = await validate(dto);
+    const validatedBody = plainToInstance(DTO, parsedMetadata, {
+      enableImplicitConversion: true,
+    });
+    const errors = await validate(validatedBody);
 
     if (errors.length > 0) {
       let errorMessages: any[] = [];
@@ -36,9 +39,8 @@ export default async function fileUploadHandler(
       });
     }
 
-    const url: string = await s3Service.putObject(file);
-
-    return { data: dto, url };
+    const url: string = await s3Service.putObject(file, key);
+    return { data: validatedBody, fileUrl: url };
   } catch (error) {
     if (error instanceof BadRequestException) {
       throw error;

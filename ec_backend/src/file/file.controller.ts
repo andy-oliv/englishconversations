@@ -8,6 +8,7 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -22,8 +23,9 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { multerMemoryStorage } from '../config/upload.config';
 import { S3Service } from '../s3/s3.service';
 import File from '../entities/File';
-import fileUploadHandler from '../helper/functions/fileUploadHandler';
 import { Logger } from 'nestjs-pino';
+import FormDataHandler from '../helper/functions/formDataHandler';
+import FormHandlerReturn from '../common/types/FormHandlerReturn';
 import GenerateFileDTO from './dto/generateFile.dto';
 
 @ApiTags('Files')
@@ -51,10 +53,17 @@ export class FileController {
   async generateFile(
     @UploadedFile() file: Express.Multer.File,
     @Body('metadata') metadata: string,
+    @Query('key') key?: string,
   ): Promise<Return> {
-    const handledFile: { data: GenerateFileDTO; url: string } =
-      await fileUploadHandler(file, metadata, this.s3Service, this.logger);
-    const fileData: File = { ...handledFile.data, url: handledFile.url };
+    const handledFile: FormHandlerReturn = await FormDataHandler(
+      GenerateFileDTO,
+      file,
+      metadata,
+      this.s3Service,
+      this.logger,
+      key,
+    );
+    const fileData: File = { ...handledFile.data, url: handledFile.fileUrl };
     return this.fileService.generateFile(fileData);
   }
 

@@ -6,16 +6,32 @@ import generateMockUser from '../helper/mocks/generateMockUser';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
 import Return from '../common/types/Return';
 import {
+  BadRequestException,
   ConflictException,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import FormHandlerReturn from '../common/types/FormHandlerReturn';
+import FormDataHandler from '../helper/functions/formDataHandler';
+import { S3Service } from '../s3/s3.service';
+import { Logger } from 'nestjs-pino';
+import RegisterUserDTO from './dto/registerUser.dto';
+import updateFormHandler from '../helper/functions/templates/updateFormHandler';
+import UpdateUserDTO from './dto/updateUser.dto';
+
+jest.mock('../helper/functions/formDataHandler');
+jest.mock('../helper/functions/templates/updateFormHandler');
 
 describe('UserController', () => {
   let userController: UserController;
   let userService: UserService;
+  let s3Service: S3Service;
+  let logger: Logger;
   let user: User;
   let users: User[];
+  let file: Express.Multer.File;
+  let validatedUser: FormHandlerReturn;
+  let metadata: string;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -32,13 +48,42 @@ describe('UserController', () => {
             deleteUser: jest.fn(),
           },
         },
+        {
+          provide: S3Service,
+          useValue: {},
+        },
+        {
+          provide: Logger,
+          useValue: {
+            log: jest.fn(),
+            error: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
     userController = module.get<UserController>(UserController);
     userService = module.get<UserService>(UserService);
+    s3Service = module.get<S3Service>(S3Service);
+    logger = module.get<Logger>(Logger);
     user = generateMockUser();
     users = [generateMockUser(), generateMockUser()];
+    file = {
+      fieldname: 'file',
+      originalname: 'test.jpeg',
+      encoding: '7bit',
+      mimetype: 'image/jpeg',
+      size: 1024,
+      buffer: Buffer.from('dummy content'),
+      stream: null,
+      destination: '',
+      filename: '',
+      path: '',
+    };
+    validatedUser = {
+      data: user,
+      fileUrl: user.avatarUrl,
+    };
   });
 
   it('should be defined', () => {
@@ -47,42 +92,88 @@ describe('UserController', () => {
 
   describe('registerUser()', () => {
     it('should register a new user', async () => {
+      (FormDataHandler as jest.Mock).mockResolvedValue(validatedUser);
       (userService.registerUser as jest.Mock).mockResolvedValue({
         message: httpMessages_EN.user.registerUser.status_201,
         data: user,
       });
 
-      const result: Return = await userController.registerUser(user);
+      const result: Return = await userController.registerUser(file, metadata);
 
       expect(result).toMatchObject({
         message: httpMessages_EN.user.registerUser.status_201,
         data: user,
       });
       expect(userService.registerUser).toHaveBeenCalledWith(user);
+      expect(FormDataHandler).toHaveBeenCalledWith(
+        RegisterUserDTO,
+        file,
+        metadata,
+        s3Service,
+        logger,
+        'images/userAvatars',
+      );
     });
 
+    it('should throw BadRequestException due to wrong file type', async () => {
+      await expect(
+        userController.registerUser(
+          {
+            fieldname: 'file',
+            originalname: 'test.pdf',
+            encoding: '7bit',
+            mimetype: 'application/pdf',
+            size: 1024,
+            buffer: Buffer.from('dummy content'),
+            stream: null,
+            destination: '',
+            filename: '',
+            path: '',
+          },
+          metadata,
+        ),
+      ).rejects.toThrow(BadRequestException);
+    });
     it('should throw ConflictException', async () => {
+      (FormDataHandler as jest.Mock).mockResolvedValue(validatedUser);
       (userService.registerUser as jest.Mock).mockRejectedValue(
         new ConflictException(
           httpMessages_EN.user.validateUserAvailability.status_409,
         ),
       );
 
-      await expect(userController.registerUser(user)).rejects.toThrow(
+      await expect(userController.registerUser(file, metadata)).rejects.toThrow(
         ConflictException,
       );
       expect(userService.registerUser).toHaveBeenCalledWith(user);
+      expect(FormDataHandler).toHaveBeenCalledWith(
+        RegisterUserDTO,
+        file,
+        metadata,
+        s3Service,
+        logger,
+        'images/userAvatars',
+      );
     });
 
     it('should throw InternalServerErrorException', async () => {
+      (FormDataHandler as jest.Mock).mockResolvedValue(validatedUser);
       (userService.registerUser as jest.Mock).mockRejectedValue(
         new InternalServerErrorException(httpMessages_EN.general.status_500),
       );
 
-      await expect(userController.registerUser(user)).rejects.toThrow(
+      await expect(userController.registerUser(file, metadata)).rejects.toThrow(
         InternalServerErrorException,
       );
       expect(userService.registerUser).toHaveBeenCalledWith(user);
+      expect(FormDataHandler).toHaveBeenCalledWith(
+        RegisterUserDTO,
+        file,
+        metadata,
+        s3Service,
+        logger,
+        'images/userAvatars',
+      );
     });
   });
 
@@ -210,41 +301,93 @@ describe('UserController', () => {
   });
 
   describe('updateUser()', () => {
-    it('should fetch user', async () => {
+    it('should update a user', async () => {
+      (updateFormHandler as jest.Mock).mockResolvedValue(validatedUser);
       (userService.updateUser as jest.Mock).mockResolvedValue({
         message: httpMessages_EN.user.updateUser.status_200,
         data: user,
       });
 
-      const result: Return = await userController.updateUser(user.id, user);
+      const result: Return = await userController.updateUser(
+        user.id,
+        file,
+        metadata,
+      );
 
       expect(result).toMatchObject({
         message: httpMessages_EN.user.updateUser.status_200,
         data: user,
       });
       expect(userService.updateUser).toHaveBeenCalledWith(user.id, user);
+      expect(updateFormHandler).toHaveBeenCalledWith(
+        s3Service,
+        logger,
+        'images/userAvatars',
+        UpdateUserDTO,
+        file,
+        metadata,
+      );
+    });
+
+    it('should throw BadRequestException due to wrong file type', async () => {
+      await expect(
+        userController.updateUser(
+          user.id,
+          {
+            fieldname: 'file',
+            originalname: 'test.pdf',
+            encoding: '7bit',
+            mimetype: 'application/pdf',
+            size: 1024,
+            buffer: Buffer.from('dummy content'),
+            stream: null,
+            destination: '',
+            filename: '',
+            path: '',
+          },
+          metadata,
+        ),
+      ).rejects.toThrow(BadRequestException);
     });
 
     it('should throw NotFoundException', async () => {
+      (updateFormHandler as jest.Mock).mockResolvedValue(validatedUser);
       (userService.updateUser as jest.Mock).mockRejectedValue(
         new NotFoundException(httpMessages_EN.user.updateUser.status_404),
       );
 
-      await expect(userController.updateUser(user.id, user)).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        userController.updateUser(user.id, file, metadata),
+      ).rejects.toThrow(NotFoundException);
       expect(userService.updateUser).toHaveBeenCalledWith(user.id, user);
+      expect(updateFormHandler).toHaveBeenCalledWith(
+        s3Service,
+        logger,
+        'images/userAvatars',
+        UpdateUserDTO,
+        file,
+        metadata,
+      );
     });
 
     it('should throw InternalServerErrorException', async () => {
+      (updateFormHandler as jest.Mock).mockResolvedValue(validatedUser);
       (userService.updateUser as jest.Mock).mockRejectedValue(
         new InternalServerErrorException(httpMessages_EN.general.status_500),
       );
 
-      await expect(userController.updateUser(user.id, user)).rejects.toThrow(
-        InternalServerErrorException,
-      );
+      await expect(
+        userController.updateUser(user.id, file, metadata),
+      ).rejects.toThrow(InternalServerErrorException);
       expect(userService.updateUser).toHaveBeenCalledWith(user.id, user);
+      expect(updateFormHandler).toHaveBeenCalledWith(
+        s3Service,
+        logger,
+        'images/userAvatars',
+        UpdateUserDTO,
+        file,
+        metadata,
+      );
     });
   });
 

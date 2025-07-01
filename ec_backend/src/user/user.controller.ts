@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -8,7 +9,9 @@ import {
   Patch,
   Post,
   Query,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import Return from '../common/types/Return';
@@ -19,11 +22,31 @@ import RegisterUserDTO from './dto/registerUser.dto';
 import FetchUserByEmailDTO from './dto/fetchUserByEmail.dto';
 import UpdateUserDTO from './dto/updateUser.dto';
 import { RoleGuard } from '../auth/guards/role/role.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { multerMemoryStorage } from '../config/upload.config';
+import FormDataHandler from '../helper/functions/formDataHandler';
+import { S3Service } from '../s3/s3.service';
+import { Logger } from 'nestjs-pino';
+import FormHandlerReturn from '../common/types/FormHandlerReturn';
+import parseJson from '../helper/functions/parseJson';
+import updateFormHandler from '../helper/functions/templates/updateFormHandler';
 
 @ApiTags('Users')
 @Controller('api/users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  private readonly allowedTypes: string[];
+  constructor(
+    private readonly userService: UserService,
+    private readonly s3Service: S3Service,
+    private readonly logger: Logger,
+  ) {
+    this.allowedTypes = [
+      'image/jpeg',
+      'image/png',
+      'image/svg+xml',
+      'image/webp',
+    ];
+  }
 
   @Post()
   @ApiResponse({
@@ -47,8 +70,34 @@ export class UserController {
     description: 'Internal Server Error',
     example: httpMessages_EN.general.status_500,
   })
-  async registerUser(@Body() userData: RegisterUserDTO): Promise<Return> {
-    return this.userService.registerUser(userData);
+  @UseInterceptors(FileInterceptor('file', multerMemoryStorage))
+  async registerUser(
+    @UploadedFile() file: Express.Multer.File,
+    @Body('metadata') metadata: string,
+  ): Promise<Return> {
+    if (file) {
+      if (!this.allowedTypes.includes(file.mimetype)) {
+        throw new BadRequestException(
+          httpMessages_EN.user.registerUser.status_400,
+        );
+      }
+
+      const user: FormHandlerReturn = await FormDataHandler(
+        RegisterUserDTO,
+        file,
+        metadata,
+        this.s3Service,
+        this.logger,
+        'images/userAvatars',
+      );
+      return this.userService.registerUser({
+        ...user.data,
+        avatarUrl: user.fileUrl,
+      });
+    }
+
+    const data = await parseJson(RegisterUserDTO, metadata);
+    return this.userService.registerUser(data);
   }
 
   @Get('query')
@@ -146,10 +195,40 @@ export class UserController {
     description: 'Internal Server Error',
     example: httpMessages_EN.general.status_500,
   })
+  @UseInterceptors(FileInterceptor('file', multerMemoryStorage))
   async updateUser(
     @Param('id', new ParseUUIDPipe()) id: string,
-    @Body() data: UpdateUserDTO,
+    @UploadedFile() file: Express.Multer.File,
+    @Body('metadata') metadata: string,
   ): Promise<Return> {
+    if (file) {
+      if (!this.allowedTypes.includes(file.mimetype)) {
+        throw new BadRequestException(
+          httpMessages_EN.user.updateUser.status_400,
+        );
+      }
+
+      const user: Partial<FormHandlerReturn> = await updateFormHandler(
+        this.s3Service,
+        this.logger,
+        'images/userAvatars',
+        UpdateUserDTO,
+        file,
+        metadata,
+      );
+      return this.userService.updateUser(id, {
+        ...user.data,
+        avatarUrl: user.fileUrl,
+      });
+    }
+
+    if (!metadata) {
+      throw new BadRequestException(
+        httpMessages_EN.user.updateUser.status_4002,
+      );
+    }
+
+    const data = await parseJson(UpdateUserDTO, metadata);
     return this.userService.updateUser(id, data);
   }
 

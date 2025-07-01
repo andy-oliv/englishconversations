@@ -15,6 +15,7 @@ import Return from '../common/types/Return';
 import { ConfigService } from '@nestjs/config';
 import generateExceptionMessage from '../helper/functions/generateExceptionMessage';
 import UpdateUserDTO from './dto/updateUser.dto';
+import { S3Service } from '../s3/s3.service';
 
 @Injectable()
 export class UserService {
@@ -39,6 +40,7 @@ export class UserService {
     private readonly prismaService: PrismaService,
     private readonly logger: Logger,
     private readonly configService: ConfigService,
+    private readonly s3service: S3Service,
   ) {}
 
   async validateUserAvailability(email: string): Promise<void> {
@@ -237,6 +239,30 @@ export class UserService {
 
   async updateUser(id: string, userData: UpdateUserDTO): Promise<Return> {
     try {
+      if (userData.avatarUrl) {
+        const currentUser: User =
+          await this.prismaService.user.findFirstOrThrow({
+            where: {
+              id,
+            },
+          });
+
+        await this.s3service.deleteFileFromS3(currentUser.avatarUrl); //deleting previous avatar from S3
+        this.logger.log({
+          message: generateExceptionMessage(
+            'userService',
+            'updateUser',
+            loggerMessages.user.updateUser.status_2002,
+          ),
+          data: {
+            id: currentUser.id,
+            name: currentUser.name,
+            email: currentUser.email,
+            deletedAvatarUrl: currentUser.avatarUrl,
+          },
+        });
+      }
+
       const updatedUser: User = await this.prismaService.user.update({
         where: {
           id,
@@ -278,6 +304,8 @@ export class UserService {
           id,
         },
       });
+
+      await this.s3service.deleteFileFromS3(deletedUser.avatarUrl);
 
       this.logger.log(
         generateExceptionMessage(

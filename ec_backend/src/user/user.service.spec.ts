@@ -13,10 +13,12 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { S3Service } from '../s3/s3.service';
 
 describe('UserService', () => {
   let userService: UserService;
   let prismaService: PrismaService;
+  let s3Service: S3Service;
   let user: User;
   let users: User[];
   let emptyUserList: User[];
@@ -56,11 +58,18 @@ describe('UserService', () => {
             get: jest.fn(),
           },
         },
+        {
+          provide: S3Service,
+          useValue: {
+            deleteFileFromS3: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
     userService = module.get<UserService>(UserService);
     prismaService = module.get<PrismaService>(PrismaService);
+    s3Service = module.get<S3Service>(S3Service);
     user = generateMockUser();
     users = [generateMockUser(), generateMockUser()];
     emptyUserList = [];
@@ -443,6 +452,7 @@ describe('UserService', () => {
   describe('deleteUser()', () => {
     it('should fetch user', async () => {
       (prismaService.user.delete as jest.Mock).mockResolvedValue(user);
+      (s3Service.deleteFileFromS3 as jest.Mock).mockResolvedValue(undefined);
 
       const result: Return = await userService.deleteUser(user.id);
 
@@ -455,6 +465,7 @@ describe('UserService', () => {
           id: user.id,
         },
       });
+      expect(s3Service.deleteFileFromS3).toHaveBeenCalledWith(user.avatarUrl);
     });
 
     it('should throw NotFoundException', async () => {

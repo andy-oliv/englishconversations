@@ -75,21 +75,6 @@ export default class RegisterUserDTO {
   country?: string;
 
   @ApiProperty({
-    title: 'AvatarURL',
-    required: false,
-    type: 'string',
-    example: 'https://google.com',
-  })
-  @IsOptional()
-  @IsUrl(
-    {},
-    {
-      message: validationMessages_EN.user.registerUserDTO.avatarUrl.isUrl,
-    },
-  )
-  avatarUrl?: string;
-
-  @ApiProperty({
     title: 'Email',
     required: true,
     type: 'string',

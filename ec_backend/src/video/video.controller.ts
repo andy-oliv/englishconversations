@@ -64,7 +64,7 @@ export class VideoController {
   ): Promise<Return> {
     if (!this.allowedTypes.includes(file.mimetype)) {
       throw new BadRequestException(
-        httpMessages_EN.video.updateVideo.status_4003,
+        httpMessages_EN.video.generateVideo.status_400,
       );
     }
 

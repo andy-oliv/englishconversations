@@ -198,7 +198,7 @@ export class VideoController {
       );
     }
 
-    const videoData: any = parseJson(UpdateVideoDTO, metadata);
+    const videoData: any = await parseJson(UpdateVideoDTO, metadata);
     return this.videoService.updateVideo(id, videoData);
   }
 

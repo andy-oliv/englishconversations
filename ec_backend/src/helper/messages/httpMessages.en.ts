@@ -190,6 +190,8 @@ const httpMessages_EN = {
   },
   helper: {
     status_400: 'Validation failed',
+    status_4002: 'The metadata cannot be empty.',
+    status_4003: 'The file cannot be empty.',
   },
   notification: {
     deleteNotification: {
@@ -387,7 +389,7 @@ const httpMessages_EN = {
       status_200: 'The user has been successfully updated.',
       status_400:
         'The file type is invalid. The accepted types are jpeg, png, svg and webp',
-      status_4002: 'The request cannot be empty',
+      status_4002: 'No data provided for update.',
       status_404: 'The user was not found or the ID is invalid.',
     },
     validateUserAvailability: {
@@ -481,6 +483,7 @@ const httpMessages_EN = {
     },
     updateVideo: {
       status_200: 'The video has been successfully updated!',
+      status_400: 'No data provided for update.',
       status_404: 'The video was not found or the ID is invalid.',
     },
   },

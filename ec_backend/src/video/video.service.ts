@@ -8,12 +8,15 @@ import handleInternalErrorException from '../helper/functions/handleErrorExcepti
 import loggerMessages from '../helper/messages/loggerMessages';
 import generateExceptionMessage from '../helper/functions/generateExceptionMessage';
 import UpdateVideoDTO from './dto/updateVideo.dto';
+import { S3Service } from '../s3/s3.service';
+import { FileService } from '../file/file.service';
 
 @Injectable()
 export class VideoService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly logger: Logger,
+    private readonly fileService: FileService,
   ) {}
 
   async generateVideo(data: Video): Promise<Return> {
@@ -71,6 +74,17 @@ export class VideoService {
       const video: Video = await this.prismaService.video.findFirstOrThrow({
         where: {
           id,
+        },
+        include: {
+          thumbnail: {
+            select: {
+              id: true,
+              name: true,
+              type: true,
+              size: true,
+              url: true,
+            },
+          },
         },
       });
 
@@ -142,7 +156,9 @@ export class VideoService {
         },
       });
 
-      this.logger.warn({
+      await this.fileService.deleteFile(deletedVideo.thumbnailId);
+
+      this.logger.log({
         message: generateExceptionMessage(
           'videoService',
           'deleteVideo',

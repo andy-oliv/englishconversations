@@ -19,6 +19,9 @@ export default async function FormDataHandler(
   key?: string,
 ): Promise<FormHandlerReturn> {
   try {
+    if (metadata === undefined) {
+      throw new BadRequestException(httpMessages_EN.helper.status_4002);
+    }
     const parsedMetadata = JSON.parse(metadata);
 
     const validatedBody = plainToInstance(DTO, parsedMetadata, {
@@ -39,6 +42,9 @@ export default async function FormDataHandler(
       });
     }
 
+    if (file === undefined) {
+      throw new BadRequestException(httpMessages_EN.helper.status_4003);
+    }
     const url: string = await s3Service.putObject(file, key);
     return { data: validatedBody, fileUrl: url };
   } catch (error) {

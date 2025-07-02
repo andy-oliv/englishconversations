@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -7,18 +8,33 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { VideoService } from './video.service';
 import Return from '../common/types/Return';
-import GenerateVideoDTO from './dto/generateVideo.dto';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
 import UpdateVideoDTO from './dto/updateVideo.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { multerMemoryStorage } from '../config/upload.config';
+import { FileService } from '../file/file.service';
+import FormHandlerReturn from '../common/types/FormHandlerReturn';
+import FormDataHandler from '../helper/functions/formDataHandler';
+import GenerateVideoDTO from './dto/generateVideo.dto';
+import { S3Service } from '../s3/s3.service';
+import { Logger } from 'nestjs-pino';
+import updateFormHandler from '../helper/functions/templates/updateFormHandler';
 
 @ApiTags('Videos')
 @Controller('api/videos')
 export class VideoController {
-  constructor(private readonly videoService: VideoService) {}
+  constructor(
+    private readonly videoService: VideoService,
+    private readonly fileService: FileService,
+    private readonly s3Service: S3Service,
+    private readonly logger: Logger,
+  ) {}
 
   @Post()
   @ApiResponse({
@@ -31,8 +47,30 @@ export class VideoController {
     description: 'Internal Server Error',
     example: httpMessages_EN.general.status_500,
   })
-  async generateVideo(@Body() videoData: GenerateVideoDTO): Promise<Return> {
-    return this.videoService.generateVideo(videoData);
+  @UseInterceptors(FileInterceptor('file', multerMemoryStorage))
+  async generateVideo(
+    @UploadedFile() file: Express.Multer.File,
+    @Body('metadata') metadata: string,
+  ): Promise<Return> {
+    const videoData: FormHandlerReturn = await FormDataHandler(
+      GenerateVideoDTO,
+      file,
+      metadata,
+      this.s3Service,
+      this.logger,
+      'videos/thumbnails',
+    );
+    const thumbnail: Return = await this.fileService.generateFile({
+      name: file.originalname,
+      type: 'IMAGE',
+      size: file.size,
+      url: videoData.fileUrl,
+    });
+
+    return this.videoService.generateVideo({
+      ...videoData.data,
+      thumbnailId: thumbnail.data.id,
+    });
   }
 
   @Get(':id')
@@ -98,11 +136,48 @@ export class VideoController {
     description: 'Internal Server Error',
     example: httpMessages_EN.general.status_500,
   })
+  @UseInterceptors(FileInterceptor('file', multerMemoryStorage))
   async updateVideo(
     @Param('id', new ParseUUIDPipe()) id: string,
-    @Body() updatedData: UpdateVideoDTO,
+    @UploadedFile() file: Express.Multer.File,
+    @Body('metadata') metadata: string,
   ): Promise<Return> {
-    return await this.videoService.updateVideo(id, updatedData);
+    if (!metadata && !file) {
+      throw new BadRequestException(
+        httpMessages_EN.video.updateVideo.status_400,
+      );
+    }
+
+    const videoData: Partial<FormHandlerReturn> = await updateFormHandler(
+      this.s3Service,
+      this.logger,
+      'videos/thumbnails',
+      UpdateVideoDTO,
+      file,
+      metadata,
+    );
+
+    if (file !== undefined) {
+      const thumbnail: Return = await this.fileService.generateFile({
+        name: file.originalname,
+        type: 'IMAGE',
+        size: file.size,
+        url: videoData.fileUrl,
+      });
+
+      return this.videoService.updateVideo(id, {
+        ...videoData.data,
+        thumbnailId: thumbnail.data.id,
+      });
+    }
+
+    if (videoData === undefined) {
+      throw new BadRequestException('VideoData is undefined');
+    }
+
+    return this.videoService.updateVideo(id, {
+      ...videoData.data,
+    });
   }
 
   @Delete(':id')

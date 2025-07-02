@@ -10,10 +10,12 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { FileService } from '../file/file.service';
 
 describe('VideoService', () => {
   let videoService: VideoService;
   let prismaService: PrismaService;
+  let fileService: FileService;
   let logger: Logger;
   let video: Video;
   let videos: Video[];
@@ -44,11 +46,18 @@ describe('VideoService', () => {
             error: jest.fn(),
           },
         },
+        {
+          provide: FileService,
+          useValue: {
+            deleteFile: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
     videoService = module.get<VideoService>(VideoService);
     prismaService = module.get<PrismaService>(PrismaService);
+    fileService = module.get<FileService>(FileService);
     logger = module.get<Logger>(Logger);
     video = generateMockVideo();
     videos = [generateMockVideo(), generateMockVideo()];
@@ -146,6 +155,17 @@ describe('VideoService', () => {
         where: {
           id: video.id,
         },
+        include: {
+          thumbnail: {
+            select: {
+              id: true,
+              name: true,
+              type: true,
+              size: true,
+              url: true,
+            },
+          },
+        },
       });
     });
 
@@ -162,6 +182,17 @@ describe('VideoService', () => {
         where: {
           id: video.id,
         },
+        include: {
+          thumbnail: {
+            select: {
+              id: true,
+              name: true,
+              type: true,
+              size: true,
+              url: true,
+            },
+          },
+        },
       });
     });
 
@@ -177,6 +208,17 @@ describe('VideoService', () => {
       expect(prismaService.video.findFirstOrThrow).toHaveBeenCalledWith({
         where: {
           id: video.id,
+        },
+        include: {
+          thumbnail: {
+            select: {
+              id: true,
+              name: true,
+              type: true,
+              size: true,
+              url: true,
+            },
+          },
         },
       });
     });
@@ -236,6 +278,7 @@ describe('VideoService', () => {
   describe('deleteVideo()', () => {
     it('should fetch a video', async () => {
       (prismaService.video.delete as jest.Mock).mockResolvedValue(video);
+      (fileService.deleteFile as jest.Mock).mockResolvedValue(undefined);
 
       const result: Return = await videoService.deleteVideo(video.id);
 
@@ -248,6 +291,7 @@ describe('VideoService', () => {
           id: video.id,
         },
       });
+      expect(fileService.deleteFile).toHaveBeenCalledWith(video.thumbnailId);
     });
 
     it('should throw NotFoundException', async () => {

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -7,6 +8,8 @@ import {
   Query,
   Req,
   Res,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import GeneratedTokens from '../common/types/GeneratedTokens';
@@ -23,14 +26,32 @@ import updatePasswordDTO from './dto/updatePassword.dto';
 import UpdateEmailDTO from './dto/updateEmail.dto';
 import GenerateResetTokenDTO from './dto/generateResetToken.dto';
 import CheckTokenDTO from './dto/checkToken.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { multerMemoryStorage } from '../config/upload.config';
+import FormHandlerReturn from '../common/types/FormHandlerReturn';
+import FormDataHandler from '../helper/functions/formDataHandler';
+import { S3Service } from '../s3/s3.service';
+import { Logger } from 'nestjs-pino';
+import parseJson from '../helper/functions/parseJson';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
+  private readonly allowedTypes;
+
   constructor(
     private readonly authService: AuthService,
     private readonly userService: UserService,
-  ) {}
+    private readonly s3Service: S3Service,
+    private readonly logger: Logger,
+  ) {
+    this.allowedTypes = [
+      'image/jpeg',
+      'image/png',
+      'image/svg+xml',
+      'image/webp',
+    ];
+  }
 
   @Public()
   @Post('login')
@@ -94,11 +115,41 @@ export class AuthController {
     description: 'Internal Server Error',
     example: httpMessages_EN.general.status_500,
   })
+  @UseInterceptors(FileInterceptor('file', multerMemoryStorage))
   async register(
-    @Body() userData: RegisterUserDTO,
-    @Res({ passthrough: true }) response: Response,
+    @UploadedFile() file: Express.Multer.File,
+    @Body('metadata') metadata: string,
   ): Promise<{ message: string }> {
-    const result: Return = await this.userService.registerUser(userData);
+    if (file) {
+      if (!this.allowedTypes.includes(file.mimetype)) {
+        throw new BadRequestException(
+          httpMessages_EN.user.registerUser.status_400,
+        );
+      }
+
+      const userData: FormHandlerReturn = await FormDataHandler(
+        RegisterUserDTO,
+        file,
+        metadata,
+        this.s3Service,
+        this.logger,
+        'images/userAvatars',
+      );
+
+      const result: Return = await this.userService.registerUser({
+        ...userData.data,
+        avatarUrl: userData.fileUrl,
+      });
+      return await this.authService.generateEmailConfirmationToken(
+        result.data.id,
+        result.data.name,
+        result.data.email,
+        result.data.role,
+      );
+    }
+
+    const data = await parseJson(RegisterUserDTO, metadata);
+    const result: Return = await this.userService.registerUser(data);
     return await this.authService.generateEmailConfirmationToken(
       result.data.id,
       result.data.name,

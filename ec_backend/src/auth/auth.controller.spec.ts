@@ -14,11 +14,20 @@ import {
 } from '@nestjs/common';
 import Return from '../common/types/Return';
 import RequestWithUser from '../common/types/RequestWithUser';
+import { S3Service } from '../s3/s3.service';
+import { Logger } from 'nestjs-pino';
+import FormHandlerReturn from '../common/types/FormHandlerReturn';
+import FormDataHandler from '../helper/functions/formDataHandler';
+import RegisterUserDTO from '../user/dto/registerUser.dto';
+
+jest.mock('../helper/functions/formDataHandler');
 
 describe('AuthController', () => {
   let authController: AuthController;
   let authService: AuthService;
   let userService: UserService;
+  let logger: Logger;
+  let s3Service: S3Service;
   let user: User;
   let loginData: { email: string; password: string };
   let mockResponse: any;
@@ -28,6 +37,9 @@ describe('AuthController', () => {
   let accessCookieExpiration: number;
   let emailToken: string;
   let mockToken: string;
+  let returnedData: FormHandlerReturn;
+  let file: Express.Multer.File;
+  let metadata: string;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -51,12 +63,25 @@ describe('AuthController', () => {
             registerUser: jest.fn(),
           },
         },
+        {
+          provide: S3Service,
+          useValue: {},
+        },
+        {
+          provide: Logger,
+          useValue: {
+            log: jest.fn(),
+            error: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
     authController = module.get<AuthController>(AuthController);
     authService = module.get<AuthService>(AuthService);
     userService = module.get<UserService>(UserService);
+    logger = module.get<Logger>(Logger);
+    s3Service = module.get<S3Service>(S3Service);
     user = generateMockUser();
     loginData = {
       email: user.email,
@@ -73,6 +98,23 @@ describe('AuthController', () => {
     };
     emailToken = faker.internet.jwt();
     mockToken = faker.internet.jwt();
+    returnedData = {
+      data: user,
+      fileUrl: user.avatarUrl,
+    };
+    file = {
+      fieldname: 'file',
+      originalname: 'test.jpeg',
+      encoding: '7bit',
+      mimetype: 'image/jpeg',
+      size: 1024,
+      buffer: Buffer.from('dummy content'),
+      stream: null,
+      destination: '',
+      filename: '',
+      path: '',
+    };
+    metadata = 'mock-data';
   });
 
   it('should be defined', () => {
@@ -179,6 +221,7 @@ describe('AuthController', () => {
 
   describe('register()', () => {
     it('should register a user and send confirmation email', async () => {
+      (FormDataHandler as jest.Mock).mockResolvedValue(returnedData);
       (userService.registerUser as jest.Mock).mockResolvedValue({
         message: httpMessages_EN.user.registerUser.status_201,
         data: user,
@@ -190,14 +233,25 @@ describe('AuthController', () => {
       });
 
       const result: { message: string } = await authController.register(
-        user,
-        mockResponse,
+        file,
+        metadata,
       );
 
       expect(result).toMatchObject({
         message: httpMessages_EN.auth.generateEmailConfirmationToken.status_200,
       });
-      expect(userService.registerUser).toHaveBeenCalledWith(user);
+      expect(FormDataHandler).toHaveBeenCalledWith(
+        RegisterUserDTO,
+        file,
+        metadata,
+        s3Service,
+        logger,
+        'images/userAvatars',
+      );
+      expect(userService.registerUser).toHaveBeenCalledWith({
+        ...returnedData.data,
+        avatarUrl: returnedData.fileUrl,
+      });
       expect(authService.generateEmailConfirmationToken).toHaveBeenCalledWith(
         user.id,
         user.name,
@@ -207,27 +261,51 @@ describe('AuthController', () => {
     });
 
     it('should throw ConflictException', async () => {
+      (FormDataHandler as jest.Mock).mockResolvedValue(returnedData);
       (userService.registerUser as jest.Mock).mockRejectedValue(
         new ConflictException(
           httpMessages_EN.user.validateUserAvailability.status_409,
         ),
       );
 
-      await expect(authController.register(user, mockResponse)).rejects.toThrow(
+      await expect(authController.register(file, metadata)).rejects.toThrow(
         ConflictException,
       );
-      expect(userService.registerUser).toHaveBeenCalledWith(user);
+      expect(FormDataHandler).toHaveBeenCalledWith(
+        RegisterUserDTO,
+        file,
+        metadata,
+        s3Service,
+        logger,
+        'images/userAvatars',
+      );
+      expect(userService.registerUser).toHaveBeenCalledWith({
+        ...returnedData.data,
+        avatarUrl: returnedData.fileUrl,
+      });
     });
 
     it('should throw InternalServerErrorException', async () => {
+      (FormDataHandler as jest.Mock).mockResolvedValue(returnedData);
       (userService.registerUser as jest.Mock).mockRejectedValue(
         new InternalServerErrorException(httpMessages_EN.general.status_500),
       );
 
-      await expect(authController.register(user, mockResponse)).rejects.toThrow(
+      await expect(authController.register(file, metadata)).rejects.toThrow(
         InternalServerErrorException,
       );
-      expect(userService.registerUser).toHaveBeenCalledWith(user);
+      expect(FormDataHandler).toHaveBeenCalledWith(
+        RegisterUserDTO,
+        file,
+        metadata,
+        s3Service,
+        logger,
+        'images/userAvatars',
+      );
+      expect(userService.registerUser).toHaveBeenCalledWith({
+        ...returnedData.data,
+        avatarUrl: returnedData.fileUrl,
+      });
     });
   });
 

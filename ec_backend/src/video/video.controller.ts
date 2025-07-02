@@ -25,16 +25,26 @@ import GenerateVideoDTO from './dto/generateVideo.dto';
 import { S3Service } from '../s3/s3.service';
 import { Logger } from 'nestjs-pino';
 import updateFormHandler from '../helper/functions/templates/updateFormHandler';
+import parseJson from '../helper/functions/parseJson';
 
 @ApiTags('Videos')
 @Controller('api/videos')
 export class VideoController {
+  private readonly allowedTypes: string[];
+
   constructor(
     private readonly videoService: VideoService,
     private readonly fileService: FileService,
     private readonly s3Service: S3Service,
     private readonly logger: Logger,
-  ) {}
+  ) {
+    this.allowedTypes = [
+      'image/jpeg',
+      'image/png',
+      'image/svg+xml',
+      'image/webp',
+    ];
+  }
 
   @Post()
   @ApiResponse({
@@ -52,6 +62,12 @@ export class VideoController {
     @UploadedFile() file: Express.Multer.File,
     @Body('metadata') metadata: string,
   ): Promise<Return> {
+    if (!this.allowedTypes.includes(file.mimetype)) {
+      throw new BadRequestException(
+        httpMessages_EN.video.updateVideo.status_4003,
+      );
+    }
+
     const videoData: FormHandlerReturn = await FormDataHandler(
       GenerateVideoDTO,
       file,
@@ -147,17 +163,22 @@ export class VideoController {
         httpMessages_EN.video.updateVideo.status_400,
       );
     }
+    if (file) {
+      if (!this.allowedTypes.includes(file.mimetype)) {
+        throw new BadRequestException(
+          httpMessages_EN.video.updateVideo.status_4003,
+        );
+      }
 
-    const videoData: Partial<FormHandlerReturn> = await updateFormHandler(
-      this.s3Service,
-      this.logger,
-      'videos/thumbnails',
-      UpdateVideoDTO,
-      file,
-      metadata,
-    );
+      const videoData: Partial<FormHandlerReturn> = await updateFormHandler(
+        this.s3Service,
+        this.logger,
+        'videos/thumbnails',
+        UpdateVideoDTO,
+        file,
+        metadata,
+      );
 
-    if (file !== undefined) {
       const thumbnail: Return = await this.fileService.generateFile({
         name: file.originalname,
         type: 'IMAGE',
@@ -171,13 +192,14 @@ export class VideoController {
       });
     }
 
-    if (videoData === undefined) {
-      throw new BadRequestException('VideoData is undefined');
+    if (!metadata) {
+      throw new BadRequestException(
+        httpMessages_EN.video.updateVideo.status_4002,
+      );
     }
 
-    return this.videoService.updateVideo(id, {
-      ...videoData.data,
-    });
+    const videoData: any = parseJson(UpdateVideoDTO, metadata);
+    return this.videoService.updateVideo(id, videoData);
   }
 
   @Delete(':id')

@@ -118,12 +118,18 @@ const httpMessages_EN = {
     },
     generateChapter: {
       status_200: 'The chapter has been successfully generated!',
+      status_400:
+        'Invalid file type. The accepted types are jpeg, png, svg and webp',
     },
     throwIfChapterExists: {
       status_409: 'There is another chapter with the same definitions.',
     },
     updateChapter: {
       status_200: 'The chapter has been successfully updated!',
+      status_400: 'No data provided for update.',
+      status_4002: 'There is nothing to update',
+      status_4003:
+        'Invalid file type. The accepted types are jpeg, png, svg and webp',
       status_404: 'The chapter was not found or the ID is invalid.',
     },
   },
@@ -192,6 +198,8 @@ const httpMessages_EN = {
     status_400: 'Validation failed',
     status_4002: 'The metadata cannot be empty.',
     status_4003: 'The file cannot be empty.',
+    status_4004:
+      'The file type is invalid. The accepted types are jpeg, png, svg and webp',
   },
   notification: {
     deleteNotification: {
@@ -480,10 +488,15 @@ const httpMessages_EN = {
     },
     generateVideo: {
       status_200: 'The video file has been successfully generated!',
+      status_400:
+        'Invalid file type. The accepted types are jpeg, png, svg and webp',
     },
     updateVideo: {
       status_200: 'The video has been successfully updated!',
       status_400: 'No data provided for update.',
+      status_4002: 'There is nothing to update.',
+      status_4003:
+        'Invalid file type. The accepted types are jpeg, png, svg and webp',
       status_404: 'The video was not found or the ID is invalid.',
     },
   },

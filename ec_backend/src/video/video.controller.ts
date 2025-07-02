@@ -26,25 +26,17 @@ import { S3Service } from '../s3/s3.service';
 import { Logger } from 'nestjs-pino';
 import updateFormHandler from '../helper/functions/templates/updateFormHandler';
 import parseJson from '../helper/functions/parseJson';
+import allowedTypes from '../helper/functions/allowedTypes';
 
 @ApiTags('Videos')
 @Controller('api/videos')
 export class VideoController {
-  private readonly allowedTypes: string[];
-
   constructor(
     private readonly videoService: VideoService,
     private readonly fileService: FileService,
     private readonly s3Service: S3Service,
     private readonly logger: Logger,
-  ) {
-    this.allowedTypes = [
-      'image/jpeg',
-      'image/png',
-      'image/svg+xml',
-      'image/webp',
-    ];
-  }
+  ) {}
 
   @Post()
   @ApiResponse({
@@ -62,11 +54,7 @@ export class VideoController {
     @UploadedFile() file: Express.Multer.File,
     @Body('metadata') metadata: string,
   ): Promise<Return> {
-    if (!this.allowedTypes.includes(file.mimetype)) {
-      throw new BadRequestException(
-        httpMessages_EN.video.generateVideo.status_400,
-      );
-    }
+    allowedTypes(file);
 
     const videoData: FormHandlerReturn = await FormDataHandler(
       GenerateVideoDTO,
@@ -164,11 +152,7 @@ export class VideoController {
       );
     }
     if (file) {
-      if (!this.allowedTypes.includes(file.mimetype)) {
-        throw new BadRequestException(
-          httpMessages_EN.video.updateVideo.status_4003,
-        );
-      }
+      allowedTypes(file);
 
       const videoData: Partial<FormHandlerReturn> = await updateFormHandler(
         this.s3Service,

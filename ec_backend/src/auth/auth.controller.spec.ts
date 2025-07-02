@@ -19,8 +19,10 @@ import { Logger } from 'nestjs-pino';
 import FormHandlerReturn from '../common/types/FormHandlerReturn';
 import FormDataHandler from '../helper/functions/formDataHandler';
 import RegisterUserDTO from '../user/dto/registerUser.dto';
+import allowedTypes from '../helper/functions/allowedTypes';
 
 jest.mock('../helper/functions/formDataHandler');
+jest.mock('../helper/functions/allowedTypes');
 
 describe('AuthController', () => {
   let authController: AuthController;
@@ -221,6 +223,7 @@ describe('AuthController', () => {
 
   describe('register()', () => {
     it('should register a user and send confirmation email', async () => {
+      (allowedTypes as jest.Mock).mockReturnValue(undefined);
       (FormDataHandler as jest.Mock).mockResolvedValue(returnedData);
       (userService.registerUser as jest.Mock).mockResolvedValue({
         message: httpMessages_EN.user.registerUser.status_201,
@@ -240,6 +243,7 @@ describe('AuthController', () => {
       expect(result).toMatchObject({
         message: httpMessages_EN.auth.generateEmailConfirmationToken.status_200,
       });
+      expect(allowedTypes).toHaveBeenCalledWith(file);
       expect(FormDataHandler).toHaveBeenCalledWith(
         RegisterUserDTO,
         file,
@@ -261,6 +265,7 @@ describe('AuthController', () => {
     });
 
     it('should throw ConflictException', async () => {
+      (allowedTypes as jest.Mock).mockReturnValue(undefined);
       (FormDataHandler as jest.Mock).mockResolvedValue(returnedData);
       (userService.registerUser as jest.Mock).mockRejectedValue(
         new ConflictException(
@@ -271,6 +276,7 @@ describe('AuthController', () => {
       await expect(authController.register(file, metadata)).rejects.toThrow(
         ConflictException,
       );
+      expect(allowedTypes).toHaveBeenCalledWith(file);
       expect(FormDataHandler).toHaveBeenCalledWith(
         RegisterUserDTO,
         file,
@@ -286,6 +292,7 @@ describe('AuthController', () => {
     });
 
     it('should throw InternalServerErrorException', async () => {
+      (allowedTypes as jest.Mock).mockReturnValue(undefined);
       (FormDataHandler as jest.Mock).mockResolvedValue(returnedData);
       (userService.registerUser as jest.Mock).mockRejectedValue(
         new InternalServerErrorException(httpMessages_EN.general.status_500),
@@ -294,6 +301,7 @@ describe('AuthController', () => {
       await expect(authController.register(file, metadata)).rejects.toThrow(
         InternalServerErrorException,
       );
+      expect(allowedTypes).toHaveBeenCalledWith(file);
       expect(FormDataHandler).toHaveBeenCalledWith(
         RegisterUserDTO,
         file,

@@ -30,23 +30,16 @@ import { Logger } from 'nestjs-pino';
 import FormHandlerReturn from '../common/types/FormHandlerReturn';
 import parseJson from '../helper/functions/parseJson';
 import updateFormHandler from '../helper/functions/templates/updateFormHandler';
+import allowedTypes from '../helper/functions/allowedTypes';
 
 @ApiTags('Users')
 @Controller('api/users')
 export class UserController {
-  private readonly allowedTypes: string[];
   constructor(
     private readonly userService: UserService,
     private readonly s3Service: S3Service,
     private readonly logger: Logger,
-  ) {
-    this.allowedTypes = [
-      'image/jpeg',
-      'image/png',
-      'image/svg+xml',
-      'image/webp',
-    ];
-  }
+  ) {}
 
   @Post()
   @ApiResponse({
@@ -76,11 +69,7 @@ export class UserController {
     @Body('metadata') metadata: string,
   ): Promise<Return> {
     if (file) {
-      if (!this.allowedTypes.includes(file.mimetype)) {
-        throw new BadRequestException(
-          httpMessages_EN.user.registerUser.status_400,
-        );
-      }
+      allowedTypes(file);
 
       const user: FormHandlerReturn = await FormDataHandler(
         RegisterUserDTO,
@@ -202,11 +191,7 @@ export class UserController {
     @Body('metadata') metadata: string,
   ): Promise<Return> {
     if (file) {
-      if (!this.allowedTypes.includes(file.mimetype)) {
-        throw new BadRequestException(
-          httpMessages_EN.user.updateUser.status_400,
-        );
-      }
+      allowedTypes(file);
 
       const user: Partial<FormHandlerReturn> = await updateFormHandler(
         this.s3Service,

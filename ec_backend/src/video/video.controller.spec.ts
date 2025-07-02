@@ -18,9 +18,11 @@ import GenerateVideoDTO from './dto/generateVideo.dto';
 import { faker } from '@faker-js/faker/.';
 import updateFormHandler from '../helper/functions/templates/updateFormHandler';
 import UpdateVideoDTO from './dto/updateVideo.dto';
+import allowedTypes from '../helper/functions/allowedTypes';
 
 jest.mock('../helper/functions/formDataHandler');
 jest.mock('../helper/functions/templates/updateFormHandler');
+jest.mock('../helper/functions/allowedTypes');
 
 describe('VideoController', () => {
   let videoController: VideoController;
@@ -78,9 +80,9 @@ describe('VideoController', () => {
     metadata = 'mock-data';
     uploadedFile = {
       fieldname: 'file',
-      originalname: 'test.pdf',
+      originalname: 'test.jpeg',
       encoding: '7bit',
-      mimetype: 'application/pdf',
+      mimetype: 'image/jpeg',
       size: 1024,
       buffer: Buffer.from('dummy content'),
       stream: null,
@@ -110,6 +112,7 @@ describe('VideoController', () => {
 
   describe('generateVideo()', () => {
     it('should generate a video', async () => {
+      (allowedTypes as jest.Mock).mockReturnValue(undefined);
       (FormDataHandler as jest.Mock).mockResolvedValue(returnedData);
       (fileService.generateFile as jest.Mock).mockResolvedValue(thumbnail);
       (videoService.generateVideo as jest.Mock).mockResolvedValue({
@@ -126,6 +129,7 @@ describe('VideoController', () => {
         message: httpMessages_EN.video.generateVideo.status_200,
         data: video,
       });
+      expect(allowedTypes).toHaveBeenCalledWith(uploadedFile);
       expect(videoService.generateVideo).toHaveBeenCalledWith({
         ...video,
         thumbnailId: thumbnail.data.id,
@@ -246,6 +250,7 @@ describe('VideoController', () => {
 
   describe('updateVideo()', () => {
     it('should update video', async () => {
+      (allowedTypes as jest.Mock).mockReturnValue(undefined);
       (updateFormHandler as jest.Mock).mockResolvedValue(returnedData);
       (fileService.generateFile as jest.Mock).mockResolvedValue(thumbnail);
       (videoService.updateVideo as jest.Mock).mockResolvedValue({
@@ -263,6 +268,7 @@ describe('VideoController', () => {
         message: httpMessages_EN.video.updateVideo.status_200,
         data: video,
       });
+      expect(allowedTypes).toHaveBeenCalledWith(uploadedFile);
       expect(videoService.updateVideo).toHaveBeenCalledWith(video.id, {
         ...returnedData.data,
         thumbnailId: thumbnail.data.id,

@@ -18,9 +18,11 @@ import { Logger } from 'nestjs-pino';
 import RegisterUserDTO from './dto/registerUser.dto';
 import updateFormHandler from '../helper/functions/templates/updateFormHandler';
 import UpdateUserDTO from './dto/updateUser.dto';
+import allowedTypes from '../helper/functions/allowedTypes';
 
 jest.mock('../helper/functions/formDataHandler');
 jest.mock('../helper/functions/templates/updateFormHandler');
+jest.mock('../helper/functions/allowedTypes');
 
 describe('UserController', () => {
   let userController: UserController;
@@ -92,6 +94,7 @@ describe('UserController', () => {
 
   describe('registerUser()', () => {
     it('should register a new user', async () => {
+      (allowedTypes as jest.Mock).mockReturnValue(undefined);
       (FormDataHandler as jest.Mock).mockResolvedValue(validatedUser);
       (userService.registerUser as jest.Mock).mockResolvedValue({
         message: httpMessages_EN.user.registerUser.status_201,
@@ -104,6 +107,7 @@ describe('UserController', () => {
         message: httpMessages_EN.user.registerUser.status_201,
         data: user,
       });
+      expect(allowedTypes).toHaveBeenCalledWith(file);
       expect(userService.registerUser).toHaveBeenCalledWith(user);
       expect(FormDataHandler).toHaveBeenCalledWith(
         RegisterUserDTO,
@@ -116,6 +120,10 @@ describe('UserController', () => {
     });
 
     it('should throw BadRequestException due to wrong file type', async () => {
+      (allowedTypes as jest.Mock).mockImplementation(() => {
+        throw new BadRequestException(httpMessages_EN.helper.status_4004);
+      });
+
       await expect(
         userController.registerUser(
           {
@@ -133,8 +141,10 @@ describe('UserController', () => {
           metadata,
         ),
       ).rejects.toThrow(BadRequestException);
+      expect(allowedTypes).toHaveBeenCalledWith(file);
     });
     it('should throw ConflictException', async () => {
+      (allowedTypes as jest.Mock).mockReturnValue(undefined);
       (FormDataHandler as jest.Mock).mockResolvedValue(validatedUser);
       (userService.registerUser as jest.Mock).mockRejectedValue(
         new ConflictException(
@@ -145,6 +155,7 @@ describe('UserController', () => {
       await expect(userController.registerUser(file, metadata)).rejects.toThrow(
         ConflictException,
       );
+      expect(allowedTypes).toHaveBeenCalledWith(file);
       expect(userService.registerUser).toHaveBeenCalledWith(user);
       expect(FormDataHandler).toHaveBeenCalledWith(
         RegisterUserDTO,
@@ -157,6 +168,7 @@ describe('UserController', () => {
     });
 
     it('should throw InternalServerErrorException', async () => {
+      (allowedTypes as jest.Mock).mockReturnValue(undefined);
       (FormDataHandler as jest.Mock).mockResolvedValue(validatedUser);
       (userService.registerUser as jest.Mock).mockRejectedValue(
         new InternalServerErrorException(httpMessages_EN.general.status_500),
@@ -165,6 +177,7 @@ describe('UserController', () => {
       await expect(userController.registerUser(file, metadata)).rejects.toThrow(
         InternalServerErrorException,
       );
+      expect(allowedTypes).toHaveBeenCalledWith(file);
       expect(userService.registerUser).toHaveBeenCalledWith(user);
       expect(FormDataHandler).toHaveBeenCalledWith(
         RegisterUserDTO,
@@ -302,6 +315,7 @@ describe('UserController', () => {
 
   describe('updateUser()', () => {
     it('should update a user', async () => {
+      (allowedTypes as jest.Mock).mockReturnValue(undefined);
       (updateFormHandler as jest.Mock).mockResolvedValue(validatedUser);
       (userService.updateUser as jest.Mock).mockResolvedValue({
         message: httpMessages_EN.user.updateUser.status_200,
@@ -318,6 +332,7 @@ describe('UserController', () => {
         message: httpMessages_EN.user.updateUser.status_200,
         data: user,
       });
+      expect(allowedTypes).toHaveBeenCalledWith(file);
       expect(userService.updateUser).toHaveBeenCalledWith(user.id, user);
       expect(updateFormHandler).toHaveBeenCalledWith(
         s3Service,
@@ -330,6 +345,10 @@ describe('UserController', () => {
     });
 
     it('should throw BadRequestException due to wrong file type', async () => {
+      (allowedTypes as jest.Mock).mockImplementation(() => {
+        throw new BadRequestException(httpMessages_EN.helper.status_4004);
+      });
+
       await expect(
         userController.updateUser(
           user.id,
@@ -348,9 +367,11 @@ describe('UserController', () => {
           metadata,
         ),
       ).rejects.toThrow(BadRequestException);
+      expect(allowedTypes).toHaveBeenCalledWith(file);
     });
 
     it('should throw NotFoundException', async () => {
+      (allowedTypes as jest.Mock).mockReturnValue(undefined);
       (updateFormHandler as jest.Mock).mockResolvedValue(validatedUser);
       (userService.updateUser as jest.Mock).mockRejectedValue(
         new NotFoundException(httpMessages_EN.user.updateUser.status_404),
@@ -359,6 +380,7 @@ describe('UserController', () => {
       await expect(
         userController.updateUser(user.id, file, metadata),
       ).rejects.toThrow(NotFoundException);
+      expect(allowedTypes).toHaveBeenCalledWith(file);
       expect(userService.updateUser).toHaveBeenCalledWith(user.id, user);
       expect(updateFormHandler).toHaveBeenCalledWith(
         s3Service,
@@ -371,6 +393,7 @@ describe('UserController', () => {
     });
 
     it('should throw InternalServerErrorException', async () => {
+      (allowedTypes as jest.Mock).mockReturnValue(undefined);
       (updateFormHandler as jest.Mock).mockResolvedValue(validatedUser);
       (userService.updateUser as jest.Mock).mockRejectedValue(
         new InternalServerErrorException(httpMessages_EN.general.status_500),
@@ -379,6 +402,7 @@ describe('UserController', () => {
       await expect(
         userController.updateUser(user.id, file, metadata),
       ).rejects.toThrow(InternalServerErrorException);
+      expect(allowedTypes).toHaveBeenCalledWith(file);
       expect(userService.updateUser).toHaveBeenCalledWith(user.id, user);
       expect(updateFormHandler).toHaveBeenCalledWith(
         s3Service,

@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Get,
@@ -33,25 +32,17 @@ import FormDataHandler from '../helper/functions/formDataHandler';
 import { S3Service } from '../s3/s3.service';
 import { Logger } from 'nestjs-pino';
 import parseJson from '../helper/functions/parseJson';
+import allowedTypes from '../helper/functions/allowedTypes';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-  private readonly allowedTypes;
-
   constructor(
     private readonly authService: AuthService,
     private readonly userService: UserService,
     private readonly s3Service: S3Service,
     private readonly logger: Logger,
-  ) {
-    this.allowedTypes = [
-      'image/jpeg',
-      'image/png',
-      'image/svg+xml',
-      'image/webp',
-    ];
-  }
+  ) {}
 
   @Public()
   @Post('login')
@@ -121,11 +112,7 @@ export class AuthController {
     @Body('metadata') metadata: string,
   ): Promise<{ message: string }> {
     if (file) {
-      if (!this.allowedTypes.includes(file.mimetype)) {
-        throw new BadRequestException(
-          httpMessages_EN.user.registerUser.status_400,
-        );
-      }
+      allowedTypes(file);
 
       const userData: FormHandlerReturn = await FormDataHandler(
         RegisterUserDTO,

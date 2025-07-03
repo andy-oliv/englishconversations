@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -7,7 +8,9 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ChapterService } from './chapter.service';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -16,12 +19,27 @@ import Return from '../common/types/Return';
 import GenerateChapterDTO from './dto/generateChapter.dto';
 import UpdateChapterDTO from './dto/updateChapter.dto';
 import { RoleGuard } from '../auth/guards/role/role.guard';
+import FormHandlerReturn from '../common/types/FormHandlerReturn';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { multerMemoryStorage } from '../config/upload.config';
+import FormDataHandler from '../helper/functions/formDataHandler';
+import { S3Service } from '../s3/s3.service';
+import { Logger } from 'nestjs-pino';
+import { FileService } from '../file/file.service';
+import updateFormHandler from '../helper/functions/templates/updateFormHandler';
+import parseJson from '../helper/functions/parseJson';
+import allowedTypes from '../helper/functions/allowedTypes';
 
 @ApiTags('Chapters')
 @Controller('api/chapters')
 @UseGuards(RoleGuard)
 export class ChapterController {
-  constructor(private readonly chapterService: ChapterService) {}
+  constructor(
+    private readonly chapterService: ChapterService,
+    private readonly fileService: FileService,
+    private readonly s3Service: S3Service,
+    private readonly logger: Logger,
+  ) {}
 
   @Post()
   @ApiResponse({
@@ -39,10 +57,32 @@ export class ChapterController {
     description: 'Internal Server Error',
     example: httpMessages_EN.general.status_500,
   })
+  @UseInterceptors(FileInterceptor('file', multerMemoryStorage))
   async generateChapter(
-    @Body() chapterData: GenerateChapterDTO,
+    @UploadedFile() file: Express.Multer.File,
+    @Body('metadata') metadata: string,
   ): Promise<Return> {
-    return this.chapterService.generateChapter(chapterData);
+    allowedTypes(file);
+
+    const chapterData: FormHandlerReturn = await FormDataHandler(
+      GenerateChapterDTO,
+      file,
+      metadata,
+      this.s3Service,
+      this.logger,
+      'images/chapter',
+    );
+    const thumbnail: Return = await this.fileService.generateFile({
+      name: file.originalname,
+      type: 'IMAGE',
+      size: file.size,
+      url: chapterData.fileUrl,
+    });
+
+    return this.chapterService.generateChapter({
+      ...chapterData.data,
+      fileId: thumbnail.data.id,
+    });
   }
 
   @Get(':id')
@@ -108,11 +148,52 @@ export class ChapterController {
     description: 'Internal Server Error',
     example: httpMessages_EN.general.status_500,
   })
+  @UseInterceptors(FileInterceptor('file', multerMemoryStorage))
   async updateChapter(
+    @UploadedFile() file: Express.Multer.File,
     @Param('id', new ParseUUIDPipe()) id: string,
-    @Body() updatedData: UpdateChapterDTO,
+    @Body('metadata') metadata: string,
   ): Promise<Return> {
-    return await this.chapterService.updateChapter(id, updatedData);
+    if (!metadata && !file) {
+      throw new BadRequestException(
+        httpMessages_EN.chapter.updateChapter.status_400,
+      );
+    }
+
+    if (file) {
+      allowedTypes(file);
+
+      const chapterData: Partial<FormHandlerReturn> = await updateFormHandler(
+        this.s3Service,
+        this.logger,
+        'images/chapter',
+        UpdateChapterDTO,
+        file,
+        metadata,
+      );
+
+      const thumbnail: Return = await this.fileService.generateFile({
+        name: file.originalname,
+        type: 'IMAGE',
+        size: file.size,
+        url: chapterData.fileUrl,
+      });
+
+      return this.chapterService.updateChapter(id, {
+        ...chapterData.data,
+        fileId: thumbnail.data.id,
+      });
+    }
+
+    if (!metadata) {
+      throw new BadRequestException(
+        httpMessages_EN.chapter.updateChapter.status_4002,
+      );
+    }
+
+    const chapterData: any = await parseJson(UpdateChapterDTO, metadata);
+    this.logger.log(`CHAPTER DATA: ${chapterData}`);
+    return this.chapterService.updateChapter(id, chapterData);
   }
 
   @Delete(':id')

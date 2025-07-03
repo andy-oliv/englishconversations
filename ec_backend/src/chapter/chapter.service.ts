@@ -12,12 +12,14 @@ import handleInternalErrorException from '../helper/functions/handleErrorExcepti
 import loggerMessages from '../helper/messages/loggerMessages';
 import UpdateChapterDTO from './dto/updateChapter.dto';
 import generateExceptionMessage from '../helper/functions/generateExceptionMessage';
+import { FileService } from '../file/file.service';
 
 @Injectable()
 export class ChapterService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly logger: Logger,
+    private readonly fileService: FileService,
   ) {}
 
   async throwIfChapterExists(chapterData: Chapter): Promise<void> {
@@ -118,6 +120,14 @@ export class ChapterService {
                 description: true,
               },
             },
+            file: {
+              select: {
+                id: true,
+                name: true,
+                size: true,
+                url: true,
+              },
+            },
           },
         });
 
@@ -192,7 +202,9 @@ export class ChapterService {
         },
       });
 
-      this.logger.warn({
+      await this.fileService.deleteFile(deletedchapter.fileId);
+
+      this.logger.log({
         message: generateExceptionMessage(
           'chapterService',
           'deleteChapter',

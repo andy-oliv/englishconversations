@@ -11,10 +11,12 @@ import {
 import { ChapterService } from './chapter.service';
 import Chapter from '../entities/Chapter';
 import { faker } from '@faker-js/faker/.';
+import { FileService } from '../file/file.service';
 
 describe('ChapterService', () => {
   let chapterService: ChapterService;
   let prismaService: PrismaService;
+  let fileService: FileService;
   let logger: Logger;
   let chapter: Chapter;
   let chapters: Chapter[];
@@ -45,11 +47,18 @@ describe('ChapterService', () => {
             error: jest.fn(),
           },
         },
+        {
+          provide: FileService,
+          useValue: {
+            deleteFile: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
     chapterService = module.get<ChapterService>(ChapterService);
     prismaService = module.get<PrismaService>(PrismaService);
+    fileService = module.get<FileService>(FileService);
     logger = module.get<Logger>(Logger);
     chapter = {
       id: faker.string.uuid(),
@@ -194,6 +203,14 @@ describe('ChapterService', () => {
               description: true,
             },
           },
+          file: {
+            select: {
+              id: true,
+              name: true,
+              size: true,
+              url: true,
+            },
+          },
         },
       });
     });
@@ -219,6 +236,14 @@ describe('ChapterService', () => {
               description: true,
             },
           },
+          file: {
+            select: {
+              id: true,
+              name: true,
+              size: true,
+              url: true,
+            },
+          },
         },
       });
     });
@@ -242,6 +267,14 @@ describe('ChapterService', () => {
               id: true,
               name: true,
               description: true,
+            },
+          },
+          file: {
+            select: {
+              id: true,
+              name: true,
+              size: true,
+              url: true,
             },
           },
         },
@@ -306,6 +339,7 @@ describe('ChapterService', () => {
   describe('deleteChapter()', () => {
     it('should fetch a chapter', async () => {
       (prismaService.chapter.delete as jest.Mock).mockResolvedValue(chapter);
+      (fileService.deleteFile as jest.Mock).mockResolvedValue(undefined);
 
       const result: Return = await chapterService.deleteChapter(chapter.id);
 
@@ -318,6 +352,7 @@ describe('ChapterService', () => {
           id: chapter.id,
         },
       });
+      expect(fileService.deleteFile).toHaveBeenCalledWith(chapter.fileId);
     });
 
     it('should throw NotFoundException', async () => {

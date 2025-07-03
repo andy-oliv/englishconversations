@@ -280,7 +280,7 @@ export class StudentService {
         },
       });
 
-      this.logger.warn({
+      this.logger.log({
         message: generateExceptionMessage(
           'studentService',
           'deleteStudent',

@@ -189,7 +189,7 @@ export class QuizService {
       });
 
       if (quizExists) {
-        this.logger.warn({
+        this.logger.log({
           message: generateExceptionMessage(
             'quizService',
             'throwIfQuizExists',

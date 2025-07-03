@@ -398,7 +398,7 @@ export class TagService {
         },
       });
 
-      this.logger.warn(
+      this.logger.log(
         generateExceptionMessage(
           'tagService',
           'deleteTag',

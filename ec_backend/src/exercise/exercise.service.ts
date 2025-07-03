@@ -115,7 +115,7 @@ export class ExerciseService {
       });
 
     if (exerciseExists) {
-      this.logger.warn({
+      this.logger.log({
         message: generateExceptionMessage(
           'exerciseService',
           'throwIfExerciseExists',
@@ -351,7 +351,7 @@ export class ExerciseService {
         await this.fileService.deleteFile(deletedExercise.fileId);
       }
 
-      this.logger.warn({
+      this.logger.log({
         message: generateExceptionMessage(
           'exerciseService',
           'deleteExercise',

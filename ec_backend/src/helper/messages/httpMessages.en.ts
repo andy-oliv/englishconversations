@@ -233,7 +233,6 @@ const httpMessages_EN = {
     },
     createQuiz: {
       status_201: 'The quiz has been successfully created!',
-      status_400: 'The request cannot be empty.',
     },
     deleteQuiz: {
       status_200: 'The quiz was successfully deleted.',
@@ -269,8 +268,6 @@ const httpMessages_EN = {
     },
     updateQuiz: {
       status_200: 'The quiz was successfully updated.',
-      status_400: 'No data provided for update.',
-      status_4002: 'There is nothing to update',
       status_404: 'The quiz was not found or the ID is invalid.',
     },
   },
@@ -358,7 +355,6 @@ const httpMessages_EN = {
   unit: {
     createUnit: {
       status_200: 'The unit has been successfully created!',
-      status_400: 'The request cannot be empty.',
       status_404: 'The chapter was not found or the ID is invalid.',
     },
     deleteUnit: {
@@ -369,18 +365,16 @@ const httpMessages_EN = {
       status_200: 'The units have been successfully fetched.',
       status_404: 'There are no units to show.',
     },
+    fetchByChapter: {
+      status_200: 'The units have been successfully fetched.',
+      status_404: 'There are no units to show.',
+    },
     fetchUnitById: {
       status_200: 'The unit has been successfully fetched.',
       status_404: 'The unit was not found or the ID is invalid.',
     },
-    fetchByChapter: {
-      status_200: 'The units were successfully fetched.',
-      status_404: 'There are no units to show.',
-    },
     updateUnit: {
       status_200: 'The unit has been successfully updated!',
-      status_400: 'No data provided for update.',
-      status_4002: 'There is nothing to update',
       status_404: 'The unit was not found or the ID is invalid.',
       status_404B: 'The chapterId was not found or the ID is invalid.',
     },

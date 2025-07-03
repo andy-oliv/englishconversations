@@ -130,7 +130,7 @@ export class AuthService {
       };
     } catch (error) {
       if (error.code === 'P2025') {
-        this.logger.warn({
+        this.logger.log({
           message: generateExceptionMessage(
             'authService',
             'generateEmailConfirmationToken',
@@ -180,7 +180,7 @@ export class AuthService {
       return { message: httpMessages_EN.auth.generateResetToken.status_200 };
     } catch (error) {
       if (error.code === 'P2025') {
-        this.logger.warn({
+        this.logger.log({
           message: generateExceptionMessage(
             'authService',
             'generateResetToken',
@@ -616,7 +616,7 @@ export class AuthService {
     } catch (error) {
       //purposely throwing a BadRequestException to avoid exposing that the user was not found
       if (error.code === 'P2025') {
-        this.logger.warn({
+        this.logger.log({
           message: generateExceptionMessage(
             'authService',
             'updatePassword',

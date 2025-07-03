@@ -1,15 +1,17 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
   Param,
   ParseIntPipe,
-  ParseUUIDPipe,
   Patch,
   Post,
   Query,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ExerciseService } from './exercise.service';
 import Return from '../common/types/Return';
@@ -19,14 +21,28 @@ import httpMessages_EN from '../helper/messages/httpMessages.en';
 import validationMessages_EN from '../helper/messages/validationMessages.en';
 import loggerMessages from '../helper/messages/loggerMessages';
 import FetchByQueryDTO from './dto/FetchByQuery.exercise.dto';
-import UpdateExerciseDTO from './dto/UpdateExercise.dto';
 import { RoleGuard } from '../auth/guards/role/role.guard';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { multerMemoryStorage } from '../config/upload.config';
+import allowedTypes from '../helper/functions/allowedTypes';
+import FormHandlerReturn from '../common/types/FormHandlerReturn';
+import updateFormHandler from '../helper/functions/templates/updateFormHandler';
+import { S3Service } from '../s3/s3.service';
+import { Logger } from 'nestjs-pino';
+import { FileService } from '../file/file.service';
+import UpdateExerciseDTO from './dto/UpdateExercise.dto';
+import parseJson from '../helper/functions/parseJson';
 
 @ApiTags('Exercises')
 @Controller('api/exercises')
 @UseGuards(RoleGuard)
 export class ExerciseController {
-  constructor(private readonly exerciseService: ExerciseService) {}
+  constructor(
+    private readonly exerciseService: ExerciseService,
+    private readonly s3Service: S3Service,
+    private readonly logger: Logger,
+    private readonly fileService: FileService,
+  ) {}
 
   @Post()
   @ApiResponse({
@@ -152,11 +168,51 @@ export class ExerciseController {
     description: 'Internal Server Error',
     example: httpMessages_EN.general.status_500,
   })
+  @UseInterceptors(FileInterceptor('file', multerMemoryStorage))
   async updateExercise(
+    @UploadedFile() file: Express.Multer.File,
     @Param('id', new ParseIntPipe()) id: number,
-    @Body() updatedData: UpdateExerciseDTO,
+    @Body('metadata') metadata: string,
   ): Promise<Return> {
-    return this.exerciseService.updateExercise(id, updatedData);
+    if (!metadata && !file) {
+      throw new BadRequestException(
+        httpMessages_EN.exercise.updateExercise.status_400,
+      );
+    }
+
+    if (file) {
+      allowedTypes(file);
+
+      const exerciseData: Partial<FormHandlerReturn> = await updateFormHandler(
+        this.s3Service,
+        this.logger,
+        'images/exercise',
+        UpdateExerciseDTO,
+        file,
+        metadata,
+      );
+
+      const generatedFile: Return = await this.fileService.generateFile({
+        name: file.originalname,
+        type: 'IMAGE',
+        size: file.size,
+        url: exerciseData.fileUrl,
+      });
+
+      return this.exerciseService.updateExercise(id, {
+        ...exerciseData.data,
+        fileId: generatedFile.data.id,
+      });
+    }
+
+    if (!metadata) {
+      throw new BadRequestException(
+        httpMessages_EN.chapter.updateChapter.status_4002,
+      );
+    }
+
+    const exerciseData: any = await parseJson(UpdateExerciseDTO, metadata);
+    return this.exerciseService.updateExercise(id, exerciseData);
   }
 
   @Delete(':id')

@@ -192,7 +192,6 @@ export class ChapterController {
     }
 
     const chapterData: any = await parseJson(UpdateChapterDTO, metadata);
-    this.logger.log(`CHAPTER DATA: ${chapterData}`);
     return this.chapterService.updateChapter(id, chapterData);
   }
 

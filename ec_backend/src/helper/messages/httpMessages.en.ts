@@ -166,6 +166,10 @@ const httpMessages_EN = {
     },
     updateExercise: {
       status_200: 'The exercise has been successfully updated!',
+      status_400: 'No data provided for update.',
+      status_4002: 'There is nothing to update',
+      status_4003:
+        'Invalid file type. The accepted types are jpeg, png, svg and webp',
       status_404: 'The exercise was not found or the ID is invalid.',
     },
   },

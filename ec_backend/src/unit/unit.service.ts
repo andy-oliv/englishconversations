@@ -7,12 +7,14 @@ import handleInternalErrorException from '../helper/functions/handleErrorExcepti
 import loggerMessages from '../helper/messages/loggerMessages';
 import Return from '../common/types/Return';
 import UpdateUnitDTO from './dto/updateUnit.dto';
+import { FileService } from '../file/file.service';
 
 @Injectable()
 export class UnitService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly logger: Logger,
+    private readonly fileService: FileService,
   ) {}
 
   async createUnit(data: Unit): Promise<Return> {
@@ -84,6 +86,39 @@ export class UnitService {
               },
             },
           },
+          chapter: {
+            select: {
+              id: true,
+              name: true,
+              description: true,
+            },
+          },
+          videos: {
+            select: {
+              id: true,
+              title: true,
+              description: true,
+              duration: true,
+            },
+          },
+          quizzes: {
+            select: {
+              id: true,
+              title: true,
+              description: true,
+              difficulty: true,
+              isTest: true,
+            },
+          },
+          file: {
+            select: {
+              id: true,
+              name: true,
+              type: true,
+              size: true,
+              url: true,
+            },
+          },
         },
       });
 
@@ -149,6 +184,8 @@ export class UnitService {
           id,
         },
       });
+
+      await this.fileService.deleteFile(deletedUnit.fileId);
 
       return {
         message: httpMessages_EN.unit.deleteUnit.status_200,

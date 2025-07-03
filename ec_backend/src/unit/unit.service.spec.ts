@@ -10,10 +10,12 @@ import {
 import { UnitService } from './unit.service';
 import Unit from '../entities/Unit';
 import generateMockUnit from '../helper/mocks/generateMockUnit';
+import { FileService } from '../file/file.service';
 
 describe('UnitService', () => {
   let unitService: UnitService;
   let prismaService: PrismaService;
+  let fileService: FileService;
   let logger: Logger;
   let unit: Unit;
   let units: Unit[];
@@ -45,11 +47,18 @@ describe('UnitService', () => {
             error: jest.fn(),
           },
         },
+        {
+          provide: FileService,
+          useValue: {
+            deleteFile: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
     unitService = module.get<UnitService>(UnitService);
     prismaService = module.get<PrismaService>(PrismaService);
+    fileService = module.get<FileService>(FileService);
     logger = module.get<Logger>(Logger);
     unit = generateMockUnit();
     units = [generateMockUnit(), generateMockUnit()];
@@ -169,6 +178,39 @@ describe('UnitService', () => {
               },
             },
           },
+          chapter: {
+            select: {
+              id: true,
+              name: true,
+              description: true,
+            },
+          },
+          videos: {
+            select: {
+              id: true,
+              title: true,
+              description: true,
+              duration: true,
+            },
+          },
+          quizzes: {
+            select: {
+              id: true,
+              title: true,
+              description: true,
+              difficulty: true,
+              isTest: true,
+            },
+          },
+          file: {
+            select: {
+              id: true,
+              name: true,
+              type: true,
+              size: true,
+              url: true,
+            },
+          },
         },
       });
     });
@@ -197,6 +239,39 @@ describe('UnitService', () => {
               },
             },
           },
+          chapter: {
+            select: {
+              id: true,
+              name: true,
+              description: true,
+            },
+          },
+          videos: {
+            select: {
+              id: true,
+              title: true,
+              description: true,
+              duration: true,
+            },
+          },
+          quizzes: {
+            select: {
+              id: true,
+              title: true,
+              description: true,
+              difficulty: true,
+              isTest: true,
+            },
+          },
+          file: {
+            select: {
+              id: true,
+              name: true,
+              type: true,
+              size: true,
+              url: true,
+            },
+          },
         },
       });
     });
@@ -223,6 +298,39 @@ describe('UnitService', () => {
                   title: true,
                 },
               },
+            },
+          },
+          chapter: {
+            select: {
+              id: true,
+              name: true,
+              description: true,
+            },
+          },
+          videos: {
+            select: {
+              id: true,
+              title: true,
+              description: true,
+              duration: true,
+            },
+          },
+          quizzes: {
+            select: {
+              id: true,
+              title: true,
+              description: true,
+              difficulty: true,
+              isTest: true,
+            },
+          },
+          file: {
+            select: {
+              id: true,
+              name: true,
+              type: true,
+              size: true,
+              url: true,
             },
           },
         },

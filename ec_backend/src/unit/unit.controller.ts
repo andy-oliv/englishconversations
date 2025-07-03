@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -7,7 +8,9 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { UnitService } from './unit.service';
@@ -15,14 +18,29 @@ import Return from '../common/types/Return';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
 import validationMessages_EN from '../helper/messages/validationMessages.en';
 import CreateUnitDTO from './dto/createUnit.dto';
-import UpdateUnitDTO from './dto/updateUnit.dto';
 import { RoleGuard } from '../auth/guards/role/role.guard';
+import { Logger } from 'nestjs-pino';
+import { S3Service } from '../s3/s3.service';
+import { FileService } from '../file/file.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { multerMemoryStorage } from '../config/upload.config';
+import allowedTypes from '../helper/functions/allowedTypes';
+import FormHandlerReturn from '../common/types/FormHandlerReturn';
+import FormDataHandler from '../helper/functions/formDataHandler';
+import updateFormHandler from '../helper/functions/templates/updateFormHandler';
+import UpdateVideoDTO from '../video/dto/updateVideo.dto';
+import parseJson from '../helper/functions/parseJson';
 
 @ApiTags('Units')
 @Controller('api/units')
 @UseGuards(RoleGuard)
 export class UnitController {
-  constructor(private readonly unitService: UnitService) {}
+  constructor(
+    private readonly unitService: UnitService,
+    private readonly s3Service: S3Service,
+    private readonly logger: Logger,
+    private readonly fileService: FileService,
+  ) {}
 
   @Post()
   @ApiResponse({
@@ -45,8 +63,32 @@ export class UnitController {
     description: 'Internal Server Error',
     example: httpMessages_EN.general.status_500,
   })
-  async createUnit(@Body() data: CreateUnitDTO): Promise<Return> {
-    return this.unitService.createUnit(data);
+  @UseInterceptors(FileInterceptor('file', multerMemoryStorage))
+  async createUnit(
+    @Body('metadata') metadata: string,
+    @UploadedFile() file: Express.Multer.File,
+  ): Promise<Return> {
+    allowedTypes(file);
+
+    const unitData: FormHandlerReturn = await FormDataHandler(
+      CreateUnitDTO,
+      file,
+      metadata,
+      this.s3Service,
+      this.logger,
+      'images/unit',
+    );
+    const thumbnail: Return = await this.fileService.generateFile({
+      name: file.originalname,
+      type: 'IMAGE',
+      size: file.size,
+      url: unitData.fileUrl,
+    });
+
+    return this.unitService.createUnit({
+      ...unitData.data,
+      fileId: thumbnail.data.id,
+    });
   }
 
   @Get(':id')
@@ -112,11 +154,48 @@ export class UnitController {
     description: 'Internal Server Error',
     example: httpMessages_EN.general.status_500,
   })
+  @UseInterceptors(FileInterceptor('file', multerMemoryStorage))
   async updateUnit(
+    @UploadedFile() file: Express.Multer.File,
     @Param('id', new ParseIntPipe()) id: number,
-    @Body() data: UpdateUnitDTO,
+    @Body('metadata') metadata: string,
   ): Promise<Return> {
-    return this.unitService.updateUnit(id, data);
+    if (!metadata && !file) {
+      throw new BadRequestException(httpMessages_EN.unit.updateUnit.status_400);
+    }
+    if (file) {
+      allowedTypes(file);
+
+      const unitData: Partial<FormHandlerReturn> = await updateFormHandler(
+        this.s3Service,
+        this.logger,
+        'images/unit',
+        UpdateVideoDTO,
+        file,
+        metadata,
+      );
+
+      const thumbnail: Return = await this.fileService.generateFile({
+        name: file.originalname,
+        type: 'IMAGE',
+        size: file.size,
+        url: unitData.fileUrl,
+      });
+
+      return this.unitService.updateUnit(id, {
+        ...unitData.data,
+        fileId: thumbnail.data.id,
+      });
+    }
+
+    if (!metadata) {
+      throw new BadRequestException(
+        httpMessages_EN.unit.updateUnit.status_4002,
+      );
+    }
+
+    const unitData: any = await parseJson(UpdateVideoDTO, metadata);
+    return this.unitService.updateUnit(id, unitData);
   }
 
   @Delete(':id')

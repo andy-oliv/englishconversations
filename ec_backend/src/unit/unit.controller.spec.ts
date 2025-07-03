@@ -9,12 +9,33 @@ import { UnitController } from './unit.controller';
 import { UnitService } from './unit.service';
 import Unit from '../entities/Unit';
 import generateMockUnit from '../helper/mocks/generateMockUnit';
+import FormHandlerReturn from '../common/types/FormHandlerReturn';
+import { Logger } from 'nestjs-pino';
+import { S3Service } from '../s3/s3.service';
+import { FileService } from '../file/file.service';
+import { faker, fi } from '@faker-js/faker/.';
+import allowedTypes from '../helper/functions/allowedTypes';
+import FormDataHandler from '../helper/functions/formDataHandler';
+import CreateUnitDTO from './dto/createUnit.dto';
+import updateFormHandler from '../helper/functions/templates/updateFormHandler';
+import UpdateVideoDTO from '../video/dto/updateVideo.dto';
+
+jest.mock('../helper/functions/formDataHandler');
+jest.mock('../helper/functions/allowedTypes');
+jest.mock('../helper/functions/templates/updateFormHandler');
 
 describe('unitController', () => {
   let unitController: UnitController;
   let unitService: UnitService;
+  let fileService: FileService;
+  let s3Service: S3Service;
+  let logger: Logger;
   let unit: Unit;
   let units: Unit[];
+  let metadata: string;
+  let uploadedFile: Express.Multer.File;
+  let returnedData: FormHandlerReturn;
+  let thumbnail: Return;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -30,13 +51,60 @@ describe('unitController', () => {
             deleteUnit: jest.fn(),
           },
         },
+        {
+          provide: Logger,
+          useValue: {
+            log: jest.fn(),
+            error: jest.fn(),
+          },
+        },
+        {
+          provide: FileService,
+          useValue: {
+            generateFile: jest.fn(),
+          },
+        },
+        {
+          provide: S3Service,
+          useValue: {},
+        },
       ],
     }).compile();
 
     unitController = module.get<UnitController>(UnitController);
     unitService = module.get<UnitService>(UnitService);
+    fileService = module.get<FileService>(FileService);
+    s3Service = module.get<S3Service>(S3Service);
+    logger = module.get<Logger>(Logger);
     unit = generateMockUnit();
     units = [generateMockUnit(), generateMockUnit()];
+    metadata = 'mock-data';
+    uploadedFile = {
+      fieldname: 'file',
+      originalname: 'test.jpeg',
+      encoding: '7bit',
+      mimetype: 'image/jpeg',
+      size: 1024,
+      buffer: Buffer.from('dummy content'),
+      stream: null,
+      destination: '',
+      filename: '',
+      path: '',
+    };
+    thumbnail = {
+      message: httpMessages_EN.file.generateFile.status_200,
+      data: {
+        id: unit.fileId,
+        name: uploadedFile.originalname,
+        type: 'IMAGE',
+        url: faker.internet.url(),
+        size: uploadedFile.size,
+      },
+    };
+    returnedData = {
+      data: unit,
+      fileUrl: thumbnail.data.url,
+    };
   });
 
   it('should be defined', () => {
@@ -45,42 +113,106 @@ describe('unitController', () => {
 
   describe('createUnit()', () => {
     it('should generate a unit', async () => {
+      (allowedTypes as jest.Mock).mockReturnValue(undefined);
+      (FormDataHandler as jest.Mock).mockResolvedValue(returnedData);
+      (fileService.generateFile as jest.Mock).mockResolvedValue(thumbnail);
       (unitService.createUnit as jest.Mock).mockResolvedValue({
         message: httpMessages_EN.unit.createUnit.status_200,
         data: unit,
       });
 
-      const result: Return = await unitController.createUnit(unit);
+      const result: Return = await unitController.createUnit(
+        metadata,
+        uploadedFile,
+      );
 
       expect(result).toMatchObject({
         message: httpMessages_EN.unit.createUnit.status_200,
         data: unit,
       });
-      expect(unitService.createUnit).toHaveBeenCalledWith(unit);
+      expect(allowedTypes).toHaveBeenCalledWith(uploadedFile);
+      expect(unitService.createUnit).toHaveBeenCalledWith({
+        ...unit,
+        fileId: thumbnail.data.id,
+      });
+      expect(fileService.generateFile).toHaveBeenCalledWith({
+        name: uploadedFile.originalname,
+        type: 'IMAGE',
+        size: uploadedFile.size,
+        url: returnedData.fileUrl,
+      });
+      expect(FormDataHandler).toHaveBeenCalledWith(
+        CreateUnitDTO,
+        uploadedFile,
+        metadata,
+        s3Service,
+        logger,
+        'images/unit',
+      );
     });
 
     it('should throw NotFoundException', async () => {
+      (allowedTypes as jest.Mock).mockReturnValue(undefined);
+      (FormDataHandler as jest.Mock).mockResolvedValue(returnedData);
+      (fileService.generateFile as jest.Mock).mockResolvedValue(thumbnail);
       (unitService.createUnit as jest.Mock).mockRejectedValue(
         new NotFoundException(httpMessages_EN.unit.createUnit.status_404),
       );
 
-      await expect(unitService.createUnit(unit)).rejects.toThrow(
-        NotFoundException,
+      await expect(
+        unitController.createUnit(metadata, uploadedFile),
+      ).rejects.toThrow(NotFoundException);
+      expect(allowedTypes).toHaveBeenCalledWith(uploadedFile);
+      expect(unitService.createUnit).toHaveBeenCalledWith({
+        ...unit,
+        fileId: thumbnail.data.id,
+      });
+      expect(fileService.generateFile).toHaveBeenCalledWith({
+        name: uploadedFile.originalname,
+        type: 'IMAGE',
+        size: uploadedFile.size,
+        url: returnedData.fileUrl,
+      });
+      expect(FormDataHandler).toHaveBeenCalledWith(
+        CreateUnitDTO,
+        uploadedFile,
+        metadata,
+        s3Service,
+        logger,
+        'images/unit',
       );
-
-      expect(unitService.createUnit).toHaveBeenCalledWith(unit);
     });
 
     it('should throw InternalServerErrorException', async () => {
+      (allowedTypes as jest.Mock).mockReturnValue(undefined);
+      (FormDataHandler as jest.Mock).mockResolvedValue(returnedData);
+      (fileService.generateFile as jest.Mock).mockResolvedValue(thumbnail);
       (unitService.createUnit as jest.Mock).mockRejectedValue(
         new InternalServerErrorException(httpMessages_EN.general.status_500),
       );
 
-      await expect(unitService.createUnit(unit)).rejects.toThrow(
-        InternalServerErrorException,
+      await expect(
+        unitController.createUnit(metadata, uploadedFile),
+      ).rejects.toThrow(InternalServerErrorException);
+      expect(allowedTypes).toHaveBeenCalledWith(uploadedFile);
+      expect(unitService.createUnit).toHaveBeenCalledWith({
+        ...unit,
+        fileId: thumbnail.data.id,
+      });
+      expect(fileService.generateFile).toHaveBeenCalledWith({
+        name: uploadedFile.originalname,
+        type: 'IMAGE',
+        size: uploadedFile.size,
+        url: returnedData.fileUrl,
+      });
+      expect(FormDataHandler).toHaveBeenCalledWith(
+        CreateUnitDTO,
+        uploadedFile,
+        metadata,
+        s3Service,
+        logger,
+        'images/unit',
       );
-
-      expect(unitService.createUnit).toHaveBeenCalledWith(unit);
     });
   });
 
@@ -166,42 +298,107 @@ describe('unitController', () => {
 
   describe('updateUnit()', () => {
     it('should update unit', async () => {
+      (allowedTypes as jest.Mock).mockReturnValue(undefined);
+      (updateFormHandler as jest.Mock).mockResolvedValue(returnedData);
+      (fileService.generateFile as jest.Mock).mockResolvedValue(thumbnail);
       (unitService.updateUnit as jest.Mock).mockResolvedValue({
         message: httpMessages_EN.unit.updateUnit.status_200,
         data: unit,
       });
 
-      const result: Return = await unitController.updateUnit(unit.id, unit);
+      const result: Return = await unitController.updateUnit(
+        uploadedFile,
+        unit.id,
+        metadata,
+      );
 
       expect(result).toMatchObject({
         message: httpMessages_EN.unit.updateUnit.status_200,
         data: unit,
       });
-      expect(unitService.updateUnit).toHaveBeenCalledWith(unit.id, unit);
+      expect(allowedTypes).toHaveBeenCalledWith(uploadedFile);
+      expect(unitService.updateUnit).toHaveBeenCalledWith(unit.id, {
+        ...unit,
+        fileId: thumbnail.data.id,
+      });
+      expect(fileService.generateFile).toHaveBeenCalledWith({
+        name: uploadedFile.originalname,
+        type: 'IMAGE',
+        size: uploadedFile.size,
+        url: returnedData.fileUrl,
+      });
+      expect(updateFormHandler).toHaveBeenCalledWith(
+        s3Service,
+        logger,
+        'images/unit',
+        UpdateVideoDTO,
+        uploadedFile,
+        metadata,
+      );
     });
 
     it('should throw NotFoundException', async () => {
+      (allowedTypes as jest.Mock).mockReturnValue(undefined);
+      (updateFormHandler as jest.Mock).mockResolvedValue(returnedData);
+      (fileService.generateFile as jest.Mock).mockResolvedValue(thumbnail);
       (unitService.updateUnit as jest.Mock).mockRejectedValue(
         new NotFoundException(httpMessages_EN.unit.updateUnit.status_404),
       );
 
-      await expect(unitService.updateUnit(unit.id, unit)).rejects.toThrow(
-        NotFoundException,
+      await expect(
+        unitController.updateUnit(uploadedFile, unit.id, metadata),
+      ).rejects.toThrow(NotFoundException);
+      expect(allowedTypes).toHaveBeenCalledWith(uploadedFile);
+      expect(unitService.updateUnit).toHaveBeenCalledWith(unit.id, {
+        ...unit,
+        fileId: thumbnail.data.id,
+      });
+      expect(fileService.generateFile).toHaveBeenCalledWith({
+        name: uploadedFile.originalname,
+        type: 'IMAGE',
+        size: uploadedFile.size,
+        url: returnedData.fileUrl,
+      });
+      expect(updateFormHandler).toHaveBeenCalledWith(
+        s3Service,
+        logger,
+        'images/unit',
+        UpdateVideoDTO,
+        uploadedFile,
+        metadata,
       );
-
-      expect(unitService.updateUnit).toHaveBeenCalledWith(unit.id, unit);
     });
 
     it('should throw InternalServerErrorException', async () => {
+      (allowedTypes as jest.Mock).mockReturnValue(undefined);
+      (updateFormHandler as jest.Mock).mockResolvedValue(returnedData);
+      (fileService.generateFile as jest.Mock).mockResolvedValue(thumbnail);
       (unitService.updateUnit as jest.Mock).mockRejectedValue(
         new InternalServerErrorException(httpMessages_EN.general.status_500),
       );
 
-      await expect(unitService.updateUnit(unit.id, unit)).rejects.toThrow(
-        InternalServerErrorException,
+      await expect(
+        unitController.updateUnit(uploadedFile, unit.id, metadata),
+      ).rejects.toThrow(InternalServerErrorException);
+      expect(allowedTypes).toHaveBeenCalledWith(uploadedFile);
+      expect(unitService.updateUnit).toHaveBeenCalledWith(unit.id, {
+        ...unit,
+        fileId: thumbnail.data.id,
+      });
+      expect(fileService.generateFile).toHaveBeenCalledWith({
+        name: uploadedFile.originalname,
+        type: 'IMAGE',
+        size: uploadedFile.size,
+        url: returnedData.fileUrl,
+      });
+      expect(updateFormHandler).toHaveBeenCalledWith(
+        s3Service,
+        logger,
+        'images/unit',
+        UpdateVideoDTO,
+        uploadedFile,
+        metadata,
       );
-
-      expect(unitService.updateUnit).toHaveBeenCalledWith(unit.id, unit);
     });
   });
 

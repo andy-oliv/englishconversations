@@ -371,6 +371,8 @@ const httpMessages_EN = {
     },
     updateUnit: {
       status_200: 'The unit has been successfully updated!',
+      status_400: 'No data provided for update.',
+      status_4002: 'There is nothing to update',
       status_404: 'The unit was not found or the ID is invalid.',
       status_404B: 'The chapterId was not found or the ID is invalid.',
     },

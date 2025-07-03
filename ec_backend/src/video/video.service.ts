@@ -156,7 +156,9 @@ export class VideoService {
         },
       });
 
-      await this.fileService.deleteFile(deletedVideo.thumbnailId);
+      if (deletedVideo.thumbnailId) {
+        await this.fileService.deleteFile(deletedVideo.thumbnailId);
+      }
 
       this.logger.log({
         message: generateExceptionMessage(

@@ -68,27 +68,35 @@ export class UnitController {
     @Body('metadata') metadata: string,
     @UploadedFile() file: Express.Multer.File,
   ): Promise<Return> {
-    allowedTypes(file);
+    if (file) {
+      allowedTypes(file);
 
-    const unitData: FormHandlerReturn = await FormDataHandler(
-      CreateUnitDTO,
-      file,
-      metadata,
-      this.s3Service,
-      this.logger,
-      'images/unit',
-    );
-    const thumbnail: Return = await this.fileService.generateFile({
-      name: file.originalname,
-      type: 'IMAGE',
-      size: file.size,
-      url: unitData.fileUrl,
-    });
+      const unitData: FormHandlerReturn = await FormDataHandler(
+        CreateUnitDTO,
+        file,
+        metadata,
+        this.s3Service,
+        this.logger,
+        'images/unit',
+      );
+      const thumbnail: Return = await this.fileService.generateFile({
+        name: file.originalname,
+        type: 'IMAGE',
+        size: file.size,
+        url: unitData.fileUrl,
+      });
 
-    return this.unitService.createUnit({
-      ...unitData.data,
-      fileId: thumbnail.data.id,
-    });
+      return this.unitService.createUnit({
+        ...unitData.data,
+        fileId: thumbnail.data.id,
+      });
+    }
+    if (!metadata) {
+      throw new BadRequestException(httpMessages_EN.unit.createUnit.status_400);
+    }
+
+    const unitData: any = await parseJson(CreateUnitDTO, metadata);
+    return this.unitService.createUnit(unitData);
   }
 
   @Get(':id')

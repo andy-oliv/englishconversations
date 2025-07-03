@@ -185,7 +185,9 @@ export class UnitService {
         },
       });
 
-      await this.fileService.deleteFile(deletedUnit.fileId);
+      if (deletedUnit.fileId) {
+        await this.fileService.deleteFile(deletedUnit.fileId);
+      }
 
       return {
         message: httpMessages_EN.unit.deleteUnit.status_200,

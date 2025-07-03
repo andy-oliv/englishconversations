@@ -305,7 +305,9 @@ export class UserService {
         },
       });
 
-      await this.s3service.deleteFileFromS3(deletedUser.avatarUrl);
+      if (deletedUser.avatarUrl) {
+        await this.s3service.deleteFileFromS3(deletedUser.avatarUrl);
+      }
 
       this.logger.log(
         generateExceptionMessage(

@@ -347,7 +347,9 @@ export class ExerciseService {
           },
         });
 
-      await this.fileService.deleteFile(deletedExercise.fileId);
+      if (deletedExercise.fileId) {
+        await this.fileService.deleteFile(deletedExercise.fileId);
+      }
 
       this.logger.warn({
         message: generateExceptionMessage(

@@ -202,7 +202,9 @@ export class ChapterService {
         },
       });
 
-      await this.fileService.deleteFile(deletedchapter.fileId);
+      if (deletedchapter.fileId) {
+        await this.fileService.deleteFile(deletedchapter.fileId);
+      }
 
       this.logger.log({
         message: generateExceptionMessage(

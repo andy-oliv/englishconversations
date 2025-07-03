@@ -338,6 +338,42 @@ describe('UnitService', () => {
     });
   });
 
+  describe('fetchByChapter()', () => {
+    it('should fetch units', async () => {
+      (prismaService.unit.findMany as jest.Mock).mockResolvedValue(units);
+
+      const result: Return = await unitService.fetchByChapter(unit.chapterId);
+
+      expect(result).toMatchObject({
+        message: httpMessages_EN.unit.fetchByChapter.status_200,
+        data: units,
+      });
+      expect(prismaService.unit.findMany).toHaveBeenCalled();
+    });
+
+    it('should throw NotFoundException', async () => {
+      (prismaService.unit.findMany as jest.Mock).mockResolvedValue(emptyUnits);
+
+      await expect(unitService.fetchByChapter(unit.chapterId)).rejects.toThrow(
+        NotFoundException,
+      );
+
+      expect(prismaService.unit.findMany).toHaveBeenCalled();
+    });
+
+    it('should throw InternalErrorException', async () => {
+      (prismaService.unit.findMany as jest.Mock).mockRejectedValue(
+        new InternalServerErrorException(httpMessages_EN.general.status_500),
+      );
+
+      await expect(unitService.fetchByChapter(unit.chapterId)).rejects.toThrow(
+        InternalServerErrorException,
+      );
+
+      expect(prismaService.unit.findMany).toHaveBeenCalled();
+    });
+  });
+
   describe('updateUnit()', () => {
     it('should fetch a unit', async () => {
       (prismaService.unit.update as jest.Mock).mockResolvedValue(unit);

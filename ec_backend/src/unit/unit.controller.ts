@@ -6,8 +6,10 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  ParseUUIDPipe,
   Patch,
   Post,
+  Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -97,6 +99,13 @@ export class UnitController {
 
     const unitData: any = await parseJson(CreateUnitDTO, metadata);
     return this.unitService.createUnit(unitData);
+  }
+
+  @Get('chapter')
+  async fetchByChapter(
+    @Query('id', new ParseUUIDPipe()) id: string,
+  ): Promise<Return> {
+    return this.unitService.fetchByChapter(id);
   }
 
   @Get(':id')

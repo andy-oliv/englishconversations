@@ -143,6 +143,38 @@ export class UnitService {
     }
   }
 
+  async fetchByChapter(chapterId: string): Promise<Return> {
+    try {
+      const units: Unit[] = await this.prismaService.unit.findMany({
+        where: {
+          chapterId,
+        },
+      });
+
+      if (units.length === 0) {
+        throw new NotFoundException(
+          httpMessages_EN.unit.fetchByChapter.status_404,
+        );
+      }
+
+      return {
+        message: httpMessages_EN.unit.fetchByChapter.status_200,
+        data: units,
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+      handleInternalErrorException(
+        'unitService',
+        'fetchByChapter',
+        loggerMessages.unit.fetchByChapter.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
   async updateUnit(id: number, data: UpdateUnitDTO): Promise<Return> {
     try {
       const updatedUnit: Unit = await this.prismaService.unit.update({

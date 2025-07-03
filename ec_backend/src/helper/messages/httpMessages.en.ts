@@ -373,6 +373,10 @@ const httpMessages_EN = {
       status_200: 'The unit has been successfully fetched.',
       status_404: 'The unit was not found or the ID is invalid.',
     },
+    fetchByChapter: {
+      status_200: 'The units were successfully fetched.',
+      status_404: 'There are no units to show.',
+    },
     updateUnit: {
       status_200: 'The unit has been successfully updated!',
       status_400: 'No data provided for update.',

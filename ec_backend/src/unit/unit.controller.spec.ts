@@ -13,7 +13,7 @@ import FormHandlerReturn from '../common/types/FormHandlerReturn';
 import { Logger } from 'nestjs-pino';
 import { S3Service } from '../s3/s3.service';
 import { FileService } from '../file/file.service';
-import { faker, fi } from '@faker-js/faker/.';
+import { faker } from '@faker-js/faker/.';
 import allowedTypes from '../helper/functions/allowedTypes';
 import FormDataHandler from '../helper/functions/formDataHandler';
 import CreateUnitDTO from './dto/createUnit.dto';
@@ -47,6 +47,7 @@ describe('unitController', () => {
             createUnit: jest.fn(),
             fetchUnits: jest.fn(),
             fetchUnitById: jest.fn(),
+            fetchByChapter: jest.fn(),
             updateUnit: jest.fn(),
             deleteUnit: jest.fn(),
           },
@@ -293,6 +294,49 @@ describe('unitController', () => {
       );
 
       expect(unitService.fetchUnitById).toHaveBeenCalledWith(unit.id);
+    });
+  });
+
+  describe('fetchByChapter()', () => {
+    it('should fetch units', async () => {
+      (unitService.fetchByChapter as jest.Mock).mockResolvedValue({
+        message: httpMessages_EN.unit.fetchByChapter.status_200,
+        data: units,
+      });
+
+      const result: Return = await unitController.fetchByChapter(
+        unit.chapterId,
+      );
+
+      expect(result).toMatchObject({
+        message: httpMessages_EN.unit.fetchByChapter.status_200,
+        data: units,
+      });
+      expect(unitService.fetchByChapter).toHaveBeenCalled();
+    });
+
+    it('should throw NotFoundException', async () => {
+      (unitService.fetchByChapter as jest.Mock).mockRejectedValue(
+        new NotFoundException(httpMessages_EN.unit.fetchByChapter.status_404),
+      );
+
+      await expect(unitService.fetchByChapter(unit.chapterId)).rejects.toThrow(
+        NotFoundException,
+      );
+
+      expect(unitService.fetchByChapter).toHaveBeenCalledWith(unit.chapterId);
+    });
+
+    it('should throw InternalServerErrorException', async () => {
+      (unitService.fetchByChapter as jest.Mock).mockRejectedValue(
+        new InternalServerErrorException(httpMessages_EN.general.status_500),
+      );
+
+      await expect(unitService.fetchByChapter(unit.chapterId)).rejects.toThrow(
+        InternalServerErrorException,
+      );
+
+      expect(unitService.fetchByChapter).toHaveBeenCalledWith(unit.chapterId);
     });
   });
 

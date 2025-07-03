@@ -440,6 +440,10 @@ const loggerMessages = {
       status_500:
         'An internal error occurred while fetching the unit. Check the error log for more information.',
     },
+    fetchByChapter: {
+      status_500:
+        'An internal error occurred while fetching the units. Check the error log for more information.',
+    },
     updateUnit: {
       status_500:
         'An internal error occurred while updating the unit. Check the error log for more information.',

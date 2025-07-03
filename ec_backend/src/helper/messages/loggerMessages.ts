@@ -335,6 +335,9 @@ const loggerMessages = {
         'An internal error occurred while updating the quiz. Check the error log for more information.',
     },
   },
+  selfGuard: {
+    status_403: 'Blocked access attempt by role ${request.user.role}',
+  },
   student: {
     deleteStudent: {
       status_200: 'A student has been deleted.',

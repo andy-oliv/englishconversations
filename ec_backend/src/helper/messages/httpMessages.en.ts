@@ -233,6 +233,7 @@ const httpMessages_EN = {
     },
     createQuiz: {
       status_201: 'The quiz has been successfully created!',
+      status_400: 'The metadata must not be empty.',
     },
     deleteQuiz: {
       status_200: 'The quiz was successfully deleted.',
@@ -268,8 +269,13 @@ const httpMessages_EN = {
     },
     updateQuiz: {
       status_200: 'The quiz was successfully updated.',
+      status_400: 'The request must not be empty.',
+      status_4002: 'The metadata must not be empty.',
       status_404: 'The quiz was not found or the ID is invalid.',
     },
+  },
+  selfGuard: {
+    status_403: 'Access denied.',
   },
   student: {
     deleteStudent: {
@@ -355,6 +361,7 @@ const httpMessages_EN = {
   unit: {
     createUnit: {
       status_200: 'The unit has been successfully created!',
+      status_400: 'The metadata must not be empty.',
       status_404: 'The chapter was not found or the ID is invalid.',
     },
     deleteUnit: {
@@ -375,6 +382,8 @@ const httpMessages_EN = {
     },
     updateUnit: {
       status_200: 'The unit has been successfully updated!',
+      status_400: 'The request must not be empty.',
+      status_4002: 'The metadata must not be empty.',
       status_404: 'The unit was not found or the ID is invalid.',
       status_404B: 'The chapterId was not found or the ID is invalid.',
     },

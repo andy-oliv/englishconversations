@@ -16,6 +16,7 @@ import { ConfigService } from '@nestjs/config';
 import generateExceptionMessage from '../helper/functions/generateExceptionMessage';
 import UpdateUserDTO from './dto/updateUser.dto';
 import { S3Service } from '../s3/s3.service';
+import { Response } from 'express';
 
 @Injectable()
 export class UserService {
@@ -247,7 +248,10 @@ export class UserService {
             },
           });
 
-        await this.s3service.deleteFileFromS3(currentUser.avatarUrl); //deleting previous avatar from S3
+        if (currentUser.avatarUrl) {
+          await this.s3service.deleteFileFromS3(currentUser.avatarUrl); //deleting previous avatar from S3
+        }
+
         this.logger.log({
           message: generateExceptionMessage(
             'userService',
@@ -297,7 +301,7 @@ export class UserService {
     }
   }
 
-  async deleteUser(id: string): Promise<Return> {
+  async deleteUser(id: string, response: Response): Promise<Return> {
     try {
       const deletedUser: User = await this.prismaService.user.delete({
         where: {
@@ -316,6 +320,9 @@ export class UserService {
           loggerMessages.user.deleteUser.status_200,
         ),
       );
+
+      response.clearCookie('ec_accessToken');
+      response.clearCookie('ec_refreshToken');
 
       return {
         message: httpMessages_EN.user.deleteUser.status_200,

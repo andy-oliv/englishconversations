@@ -9,6 +9,7 @@ import {
   Patch,
   Post,
   Query,
+  Res,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -31,6 +32,8 @@ import FormHandlerReturn from '../common/types/FormHandlerReturn';
 import parseJson from '../helper/functions/parseJson';
 import updateFormHandler from '../helper/functions/templates/updateFormHandler';
 import allowedTypes from '../helper/functions/allowedTypes';
+import { Response } from 'express';
+import { SelfGuard } from '../auth/guards/self/self.guard';
 
 @ApiTags('Users')
 @Controller('api/users')
@@ -42,6 +45,7 @@ export class UserController {
   ) {}
 
   @Post()
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 201,
     description: 'Success',
@@ -116,6 +120,7 @@ export class UserController {
   }
 
   @Get(':id')
+  @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -164,6 +169,7 @@ export class UserController {
   }
 
   @Patch(':id')
+  @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -218,6 +224,7 @@ export class UserController {
   }
 
   @Delete(':id')
+  @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -240,7 +247,8 @@ export class UserController {
   })
   async deleteUser(
     @Param('id', new ParseUUIDPipe()) id: string,
+    @Res({ passthrough: true }) response: Response,
   ): Promise<Return> {
-    return this.userService.deleteUser(id);
+    return this.userService.deleteUser(id, response);
   }
 }

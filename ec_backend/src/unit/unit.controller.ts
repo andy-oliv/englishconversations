@@ -102,6 +102,26 @@ export class UnitController {
   }
 
   @Get('chapter')
+  @ApiResponse({
+    status: 200,
+    description: 'Success',
+    example: httpMessages_EN.unit.fetchByChapter.status_200,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request',
+    example: 'Validation failed (uuid is expected)',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Not Found',
+    example: httpMessages_EN.unit.fetchByChapter.status_404,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal Server Error',
+    example: httpMessages_EN.general.status_500,
+  })
   async fetchByChapter(
     @Query('id', new ParseUUIDPipe()) id: string,
   ): Promise<Return> {

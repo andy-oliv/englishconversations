@@ -11,13 +11,34 @@ import { QuizController } from './quiz.controller';
 import { QuizService } from './quiz.service';
 import Quiz from '../entities/Quiz';
 import generateMockQuiz from '../helper/mocks/generateMockQuiz';
+import allowedTypes from '../helper/functions/allowedTypes';
+import FormDataHandler from '../helper/functions/formDataHandler';
+import FormHandlerReturn from '../common/types/FormHandlerReturn';
+import { FileService } from '../file/file.service';
+import { S3Service } from '../s3/s3.service';
+import { Logger } from 'nestjs-pino';
+import { faker } from '@faker-js/faker/.';
+import CreateQuizDTO from './dto/createQuiz.dto';
+import updateFormHandler from '../helper/functions/templates/updateFormHandler';
+import UpdateQuizDTO from './dto/updateQuiz.dto';
+
+jest.mock('../helper/functions/allowedTypes');
+jest.mock('../helper/functions/formDataHandler');
+jest.mock('../helper/functions/templates/updateFormHandler');
 
 describe('quizController', () => {
   let quizController: QuizController;
   let quizService: QuizService;
+  let fileService: FileService;
+  let s3Service: S3Service;
+  let logger: Logger;
   let quiz: Quiz;
   let quizList: Quiz[];
   let query: { level: CEFRLevels; difficulty: Difficulty };
+  let metadata: string;
+  let uploadedFile: Express.Multer.File;
+  let returnedData: FormHandlerReturn;
+  let thumbnail: Return;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -35,17 +56,63 @@ describe('quizController', () => {
             deleteQuiz: jest.fn(),
           },
         },
+        {
+          provide: FileService,
+          useValue: {
+            generateFile: jest.fn(),
+          },
+        },
+        {
+          provide: S3Service,
+          useValue: {},
+        },
+        {
+          provide: Logger,
+          useValue: {
+            log: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
     quizController = module.get<QuizController>(QuizController);
     quizService = module.get<QuizService>(QuizService);
+    fileService = module.get<FileService>(FileService);
+    s3Service = module.get<S3Service>(S3Service);
+    logger = module.get<Logger>(Logger);
 
     quiz = generateMockQuiz();
     quizList = [generateMockQuiz(), generateMockQuiz()];
     query = {
       level: quiz.level,
       difficulty: quiz.difficulty,
+    };
+    metadata = 'mock-data';
+    uploadedFile = {
+      fieldname: 'file',
+      originalname: 'test.jpeg',
+      encoding: '7bit',
+      mimetype: 'image/jpeg',
+      size: 1024,
+      buffer: Buffer.from('dummy content'),
+      stream: null,
+      destination: '',
+      filename: '',
+      path: '',
+    };
+    thumbnail = {
+      message: httpMessages_EN.file.generateFile.status_200,
+      data: {
+        id: quiz.fileId,
+        name: uploadedFile.originalname,
+        type: 'IMAGE',
+        url: faker.internet.url(),
+        size: uploadedFile.size,
+      },
+    };
+    returnedData = {
+      data: quiz,
+      fileUrl: thumbnail.data.url,
     };
   });
 
@@ -55,44 +122,108 @@ describe('quizController', () => {
 
   describe('createQuiz()', () => {
     it('should create a quiz', async () => {
+      (allowedTypes as jest.Mock).mockReturnValue(undefined);
+      (FormDataHandler as jest.Mock).mockResolvedValue(returnedData);
+      (fileService.generateFile as jest.Mock).mockResolvedValue(thumbnail);
       (quizService.createQuiz as jest.Mock).mockResolvedValue({
         message: httpMessages_EN.quiz.createQuiz.status_201,
         data: quiz,
       });
 
-      const result: Return = await quizController.createQuiz(quiz);
+      const result: Return = await quizController.createQuiz(
+        uploadedFile,
+        metadata,
+      );
 
       expect(result).toMatchObject({
         message: httpMessages_EN.quiz.createQuiz.status_201,
         data: quiz,
       });
-      expect(quizService.createQuiz).toHaveBeenCalledWith(quiz);
+      expect(allowedTypes).toHaveBeenCalledWith(uploadedFile);
+      expect(quizService.createQuiz).toHaveBeenCalledWith({
+        ...quiz,
+        fileId: thumbnail.data.id,
+      });
+      expect(fileService.generateFile).toHaveBeenCalledWith({
+        name: uploadedFile.originalname,
+        type: 'IMAGE',
+        size: uploadedFile.size,
+        url: returnedData.fileUrl,
+      });
+      expect(FormDataHandler).toHaveBeenCalledWith(
+        CreateQuizDTO,
+        uploadedFile,
+        metadata,
+        s3Service,
+        logger,
+        'images/quiz',
+      );
     });
 
     it('should throw a ConflictException', async () => {
+      (allowedTypes as jest.Mock).mockReturnValue(undefined);
+      (FormDataHandler as jest.Mock).mockResolvedValue(returnedData);
+      (fileService.generateFile as jest.Mock).mockResolvedValue(thumbnail);
       (quizService.createQuiz as jest.Mock).mockRejectedValue(
         new ConflictException(
           httpMessages_EN.quiz.throwIfQuizExists.status_409,
         ),
       );
 
-      await expect(quizController.createQuiz(quiz)).rejects.toThrow(
-        new ConflictException(
-          httpMessages_EN.quiz.throwIfQuizExists.status_409,
-        ),
+      await expect(
+        quizController.createQuiz(uploadedFile, metadata),
+      ).rejects.toThrow(ConflictException);
+      expect(allowedTypes).toHaveBeenCalledWith(uploadedFile);
+      expect(quizService.createQuiz).toHaveBeenCalledWith({
+        ...quiz,
+        fileId: thumbnail.data.id,
+      });
+      expect(fileService.generateFile).toHaveBeenCalledWith({
+        name: uploadedFile.originalname,
+        type: 'IMAGE',
+        size: uploadedFile.size,
+        url: returnedData.fileUrl,
+      });
+      expect(FormDataHandler).toHaveBeenCalledWith(
+        CreateQuizDTO,
+        uploadedFile,
+        metadata,
+        s3Service,
+        logger,
+        'images/quiz',
       );
-      expect(quizService.createQuiz).toHaveBeenCalledWith(quiz);
     });
 
     it('should throw an InternalServerErrorException', async () => {
+      (allowedTypes as jest.Mock).mockReturnValue(undefined);
+      (FormDataHandler as jest.Mock).mockResolvedValue(returnedData);
+      (fileService.generateFile as jest.Mock).mockResolvedValue(thumbnail);
       (quizService.createQuiz as jest.Mock).mockRejectedValue(
         new InternalServerErrorException(httpMessages_EN.general.status_500),
       );
 
-      await expect(quizController.createQuiz(quiz)).rejects.toThrow(
-        new InternalServerErrorException(httpMessages_EN.general.status_500),
+      await expect(
+        quizController.createQuiz(uploadedFile, metadata),
+      ).rejects.toThrow(InternalServerErrorException);
+      expect(allowedTypes).toHaveBeenCalledWith(uploadedFile);
+      expect(quizService.createQuiz).toHaveBeenCalledWith({
+        ...quiz,
+        fileId: thumbnail.data.id,
+      });
+      expect(fileService.generateFile).toHaveBeenCalledWith({
+        name: uploadedFile.originalname,
+        type: 'IMAGE',
+        size: uploadedFile.size,
+        url: returnedData.fileUrl,
+      });
+      expect(FormDataHandler).toHaveBeenCalledWith(
+        CreateQuizDTO,
+        uploadedFile,
+        metadata,
+        s3Service,
+        logger,
+        'images/quiz',
       );
-      expect(quizService.createQuiz).toHaveBeenCalledWith(quiz);
     });
   });
 
@@ -237,43 +368,107 @@ describe('quizController', () => {
 
   describe('updateQuiz()', () => {
     it('should update an quiz create', async () => {
+      (allowedTypes as jest.Mock).mockReturnValue(undefined);
+      (updateFormHandler as jest.Mock).mockResolvedValue(returnedData);
+      (fileService.generateFile as jest.Mock).mockResolvedValue(thumbnail);
       (quizService.updateQuiz as jest.Mock).mockResolvedValue({
         message: httpMessages_EN.quiz.updateQuiz.status_200,
         data: quiz,
       });
 
-      const result: Return = await quizController.updateQuiz(quiz.id, quiz);
+      const result: Return = await quizController.updateQuiz(
+        uploadedFile,
+        quiz.id,
+        metadata,
+      );
 
       expect(result).toMatchObject({
         message: httpMessages_EN.quiz.updateQuiz.status_200,
         data: quiz,
       });
-
-      expect(quizService.updateQuiz).toHaveBeenCalledWith(quiz.id, quiz);
+      expect(allowedTypes).toHaveBeenCalledWith(uploadedFile);
+      expect(quizService.updateQuiz).toHaveBeenCalledWith(quiz.id, {
+        ...quiz,
+        fileId: thumbnail.data.id,
+      });
+      expect(fileService.generateFile).toHaveBeenCalledWith({
+        name: uploadedFile.originalname,
+        type: 'IMAGE',
+        size: uploadedFile.size,
+        url: returnedData.fileUrl,
+      });
+      expect(updateFormHandler).toHaveBeenCalledWith(
+        s3Service,
+        logger,
+        'images/quiz',
+        UpdateQuizDTO,
+        uploadedFile,
+        metadata,
+      );
     });
 
     it('should throw a NotFoundException', async () => {
+      (allowedTypes as jest.Mock).mockReturnValue(undefined);
+      (updateFormHandler as jest.Mock).mockResolvedValue(returnedData);
+      (fileService.generateFile as jest.Mock).mockResolvedValue(thumbnail);
       (quizService.updateQuiz as jest.Mock).mockRejectedValue(
         new NotFoundException(httpMessages_EN.quiz.updateQuiz.status_404),
       );
 
-      await expect(quizController.updateQuiz(quiz.id, quiz)).rejects.toThrow(
-        new NotFoundException(httpMessages_EN.quiz.updateQuiz.status_404),
+      await expect(
+        quizController.updateQuiz(uploadedFile, quiz.id, metadata),
+      ).rejects.toThrow(NotFoundException);
+      expect(allowedTypes).toHaveBeenCalledWith(uploadedFile);
+      expect(quizService.updateQuiz).toHaveBeenCalledWith(quiz.id, {
+        ...quiz,
+        fileId: thumbnail.data.id,
+      });
+      expect(fileService.generateFile).toHaveBeenCalledWith({
+        name: uploadedFile.originalname,
+        type: 'IMAGE',
+        size: uploadedFile.size,
+        url: returnedData.fileUrl,
+      });
+      expect(updateFormHandler).toHaveBeenCalledWith(
+        s3Service,
+        logger,
+        'images/quiz',
+        UpdateQuizDTO,
+        uploadedFile,
+        metadata,
       );
-
-      expect(quizService.updateQuiz).toHaveBeenCalledWith(quiz.id, quiz);
     });
 
     it('should throw an InternalServerErrorException', async () => {
+      (allowedTypes as jest.Mock).mockReturnValue(undefined);
+      (updateFormHandler as jest.Mock).mockResolvedValue(returnedData);
+      (fileService.generateFile as jest.Mock).mockResolvedValue(thumbnail);
       (quizService.updateQuiz as jest.Mock).mockRejectedValue(
         new InternalServerErrorException(httpMessages_EN.general.status_500),
       );
 
-      await expect(quizController.updateQuiz(quiz.id, quiz)).rejects.toThrow(
-        new InternalServerErrorException(httpMessages_EN.general.status_500),
+      await expect(
+        quizController.updateQuiz(uploadedFile, quiz.id, metadata),
+      ).rejects.toThrow(InternalServerErrorException);
+      expect(allowedTypes).toHaveBeenCalledWith(uploadedFile);
+      expect(quizService.updateQuiz).toHaveBeenCalledWith(quiz.id, {
+        ...quiz,
+        fileId: thumbnail.data.id,
+      });
+      expect(fileService.generateFile).toHaveBeenCalledWith({
+        name: uploadedFile.originalname,
+        type: 'IMAGE',
+        size: uploadedFile.size,
+        url: returnedData.fileUrl,
+      });
+      expect(updateFormHandler).toHaveBeenCalledWith(
+        s3Service,
+        logger,
+        'images/quiz',
+        UpdateQuizDTO,
+        uploadedFile,
+        metadata,
       );
-
-      expect(quizService.updateQuiz).toHaveBeenCalledWith(quiz.id, quiz);
     });
   });
 

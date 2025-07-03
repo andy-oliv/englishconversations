@@ -14,11 +14,13 @@ import Quiz from '../entities/Quiz';
 import generateMockQuiz from '../helper/mocks/generateMockQuiz';
 import { ExerciseService } from '../exercise/exercise.service';
 import { faker } from '@faker-js/faker/.';
+import { FileService } from '../file/file.service';
 
 describe('quizService', () => {
   let quizService: QuizService;
   let exerciseService: ExerciseService;
   let prismaService: PrismaService;
+  let fileService: FileService;
   let logger: Logger;
   let quizzes: Quiz[];
   let emptyQuizList: Quiz[];
@@ -60,12 +62,19 @@ describe('quizService', () => {
             throwIfNotExercise: jest.fn(),
           },
         },
+        {
+          provide: FileService,
+          useValue: {
+            deleteFile: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
     quizService = module.get<QuizService>(QuizService);
     exerciseService = module.get<ExerciseService>(ExerciseService);
     prismaService = module.get<PrismaService>(PrismaService);
+    fileService = module.get<FileService>(FileService);
     logger = module.get<Logger>(Logger);
 
     quizzes = [generateMockQuiz(), generateMockQuiz()];
@@ -228,6 +237,15 @@ describe('quizService', () => {
               description: true,
             },
           },
+          file: {
+            select: {
+              id: true,
+              name: true,
+              type: true,
+              size: true,
+              url: true,
+            },
+          },
           tags: {
             select: {
               tag: {
@@ -263,6 +281,15 @@ describe('quizService', () => {
               description: true,
             },
           },
+          file: {
+            select: {
+              id: true,
+              name: true,
+              type: true,
+              size: true,
+              url: true,
+            },
+          },
           tags: {
             select: {
               tag: {
@@ -296,6 +323,15 @@ describe('quizService', () => {
               id: true,
               type: true,
               description: true,
+            },
+          },
+          file: {
+            select: {
+              id: true,
+              name: true,
+              type: true,
+              size: true,
+              url: true,
             },
           },
           tags: {
@@ -409,6 +445,7 @@ describe('quizService', () => {
   describe('deleteQuiz()', () => {
     it('should delete a quiz register', async () => {
       (prismaService.quiz.delete as jest.Mock).mockResolvedValue(quiz);
+      (fileService.deleteFile as jest.Mock).mockResolvedValue(undefined);
 
       const result: Return = await quizService.deleteQuiz(quiz.id);
 
@@ -421,10 +458,12 @@ describe('quizService', () => {
           id: quiz.id,
         },
       });
+      expect(fileService.deleteFile).toHaveBeenCalledWith(quiz.fileId);
     });
 
     it('should throw a NotFoundException', async () => {
       (prismaService.quiz.delete as jest.Mock).mockRejectedValue(error);
+      (fileService.deleteFile as jest.Mock).mockResolvedValue(undefined);
 
       await expect(quizService.deleteQuiz(quiz.id)).rejects.toThrow(
         new NotFoundException(httpMessages_EN.quiz.deleteQuiz.status_404),

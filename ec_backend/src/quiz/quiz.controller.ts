@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -8,7 +9,9 @@ import {
   Patch,
   Post,
   Query,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { QuizService } from './quiz.service';
@@ -20,12 +23,27 @@ import fetchQuizzesByQueryDTO from './dto/fetchQuizzesByQuery.dto';
 import UpdateQuizDTO from './dto/updateQuiz.dto';
 import AddOrRemoveExerciseDTO from './dto/addOrRemoveExercise.dto';
 import { RoleGuard } from '../auth/guards/role/role.guard';
+import { S3Service } from '../s3/s3.service';
+import { FileService } from '../file/file.service';
+import { Logger } from 'nestjs-pino';
+import allowedTypes from '../helper/functions/allowedTypes';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { multerMemoryStorage } from '../config/upload.config';
+import FormHandlerReturn from '../common/types/FormHandlerReturn';
+import FormDataHandler from '../helper/functions/formDataHandler';
+import updateFormHandler from '../helper/functions/templates/updateFormHandler';
+import parseJson from '../helper/functions/parseJson';
 
 @ApiTags('Quizzes')
 @Controller('api/quizzes')
 @UseGuards(RoleGuard)
 export class QuizController {
-  constructor(private readonly quizService: QuizService) {}
+  constructor(
+    private readonly quizService: QuizService,
+    private readonly s3Service: S3Service,
+    private readonly fileService: FileService,
+    private readonly logger: Logger,
+  ) {}
 
   @Post()
   @ApiResponse({
@@ -48,7 +66,39 @@ export class QuizController {
     description: 'Internal Server Error',
     example: httpMessages_EN.general.status_500,
   })
-  async createQuiz(@Body() quizData: CreateQuizDTO): Promise<Return> {
+  @UseInterceptors(FileInterceptor('file', multerMemoryStorage))
+  async createQuiz(
+    @UploadedFile() file: Express.Multer.File,
+    @Body('metadata') metadata: string,
+  ): Promise<Return> {
+    if (file) {
+      allowedTypes(file);
+      const quizData: FormHandlerReturn = await FormDataHandler(
+        CreateQuizDTO,
+        file,
+        metadata,
+        this.s3Service,
+        this.logger,
+        'images/quiz',
+      );
+      const thumbnail: Return = await this.fileService.generateFile({
+        name: file.originalname,
+        type: 'IMAGE',
+        size: file.size,
+        url: quizData.fileUrl,
+      });
+
+      return this.quizService.createQuiz({
+        ...quizData.data,
+        fileId: thumbnail.data.id,
+      });
+    }
+
+    if (!metadata) {
+      throw new BadRequestException(httpMessages_EN.quiz.createQuiz.status_400);
+    }
+
+    const quizData: any = await parseJson(CreateQuizDTO, metadata);
     return this.quizService.createQuiz(quizData);
   }
 
@@ -200,10 +250,47 @@ export class QuizController {
     description: 'Internal Server Error',
     example: httpMessages_EN.general.status_500,
   })
+  @UseInterceptors(FileInterceptor('file', multerMemoryStorage))
   async updateQuiz(
+    @UploadedFile() file: Express.Multer.File,
     @Param('id', new ParseUUIDPipe()) id: string,
-    @Body() quizData: UpdateQuizDTO,
+    @Body('metadata') metadata: string,
   ): Promise<Return> {
+    if (!metadata && !file) {
+      throw new BadRequestException(httpMessages_EN.quiz.updateQuiz.status_400);
+    }
+    if (file) {
+      allowedTypes(file);
+
+      const quizData: Partial<FormHandlerReturn> = await updateFormHandler(
+        this.s3Service,
+        this.logger,
+        'images/quiz',
+        UpdateQuizDTO,
+        file,
+        metadata,
+      );
+
+      const thumbnail: Return = await this.fileService.generateFile({
+        name: file.originalname,
+        type: 'IMAGE',
+        size: file.size,
+        url: quizData.fileUrl,
+      });
+
+      return this.quizService.updateQuiz(id, {
+        ...quizData.data,
+        fileId: thumbnail.data.id,
+      });
+    }
+
+    if (!metadata) {
+      throw new BadRequestException(
+        httpMessages_EN.quiz.updateQuiz.status_4002,
+      );
+    }
+
+    const quizData: any = await parseJson(UpdateQuizDTO, metadata);
     return this.quizService.updateQuiz(id, quizData);
   }
 

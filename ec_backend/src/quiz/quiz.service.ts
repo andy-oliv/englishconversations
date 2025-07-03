@@ -15,6 +15,7 @@ import { CEFRLevels, Difficulty } from '../../generated/prisma';
 import UpdateQuizDTO from './dto/updateQuiz.dto';
 import { ExerciseService } from '../exercise/exercise.service';
 import Exercise from '../entities/Exercise';
+import { FileService } from '../file/file.service';
 
 @Injectable()
 export class QuizService {
@@ -24,6 +25,15 @@ export class QuizService {
         id: true,
         type: true,
         description: true,
+      },
+    },
+    file: {
+      select: {
+        id: true,
+        name: true,
+        type: true,
+        size: true,
+        url: true,
       },
     },
     tags: {
@@ -42,6 +52,7 @@ export class QuizService {
     private readonly prismaService: PrismaService,
     private readonly logger: Logger,
     private readonly exerciseService: ExerciseService,
+    private readonly fileService: FileService,
   ) {}
 
   async validateAddition(quizId: string, exerciseId: number): Promise<void> {
@@ -373,7 +384,11 @@ export class QuizService {
         },
       });
 
-      this.logger.warn({
+      if (deletedQuiz.fileId) {
+        await this.fileService.deleteFile(deletedQuiz.fileId);
+      }
+
+      this.logger.log({
         message: generateExceptionMessage(
           'quizService',
           'deleteQuiz',
@@ -451,7 +466,7 @@ export class QuizService {
 
       const updatedQuiz: Quiz = await this.fetchQuizWithExercises(quizId);
 
-      this.logger.warn({
+      this.logger.log({
         message: loggerMessages.quiz.removeExercise.status_200,
         data: updatedQuiz,
       });

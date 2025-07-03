@@ -24,7 +24,6 @@ import FetchByQueryDTO from './dto/FetchByQuery.exercise.dto';
 import { RoleGuard } from '../auth/guards/role/role.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerMemoryStorage } from '../config/upload.config';
-import allowedTypes from '../helper/functions/allowedTypes';
 import FormHandlerReturn from '../common/types/FormHandlerReturn';
 import updateFormHandler from '../helper/functions/templates/updateFormHandler';
 import { S3Service } from '../s3/s3.service';
@@ -32,6 +31,8 @@ import { Logger } from 'nestjs-pino';
 import { FileService } from '../file/file.service';
 import UpdateExerciseDTO from './dto/UpdateExercise.dto';
 import parseJson from '../helper/functions/parseJson';
+import FormDataHandler from '../helper/functions/formDataHandler';
+import defineFileType from '../helper/functions/defineFileType';
 
 @ApiTags('Exercises')
 @Controller('api/exercises')
@@ -65,9 +66,41 @@ export class ExerciseController {
     description: 'Internal Server Error',
     example: httpMessages_EN.general.status_500,
   })
+  @UseInterceptors(FileInterceptor('file', multerMemoryStorage))
   async createExercise(
-    @Body() exerciseData: CreateExerciseDTO,
+    @UploadedFile() file: Express.Multer.File,
+    @Body('metadata') metadata: string,
   ): Promise<Return> {
+    if (file) {
+      const exerciseData: FormHandlerReturn = await FormDataHandler(
+        CreateExerciseDTO,
+        file,
+        metadata,
+        this.s3Service,
+        this.logger,
+        'multimedia/exercise',
+      );
+
+      const generatedFile: Return = await this.fileService.generateFile({
+        name: file.originalname,
+        type: defineFileType(file.mimetype),
+        size: file.size,
+        url: exerciseData.fileUrl,
+      });
+
+      return this.exerciseService.createExercise({
+        ...exerciseData.data,
+        fileId: generatedFile.data.id,
+      });
+    }
+
+    if (!metadata) {
+      throw new BadRequestException(
+        httpMessages_EN.chapter.updateChapter.status_4002,
+      );
+    }
+
+    const exerciseData: any = await parseJson(CreateExerciseDTO, metadata);
     return this.exerciseService.createExercise(exerciseData);
   }
 
@@ -181,12 +214,10 @@ export class ExerciseController {
     }
 
     if (file) {
-      allowedTypes(file);
-
       const exerciseData: Partial<FormHandlerReturn> = await updateFormHandler(
         this.s3Service,
         this.logger,
-        'images/exercise',
+        'multimedia/exercise',
         UpdateExerciseDTO,
         file,
         metadata,
@@ -194,7 +225,7 @@ export class ExerciseController {
 
       const generatedFile: Return = await this.fileService.generateFile({
         name: file.originalname,
-        type: 'IMAGE',
+        type: defineFileType(file.mimetype),
         size: file.size,
         url: exerciseData.fileUrl,
       });

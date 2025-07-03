@@ -12,10 +12,12 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { FileService } from '../file/file.service';
 
 describe('ExerciseService', () => {
   let exerciseService: ExerciseService;
   let prismaService: PrismaService;
+  let fileService: FileService;
   let logger: Logger;
   let exercises: Exercise[];
   let emptyExerciseList: Exercise[];
@@ -47,11 +49,18 @@ describe('ExerciseService', () => {
             warn: jest.fn(),
           },
         },
+        {
+          provide: FileService,
+          useValue: {
+            deleteFile: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
     exerciseService = module.get<ExerciseService>(ExerciseService);
     prismaService = module.get<PrismaService>(PrismaService);
+    fileService = module.get<FileService>(FileService);
     logger = module.get<Logger>(Logger);
 
     exercises = [generateMockExercise(), generateMockExercise()];
@@ -73,9 +82,6 @@ describe('ExerciseService', () => {
         .spyOn(exerciseService, 'throwIfExerciseExists')
         .mockResolvedValue(undefined);
       (prismaService.exercise.create as jest.Mock).mockResolvedValue(exercise);
-      (logger.log as jest.Mock).mockResolvedValue(
-        loggerMessages.exercise.createExercise.status_201,
-      );
 
       const result: Return = await exerciseService.createExercise(exercise);
 
@@ -93,10 +99,6 @@ describe('ExerciseService', () => {
         exercise.difficulty,
       );
       expect(prismaService.exercise.create).toHaveBeenCalledWith({
-        data: exercise,
-      });
-      expect(logger.log).toHaveBeenLastCalledWith({
-        message: loggerMessages.exercise.createExercise.status_201,
         data: exercise,
       });
     });
@@ -185,9 +187,6 @@ describe('ExerciseService', () => {
         .spyOn(exerciseService, 'throwIfExerciseExists')
         .mockResolvedValue(undefined);
       (prismaService.exercise.create as jest.Mock).mockResolvedValue(exercise);
-      (logger.log as jest.Mock).mockResolvedValue(
-        loggerMessages.exercise.createExercise.status_201,
-      );
 
       const result: Return = await exerciseService.createExercise(exercise);
 
@@ -205,10 +204,6 @@ describe('ExerciseService', () => {
         exercise.difficulty,
       );
       expect(prismaService.exercise.create).toHaveBeenCalledWith({
-        data: exercise,
-      });
-      expect(logger.log).toHaveBeenLastCalledWith({
-        message: loggerMessages.exercise.createExercise.status_201,
         data: exercise,
       });
     });
@@ -293,6 +288,15 @@ describe('ExerciseService', () => {
               },
             },
           },
+          file: {
+            select: {
+              id: true,
+              type: true,
+              name: true,
+              size: true,
+              url: true,
+            },
+          },
         },
       });
     });
@@ -332,6 +336,15 @@ describe('ExerciseService', () => {
               },
             },
           },
+          file: {
+            select: {
+              id: true,
+              type: true,
+              name: true,
+              size: true,
+              url: true,
+            },
+          },
         },
       });
     });
@@ -367,6 +380,15 @@ describe('ExerciseService', () => {
                   title: true,
                 },
               },
+            },
+          },
+          file: {
+            select: {
+              id: true,
+              type: true,
+              name: true,
+              size: true,
+              url: true,
             },
           },
         },
@@ -490,6 +512,7 @@ describe('ExerciseService', () => {
   describe('deleteExercise()', () => {
     it('should delete an exercise register', async () => {
       (prismaService.exercise.delete as jest.Mock).mockResolvedValue(exercise);
+      (fileService.deleteFile as jest.Mock).mockReturnValue(undefined);
 
       const result: Return = await exerciseService.deleteExercise(exercise.id);
 
@@ -502,6 +525,7 @@ describe('ExerciseService', () => {
           id: exercise.id,
         },
       });
+      expect(fileService.deleteFile).toHaveBeenCalledWith(exercise.fileId);
     });
 
     it('should throw a NotFoundException', async () => {

@@ -11,13 +11,34 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import FormHandlerReturn from '../common/types/FormHandlerReturn';
+import { faker } from '@faker-js/faker/.';
+import FormDataHandler from '../helper/functions/formDataHandler';
+import defineFileType from '../helper/functions/defineFileType';
+import { FileService } from '../file/file.service';
+import { S3Service } from '../s3/s3.service';
+import { Logger } from 'nestjs-pino';
+import CreateExerciseDTO from './dto/CreateExercise.dto';
+import updateFormHandler from '../helper/functions/templates/updateFormHandler';
+import UpdateExerciseDTO from './dto/UpdateExercise.dto';
+
+jest.mock('../helper/functions/formDataHandler');
+jest.mock('../helper/functions/defineFileType');
+jest.mock('../helper/functions/templates/updateFormHandler');
 
 describe('ExerciseController', () => {
   let exerciseController: ExerciseController;
   let exerciseService: ExerciseService;
+  let fileService: FileService;
+  let s3Service: S3Service;
+  let logger: Logger;
   let exercise: Exercise;
   let exerciseList: Exercise[];
   let query: { level: CEFRLevels; difficulty: Difficulty; quizId: string };
+  let returnedData: FormHandlerReturn;
+  let file: Express.Multer.File;
+  let generatedFile: Return;
+  let metadata: string;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -34,11 +55,31 @@ describe('ExerciseController', () => {
             deleteExercise: jest.fn(),
           },
         },
+        {
+          provide: FileService,
+          useValue: {
+            generateFile: jest.fn(),
+          },
+        },
+        {
+          provide: Logger,
+          useValue: {
+            log: jest.fn(),
+            error: jest.fn(),
+          },
+        },
+        {
+          provide: S3Service,
+          useValue: {},
+        },
       ],
     }).compile();
 
     exerciseController = module.get<ExerciseController>(ExerciseController);
     exerciseService = module.get<ExerciseService>(ExerciseService);
+    fileService = module.get<FileService>(FileService);
+    s3Service = module.get<S3Service>(S3Service);
+    logger = module.get<Logger>(Logger);
 
     exercise = generateMockExercise();
     exerciseList = [generateMockExercise(), generateMockExercise()];
@@ -46,6 +87,33 @@ describe('ExerciseController', () => {
       level: exercise.level,
       difficulty: exercise.difficulty,
       quizId: exercise.quizId,
+    };
+    returnedData = {
+      data: exercise,
+      fileUrl: faker.internet.url(),
+    };
+    file = {
+      fieldname: 'file',
+      originalname: 'test.jpeg',
+      encoding: '7bit',
+      mimetype: 'image/jpeg',
+      size: 1024,
+      buffer: Buffer.from('dummy content'),
+      stream: null,
+      destination: '',
+      filename: '',
+      path: '',
+    };
+    metadata = 'mock-data';
+    generatedFile = {
+      message: httpMessages_EN.exercise.createExercise.status_201,
+      data: {
+        id: faker.string.uuid(),
+        name: file.originalname,
+        type: 'mock-type',
+        size: file.size,
+        url: returnedData.fileUrl,
+      },
     };
   });
 
@@ -55,44 +123,108 @@ describe('ExerciseController', () => {
 
   describe('createExercise()', () => {
     it('should create an Exercise', async () => {
+      (FormDataHandler as jest.Mock).mockResolvedValue(returnedData);
+      (fileService.generateFile as jest.Mock).mockResolvedValue(generatedFile);
+      (defineFileType as jest.Mock).mockReturnValue('mock-type');
       (exerciseService.createExercise as jest.Mock).mockResolvedValue({
         message: httpMessages_EN.exercise.createExercise.status_201,
         data: exercise,
       });
 
-      const result: Return = await exerciseController.createExercise(exercise);
+      const result: Return = await exerciseController.createExercise(
+        file,
+        metadata,
+      );
 
       expect(result).toMatchObject({
         message: httpMessages_EN.exercise.createExercise.status_201,
         data: exercise,
       });
-      expect(exerciseService.createExercise).toHaveBeenCalledWith(exercise);
+      expect(FormDataHandler).toHaveBeenCalledWith(
+        CreateExerciseDTO,
+        file,
+        metadata,
+        s3Service,
+        logger,
+        'multimedia/exercise',
+      );
+      expect(fileService.generateFile).toHaveBeenCalledWith({
+        name: file.originalname,
+        type: 'mock-type',
+        size: file.size,
+        url: returnedData.fileUrl,
+      });
+      expect(defineFileType).toHaveBeenCalledWith(file.mimetype);
+      expect(exerciseService.createExercise).toHaveBeenCalledWith({
+        ...returnedData.data,
+        fileId: generatedFile.data.id,
+      });
     });
 
     it('should throw a ConflictException', async () => {
+      (FormDataHandler as jest.Mock).mockResolvedValue(returnedData);
+      (fileService.generateFile as jest.Mock).mockResolvedValue(generatedFile);
+      (defineFileType as jest.Mock).mockReturnValue('mock-type');
       (exerciseService.createExercise as jest.Mock).mockRejectedValue(
         new ConflictException(
-          httpMessages_EN.exercise.createExercise.status_409,
+          httpMessages_EN.exercise.throwIfExerciseExists.status_409,
         ),
       );
 
-      await expect(exerciseController.createExercise(exercise)).rejects.toThrow(
-        new ConflictException(
-          httpMessages_EN.exercise.createExercise.status_409,
-        ),
+      await expect(
+        exerciseController.createExercise(file, metadata),
+      ).rejects.toThrow(ConflictException);
+      expect(FormDataHandler).toHaveBeenCalledWith(
+        CreateExerciseDTO,
+        file,
+        metadata,
+        s3Service,
+        logger,
+        'multimedia/exercise',
       );
-      expect(exerciseService.createExercise).toHaveBeenCalledWith(exercise);
+      expect(fileService.generateFile).toHaveBeenCalledWith({
+        name: file.originalname,
+        type: 'mock-type',
+        size: file.size,
+        url: returnedData.fileUrl,
+      });
+      expect(defineFileType).toHaveBeenCalledWith(file.mimetype);
+      expect(exerciseService.createExercise).toHaveBeenCalledWith({
+        ...returnedData.data,
+        fileId: generatedFile.data.id,
+      });
     });
 
     it('should throw an InternalServerErrorException', async () => {
+      (FormDataHandler as jest.Mock).mockResolvedValue(returnedData);
+      (fileService.generateFile as jest.Mock).mockResolvedValue(generatedFile);
+      (defineFileType as jest.Mock).mockReturnValue('mock-type');
       (exerciseService.createExercise as jest.Mock).mockRejectedValue(
         new InternalServerErrorException(httpMessages_EN.general.status_500),
       );
 
-      await expect(exerciseController.createExercise(exercise)).rejects.toThrow(
-        new InternalServerErrorException(httpMessages_EN.general.status_500),
+      await expect(
+        exerciseController.createExercise(file, metadata),
+      ).rejects.toThrow(InternalServerErrorException);
+      expect(FormDataHandler).toHaveBeenCalledWith(
+        CreateExerciseDTO,
+        file,
+        metadata,
+        s3Service,
+        logger,
+        'multimedia/exercise',
       );
-      expect(exerciseService.createExercise).toHaveBeenCalledWith(exercise);
+      expect(fileService.generateFile).toHaveBeenCalledWith({
+        name: file.originalname,
+        type: 'mock-type',
+        size: file.size,
+        url: returnedData.fileUrl,
+      });
+      expect(defineFileType).toHaveBeenCalledWith(file.mimetype);
+      expect(exerciseService.createExercise).toHaveBeenCalledWith({
+        ...returnedData.data,
+        fileId: generatedFile.data.id,
+      });
     });
   });
 
@@ -265,28 +397,49 @@ describe('ExerciseController', () => {
 
   describe('updateExercise()', () => {
     it('should update an exercise create', async () => {
+      (updateFormHandler as jest.Mock).mockResolvedValue(returnedData);
+      (fileService.generateFile as jest.Mock).mockResolvedValue(generatedFile);
+      (defineFileType as jest.Mock).mockReturnValue('mock-type');
       (exerciseService.updateExercise as jest.Mock).mockResolvedValue({
         message: httpMessages_EN.exercise.updateExercise.status_200,
         data: exercise,
       });
 
       const result: Return = await exerciseController.updateExercise(
+        file,
         exercise.id,
-        exercise,
+        metadata,
       );
 
       expect(result).toMatchObject({
         message: httpMessages_EN.exercise.updateExercise.status_200,
         data: exercise,
       });
-
-      expect(exerciseService.updateExercise).toHaveBeenCalledWith(
-        exercise.id,
-        exercise,
+      expect(updateFormHandler).toHaveBeenCalledWith(
+        s3Service,
+        logger,
+        'multimedia/exercise',
+        UpdateExerciseDTO,
+        file,
+        metadata,
       );
+      expect(fileService.generateFile).toHaveBeenCalledWith({
+        name: file.originalname,
+        type: 'mock-type',
+        size: file.size,
+        url: returnedData.fileUrl,
+      });
+      expect(defineFileType).toHaveBeenCalledWith(file.mimetype);
+      expect(exerciseService.updateExercise).toHaveBeenCalledWith(exercise.id, {
+        ...returnedData.data,
+        fileId: generatedFile.data.id,
+      });
     });
 
     it('should throw a NotFoundException', async () => {
+      (updateFormHandler as jest.Mock).mockResolvedValue(returnedData);
+      (fileService.generateFile as jest.Mock).mockResolvedValue(generatedFile);
+      (defineFileType as jest.Mock).mockReturnValue('mock-type');
       (exerciseService.updateExercise as jest.Mock).mockRejectedValue(
         new NotFoundException(
           httpMessages_EN.exercise.updateExercise.status_404,
@@ -294,34 +447,59 @@ describe('ExerciseController', () => {
       );
 
       await expect(
-        exerciseController.updateExercise(exercise.id, exercise),
-      ).rejects.toThrow(
-        new NotFoundException(
-          httpMessages_EN.exercise.updateExercise.status_404,
-        ),
+        exerciseController.updateExercise(file, exercise.id, metadata),
+      ).rejects.toThrow(NotFoundException);
+      expect(updateFormHandler).toHaveBeenCalledWith(
+        s3Service,
+        logger,
+        'multimedia/exercise',
+        UpdateExerciseDTO,
+        file,
+        metadata,
       );
-
-      expect(exerciseService.updateExercise).toHaveBeenCalledWith(
-        exercise.id,
-        exercise,
-      );
+      expect(fileService.generateFile).toHaveBeenCalledWith({
+        name: file.originalname,
+        type: 'mock-type',
+        size: file.size,
+        url: returnedData.fileUrl,
+      });
+      expect(defineFileType).toHaveBeenCalledWith(file.mimetype);
+      expect(exerciseService.updateExercise).toHaveBeenCalledWith(exercise.id, {
+        ...returnedData.data,
+        fileId: generatedFile.data.id,
+      });
     });
 
     it('should throw an InternalServerErrorException', async () => {
+      (updateFormHandler as jest.Mock).mockResolvedValue(returnedData);
+      (fileService.generateFile as jest.Mock).mockResolvedValue(generatedFile);
+      (defineFileType as jest.Mock).mockReturnValue('mock-type');
       (exerciseService.updateExercise as jest.Mock).mockRejectedValue(
         new InternalServerErrorException(httpMessages_EN.general.status_500),
       );
 
       await expect(
-        exerciseController.updateExercise(exercise.id, exercise),
-      ).rejects.toThrow(
-        new InternalServerErrorException(httpMessages_EN.general.status_500),
+        exerciseController.updateExercise(file, exercise.id, metadata),
+      ).rejects.toThrow(InternalServerErrorException);
+      expect(updateFormHandler).toHaveBeenCalledWith(
+        s3Service,
+        logger,
+        'multimedia/exercise',
+        UpdateExerciseDTO,
+        file,
+        metadata,
       );
-
-      expect(exerciseService.updateExercise).toHaveBeenCalledWith(
-        exercise.id,
-        exercise,
-      );
+      expect(fileService.generateFile).toHaveBeenCalledWith({
+        name: file.originalname,
+        type: 'mock-type',
+        size: file.size,
+        url: returnedData.fileUrl,
+      });
+      expect(defineFileType).toHaveBeenCalledWith(file.mimetype);
+      expect(exerciseService.updateExercise).toHaveBeenCalledWith(exercise.id, {
+        ...returnedData.data,
+        fileId: generatedFile.data.id,
+      });
     });
   });
 

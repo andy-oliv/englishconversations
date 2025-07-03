@@ -226,6 +226,15 @@ export class ExerciseService {
                 },
               },
             },
+            file: {
+              select: {
+                id: true,
+                type: true,
+                name: true,
+                size: true,
+                url: true,
+              },
+            },
           },
         });
 

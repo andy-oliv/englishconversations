@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import Return from '../common/types/Return';
 import { AnsweredQuizService } from './answered-quiz.service';
@@ -16,6 +17,8 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
 import validationMessages_EN from '../helper/messages/validationMessages.en';
 import AddFeedbackDTO from './dto/addFeedback.dto';
+import { SelfGuard } from '../auth/guards/self/self.guard';
+import { RoleGuard } from '../auth/guards/role/role.guard';
 
 @ApiTags('AnsweredQuizzes')
 @Controller('api/answers/q')
@@ -23,6 +26,7 @@ export class AnsweredQuizController {
   constructor(private readonly answerQuizService: AnsweredQuizService) {}
 
   @Post()
+  @UseGuards(SelfGuard)
   @ApiResponse({
     status: 201,
     description: 'Success',
@@ -43,10 +47,11 @@ export class AnsweredQuizController {
   }
 
   @Get('query')
+  @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',
-    example: httpMessages_EN.answeredQuiz.fetchAnswersByQuery.status_200,
+    example: httpMessages_EN.answeredQuiz.fetchAnswersByUser.status_200,
   })
   @ApiResponse({
     status: 400,
@@ -56,21 +61,21 @@ export class AnsweredQuizController {
   @ApiResponse({
     status: 404,
     description: 'Not Found',
-    example: httpMessages_EN.answeredQuiz.fetchAnswersByQuery.status_404,
+    example: httpMessages_EN.answeredQuiz.fetchAnswersByUser.status_404,
   })
   @ApiResponse({
     status: 500,
     description: 'Internal Server Error',
     example: httpMessages_EN.general.status_500,
   })
-  async fetchAnswersByQuery(
-    @Query('quizId', new ParseUUIDPipe()) quizId: string,
-    @Query('studentId', new ParseUUIDPipe()) studentId: string,
+  async fetchAnswersByUser(
+    @Query('userId', new ParseUUIDPipe()) userId: string,
   ): Promise<Return> {
-    return this.answerQuizService.fetchAnswersByQuery(quizId, studentId);
+    return this.answerQuizService.fetchAnswersByUser(userId);
   }
 
   @Get(':id')
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -98,6 +103,7 @@ export class AnsweredQuizController {
   }
 
   @Get()
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -118,6 +124,7 @@ export class AnsweredQuizController {
   }
 
   @Patch(':id')
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -146,6 +153,7 @@ export class AnsweredQuizController {
   }
 
   @Delete(':id')
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',

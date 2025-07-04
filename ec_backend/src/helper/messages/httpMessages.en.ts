@@ -15,9 +15,9 @@ const httpMessages_EN = {
       status_200: 'The answer was successfully fetched.',
       status_404: 'The answer was not found or the ID is invalid.',
     },
-    fetchAnswerByQuery: {
+    fetchAnswersByUser: {
       status_200: 'The answers were successfully fetched.',
-      status_404: 'There are no answers to show.',
+      status_404: 'There are no answers to show or the ID is invalid.',
     },
     addFeedback: {
       status_200: 'The answer was successfully updated.',
@@ -41,12 +41,15 @@ const httpMessages_EN = {
       status_200: 'The answer has been successfully fetched!',
       status_404: 'The answer was not found or the ID is invalid.',
     },
-    fetchAnswersByQuery: {
+    fetchAnswersByUser: {
       status_200: 'The answers have been successfully fetched!',
       status_404: 'There are no answers to show or the ID is invalid.',
     },
     saveAnswer: {
       status_201: 'The answer has been successfully saved.',
+    },
+    throwIfNotAnsweredQuiz: {
+      status_404: 'The answer was not found.',
     },
   },
   auth: {
@@ -434,6 +437,10 @@ const httpMessages_EN = {
       status_200: 'The user progress has been successfully fetched!',
       status_404: 'The user progress was not found or the ID is invalid.',
     },
+    fetchUserChaptersByUser: {
+      status_200: 'The user progresses have been successfully fetched!',
+      status_404: 'There are no progresses to show or the ID is invalid.',
+    },
     generateUserChapter: {
       status_200: 'The user progress has been successfully generated!',
       status_404: 'The userId or the chapterId are invalid.',
@@ -443,7 +450,7 @@ const httpMessages_EN = {
     },
     updateUserChapter: {
       status_200: 'The user progress has been successfully updated!',
-      status_404: 'The user progress was not found or the ID is invalid.',
+      status_404: 'The user progress was not found or the IDs are invalid.',
     },
   },
   userNotification: {
@@ -457,6 +464,11 @@ const httpMessages_EN = {
     },
     generateUserNotification: {
       status_200: 'A new notification has been generated!',
+      status_404:
+        'Please, check the request. Either the user or the desired notification do not exist',
+    },
+    updateUserNotification: {
+      status_200: 'The notification has been updated!',
       status_404:
         'Please, check the request. Either the user or the desired notification do not exist',
     },

@@ -7,6 +7,8 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Query,
+  UseGuards,
 } from '@nestjs/common';
 import { UserChapterService } from './user-chapter.service';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -14,6 +16,8 @@ import httpMessages_EN from '../helper/messages/httpMessages.en';
 import Return from '../common/types/Return';
 import GenerateUserChapterDTO from './dto/generateUserChapter.dto';
 import UpdateUserChapterDTO from './dto/updateUserChapter.dto';
+import { SelfGuard } from '../auth/guards/self/self.guard';
+import { RoleGuard } from '../auth/guards/role/role.guard';
 
 @ApiTags('UserChapter')
 @Controller('api/users/chapters')
@@ -21,6 +25,7 @@ export class UserChapterController {
   constructor(private readonly userChapterService: UserChapterService) {}
 
   @Post()
+  @UseGuards(SelfGuard)
   @ApiResponse({
     status: 201,
     description: 'Success',
@@ -47,7 +52,36 @@ export class UserChapterController {
     return this.userChapterService.generateUserChapter(userChapterData);
   }
 
+  @Get('fetch/:userId')
+  @UseGuards(SelfGuard)
+  @ApiResponse({
+    status: 200,
+    description: 'Success',
+    example: httpMessages_EN.userChapter.fetchUserChaptersByUser.status_200,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request',
+    example: 'Validation failed (uuid is expected)',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Not Found',
+    example: httpMessages_EN.userChapter.fetchUserChaptersByUser.status_404,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal Server Error',
+    example: httpMessages_EN.general.status_500,
+  })
+  async fetchUserChaptersByUser(
+    @Param('userId', new ParseUUIDPipe()) userId: string,
+  ): Promise<Return> {
+    return this.userChapterService.fetchUserChaptersByUser(userId);
+  }
+
   @Get('all')
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -68,6 +102,7 @@ export class UserChapterController {
   }
 
   @Get(':id')
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -94,7 +129,8 @@ export class UserChapterController {
     return this.userChapterService.fetchUserChapterById(id);
   }
 
-  @Patch(':id')
+  @Patch('query')
+  @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -116,13 +152,19 @@ export class UserChapterController {
     example: httpMessages_EN.general.status_500,
   })
   async updateUserChapter(
-    @Param('id', new ParseUUIDPipe()) id: string,
+    @Query('id', new ParseUUIDPipe()) id: string,
+    @Query('userId', new ParseUUIDPipe()) userId: string,
     @Body() updatedData: UpdateUserChapterDTO,
   ): Promise<Return> {
-    return await this.userChapterService.updateUserChapter(id, updatedData);
+    return await this.userChapterService.updateUserChapter(
+      id,
+      userId,
+      updatedData,
+    );
   }
 
   @Delete(':id')
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',

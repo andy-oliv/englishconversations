@@ -4,10 +4,17 @@ import { AnsweredExerciseService } from './answered-exercise.service';
 import { PrismaModule } from '../prisma/prisma.module';
 import { QuizModule } from '../quiz/quiz.module';
 import { ExerciseModule } from '../exercise/exercise.module';
-import { StudentModule } from '../student/student.module';
+import { UserModule } from '../user/user.module';
+import { AnsweredQuizModule } from '../answered-quiz/answered-quiz.module';
 
 @Module({
-  imports: [PrismaModule, QuizModule, ExerciseModule, StudentModule],
+  imports: [
+    PrismaModule,
+    QuizModule,
+    ExerciseModule,
+    UserModule,
+    AnsweredQuizModule,
+  ],
   controllers: [AnsweredExerciseController],
   providers: [AnsweredExerciseService],
 })

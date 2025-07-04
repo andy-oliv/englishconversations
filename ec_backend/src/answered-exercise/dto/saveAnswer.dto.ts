@@ -31,32 +31,33 @@ export default class SaveAnswerDTO {
   exerciseId: number;
 
   @ApiProperty({
-    title: 'StudentID',
+    title: 'UserID',
     required: true,
     type: 'string',
     example: 'fa7f094c-be3a-4c1f-9369-957f7d91d05b',
   })
   @IsNotEmpty({
     message:
-      validationMessages_EN.answeredExercise.saveAnswerDTO.studentId.isNotEmpty,
+      validationMessages_EN.answeredExercise.saveAnswerDTO.userId.isNotEmpty,
   })
   @IsUUID('all', {
-    message:
-      validationMessages_EN.answeredExercise.saveAnswerDTO.studentId.isUUID,
+    message: validationMessages_EN.answeredExercise.saveAnswerDTO.userId.isUUID,
   })
-  studentId: string;
+  userId: string;
 
   @ApiProperty({
-    title: 'QuizID',
+    title: 'AnsweredQuizID',
     required: false,
     type: 'string',
     example: 'fa7f094c-be3a-4c1f-9369-957f7d91d05b',
   })
   @IsOptional()
   @IsUUID('all', {
-    message: validationMessages_EN.answeredExercise.saveAnswerDTO.quizId.isUUID,
+    message:
+      validationMessages_EN.answeredExercise.saveAnswerDTO.answeredQuizId
+        .isUUID,
   })
-  quizId?: string;
+  answeredQuizId?: string;
 
   @ApiProperty({
     title: 'IsRetry',

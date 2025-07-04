@@ -1,11 +1,11 @@
 import {
-  Body,
   Controller,
   Delete,
   Get,
   Post,
   Query,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { S3Service } from './s3.service';
@@ -14,9 +14,11 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { multerMemoryStorage } from '../config/upload.config';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
+import { RoleGuard } from '../auth/guards/role/role.guard';
 
 @ApiTags('S3')
 @Controller('api')
+@UseGuards(RoleGuard)
 export class S3Controller {
   constructor(private readonly s3Service: S3Service) {}
 

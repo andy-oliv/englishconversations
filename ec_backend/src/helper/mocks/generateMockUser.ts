@@ -6,6 +6,7 @@ export default function generateMockUser(): User {
     id: faker.string.uuid(),
     name: faker.person.firstName(),
     bio: faker.person.bio(),
+    birthdate: faker.date.past(),
     city: faker.location.city(),
     state: faker.location.state(),
     country: faker.location.country(),

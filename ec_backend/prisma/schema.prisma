@@ -12,6 +12,7 @@ model User {
   id String @id @default(uuid())
   name String @db.VarChar(150)
   bio String? @db.Text
+  birthdate DateTime? @db.Date
   city String? @db.VarChar(50)
   state String? @db.VarChar(50)
   country String? @db.VarChar(50)
@@ -29,28 +30,14 @@ model User {
   lastLogin DateTime? @db.DateTime()
   units UserUnit[]
   chapters UserChapter[]
+  answeredExercises AnsweredExercise[]
+  answeredQuizzes AnsweredQuiz[]
   videoProgresses VideoProgress[]
   notifications UserNotification[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@index([email])
-}
-
-model Student {
-  id String @id @default(uuid())
-  name String @db.VarChar(100)
-  age Int
-  birthdate DateTime @db.Date
-  city String @db.VarChar(50)
-  state String @db.VarChar(50)
-  country String @db.VarChar(50)
-  observations String? @db.Text
-  answeredExercises AnsweredExercise[]
-  answeredQuizzes AnsweredQuiz[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
   @@index([city])
   @@index([state])
   @@index([country])
@@ -84,10 +71,10 @@ model AnsweredExercise {
   id String @id @default(uuid())
   exercise Exercise @relation(fields: [exerciseId], references: [id])
   exerciseId Int
-  student Student @relation(fields: [studentId], references: [id])
-  studentId String
-  quiz AnsweredQuiz? @relation(fields: [quizId], references: [id])
-  quizId String?
+  user User @relation(fields: [userId], references: [id])
+  userId String
+  answeredQuiz AnsweredQuiz? @relation(fields: [answeredQuizId], references: [id])
+  answeredQuizId String?
   isRetry Boolean @default(false)
   selectedAnswers Json?
   textAnswer String? @db.VarChar(255)
@@ -99,9 +86,9 @@ model AnsweredExercise {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([studentId])
+  @@index([userId])
   @@index([exerciseId])
-  @@index([quizId])
+  @@index([answeredQuizId])
 }
 
 model Quiz {
@@ -129,8 +116,8 @@ model AnsweredQuiz {
   id String @id @default(uuid())
   quiz Quiz @relation(fields: [quizId], references: [id])
   quizId String
-  student Student @relation(fields: [studentId], references: [id])
-  studentId String
+  user User @relation(fields: [userId], references: [id])
+  userId String
   answers AnsweredExercise[]
   score Int 
   feedback String? @db.Text
@@ -139,9 +126,9 @@ model AnsweredQuiz {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@index([studentId])
+  @@index([userId])
   @@index([quizId])
-  @@index([studentId, quizId])
+  @@index([userId, quizId])
 }
 
 model Tag {

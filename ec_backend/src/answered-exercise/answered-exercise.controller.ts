@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { AnsweredExerciseService } from './answered-exercise.service';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -17,6 +18,8 @@ import httpMessages_EN from '../helper/messages/httpMessages.en';
 import validationMessages_EN from '../helper/messages/validationMessages.en';
 import fetchAnswerByQuery from './dto/fetchAnswerByQuery.dto';
 import UpdateFeedbackDTO from './dto/updateAnsweredExercise.dto';
+import { SelfGuard } from '../auth/guards/self/self.guard';
+import { RoleGuard } from '../auth/guards/role/role.guard';
 
 @ApiTags('AnsweredExercise')
 @Controller('api/answers/e')
@@ -26,6 +29,7 @@ export class AnsweredExerciseController {
   ) {}
 
   @Post()
+  @UseGuards(SelfGuard)
   @ApiResponse({
     status: 201,
     description: 'Success',
@@ -34,7 +38,9 @@ export class AnsweredExerciseController {
   @ApiResponse({
     status: 400,
     description: 'Bad Request',
-    example: validationMessages_EN.answeredExercise.saveAnswerDTO.quizId.isUUID,
+    example:
+      validationMessages_EN.answeredExercise.saveAnswerDTO.answeredQuizId
+        .isUUID,
   })
   @ApiResponse({
     status: 500,
@@ -46,30 +52,30 @@ export class AnsweredExerciseController {
   }
 
   @Get('query')
+  @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',
-    example: httpMessages_EN.answeredExercise.fetchAnswerByQuery.status_200,
+    example: httpMessages_EN.answeredExercise.fetchAnswersByUser.status_200,
   })
   @ApiResponse({
     status: 404,
     description: 'Not Found',
-    example: httpMessages_EN.answeredExercise.fetchAnswerByQuery.status_404,
+    example: httpMessages_EN.answeredExercise.fetchAnswersByUser.status_404,
   })
   @ApiResponse({
     status: 500,
     description: 'Internal Server Error',
     example: httpMessages_EN.general.status_500,
   })
-  async fetchAnswerByQuery(@Query() query: fetchAnswerByQuery) {
-    return this.answeredExerciseService.fetchAnswerByQuery(
-      query.studentId,
-      query.exerciseId,
-      query.quizId,
-    );
+  async fetchAnswersByUser(
+    @Query('userId', new ParseUUIDPipe()) userId: string,
+  ) {
+    return this.answeredExerciseService.fetchAnswersByUser(userId);
   }
 
   @Get(':id')
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -97,6 +103,7 @@ export class AnsweredExerciseController {
   }
 
   @Get()
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -117,6 +124,7 @@ export class AnsweredExerciseController {
   }
 
   @Patch(':id')
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -145,6 +153,7 @@ export class AnsweredExerciseController {
   }
 
   @Delete(':id')
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',

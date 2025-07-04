@@ -4,17 +4,16 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export default class fetchAnswerByQuery {
   @ApiProperty({
-    title: 'StudentID',
+    title: 'UserID',
     required: false,
     type: 'string',
     example: 'f0aaa9ad-ee8e-42f0-a823-c90f2d255f5a',
   })
   @IsOptional()
   @IsUUID('all', {
-    message:
-      validationMessages_EN.answeredExercise.saveAnswerDTO.studentId.isUUID,
+    message: validationMessages_EN.answeredExercise.saveAnswerDTO.userId.isUUID,
   })
-  studentId?: string;
+  userId?: string;
 
   @ApiProperty({
     title: 'ExerciseID',
@@ -30,14 +29,16 @@ export default class fetchAnswerByQuery {
   exerciseId?: number;
 
   @ApiProperty({
-    title: 'QuizId',
+    title: 'answeredQuizId',
     required: false,
     type: 'string',
     example: 'f0aaa9ad-ee8e-42f0-a823-c90f2d255f5a',
   })
   @IsOptional()
   @IsUUID('all', {
-    message: validationMessages_EN.answeredExercise.saveAnswerDTO.quizId.isUUID,
+    message:
+      validationMessages_EN.answeredExercise.saveAnswerDTO.answeredQuizId
+        .isUUID,
   })
-  quizId?: string;
+  answeredQuizId?: string;
 }

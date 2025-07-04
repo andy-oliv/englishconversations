@@ -8,6 +8,7 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { UserUnitService } from './user-unit.service';
 import Return from '../common/types/Return';
@@ -15,8 +16,9 @@ import GenerateUserUnitDTO from './dto/generateUserUnit.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
 import validationMessages_EN from '../helper/messages/validationMessages.en';
-import FetchUserUnitsByQueryDTO from './dto/fetchUserUnitsByQuery.dto';
 import UpdateUserUnitDTO from './dto/updateUserUnit.dto';
+import { SelfGuard } from '../auth/guards/self/self.guard';
+import { RoleGuard } from '../auth/guards/role/role.guard';
 
 @ApiTags('UserUnits')
 @Controller('api/users/units')
@@ -24,6 +26,7 @@ export class UserUnitController {
   constructor(private readonly userUnitService: UserUnitService) {}
 
   @Post()
+  @UseGuards(SelfGuard)
   @ApiResponse({
     status: 201,
     description: 'Success',
@@ -54,6 +57,7 @@ export class UserUnitController {
   }
 
   @Get('query')
+  @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -69,13 +73,12 @@ export class UserUnitController {
     description: 'Internal Server Error',
     example: httpMessages_EN.general.status_500,
   })
-  async fetchUserUnitByQuery(
-    @Query() { userId, unitId, status }: FetchUserUnitsByQueryDTO,
-  ): Promise<Return> {
-    return this.userUnitService.fetchUserUnitsByQuery(userId, unitId, status);
+  async fetchUserUnitByQuery(@Query('userId') userId: string): Promise<Return> {
+    return this.userUnitService.fetchUserUnitsByQuery(userId);
   }
 
   @Get('all')
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -96,6 +99,7 @@ export class UserUnitController {
   }
 
   @Get(':id')
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -116,7 +120,8 @@ export class UserUnitController {
     return this.userUnitService.fetchUserUnitById(id);
   }
 
-  @Patch(':id')
+  @Patch('update')
+  @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -133,13 +138,15 @@ export class UserUnitController {
     example: httpMessages_EN.general.status_500,
   })
   async updateUserUnit(
-    @Param('id', new ParseUUIDPipe()) id: string,
+    @Query('id', new ParseUUIDPipe()) id: string,
+    @Query('userId', new ParseUUIDPipe()) userId: string,
     @Body() data: UpdateUserUnitDTO,
   ): Promise<Return> {
-    return this.userUnitService.updateUserUnit(id, data);
+    return this.userUnitService.updateUserUnit(id, userId, data);
   }
 
   @Delete(':id')
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',

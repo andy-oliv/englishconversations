@@ -159,8 +159,44 @@ export class UserChapterService {
     }
   }
 
+  async fetchUserChaptersByUser(userId: string): Promise<Return> {
+    try {
+      const progresses: UserChapter[] =
+        await this.prismaService.userChapter.findMany({
+          where: {
+            userId: userId,
+          },
+          include: this.includedProgress,
+        });
+
+      if (progresses.length === 0) {
+        throw new NotFoundException(
+          httpMessages_EN.userChapter.fetchUserChaptersByUser.status_404,
+        );
+      }
+
+      return {
+        message: httpMessages_EN.userChapter.fetchUserChaptersByUser.status_200,
+        data: progresses,
+      };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+
+      handleInternalErrorException(
+        'userChapterService',
+        'fetchUserChaptersByUser',
+        loggerMessages.userChapter.fetchUserChaptersByUser.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
   async updateUserChapter(
     id: string,
+    userId: string,
     updatedData: UpdateUserChapterDTO,
   ): Promise<Return> {
     try {
@@ -168,6 +204,7 @@ export class UserChapterService {
         await this.prismaService.userChapter.update({
           where: {
             id,
+            userId,
           },
           data: updatedData,
         });

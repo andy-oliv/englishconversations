@@ -9,10 +9,12 @@ import { UserNotificationController } from './user-notification.controller';
 import { UserNotificationService } from './user-notification.service';
 import UserNotification from '../entities/UserNotification';
 import generateMockUserNotification from '../helper/mocks/generateMockUserNotification';
+import { Logger } from 'nestjs-pino';
 
 describe('NotificationController', () => {
   let userNotificationController: UserNotificationController;
   let userNotificationService: UserNotificationService;
+  let logger: Logger;
   let userNotification: UserNotification;
   let userNotifications: UserNotification[];
 
@@ -25,7 +27,15 @@ describe('NotificationController', () => {
           useValue: {
             generateUserNotification: jest.fn(),
             fetchUserNotifications: jest.fn(),
+            updateUserNotification: jest.fn(),
             deleteUserNotification: jest.fn(),
+          },
+        },
+        {
+          provide: Logger,
+          useValue: {
+            log: jest.fn(),
+            error: jest.fn(),
           },
         },
       ],
@@ -142,6 +152,86 @@ describe('NotificationController', () => {
       expect(
         userNotificationService.fetchUserNotifications,
       ).toHaveBeenCalledWith(userNotification.userId);
+    });
+  });
+
+  describe('updateUserNotification()', () => {
+    it('should update a notification', async () => {
+      (
+        userNotificationService.updateUserNotification as jest.Mock
+      ).mockResolvedValue({
+        message:
+          httpMessages_EN.userNotification.updateUserNotification.status_200,
+        data: userNotification,
+      });
+
+      const result: Return =
+        await userNotificationController.updateUserNotification(
+          userNotification.userId,
+          userNotification.id,
+          userNotification,
+        );
+
+      expect(result).toMatchObject({
+        message:
+          httpMessages_EN.userNotification.updateUserNotification.status_200,
+        data: userNotification,
+      });
+      expect(
+        userNotificationService.updateUserNotification,
+      ).toHaveBeenCalledWith(
+        userNotification.userId,
+        userNotification.id,
+        userNotification,
+      );
+    });
+
+    it('should throw NotFoundException', async () => {
+      (
+        userNotificationService.updateUserNotification as jest.Mock
+      ).mockRejectedValue(
+        new NotFoundException(
+          httpMessages_EN.userNotification.updateUserNotification.status_404,
+        ),
+      );
+
+      await expect(
+        userNotificationController.updateUserNotification(
+          userNotification.userId,
+          userNotification.id,
+          userNotification,
+        ),
+      ).rejects.toThrow(NotFoundException);
+      expect(
+        userNotificationService.updateUserNotification,
+      ).toHaveBeenCalledWith(
+        userNotification.userId,
+        userNotification.id,
+        userNotification,
+      );
+    });
+
+    it('should throw InternalServerErrorException', async () => {
+      (
+        userNotificationService.updateUserNotification as jest.Mock
+      ).mockRejectedValue(
+        new InternalServerErrorException(httpMessages_EN.general.status_500),
+      );
+
+      await expect(
+        userNotificationController.updateUserNotification(
+          userNotification.userId,
+          userNotification.id,
+          userNotification,
+        ),
+      ).rejects.toThrow(InternalServerErrorException);
+      expect(
+        userNotificationService.updateUserNotification,
+      ).toHaveBeenCalledWith(
+        userNotification.userId,
+        userNotification.id,
+        userNotification,
+      );
     });
   });
 

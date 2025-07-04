@@ -21,7 +21,7 @@ const loggerMessages = {
       status_500:
         'An internal error occurred while fetching the answer. Check the error log for more information.',
     },
-    fetchAnswerByQuery: {
+    fetchAnswersByUser: {
       status_500:
         'An internal error occurred while fetching the answers. Check the error log for more information.',
     },
@@ -52,11 +52,15 @@ const loggerMessages = {
       status_500:
         'An internal error occurred while fetching the answer. Check the error log for more information.',
     },
-    fetchAnswersByQuery: {
+    fetchAnswersByUser: {
       status_500:
         'An internal error occurred while fetching the answers. Check the error log for more information.',
     },
     saveAnswer: {
+      status_500:
+        'An internal error occurred while saving the answer. Check the error log for more information.',
+    },
+    throwIfNotAnsweredQuiz: {
       status_500:
         'An internal error occurred while saving the answer. Check the error log for more information.',
     },
@@ -336,6 +340,7 @@ const loggerMessages = {
     },
   },
   selfGuard: {
+    warn: `Attempt to access unauthorized resource. ID override.`,
     status_403: 'Blocked access attempt by role ${request.user.role}',
   },
   student: {
@@ -509,6 +514,10 @@ const loggerMessages = {
       status_500:
         'An internal error occurred while fetching the user progress. Check the error log for more information.',
     },
+    fetchUserChaptersByUser: {
+      status_500:
+        'An internal error occurred while fetching the user progress. Check the error log for more information.',
+    },
     generateUserChapter: {
       status_500:
         'An internal error occurred while generating the user progress. Check the error log for more information.',
@@ -535,6 +544,10 @@ const loggerMessages = {
     generateUserNotification: {
       status_500:
         'An internal error occurred while generating the notification. Check the error log for more information.',
+    },
+    updateUserNotification: {
+      status_500:
+        'An internal error occurred while updating the notification. Check the error log for more information.',
     },
   },
   userUnit: {

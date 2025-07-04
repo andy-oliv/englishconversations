@@ -15,7 +15,7 @@ describe('answeredQuiz', () => {
   let answeredQuizService: AnsweredQuizService;
   let answer: AnsweredQuiz;
   let answerList: AnsweredQuiz[];
-  let query: { quizId: string; studentId: string };
+  let query: { quizId: string; userId: string };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -27,7 +27,7 @@ describe('answeredQuiz', () => {
             addFeedback: jest.fn(),
             saveAnswer: jest.fn(),
             fetchAnswers: jest.fn(),
-            fetchAnswersByQuery: jest.fn(),
+            fetchAnswersByUser: jest.fn(),
             fetchAnswerById: jest.fn(),
             deleteAnswer: jest.fn(),
           },
@@ -42,10 +42,6 @@ describe('answeredQuiz', () => {
 
     answer = generateMockAnsweredQuiz();
     answerList = [generateMockAnsweredQuiz(), generateMockAnsweredQuiz()];
-    query = {
-      quizId: answer.quizId,
-      studentId: answer.studentId,
-    };
   });
 
   it('should be defined', () => {
@@ -80,70 +76,61 @@ describe('answeredQuiz', () => {
     });
   });
 
-  describe('fetchAnswersByQuery()', () => {
+  describe('fetchAnswersByUser()', () => {
     it('should fetch all answers based on the query', async () => {
-      (answeredQuizService.fetchAnswersByQuery as jest.Mock).mockResolvedValue({
-        message: httpMessages_EN.answeredQuiz.fetchAnswersByQuery.status_200,
+      (answeredQuizService.fetchAnswersByUser as jest.Mock).mockResolvedValue({
+        message: httpMessages_EN.answeredQuiz.fetchAnswersByUser.status_200,
         data: answerList,
       });
 
-      const result: Return = await answeredQuizController.fetchAnswersByQuery(
-        answer.quizId,
-        answer.studentId,
+      const result: Return = await answeredQuizController.fetchAnswersByUser(
+        answer.userId,
       );
 
       expect(result).toMatchObject({
-        message: httpMessages_EN.answeredQuiz.fetchAnswersByQuery.status_200,
+        message: httpMessages_EN.answeredQuiz.fetchAnswersByUser.status_200,
         data: answerList,
       });
 
-      expect(answeredQuizService.fetchAnswersByQuery).toHaveBeenCalledWith(
-        query.quizId,
-        query.studentId,
+      expect(answeredQuizService.fetchAnswersByUser).toHaveBeenCalledWith(
+        query.userId,
       );
     });
 
     it('should throw a NotFoundException', async () => {
-      (answeredQuizService.fetchAnswersByQuery as jest.Mock).mockRejectedValue(
+      (answeredQuizService.fetchAnswersByUser as jest.Mock).mockRejectedValue(
         new NotFoundException(
-          httpMessages_EN.answeredQuiz.fetchAnswersByQuery.status_404,
+          httpMessages_EN.answeredQuiz.fetchAnswersByUser.status_404,
         ),
       );
 
       await expect(
-        answeredQuizController.fetchAnswersByQuery(
-          answer.quizId,
-          answer.studentId,
-        ),
+        answeredQuizController.fetchAnswersByUser(answer.userId),
       ).rejects.toThrow(
         new NotFoundException(
-          httpMessages_EN.answeredQuiz.fetchAnswersByQuery.status_404,
+          httpMessages_EN.answeredQuiz.fetchAnswersByUser.status_404,
         ),
       );
 
-      expect(answeredQuizService.fetchAnswersByQuery).toHaveBeenCalledWith(
-        query.quizId,
-        query.studentId,
+      expect(answeredQuizService.fetchAnswersByUser).toHaveBeenCalledWith(
+        query.userId,
       );
     });
 
     it('should throw an InternalServerErrorException', async () => {
-      (answeredQuizService.fetchAnswersByQuery as jest.Mock).mockRejectedValue(
+      (answeredQuizService.fetchAnswersByUser as jest.Mock).mockRejectedValue(
         new InternalServerErrorException(httpMessages_EN.general.status_500),
       );
 
       await expect(
-        answeredQuizController.fetchAnswersByQuery(
-          answer.quizId,
-          answer.studentId,
-        ),
+        answeredQuizController.fetchAnswersByUser(answer.userId),
       ).rejects.toThrow(
         new InternalServerErrorException(httpMessages_EN.general.status_500),
       );
 
-      expect(answeredQuizService.fetchAnswersByQuery).toHaveBeenCalledWith(
+      expect(answeredQuizService.fetchAnswersByUser).toHaveBeenCalledWith(
         query.quizId,
-        query.studentId,
+        query.userId,
       );
     });
   });

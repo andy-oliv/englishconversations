@@ -23,7 +23,74 @@ export class SelfGuard implements CanActivate {
 
     if (request.user.role === 'STUDENT') {
       //replacing userId params with the user's own id to prevent access to other users' information
-      request.params.id = request.user.id;
+      if (
+        request.params?.id !== undefined &&
+        request.params?.id !== request.user.id
+      ) {
+        request.params.id = request.user.id;
+
+        this.logger.warn({
+          message: loggerMessages.selfGuard.warn,
+          requestOrigin: {
+            id: request.user.id,
+            name: request.user.name,
+            email: request.user.email,
+            role: request.user.role,
+          },
+        });
+      }
+
+      if (
+        request.params?.userId !== undefined &&
+        request.params?.userId !== request.user.id
+      ) {
+        request.params.userId = request.user.id;
+
+        this.logger.warn({
+          message: loggerMessages.selfGuard.warn,
+          requestOrigin: {
+            id: request.user.id,
+            name: request.user.name,
+            email: request.user.email,
+            role: request.user.role,
+          },
+        });
+      }
+
+      if (
+        request.body?.userId !== undefined &&
+        request.body?.userId !== request.user.id
+      ) {
+        request.body.userId = request.user.id;
+
+        this.logger.warn({
+          message: loggerMessages.selfGuard.warn,
+          requestOrigin: {
+            id: request.user.id,
+            name: request.user.name,
+            email: request.user.email,
+            role: request.user.role,
+          },
+        });
+      }
+
+      if (
+        request.query?.userId !== undefined &&
+        request.query?.userId !== request.user.id
+      ) {
+        request.query.userId = request.user.id;
+
+        this.logger.warn({
+          message: loggerMessages.selfGuard.warn,
+          requestOrigin: {
+            id: request.user.id,
+            name: request.user.name,
+            email: request.user.email,
+            role: request.user.role,
+          },
+        });
+      }
+
       return true;
     }
 

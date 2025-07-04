@@ -26,6 +26,7 @@ describe('UserService', () => {
   let hashedPassword: string;
   let logger: Logger;
   let configService: ConfigService;
+  let mockResponse: any;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -79,6 +80,9 @@ describe('UserService', () => {
     hashedPassword = faker.internet.password();
     logger = module.get<Logger>(Logger);
     configService = module.get<ConfigService>(ConfigService);
+    mockResponse = {
+      clearCookie: jest.fn(),
+    };
   });
 
   it('should be defined', () => {
@@ -232,6 +236,36 @@ describe('UserService', () => {
               status: true,
             },
           },
+          videoProgresses: {
+            select: {
+              id: true,
+              video: {
+                select: {
+                  id: true,
+                  title: true,
+                  description: true,
+                },
+              },
+              progress: true,
+              isFavorite: true,
+              watchedCount: true,
+              watchedDuration: true,
+            },
+          },
+          notifications: {
+            select: {
+              id: true,
+              notification: {
+                select: {
+                  type: true,
+                  title: true,
+                  content: true,
+                },
+              },
+              isRead: true,
+              deliveredAt: true,
+            },
+          },
         },
       });
     });
@@ -264,6 +298,36 @@ describe('UserService', () => {
               status: true,
             },
           },
+          videoProgresses: {
+            select: {
+              id: true,
+              video: {
+                select: {
+                  id: true,
+                  title: true,
+                  description: true,
+                },
+              },
+              progress: true,
+              isFavorite: true,
+              watchedCount: true,
+              watchedDuration: true,
+            },
+          },
+          notifications: {
+            select: {
+              id: true,
+              notification: {
+                select: {
+                  type: true,
+                  title: true,
+                  content: true,
+                },
+              },
+              isRead: true,
+              deliveredAt: true,
+            },
+          },
         },
       });
     });
@@ -293,6 +357,36 @@ describe('UserService', () => {
               id: true,
               progress: true,
               status: true,
+            },
+          },
+          videoProgresses: {
+            select: {
+              id: true,
+              video: {
+                select: {
+                  id: true,
+                  title: true,
+                  description: true,
+                },
+              },
+              progress: true,
+              isFavorite: true,
+              watchedCount: true,
+              watchedDuration: true,
+            },
+          },
+          notifications: {
+            select: {
+              id: true,
+              notification: {
+                select: {
+                  type: true,
+                  title: true,
+                  content: true,
+                },
+              },
+              isRead: true,
+              deliveredAt: true,
             },
           },
         },
@@ -331,6 +425,36 @@ describe('UserService', () => {
               status: true,
             },
           },
+          videoProgresses: {
+            select: {
+              id: true,
+              video: {
+                select: {
+                  id: true,
+                  title: true,
+                  description: true,
+                },
+              },
+              progress: true,
+              isFavorite: true,
+              watchedCount: true,
+              watchedDuration: true,
+            },
+          },
+          notifications: {
+            select: {
+              id: true,
+              notification: {
+                select: {
+                  type: true,
+                  title: true,
+                  content: true,
+                },
+              },
+              isRead: true,
+              deliveredAt: true,
+            },
+          },
         },
       });
     });
@@ -363,6 +487,36 @@ describe('UserService', () => {
               status: true,
             },
           },
+          videoProgresses: {
+            select: {
+              id: true,
+              video: {
+                select: {
+                  id: true,
+                  title: true,
+                  description: true,
+                },
+              },
+              progress: true,
+              isFavorite: true,
+              watchedCount: true,
+              watchedDuration: true,
+            },
+          },
+          notifications: {
+            select: {
+              id: true,
+              notification: {
+                select: {
+                  type: true,
+                  title: true,
+                  content: true,
+                },
+              },
+              isRead: true,
+              deliveredAt: true,
+            },
+          },
         },
       });
     });
@@ -392,6 +546,36 @@ describe('UserService', () => {
               id: true,
               progress: true,
               status: true,
+            },
+          },
+          videoProgresses: {
+            select: {
+              id: true,
+              video: {
+                select: {
+                  id: true,
+                  title: true,
+                  description: true,
+                },
+              },
+              progress: true,
+              isFavorite: true,
+              watchedCount: true,
+              watchedDuration: true,
+            },
+          },
+          notifications: {
+            select: {
+              id: true,
+              notification: {
+                select: {
+                  type: true,
+                  title: true,
+                  content: true,
+                },
+              },
+              isRead: true,
+              deliveredAt: true,
             },
           },
         },
@@ -452,9 +636,12 @@ describe('UserService', () => {
   describe('deleteUser()', () => {
     it('should fetch user', async () => {
       (prismaService.user.delete as jest.Mock).mockResolvedValue(user);
-      (s3Service.deleteFileFromS3 as jest.Mock).mockResolvedValue(undefined);
+      (mockResponse.clearCookie as jest.Mock).mockReturnValue(undefined);
 
-      const result: Return = await userService.deleteUser(user.id);
+      const result: Return = await userService.deleteUser(
+        user.id,
+        mockResponse,
+      );
 
       expect(result).toMatchObject({
         message: httpMessages_EN.user.deleteUser.status_200,
@@ -465,15 +652,17 @@ describe('UserService', () => {
           id: user.id,
         },
       });
-      expect(s3Service.deleteFileFromS3).toHaveBeenCalledWith(user.avatarUrl);
+      expect(mockResponse.clearCookie).toHaveBeenCalledTimes(2);
+      expect(mockResponse.clearCookie).toHaveBeenCalledWith('ec_accessToken');
+      expect(mockResponse.clearCookie).toHaveBeenCalledWith('ec_refreshToken');
     });
 
     it('should throw NotFoundException', async () => {
       (prismaService.user.delete as jest.Mock).mockRejectedValue(error);
 
-      await expect(userService.deleteUser(user.id)).rejects.toThrow(
-        NotFoundException,
-      );
+      await expect(
+        userService.deleteUser(user.id, mockResponse),
+      ).rejects.toThrow(NotFoundException);
 
       expect(prismaService.user.delete).toHaveBeenCalledWith({
         where: {
@@ -487,9 +676,9 @@ describe('UserService', () => {
         new InternalServerErrorException(httpMessages_EN.general.status_500),
       );
 
-      await expect(userService.deleteUser(user.id)).rejects.toThrow(
-        InternalServerErrorException,
-      );
+      await expect(
+        userService.deleteUser(user.id, mockResponse),
+      ).rejects.toThrow(InternalServerErrorException);
       expect(prismaService.user.delete).toHaveBeenCalledWith({
         where: {
           id: user.id,

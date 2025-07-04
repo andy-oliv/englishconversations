@@ -12,10 +12,12 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import generateMockVideoProgress from '../helper/mocks/generateMockVideoProgress';
+import { Logger } from 'nestjs-pino';
 
 describe('VideoProgressController', () => {
   let videoProgressController: VideoProgressController;
   let videoProgressService: VideoProgressService;
+  let logger: Logger;
   let videoProgress: VideoProgress;
   let videoProgresses: VideoProgress[];
   let emptyVideoProgresses: VideoProgress[];
@@ -35,6 +37,13 @@ describe('VideoProgressController', () => {
             deleteProgress: jest.fn(),
           },
         },
+        {
+          provide: Logger,
+          useValue: {
+            log: jest.fn(),
+            error: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
@@ -43,7 +52,7 @@ describe('VideoProgressController', () => {
     );
     videoProgressService =
       module.get<VideoProgressService>(VideoProgressService);
-
+    logger = module.get<Logger>(Logger);
     videoProgress = generateMockVideoProgress();
     videoProgresses = [
       generateMockVideoProgress(),
@@ -296,6 +305,7 @@ describe('VideoProgressController', () => {
 
       const result: Return = await videoProgressController.updateProgress(
         videoProgress.id,
+        videoProgress.userId,
         videoProgress,
       );
 
@@ -305,6 +315,7 @@ describe('VideoProgressController', () => {
       });
       expect(videoProgressService.updateProgress).toHaveBeenCalledWith(
         videoProgress.id,
+        videoProgress.userId,
         videoProgress,
       );
     });
@@ -317,11 +328,16 @@ describe('VideoProgressController', () => {
       );
 
       await expect(
-        videoProgressController.updateProgress(videoProgress.id, videoProgress),
+        videoProgressController.updateProgress(
+          videoProgress.id,
+          videoProgress.userId,
+          videoProgress,
+        ),
       ).rejects.toThrow(NotFoundException);
 
       expect(videoProgressService.updateProgress).toHaveBeenCalledWith(
         videoProgress.id,
+        videoProgress.userId,
         videoProgress,
       );
     });
@@ -332,11 +348,16 @@ describe('VideoProgressController', () => {
       );
 
       await expect(
-        videoProgressController.updateProgress(videoProgress.id, videoProgress),
+        videoProgressController.updateProgress(
+          videoProgress.id,
+          videoProgress.userId,
+          videoProgress,
+        ),
       ).rejects.toThrow(InternalServerErrorException);
 
       expect(videoProgressService.updateProgress).toHaveBeenCalledWith(
         videoProgress.id,
+        videoProgress.userId,
         videoProgress,
       );
     });

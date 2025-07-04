@@ -175,6 +175,48 @@ describe('UserChapterService', () => {
     });
   });
 
+  describe('fetchUserChaptersByUser()', () => {
+    it('should fetch userChapters', async () => {
+      (prismaService.userChapter.findMany as jest.Mock).mockResolvedValue(
+        progresses,
+      );
+
+      const result: Return = await userChapterService.fetchUserChaptersByUser(
+        progress.userId,
+      );
+
+      expect(result).toMatchObject({
+        message: httpMessages_EN.userChapter.fetchUserChaptersByUser.status_200,
+        data: progresses,
+      });
+      expect(prismaService.userChapter.findMany).toHaveBeenCalled();
+    });
+
+    it('should throw NotFoundException', async () => {
+      (prismaService.userChapter.findMany as jest.Mock).mockResolvedValue(
+        emptyProgresses,
+      );
+
+      await expect(
+        userChapterService.fetchUserChaptersByUser(progress.userId),
+      ).rejects.toThrow(NotFoundException);
+
+      expect(prismaService.userChapter.findMany).toHaveBeenCalled();
+    });
+
+    it('should throw InternalErrorException', async () => {
+      (prismaService.userChapter.findMany as jest.Mock).mockRejectedValue(
+        new InternalServerErrorException(httpMessages_EN.general.status_500),
+      );
+
+      await expect(
+        userChapterService.fetchUserChaptersByUser(progress.userId),
+      ).rejects.toThrow(InternalServerErrorException);
+
+      expect(prismaService.userChapter.findMany).toHaveBeenCalled();
+    });
+  });
+
   describe('fetchUserChapterById()', () => {
     it('should fetch a userChapter', async () => {
       (
@@ -284,6 +326,7 @@ describe('UserChapterService', () => {
 
       const result: Return = await userChapterService.updateUserChapter(
         progress.id,
+        progress.userId,
         progress,
       );
 
@@ -294,6 +337,7 @@ describe('UserChapterService', () => {
       expect(prismaService.userChapter.update).toHaveBeenCalledWith({
         where: {
           id: progress.id,
+          userId: progress.userId,
         },
         data: progress,
       });
@@ -305,12 +349,17 @@ describe('UserChapterService', () => {
       );
 
       await expect(
-        userChapterService.updateUserChapter(progress.id, progress),
+        userChapterService.updateUserChapter(
+          progress.id,
+          progress.userId,
+          progress,
+        ),
       ).rejects.toThrow(NotFoundException);
 
       expect(prismaService.userChapter.update).toHaveBeenCalledWith({
         where: {
           id: progress.id,
+          userId: progress.userId,
         },
         data: progress,
       });
@@ -322,12 +371,17 @@ describe('UserChapterService', () => {
       );
 
       await expect(
-        userChapterService.updateUserChapter(progress.id, progress),
+        userChapterService.updateUserChapter(
+          progress.id,
+          progress.userId,
+          progress,
+        ),
       ).rejects.toThrow(InternalServerErrorException);
 
       expect(prismaService.userChapter.update).toHaveBeenCalledWith({
         where: {
           id: progress.id,
+          userId: progress.userId,
         },
         data: progress,
       });

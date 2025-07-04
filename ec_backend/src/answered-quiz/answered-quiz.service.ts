@@ -7,7 +7,7 @@ import httpMessages_EN from '../helper/messages/httpMessages.en';
 import handleInternalErrorException from '../helper/functions/handleErrorException';
 import loggerMessages from '../helper/messages/loggerMessages';
 import { QuizService } from '../quiz/quiz.service';
-import { StudentService } from '../student/student.service';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class AnsweredQuizService {
@@ -15,15 +15,39 @@ export class AnsweredQuizService {
     private readonly prismaService: PrismaService,
     private readonly logger: Logger,
     private readonly quizService: QuizService,
-    private readonly studentService: StudentService,
+    private readonly userService: UserService,
   ) {}
 
-  async checkIsRetry(quizId: string, studentId: string): Promise<boolean> {
+  async throwIfNotAnsweredQuiz(answeredQuizId: string): Promise<void> {
+    try {
+      await this.prismaService.answeredQuiz.findFirstOrThrow({
+        where: {
+          id: answeredQuizId,
+        },
+      });
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(
+          httpMessages_EN.answeredQuiz.throwIfNotAnsweredQuiz.status_404,
+        );
+      }
+
+      handleInternalErrorException(
+        'answeredQuizService',
+        'throwIfNotAnsweredQuiz',
+        loggerMessages.answeredQuiz.throwIfNotAnsweredQuiz.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  async checkIsRetry(quizId: string, userId: string): Promise<boolean> {
     try {
       const answerExists: AnsweredQuiz =
         await this.prismaService.answeredQuiz.findFirst({
           where: {
-            AND: [{ quizId }, { studentId }],
+            AND: [{ quizId }, { userId }],
           },
         });
 
@@ -43,10 +67,10 @@ export class AnsweredQuizService {
     }
   }
 
-  async answerValidation(quizId: string, studentId: string): Promise<boolean> {
+  async answerValidation(quizId: string, userId: string): Promise<boolean> {
     await this.quizService.throwIfNotQuiz(quizId);
-    await this.studentService.throwIfNotStudent(studentId);
-    const retry: boolean = await this.checkIsRetry(quizId, studentId);
+    await this.userService.throwIfNotUser(userId);
+    const retry: boolean = await this.checkIsRetry(quizId, userId);
 
     return retry;
   }
@@ -54,7 +78,7 @@ export class AnsweredQuizService {
   async saveAnswer(data: AnsweredQuiz): Promise<Return> {
     const retry: boolean = await this.answerValidation(
       data.quizId,
-      data.studentId,
+      data.userId,
     );
 
     try {
@@ -62,7 +86,7 @@ export class AnsweredQuizService {
         {
           data: {
             quizId: data.quizId,
-            studentId: data.studentId,
+            userId: data.userId,
             score: data.score,
             feedback: data.feedback,
             elapsedTime: data.elapsedTime,
@@ -124,7 +148,7 @@ export class AnsweredQuizService {
             id,
           },
           include: {
-            student: {
+            user: {
               select: {
                 id: true,
                 name: true,
@@ -173,18 +197,15 @@ export class AnsweredQuizService {
     }
   }
 
-  async fetchAnswersByQuery(
-    quizId: string,
-    studentId: string,
-  ): Promise<Return> {
+  async fetchAnswersByUser(userId: string): Promise<Return> {
     try {
       const answers: AnsweredQuiz[] =
         await this.prismaService.answeredQuiz.findMany({
           where: {
-            AND: [{ quizId }, { studentId }],
+            userId,
           },
           include: {
-            student: {
+            user: {
               select: {
                 id: true,
                 name: true,
@@ -195,12 +216,12 @@ export class AnsweredQuizService {
 
       if (answers.length === 0) {
         throw new NotFoundException(
-          httpMessages_EN.answeredQuiz.fetchAnswersByQuery.status_404,
+          httpMessages_EN.answeredQuiz.fetchAnswersByUser.status_404,
         );
       }
 
       return {
-        message: httpMessages_EN.answeredQuiz.fetchAnswersByQuery.status_200,
+        message: httpMessages_EN.answeredQuiz.fetchAnswersByUser.status_200,
         data: answers,
       };
     } catch (error) {
@@ -210,8 +231,8 @@ export class AnsweredQuizService {
 
       handleInternalErrorException(
         'answeredQuizService',
-        'fetchAnswersByQuery',
-        loggerMessages.answeredQuiz.fetchAnswersByQuery.status_500,
+        'fetchAnswersByUser',
+        loggerMessages.answeredQuiz.fetchAnswersByUser.status_500,
         this.logger,
         error,
       );

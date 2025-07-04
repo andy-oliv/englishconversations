@@ -210,6 +210,78 @@ describe('UserNotificationService', () => {
     });
   });
 
+  describe('updateUserNotification()', () => {
+    it('should update a notification', async () => {
+      (prismaService.userNotification.update as jest.Mock).mockResolvedValue(
+        notification,
+      );
+
+      const result: Return =
+        await userNotificationService.updateUserNotification(
+          notification.userId,
+          notification.id,
+          notification,
+        );
+
+      expect(result).toMatchObject({
+        message:
+          httpMessages_EN.userNotification.updateUserNotification.status_200,
+        data: notification,
+      });
+      expect(prismaService.userNotification.update).toHaveBeenCalledWith({
+        where: {
+          userId: notification.userId,
+          id: notification.id,
+        },
+        data: notification,
+      });
+    });
+
+    it('should throw NotFoundException', async () => {
+      (prismaService.userNotification.update as jest.Mock).mockRejectedValue(
+        error,
+      );
+
+      await expect(
+        userNotificationService.updateUserNotification(
+          notification.userId,
+          notification.id,
+          notification,
+        ),
+      ).rejects.toThrow(NotFoundException);
+
+      expect(prismaService.userNotification.update).toHaveBeenCalledWith({
+        where: {
+          userId: notification.userId,
+          id: notification.id,
+        },
+        data: notification,
+      });
+    });
+
+    it('should throw InternalErrorException', async () => {
+      (prismaService.userNotification.update as jest.Mock).mockRejectedValue(
+        new InternalServerErrorException(httpMessages_EN.general.status_500),
+      );
+
+      await expect(
+        userNotificationService.updateUserNotification(
+          notification.userId,
+          notification.id,
+          notification,
+        ),
+      ).rejects.toThrow(InternalServerErrorException);
+
+      expect(prismaService.userNotification.update).toHaveBeenCalledWith({
+        where: {
+          userId: notification.userId,
+          id: notification.id,
+        },
+        data: notification,
+      });
+    });
+  });
+
   describe('deleteUserNotification()', () => {
     it('should fetch a notification', async () => {
       (prismaService.userNotification.delete as jest.Mock).mockResolvedValue(

@@ -11,10 +11,12 @@ import { UserChapterService } from './user-chapter.service';
 import UserChapter from '../entities/userChapter';
 import generateMockUserChapter from '../helper/mocks/generateMockUserChapter';
 import generateMockUser from '../helper/mocks/generateMockUser';
+import { Logger } from 'nestjs-pino';
 
 describe('UserChapterController', () => {
   let userChapterController: UserChapterController;
   let userChapterService: UserChapterService;
+  let logger: Logger;
   let progress: UserChapter;
   let progresses: UserChapter[];
 
@@ -27,9 +29,17 @@ describe('UserChapterController', () => {
           useValue: {
             generateUserChapter: jest.fn(),
             fetchUserChapters: jest.fn(),
+            fetchUserChaptersByUser: jest.fn(),
             fetchUserChapterById: jest.fn(),
             updateUserChapter: jest.fn(),
             deleteUserChapter: jest.fn(),
+          },
+        },
+        {
+          provide: Logger,
+          useValue: {
+            log: jest.fn(),
+            error: jest.fn(),
           },
         },
       ],
@@ -39,6 +49,7 @@ describe('UserChapterController', () => {
       UserChapterController,
     );
     userChapterService = module.get<UserChapterService>(UserChapterService);
+    logger = module.get<Logger>(Logger);
     progress = generateMockUserChapter();
     progresses = [generateMockUserChapter(), generateMockUserChapter()];
   });
@@ -140,6 +151,60 @@ describe('UserChapterController', () => {
     });
   });
 
+  describe('fetchUserChaptersByUser()', () => {
+    it('should fetch userChapters', async () => {
+      (
+        userChapterService.fetchUserChaptersByUser as jest.Mock
+      ).mockResolvedValue({
+        message: httpMessages_EN.userChapter.fetchUserChaptersByUser.status_200,
+        data: progress,
+      });
+
+      const result: Return =
+        await userChapterController.fetchUserChaptersByUser(progress.userId);
+
+      expect(result).toMatchObject({
+        message: httpMessages_EN.userChapter.fetchUserChaptersByUser.status_200,
+        data: progress,
+      });
+      expect(userChapterService.fetchUserChaptersByUser).toHaveBeenCalled();
+    });
+
+    it('should throw NotFoundException', async () => {
+      (
+        userChapterService.fetchUserChaptersByUser as jest.Mock
+      ).mockRejectedValue(
+        new NotFoundException(
+          httpMessages_EN.userChapter.fetchUserChaptersByUser.status_404,
+        ),
+      );
+
+      await expect(
+        userChapterService.fetchUserChaptersByUser(progress.userId),
+      ).rejects.toThrow(NotFoundException);
+
+      expect(userChapterService.fetchUserChaptersByUser).toHaveBeenCalledWith(
+        progress.userId,
+      );
+    });
+
+    it('should throw InternalServerErrorException', async () => {
+      (
+        userChapterService.fetchUserChaptersByUser as jest.Mock
+      ).mockRejectedValue(
+        new InternalServerErrorException(httpMessages_EN.general.status_500),
+      );
+
+      await expect(
+        userChapterService.fetchUserChaptersByUser(progress.userId),
+      ).rejects.toThrow(InternalServerErrorException);
+
+      expect(userChapterService.fetchUserChaptersByUser).toHaveBeenCalledWith(
+        progress.userId,
+      );
+    });
+  });
+
   describe('fetchUserChapterById()', () => {
     it('should fetch userChapter', async () => {
       (userChapterService.fetchUserChapterById as jest.Mock).mockResolvedValue({
@@ -198,6 +263,7 @@ describe('UserChapterController', () => {
 
       const result: Return = await userChapterController.updateUserChapter(
         progress.id,
+        progress.userId,
         progress,
       );
 
@@ -207,6 +273,7 @@ describe('UserChapterController', () => {
       });
       expect(userChapterService.updateUserChapter).toHaveBeenCalledWith(
         progress.id,
+        progress.userId,
         progress,
       );
     });
@@ -219,11 +286,16 @@ describe('UserChapterController', () => {
       );
 
       await expect(
-        userChapterService.updateUserChapter(progress.id, progress),
+        userChapterService.updateUserChapter(
+          progress.id,
+          progress.userId,
+          progress,
+        ),
       ).rejects.toThrow(NotFoundException);
 
       expect(userChapterService.updateUserChapter).toHaveBeenCalledWith(
         progress.id,
+        progress.userId,
         progress,
       );
     });
@@ -234,11 +306,16 @@ describe('UserChapterController', () => {
       );
 
       await expect(
-        userChapterService.updateUserChapter(progress.id, progress),
+        userChapterService.updateUserChapter(
+          progress.id,
+          progress.userId,
+          progress,
+        ),
       ).rejects.toThrow(InternalServerErrorException);
 
       expect(userChapterService.updateUserChapter).toHaveBeenCalledWith(
         progress.id,
+        progress.userId,
         progress,
       );
     });

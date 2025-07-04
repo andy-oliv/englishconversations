@@ -1,4 +1,4 @@
-import { IsIn, IsOptional, IsString, IsUrl } from 'class-validator';
+import { IsDate, IsIn, IsOptional, IsString, IsUrl } from 'class-validator';
 import { CEFRLevels, UserRoles } from '../../../generated/prisma';
 import validationMessages_EN from '../../helper/messages/validationMessages.en';
 import { ApiProperty } from '@nestjs/swagger';
@@ -27,6 +27,18 @@ export default class UpdateUserDTO {
     message: validationMessages_EN.user.updateUserDTO.bio.isString,
   })
   bio?: string;
+
+  @ApiProperty({
+    title: 'Birthdate',
+    required: false,
+    type: 'string',
+    example: '1991-07-10',
+  })
+  @IsOptional()
+  @IsDate({
+    message: validationMessages_EN.user.updateUserDTO.birthdate.isDate,
+  })
+  birthdate: Date;
 
   @ApiProperty({
     title: 'City',

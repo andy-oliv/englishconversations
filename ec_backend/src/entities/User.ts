@@ -4,6 +4,7 @@ export default interface User {
   id?: string;
   name: string;
   bio?: string;
+  birthdate: Date;
   city?: string;
   state?: string;
   country?: string;

@@ -10,10 +10,12 @@ import { UserUnitController } from './user-unit.controller';
 import { UserUnitService } from './user-unit.service';
 import generateMockUserUnit from '../helper/mocks/generateMockUserUnit';
 import UserUnit from '../entities/UserUnit';
+import { Logger } from 'nestjs-pino';
 
 describe('userUnitController', () => {
   let userUnitController: UserUnitController;
   let userUnitService: UserUnitService;
+  let logger: Logger;
   let progress: UserUnit;
   let progresses: UserUnit[];
 
@@ -32,11 +34,19 @@ describe('userUnitController', () => {
             deleteUserUnit: jest.fn(),
           },
         },
+        {
+          provide: Logger,
+          useValue: {
+            log: jest.fn(),
+            error: jest.fn(),
+          },
+        },
       ],
     }).compile();
 
     userUnitController = module.get<UserUnitController>(UserUnitController);
     userUnitService = module.get<UserUnitService>(UserUnitService);
+    logger = module.get<Logger>(Logger);
     progress = generateMockUserUnit();
     progresses = [generateMockUserUnit(), generateMockUserUnit()];
   });
@@ -188,11 +198,9 @@ describe('userUnitController', () => {
         data: progresses,
       });
 
-      const result: Return = await userUnitController.fetchUserUnitByQuery({
-        userId: progress.userId,
-        unitId: progress.unitId,
-        status: progress.status,
-      });
+      const result: Return = await userUnitController.fetchUserUnitByQuery(
+        progress.userId,
+      );
 
       expect(result).toMatchObject({
         message: httpMessages_EN.userUnit.fetchUserUnitsByQuery.status_200,
@@ -200,8 +208,6 @@ describe('userUnitController', () => {
       });
       expect(userUnitService.fetchUserUnitsByQuery).toHaveBeenCalledWith(
         progress.userId,
-        progress.unitId,
-        progress.status,
       );
     });
 
@@ -213,17 +219,11 @@ describe('userUnitController', () => {
       );
 
       await expect(
-        userUnitController.fetchUserUnitByQuery({
-          userId: progress.userId,
-          unitId: progress.unitId,
-          status: progress.status,
-        }),
+        userUnitController.fetchUserUnitByQuery(progress.userId),
       ).rejects.toThrow(NotFoundException);
 
       expect(userUnitService.fetchUserUnitsByQuery).toHaveBeenCalledWith(
         progress.userId,
-        progress.unitId,
-        progress.status,
       );
     });
 
@@ -233,17 +233,11 @@ describe('userUnitController', () => {
       );
 
       await expect(
-        userUnitController.fetchUserUnitByQuery({
-          userId: progress.userId,
-          unitId: progress.unitId,
-          status: progress.status,
-        }),
+        userUnitController.fetchUserUnitByQuery(progress.userId),
       ).rejects.toThrow(InternalServerErrorException);
 
       expect(userUnitService.fetchUserUnitsByQuery).toHaveBeenCalledWith(
         progress.userId,
-        progress.unitId,
-        progress.status,
       );
     });
   });
@@ -257,6 +251,7 @@ describe('userUnitController', () => {
 
       const result: Return = await userUnitController.updateUserUnit(
         progress.id,
+        progress.userId,
         progress,
       );
 
@@ -266,6 +261,7 @@ describe('userUnitController', () => {
       });
       expect(userUnitService.updateUserUnit).toHaveBeenCalledWith(
         progress.id,
+        progress.userId,
         progress,
       );
     });
@@ -278,11 +274,12 @@ describe('userUnitController', () => {
       );
 
       await expect(
-        userUnitService.updateUserUnit(progress.id, progress),
+        userUnitService.updateUserUnit(progress.id, progress.userId, progress),
       ).rejects.toThrow(NotFoundException);
 
       expect(userUnitService.updateUserUnit).toHaveBeenCalledWith(
         progress.id,
+        progress.userId,
         progress,
       );
     });
@@ -293,11 +290,12 @@ describe('userUnitController', () => {
       );
 
       await expect(
-        userUnitService.updateUserUnit(progress.id, progress),
+        userUnitService.updateUserUnit(progress.id, progress.userId, progress),
       ).rejects.toThrow(InternalServerErrorException);
 
       expect(userUnitService.updateUserUnit).toHaveBeenCalledWith(
         progress.id,
+        progress.userId,
         progress,
       );
     });

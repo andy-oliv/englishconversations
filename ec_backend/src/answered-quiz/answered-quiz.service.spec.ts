@@ -3,7 +3,6 @@ import { PrismaService } from '../prisma/prisma.service';
 import { Logger } from 'nestjs-pino';
 import Return from '../common/types/Return';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
-import { StudentService } from '../student/student.service';
 import { QuizService } from '../quiz/quiz.service';
 import { faker } from '@faker-js/faker/.';
 import {
@@ -13,6 +12,7 @@ import {
 import { AnsweredQuizService } from './answered-quiz.service';
 import generateMockAnsweredQuiz from '../helper/mocks/generateMocAnsweredQuiz';
 import AnsweredQuiz from '../entities/AnsweredQuiz';
+import { UserService } from '../user/user.service';
 
 describe('answeredQuizService', () => {
   let answeredQuizService: AnsweredQuizService;
@@ -29,9 +29,9 @@ describe('answeredQuizService', () => {
       providers: [
         AnsweredQuizService,
         {
-          provide: StudentService,
+          provide: UserService,
           useValue: {
-            throwIfNotStudent: jest.fn(),
+            throwIfNotUser: jest.fn(),
           },
         },
         {
@@ -102,12 +102,12 @@ describe('answeredQuizService', () => {
       });
       expect(answeredQuizService.answerValidation).toHaveBeenCalledWith(
         answer.quizId,
-        answer.studentId,
+        answer.userId,
       );
       expect(prismaService.answeredQuiz.create).toHaveBeenCalledWith({
         data: {
           quizId: answer.quizId,
-          studentId: answer.studentId,
+          userId: answer.userId,
           score: answer.score,
           feedback: answer.feedback,
           elapsedTime: answer.elapsedTime,
@@ -129,7 +129,7 @@ describe('answeredQuizService', () => {
 
       expect(answeredQuizService.answerValidation).toHaveBeenCalledWith(
         answer.quizId,
-        answer.studentId,
+        answer.userId,
       );
     });
 
@@ -147,12 +147,12 @@ describe('answeredQuizService', () => {
 
       expect(answeredQuizService.answerValidation).toHaveBeenCalledWith(
         answer.quizId,
-        answer.studentId,
+        answer.userId,
       );
       expect(prismaService.answeredQuiz.create).toHaveBeenCalledWith({
         data: {
           quizId: answer.quizId,
-          studentId: answer.studentId,
+          userId: answer.userId,
           score: answer.score,
           feedback: answer.feedback,
           elapsedTime: answer.elapsedTime,
@@ -223,7 +223,7 @@ describe('answeredQuizService', () => {
           id: answer.id,
         },
         include: {
-          student: {
+          user: {
             select: {
               id: true,
               name: true,
@@ -269,7 +269,7 @@ describe('answeredQuizService', () => {
           id: answer.id,
         },
         include: {
-          student: {
+          user: {
             select: {
               id: true,
               name: true,
@@ -299,27 +299,26 @@ describe('answeredQuizService', () => {
     });
   });
 
-  describe('fetchAnswersByQuery', () => {
+  describe('fetchAnswersByUser', () => {
     it('should fetch answers', async () => {
       (prismaService.answeredQuiz.findMany as jest.Mock).mockResolvedValue(
         answers,
       );
 
-      const result: Return = await answeredQuizService.fetchAnswersByQuery(
-        answer.quizId,
-        answer.studentId,
+      const result: Return = await answeredQuizService.fetchAnswersByUser(
+        answer.userId,
       );
 
       expect(result).toMatchObject({
-        message: httpMessages_EN.answeredQuiz.fetchAnswersByQuery.status_200,
+        message: httpMessages_EN.answeredQuiz.fetchAnswersByUser.status_200,
         data: answers,
       });
       expect(prismaService.answeredQuiz.findMany).toHaveBeenCalledWith({
         where: {
-          AND: [{ quizId: answer.quizId }, { studentId: answer.studentId }],
+          userId: answer.userId,
         },
         include: {
-          student: {
+          user: {
             select: {
               id: true,
               name: true,
@@ -335,18 +334,15 @@ describe('answeredQuizService', () => {
       );
 
       await expect(
-        answeredQuizService.fetchAnswersByQuery(
-          answer.quizId,
-          answer.studentId,
-        ),
+        answeredQuizService.fetchAnswersByUser(answer.userId),
       ).rejects.toBeInstanceOf(NotFoundException);
 
       expect(prismaService.answeredQuiz.findMany).toHaveBeenCalledWith({
         where: {
-          AND: [{ quizId: answer.quizId }, { studentId: answer.studentId }],
+          userId: answer.userId,
         },
         include: {
-          student: {
+          user: {
             select: {
               id: true,
               name: true,
@@ -362,20 +358,17 @@ describe('answeredQuizService', () => {
       );
 
       await expect(
-        answeredQuizService.fetchAnswersByQuery(
-          answer.quizId,
-          answer.studentId,
-        ),
+        answeredQuizService.fetchAnswersByUser(answer.userId),
       ).rejects.toThrow(
         new InternalServerErrorException(httpMessages_EN.general.status_500),
       );
 
       expect(prismaService.answeredQuiz.findMany).toHaveBeenCalledWith({
         where: {
-          AND: [{ quizId: answer.quizId }, { studentId: answer.studentId }],
+          userId: answer.userId,
         },
         include: {
-          student: {
+          user: {
             select: {
               id: true,
               name: true,

@@ -154,15 +154,11 @@ export class UserUnitService {
     }
   }
 
-  async fetchUserUnitsByQuery(
-    userId?: string,
-    unitId?: number,
-    status?: Status,
-  ): Promise<Return> {
+  async fetchUserUnitsByQuery(userId?: string): Promise<Return> {
     try {
       const userUnits: UserUnit[] = await this.prismaService.userUnit.findMany({
         where: {
-          OR: [{ userId }, { unitId }, { status }],
+          userId,
         },
       });
 
@@ -191,12 +187,17 @@ export class UserUnitService {
     }
   }
 
-  async updateUserUnit(id: string, data: UpdateUserUnitDTO): Promise<Return> {
+  async updateUserUnit(
+    id: string,
+    userId: string,
+    data: UpdateUserUnitDTO,
+  ): Promise<Return> {
     try {
       const updatedUserUnit: UserUnit =
         await this.prismaService.userUnit.update({
           where: {
             id,
+            userId,
           },
           data,
         });

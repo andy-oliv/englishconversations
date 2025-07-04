@@ -5,8 +5,8 @@ export default function generateMockAnsweredExercise(): AnsweredExercise {
   const answer: AnsweredExercise = {
     id: faker.string.uuid(),
     exerciseId: faker.number.int(),
-    studentId: faker.string.uuid(),
-    quizId: faker.string.uuid(),
+    userId: faker.string.uuid(),
+    answeredQuizId: faker.string.uuid(),
     isRetry: faker.datatype.boolean(),
     selectedAnswers: [faker.person.middleName()],
     textAnswer: faker.book.title(),

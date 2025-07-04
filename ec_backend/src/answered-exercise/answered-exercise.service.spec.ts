@@ -6,8 +6,6 @@ import httpMessages_EN from '../helper/messages/httpMessages.en';
 import { AnsweredExerciseService } from './answered-exercise.service';
 import AnsweredExercise from '../entities/AnsweredExercise';
 import generateMockAnsweredExercise from '../helper/mocks/generateMockAnsweredExercise';
-import { StudentService } from '../student/student.service';
-import { QuizService } from '../quiz/quiz.service';
 import Exercise from '../entities/Exercise';
 import generateMockExercise from '../helper/mocks/generateMockExercise';
 import { ExerciseService } from '../exercise/exercise.service';
@@ -16,11 +14,13 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { AnsweredQuizService } from '../answered-quiz/answered-quiz.service';
+import { UserService } from '../user/user.service';
 
 describe('AnsweredExerciseService', () => {
   let answeredExerciseService: AnsweredExerciseService;
-  let studentService: StudentService;
-  let quizService: QuizService;
+  let answeredQuizService: AnsweredQuizService;
+  let userService: UserService;
   let exerciseService: ExerciseService;
   let prismaService: PrismaService;
   let logger: Logger;
@@ -35,13 +35,13 @@ describe('AnsweredExerciseService', () => {
       providers: [
         AnsweredExerciseService,
         {
-          provide: StudentService,
+          provide: UserService,
           useValue: {
-            throwIfNotStudent: jest.fn(),
+            throwIfNotUser: jest.fn(),
           },
         },
         {
-          provide: QuizService,
+          provide: AnsweredQuizService,
           useValue: {
             throwIfNotQuiz: jest.fn(),
           },
@@ -79,8 +79,8 @@ describe('AnsweredExerciseService', () => {
     answeredExerciseService = module.get<AnsweredExerciseService>(
       AnsweredExerciseService,
     );
-    studentService = module.get<StudentService>(StudentService);
-    quizService = module.get<QuizService>(QuizService);
+    userService = module.get<UserService>(UserService);
+    answeredQuizService = module.get<AnsweredQuizService>(AnsweredQuizService);
     exerciseService = module.get<ExerciseService>(ExerciseService);
     prismaService = module.get<PrismaService>(PrismaService);
     logger = module.get<Logger>(Logger);
@@ -121,15 +121,15 @@ describe('AnsweredExerciseService', () => {
         data: answer,
       });
       expect(answeredExerciseService.validateAnswer).toHaveBeenCalledWith(
-        answer.studentId,
-        answer.quizId,
+        answer.userId,
+        answer.answeredQuizId,
         answer.exerciseId,
       );
       expect(prismaService.answeredExercise.create).toHaveBeenCalledWith({
         data: {
           exerciseId: answer.exerciseId,
-          studentId: answer.studentId,
-          quizId: answer.quizId,
+          userId: answer.userId,
+          answeredQuizId: answer.answeredQuizId,
           isRetry: answerValidation.alreadyAnswered,
           selectedAnswers: answer.selectedAnswers,
           textAnswer: answer.textAnswer,
@@ -153,8 +153,8 @@ describe('AnsweredExerciseService', () => {
       );
 
       expect(answeredExerciseService.validateAnswer).toHaveBeenCalledWith(
-        answer.studentId,
-        answer.quizId,
+        answer.userId,
+        answer.answeredQuizId,
         answer.exerciseId,
       );
     });
@@ -172,15 +172,15 @@ describe('AnsweredExerciseService', () => {
       );
 
       expect(answeredExerciseService.validateAnswer).toHaveBeenCalledWith(
-        answer.studentId,
-        answer.quizId,
+        answer.userId,
+        answer.answeredQuizId,
         answer.exerciseId,
       );
       expect(prismaService.answeredExercise.create).toHaveBeenCalledWith({
         data: {
           exerciseId: answer.exerciseId,
-          studentId: answer.studentId,
-          quizId: answer.quizId,
+          userId: answer.userId,
+          answeredQuizId: answer.answeredQuizId,
           isRetry: answerValidation.alreadyAnswered,
           selectedAnswers: answer.selectedAnswers,
           textAnswer: answer.textAnswer,
@@ -256,7 +256,7 @@ describe('AnsweredExerciseService', () => {
           id: answer.id,
         },
         include: {
-          student: {
+          user: {
             select: {
               id: true,
               name: true,
@@ -292,7 +292,7 @@ describe('AnsweredExerciseService', () => {
           id: answer.id,
         },
         include: {
-          student: {
+          user: {
             select: {
               id: true,
               name: true,
@@ -317,9 +317,9 @@ describe('AnsweredExerciseService', () => {
       );
 
       const result: Return = await answeredExerciseService.fetchAnswerByQuery(
-        answer.studentId,
+        answer.userId,
         answer.exerciseId,
-        answer.quizId,
+        answer.answeredQuizId,
       );
 
       expect(result).toMatchObject({
@@ -328,10 +328,10 @@ describe('AnsweredExerciseService', () => {
       });
       expect(prismaService.answeredExercise.findMany).toHaveBeenCalledWith({
         where: {
-          AND: [
-            { studentId: answer.studentId },
+          OR: [
+            { userId: answer.userId },
             { exerciseId: answer.exerciseId },
-            { quizId: answer.quizId },
+            { answeredQuizId: answer.answeredQuizId },
           ],
         },
       });
@@ -344,9 +344,9 @@ describe('AnsweredExerciseService', () => {
 
       await expect(
         answeredExerciseService.fetchAnswerByQuery(
-          answer.studentId,
+          answer.userId,
           answer.exerciseId,
-          answer.quizId,
+          answer.answeredQuizId,
         ),
       ).rejects.toThrow(
         new NotFoundException(
@@ -356,10 +356,10 @@ describe('AnsweredExerciseService', () => {
 
       expect(prismaService.answeredExercise.findMany).toHaveBeenCalledWith({
         where: {
-          AND: [
-            { studentId: answer.studentId },
+          OR: [
+            { userId: answer.userId },
             { exerciseId: answer.exerciseId },
-            { quizId: answer.quizId },
+            { answeredQuizId: answer.answeredQuizId },
           ],
         },
       });
@@ -372,9 +372,9 @@ describe('AnsweredExerciseService', () => {
 
       await expect(
         answeredExerciseService.fetchAnswerByQuery(
-          answer.studentId,
+          answer.userId,
           answer.exerciseId,
-          answer.quizId,
+          answer.answeredQuizId,
         ),
       ).rejects.toThrow(
         new InternalServerErrorException(httpMessages_EN.general.status_500),
@@ -382,10 +382,10 @@ describe('AnsweredExerciseService', () => {
 
       expect(prismaService.answeredExercise.findMany).toHaveBeenCalledWith({
         where: {
-          AND: [
-            { studentId: answer.studentId },
+          OR: [
+            { userId: answer.userId },
             { exerciseId: answer.exerciseId },
-            { quizId: answer.quizId },
+            { answeredQuizId: answer.answeredQuizId },
           ],
         },
       });

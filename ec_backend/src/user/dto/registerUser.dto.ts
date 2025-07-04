@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { CEFRLevels, UserRoles } from '../../../generated/prisma';
 import {
+  IsDate,
   IsEmail,
   IsIn,
   IsNotEmpty,
@@ -37,6 +38,18 @@ export default class RegisterUserDTO {
     message: validationMessages_EN.user.registerUserDTO.bio.isString,
   })
   bio?: string;
+
+  @ApiProperty({
+    title: 'Birthdate',
+    required: false,
+    type: 'string',
+    example: '1991-07-10',
+  })
+  @IsOptional()
+  @IsDate({
+    message: validationMessages_EN.user.registerUserDTO.birthdate.isDate,
+  })
+  birthdate: Date;
 
   @ApiProperty({
     title: 'City',

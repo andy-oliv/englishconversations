@@ -35,6 +35,36 @@ export class UserService {
         status: true,
       },
     },
+    videoProgresses: {
+      select: {
+        id: true,
+        video: {
+          select: {
+            id: true,
+            title: true,
+            description: true,
+          },
+        },
+        progress: true,
+        isFavorite: true,
+        watchedCount: true,
+        watchedDuration: true,
+      },
+    },
+    notifications: {
+      select: {
+        id: true,
+        notification: {
+          select: {
+            type: true,
+            title: true,
+            content: true,
+          },
+        },
+        isRead: true,
+        deliveredAt: true,
+      },
+    },
   };
 
   constructor(
@@ -43,6 +73,30 @@ export class UserService {
     private readonly configService: ConfigService,
     private readonly s3service: S3Service,
   ) {}
+
+  async throwIfNotUser(userId: string): Promise<void> {
+    try {
+      await this.prismaService.user.findUniqueOrThrow({
+        where: {
+          id: userId,
+        },
+      });
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(
+          httpMessages_EN.user.fetchUserById.status_404,
+        );
+      }
+
+      handleInternalErrorException(
+        'userService',
+        'throwIfNotUser',
+        loggerMessages.user.fetchUserById.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
 
   async validateUserAvailability(email: string): Promise<void> {
     try {

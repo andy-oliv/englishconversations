@@ -180,6 +180,7 @@ export class VideoProgressService {
 
   async updateProgress(
     id: number,
+    userId: string,
     data: UpdateVideoProgressDTO,
   ): Promise<Return> {
     try {
@@ -187,6 +188,7 @@ export class VideoProgressService {
         await this.prismaService.videoProgress.update({
           where: {
             id,
+            userId,
           },
           data,
         });

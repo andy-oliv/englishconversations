@@ -280,8 +280,6 @@ describe('userUnitService', () => {
 
       const result: Return = await userUnitService.fetchUserUnitsByQuery(
         progress.userId,
-        progress.unitId,
-        progress.status,
       );
 
       expect(result).toMatchObject({
@@ -290,11 +288,7 @@ describe('userUnitService', () => {
       });
       expect(prismaService.userUnit.findMany).toHaveBeenCalledWith({
         where: {
-          OR: [
-            { userId: progress.userId },
-            { unitId: progress.unitId },
-            { status: progress.status },
-          ],
+          userId: progress.userId,
         },
       });
     });
@@ -305,19 +299,11 @@ describe('userUnitService', () => {
       );
 
       await expect(
-        userUnitService.fetchUserUnitsByQuery(
-          progress.userId,
-          progress.unitId,
-          progress.status,
-        ),
+        userUnitService.fetchUserUnitsByQuery(progress.userId),
       ).rejects.toThrow(NotFoundException);
       expect(prismaService.userUnit.findMany).toHaveBeenCalledWith({
         where: {
-          OR: [
-            { userId: progress.userId },
-            { unitId: progress.unitId },
-            { status: progress.status },
-          ],
+          userId: progress.userId,
         },
       });
     });
@@ -328,19 +314,11 @@ describe('userUnitService', () => {
       );
 
       await expect(
-        userUnitService.fetchUserUnitsByQuery(
-          progress.userId,
-          progress.unitId,
-          progress.status,
-        ),
+        userUnitService.fetchUserUnitsByQuery(progress.userId),
       ).rejects.toThrow(InternalServerErrorException);
       expect(prismaService.userUnit.findMany).toHaveBeenCalledWith({
         where: {
-          OR: [
-            { userId: progress.userId },
-            { unitId: progress.unitId },
-            { status: progress.status },
-          ],
+          userId: progress.userId,
         },
       });
     });
@@ -352,6 +330,7 @@ describe('userUnitService', () => {
 
       const result: Return = await userUnitService.updateUserUnit(
         progress.id,
+        progress.userId,
         progress,
       );
 
@@ -362,6 +341,7 @@ describe('userUnitService', () => {
       expect(prismaService.userUnit.update).toHaveBeenCalledWith({
         where: {
           id: progress.id,
+          userId: progress.userId,
         },
         data: progress,
       });
@@ -373,12 +353,13 @@ describe('userUnitService', () => {
       );
 
       await expect(
-        userUnitService.updateUserUnit(progress.id, progress),
+        userUnitService.updateUserUnit(progress.id, progress.userId, progress),
       ).rejects.toThrow(NotFoundException);
 
       expect(prismaService.userUnit.update).toHaveBeenCalledWith({
         where: {
           id: progress.id,
+          userId: progress.userId,
         },
         data: progress,
       });
@@ -390,12 +371,13 @@ describe('userUnitService', () => {
       );
 
       await expect(
-        userUnitService.updateUserUnit(progress.id, progress),
+        userUnitService.updateUserUnit(progress.id, progress.userId, progress),
       ).rejects.toThrow(InternalServerErrorException);
 
       expect(prismaService.userUnit.update).toHaveBeenCalledWith({
         where: {
           id: progress.id,
+          userId: progress.userId,
         },
         data: progress,
       });

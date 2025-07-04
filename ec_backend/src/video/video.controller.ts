@@ -9,6 +9,7 @@ import {
   Patch,
   Post,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -27,9 +28,11 @@ import { Logger } from 'nestjs-pino';
 import updateFormHandler from '../helper/functions/templates/updateFormHandler';
 import parseJson from '../helper/functions/parseJson';
 import allowedTypes from '../helper/functions/allowedTypes';
+import { RoleGuard } from '../auth/guards/role/role.guard';
 
 @ApiTags('Videos')
 @Controller('api/videos')
+@UseGuards(RoleGuard)
 export class VideoController {
   constructor(
     private readonly videoService: VideoService,

@@ -7,6 +7,7 @@ import handleInternalErrorException from '../helper/functions/handleErrorExcepti
 import httpMessages_EN from '../helper/messages/httpMessages.en';
 import loggerMessages from '../helper/messages/loggerMessages';
 import generateUserNotificationDTO from './dto/generateUserNotification.dto';
+import UpdateUserNotificationDTO from './dto/updateuUserNotification.dto';
 
 @Injectable()
 export class UserNotificationService {
@@ -90,6 +91,43 @@ export class UserNotificationService {
         'userNotificationService',
         'fetchUserNotifications',
         loggerMessages.userNotification.fetchUserNotifications.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  async updateUserNotification(
+    userId: string,
+    id: string,
+    data: UpdateUserNotificationDTO,
+  ): Promise<Return> {
+    try {
+      const updatedNotification: UserNotification =
+        await this.prismaService.userNotification.update({
+          where: {
+            id,
+            userId,
+          },
+          data,
+        });
+
+      return {
+        message:
+          httpMessages_EN.userNotification.updateUserNotification.status_200,
+        data: updatedNotification,
+      };
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(
+          httpMessages_EN.userNotification.updateUserNotification.status_404,
+        );
+      }
+
+      handleInternalErrorException(
+        'userNotificationService',
+        'updateUserNotification',
+        loggerMessages.userNotification.updateUserNotification.status_500,
         this.logger,
         error,
       );

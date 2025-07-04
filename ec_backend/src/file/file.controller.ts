@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -22,7 +21,6 @@ import { RoleGuard } from '../auth/guards/role/role.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerMemoryStorage } from '../config/upload.config';
 import { S3Service } from '../s3/s3.service';
-import File from '../entities/File';
 import { Logger } from 'nestjs-pino';
 import FormDataHandler from '../helper/functions/formDataHandler';
 import FormHandlerReturn from '../common/types/FormHandlerReturn';

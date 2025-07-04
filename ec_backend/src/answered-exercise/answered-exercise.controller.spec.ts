@@ -9,13 +9,15 @@ import { AnsweredExerciseController } from './answered-exercise.controller';
 import { AnsweredExerciseService } from './answered-exercise.service';
 import AnsweredExercise from '../entities/AnsweredExercise';
 import generateMockAnsweredExercise from '../helper/mocks/generateMockAnsweredExercise';
+import { Logger } from 'nestjs-pino';
 
 describe('answeredExercise', () => {
   let answeredExerciseController: AnsweredExerciseController;
   let answeredExerciseService: AnsweredExerciseService;
+  let logger: Logger;
   let answer: AnsweredExercise;
   let answerList: AnsweredExercise[];
-  let query: { studentId: string; exerciseId: number; quizId: string };
+  let query: { userId: string; exerciseId: number; answeredQuizId: string };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -30,6 +32,13 @@ describe('answeredExercise', () => {
             fetchAnswerByQuery: jest.fn(),
             fetchAnswerById: jest.fn(),
             deleteAnswer: jest.fn(),
+          },
+        },
+        {
+          provide: Logger,
+          useValue: {
+            log: jest.fn(),
+            error: jest.fn(),
           },
         },
       ],
@@ -48,9 +57,9 @@ describe('answeredExercise', () => {
       generateMockAnsweredExercise(),
     ];
     query = {
-      studentId: answer.studentId,
+      userId: answer.userId,
       exerciseId: answer.exerciseId,
-      quizId: answer.quizId,
+      answeredQuizId: answer.answeredQuizId,
     };
   });
 
@@ -107,9 +116,9 @@ describe('answeredExercise', () => {
       });
 
       expect(answeredExerciseService.fetchAnswerByQuery).toHaveBeenCalledWith(
-        query.studentId,
+        query.userId,
         query.exerciseId,
-        query.quizId,
+        query.answeredQuizId,
       );
     });
 
@@ -131,9 +140,9 @@ describe('answeredExercise', () => {
       );
 
       expect(answeredExerciseService.fetchAnswerByQuery).toHaveBeenCalledWith(
-        query.studentId,
+        query.userId,
         query.exerciseId,
-        query.quizId,
+        query.answeredQuizId,
       );
     });
 
@@ -151,9 +160,9 @@ describe('answeredExercise', () => {
       );
 
       expect(answeredExerciseService.fetchAnswerByQuery).toHaveBeenCalledWith(
-        query.studentId,
+        query.userId,
         query.exerciseId,
-        query.quizId,
+        query.answeredQuizId,
       );
     });
   });

@@ -347,6 +347,7 @@ describe('VideoProgressService', () => {
 
       const result: Return = await videoProgressService.updateProgress(
         videoProgress.id,
+        videoProgress.userId,
         videoProgress,
       );
 
@@ -357,6 +358,7 @@ describe('VideoProgressService', () => {
       expect(prismaService.videoProgress.update).toHaveBeenCalledWith({
         where: {
           id: videoProgress.id,
+          userId: videoProgress.userId,
         },
         data: videoProgress,
       });
@@ -368,12 +370,17 @@ describe('VideoProgressService', () => {
       );
 
       await expect(
-        videoProgressService.updateProgress(videoProgress.id, videoProgress),
+        videoProgressService.updateProgress(
+          videoProgress.id,
+          videoProgress.userId,
+          videoProgress,
+        ),
       ).rejects.toThrow(NotFoundException);
 
       expect(prismaService.videoProgress.update).toHaveBeenCalledWith({
         where: {
           id: videoProgress.id,
+          userId: videoProgress.userId,
         },
         data: videoProgress,
       });
@@ -385,12 +392,17 @@ describe('VideoProgressService', () => {
       );
 
       await expect(
-        videoProgressService.updateProgress(videoProgress.id, videoProgress),
+        videoProgressService.updateProgress(
+          videoProgress.id,
+          videoProgress.userId,
+          videoProgress,
+        ),
       ).rejects.toThrow(InternalServerErrorException);
 
       expect(prismaService.videoProgress.update).toHaveBeenCalledWith({
         where: {
           id: videoProgress.id,
+          userId: videoProgress.userId,
         },
         data: videoProgress,
       });

@@ -8,6 +8,8 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { VideoProgressService } from './video-progress.service';
@@ -16,6 +18,8 @@ import GenerateVideoProgressDTO from './dto/generateVideoProgress';
 import UpdateVideoProgressDTO from './dto/updateVideoProgress';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
 import validationMessages_EN from '../helper/messages/validationMessages.en';
+import { SelfGuard } from '../auth/guards/self/self.guard';
+import { RoleGuard } from '../auth/guards/role/role.guard';
 
 @ApiTags('VideoProgress')
 @Controller('api/videos/progress')
@@ -23,6 +27,7 @@ export class VideoProgressController {
   constructor(private readonly videoProgressService: VideoProgressService) {}
 
   @Post()
+  @UseGuards(SelfGuard)
   @ApiResponse({
     status: 201,
     description: 'Success',
@@ -55,6 +60,7 @@ export class VideoProgressController {
   }
 
   @Get('user/:userId')
+  @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -84,6 +90,7 @@ export class VideoProgressController {
   }
 
   @Get('all')
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -104,6 +111,7 @@ export class VideoProgressController {
   }
 
   @Get(':id')
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -130,7 +138,8 @@ export class VideoProgressController {
     return this.videoProgressService.fetchVideoProgressById(id);
   }
 
-  @Patch(':id')
+  @Patch('update')
+  @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -152,13 +161,15 @@ export class VideoProgressController {
     example: httpMessages_EN.general.status_500,
   })
   async updateProgress(
-    @Param('id', new ParseIntPipe()) id: number,
+    @Query('id', new ParseIntPipe()) id: number,
+    @Query('userId', new ParseUUIDPipe()) userId: string,
     @Body() data: UpdateVideoProgressDTO,
   ): Promise<Return> {
-    return this.videoProgressService.updateProgress(id, data);
+    return this.videoProgressService.updateProgress(id, userId, data);
   }
 
   @Delete(':id')
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',

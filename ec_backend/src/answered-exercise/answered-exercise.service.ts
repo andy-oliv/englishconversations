@@ -6,53 +6,50 @@ import AnsweredExercise from '../entities/AnsweredExercise';
 import handleInternalErrorException from '../helper/functions/handleErrorException';
 import loggerMessages from '../helper/messages/loggerMessages';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
-import { StudentService } from '../student/student.service';
 import { ExerciseService } from '../exercise/exercise.service';
-import { QuizService } from '../quiz/quiz.service';
 import Exercise from '../entities/Exercise';
 import { isEqual } from 'lodash';
 import generateExceptionMessage from '../helper/functions/generateExceptionMessage';
+import { UserService } from '../user/user.service';
+import { AnsweredQuizService } from '../answered-quiz/answered-quiz.service';
 
 @Injectable()
 export class AnsweredExerciseService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly logger: Logger,
-    private readonly studentService: StudentService,
+    private readonly userService: UserService,
     private readonly exerciseService: ExerciseService,
-    private readonly quizService: QuizService,
+    private readonly answeredQuizService: AnsweredQuizService,
   ) {}
 
   async validateAnswer(
-    studentId: string,
-    quizId: string,
+    userId: string,
+    answeredQuizId: string,
     exerciseId: number,
   ): Promise<{ exercise: Exercise; alreadyAnswered: boolean }> {
-    await this.studentService.throwIfNotStudent(studentId);
+    await this.userService.throwIfNotUser(userId);
 
-    if (quizId) {
-      await this.quizService.throwIfNotQuiz(quizId);
+    if (answeredQuizId) {
+      await this.answeredQuizService.throwIfNotAnsweredQuiz(answeredQuizId);
     }
 
     const exercise: Exercise =
       await this.exerciseService.fetchExercise(exerciseId);
     const alreadyAnswered: boolean = await this.checkIfAnswered(
       exerciseId,
-      studentId,
+      userId,
     );
 
     return { exercise, alreadyAnswered };
   }
 
-  async checkIfAnswered(
-    exerciseId: number,
-    studentId: string,
-  ): Promise<boolean> {
+  async checkIfAnswered(exerciseId: number, userId: string): Promise<boolean> {
     try {
       const answerExists: AnsweredExercise =
         await this.prismaService.answeredExercise.findFirst({
           where: {
-            AND: [{ exerciseId }, { studentId }],
+            AND: [{ exerciseId }, { userId }],
           },
         });
 
@@ -73,15 +70,19 @@ export class AnsweredExerciseService {
 
   async saveAnswer(data: AnsweredExercise): Promise<Return> {
     const answerValidation: { exercise: Exercise; alreadyAnswered: boolean } =
-      await this.validateAnswer(data.studentId, data.quizId, data.exerciseId);
+      await this.validateAnswer(
+        data.userId,
+        data.answeredQuizId,
+        data.exerciseId,
+      );
 
     try {
       const exerciseAnswer: AnsweredExercise =
         await this.prismaService.answeredExercise.create({
           data: {
             exerciseId: data.exerciseId,
-            studentId: data.studentId,
-            quizId: data.quizId,
+            userId: data.userId,
+            answeredQuizId: data.answeredQuizId,
             isRetry: answerValidation.alreadyAnswered,
             selectedAnswers: data.selectedAnswers,
             textAnswer: data.textAnswer,
@@ -148,7 +149,7 @@ export class AnsweredExerciseService {
             id,
           },
           include: {
-            student: {
+            user: {
               select: {
                 id: true,
                 name: true,
@@ -184,27 +185,23 @@ export class AnsweredExerciseService {
     }
   }
 
-  async fetchAnswerByQuery(
-    studentId: string,
-    exerciseId: number,
-    quizId: string,
-  ): Promise<Return> {
+  async fetchAnswersByUser(userId: string): Promise<Return> {
     try {
       const answerList: AnsweredExercise[] =
         await this.prismaService.answeredExercise.findMany({
           where: {
-            AND: [{ studentId }, { exerciseId }, { quizId }],
+            userId,
           },
         });
 
       if (answerList.length === 0) {
         throw new NotFoundException(
-          httpMessages_EN.answeredExercise.fetchAnswerByQuery.status_404,
+          httpMessages_EN.answeredExercise.fetchAnswersByUser.status_404,
         );
       }
 
       return {
-        message: httpMessages_EN.answeredExercise.fetchAnswerByQuery.status_200,
+        message: httpMessages_EN.answeredExercise.fetchAnswersByUser.status_200,
         data: answerList,
       };
     } catch (error) {
@@ -214,8 +211,8 @@ export class AnsweredExerciseService {
 
       handleInternalErrorException(
         'answeredExerciseService',
-        'fetchAnswerByQuery',
-        loggerMessages.answeredExercise.fetchAnswerByQuery.status_500,
+        'fetchAnswersByUser',
+        loggerMessages.answeredExercise.fetchAnswersByUser.status_500,
         this.logger,
         error,
       );

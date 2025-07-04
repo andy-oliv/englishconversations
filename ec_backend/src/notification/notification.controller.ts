@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { NotificationService } from './notification.service';
 import Return from '../common/types/Return';
@@ -15,9 +16,11 @@ import httpMessages_EN from '../helper/messages/httpMessages.en';
 import GenerateNotificationDTO from './dto/generateNotification.dto';
 import validationMessages_EN from '../helper/messages/validationMessages.en';
 import UpdateNotificationDTO from './dto/updateNotification.dto';
+import { RoleGuard } from '../auth/guards/role/role.guard';
 
 @ApiTags('Notifications')
 @Controller('api/notifications')
+@UseGuards(RoleGuard)
 export class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}
 

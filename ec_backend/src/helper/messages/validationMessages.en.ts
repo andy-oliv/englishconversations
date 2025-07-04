@@ -5,12 +5,12 @@ const validationMessages_EN = {
         isNotEmpty: 'The exerciseId field must not be empty.',
         isInt: 'The exerciseId must be an INT.',
       },
-      studentId: {
-        isNotEmpty: 'The studentId field must not be empty.',
-        isUUID: 'The studentId field is not a valid UUID.',
+      userId: {
+        isNotEmpty: 'The userId field must not be empty.',
+        isUUID: 'The userId field is not a valid UUID.',
       },
-      quizId: {
-        isUUID: 'The quizId is not a valid UUID.',
+      answeredQuizId: {
+        isUUID: 'The answeredQuizId is not a valid UUID.',
       },
       isRetry: {
         isBoolean: 'The isRetry field must be a boolean.',
@@ -53,9 +53,9 @@ const validationMessages_EN = {
       isNotEmpty: 'The quizId field must not be empty.',
       isUUID: 'The quizId field must be a valid UUID.',
     },
-    studentId: {
-      isNotEmpty: 'The studentId field must not be empty.',
-      isUUID: 'The studentId field must be a valid UUID.',
+    userId: {
+      isNotEmpty: 'The userId field must not be empty.',
+      isUUID: 'The userId field must be a valid UUID.',
     },
     score: {
       isNotEmpty: 'The score field must not be empty.',
@@ -356,6 +356,9 @@ const validationMessages_EN = {
       bio: {
         isString: 'The bio field must be a string.',
       },
+      birthdate: {
+        isDate: 'The birthdate field must be a date.',
+      },
       city: {
         isString: 'The city field must be a string.',
       },
@@ -385,6 +388,9 @@ const validationMessages_EN = {
       },
       bio: {
         isString: 'The bio field must be a string.',
+      },
+      birthdate: {
+        isDate: 'The birthdate field must be a date.',
       },
       city: {
         isString: 'The city field must be a string.',
@@ -431,6 +437,18 @@ const validationMessages_EN = {
     notificationId: {
       isNotEmpty: 'The notificationId is must not be empty.',
       isInt: 'The notificationId must be a number.',
+    },
+    isRead: {
+      isBoolean: 'The isRead field must be a boolean.',
+    },
+    readAt: {
+      isDate: 'The readAt field must be a date.',
+    },
+    deliveredViaEmail: {
+      isBoolean: 'The deliveredViaEmail field must be a boolean.',
+    },
+    deliveredViaApp: {
+      isBoolean: 'The deliveredViaApp field must be a boolean.',
     },
   },
   userUnit: {

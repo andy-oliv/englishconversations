@@ -23,18 +23,18 @@ export default class SaveQuizAnswerDTO {
   quizId: string;
 
   @ApiProperty({
-    title: 'Student ID',
+    title: 'UserID',
     required: true,
     type: 'string',
     example: 'f0aaa9ad-ee8e-42f0-a823-c90f2d255f5a',
   })
   @IsNotEmpty({
-    message: validationMessages_EN.answeredQuiz.studentId.isNotEmpty,
+    message: validationMessages_EN.answeredQuiz.userId.isNotEmpty,
   })
   @IsUUID('all', {
-    message: validationMessages_EN.answeredQuiz.studentId.isUUID,
+    message: validationMessages_EN.answeredQuiz.userId.isUUID,
   })
-  studentId: string;
+  userId: string;
 
   @ApiProperty({
     title: 'Score',

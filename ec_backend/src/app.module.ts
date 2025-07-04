@@ -28,10 +28,17 @@ import { S3Module } from './s3/s3.module';
 import { EmailModule } from './email/email.module';
 import { EmailValidationGuard } from './auth/guards/email-validation/email-validation.guard';
 import { VideoProgressModule } from './video-progress/video-progress.module';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 60,
+      },
+    ]),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'src', 'assets', 'images'),
     }),
@@ -87,6 +94,10 @@ import { VideoProgressModule } from './video-progress/video-progress.module';
   ],
   controllers: [AppController],
   providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
     {
       provide: APP_GUARD,
       useClass: AuthGuard,

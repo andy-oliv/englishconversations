@@ -33,6 +33,7 @@ import { S3Service } from '../s3/s3.service';
 import { Logger } from 'nestjs-pino';
 import parseJson from '../helper/functions/parseJson';
 import allowedTypes from '../helper/functions/allowedTypes';
+import { Throttle } from '@nestjs/throttler';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -44,6 +45,7 @@ export class AuthController {
     private readonly logger: Logger,
   ) {}
 
+  @Throttle({ default: { ttl: 60000, limit: 5 } })
   @Public()
   @Post('login')
   @ApiResponse({
@@ -89,6 +91,7 @@ export class AuthController {
     return { message: httpMessages_EN.auth.login.status_200 };
   }
 
+  @Throttle({ default: { ttl: 60000, limit: 5 } })
   @Public()
   @Post('register')
   @ApiResponse({

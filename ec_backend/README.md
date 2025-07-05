@@ -1,85 +1,93 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# English Conversations — Backend API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+**English Conversations** is a backend API built with **NestJS** and **TypeScript**, powering a complete English learning platform. It supports interactive exercises, quizzes, tests, progress tracking, email notifications, and more — all backed by a role-based access system and RESTful architecture.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Tech Stack
 
-## Description
+![NestJS](https://img.shields.io/badge/nestjs-%23E0234E.svg?flat&logo=nestjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?flat&logo=typescript&logoColor=white)
+![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=flat&logo=Prisma&logoColor=white)
+![MySQL](https://img.shields.io/badge/mysql-4479A1.svg?style=flat&logo=mysql&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-black?style=flat&logo=JSON%20web%20tokens)
+![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=flat&logo=swagger&logoColor=white)
+![Jest](https://img.shields.io/badge/-jest-%23C21325?style=flat&logo=jest&logoColor=white)
+![Amazon S3](https://img.shields.io/badge/Amazon%20S3-FF9900?style=flat&logo=amazons3&logoColor=white)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
+## 📁 Project Structure
 
 ```bash
-$ npm install
+src/
+├── answered-exercise/   # exercise answers
+├── answered-quiz/       # quiz answers
+├── assets/              # logo for swagger customization
+├── auth/                # Authentication & Authorization (JWT, RBAC)
+├── chapter/             # Collection of units
+├── common/              # Decorators & common types
+├── config/              # Multer configuration
+├── email/               # Email service
+├── entities/            # SQL entities
+├── exercises/           # Interactive exercises
+├── file/                # Image and PDF files
+├── helper/              # global functions, log and return messages, test mocks
+├── notifications/       # In-app notification system
+├── prisma/              # Prisma module
+├── quiz/                # Quizzes and tests
+├── s3/                  # AWS S3 module
+├── tag/                 # Content tags
+├── unit/                # Collection of content (video, exercises, quizzes)
+├── user/                # User CRUD operations
+├── user-chapter/        # Chapter progress
+├── user-notification/   # User notification relation
+├── user-unit/           # Unit progress
+├── video/               # Video module
+├── video-progress/      # Video progress
+
 ```
 
-## Compile and run the project
+## Installation
 
 ```bash
-# development
-$ npm run start
+# Install dependencies
+npm install
 
-# watch mode
-$ npm run start:dev
+# Generate Prisma client
+npx prisma generate
 
-# production mode
-$ npm run start:prod
+# Run database migrations
+npx prisma migrate dev
+
+# Start the dev server
+npm run start:dev
 ```
 
-## Run tests
+## API Documentation (Swagger)
 
-```bash
-# unit tests
-$ npm run test
+http://localhost:3000/api/docs
 
-# e2e tests
-$ npm run test:e2e
+## Environment Variables
 
-# test coverage
-$ npm run test:cov
+Configure your .env file with the following:
+
+````bash
+DATABASE_URL="mysql://USERNAME:PASSWORD@localhost:3306/DB_NAME?schema=public"
+TEST_DATABASE_URL="mysql://USERNAME:PASSWORD@localhost:3306/DB_NAME?schema=public"
+BETTERSTACK_TOKEN="your token from Better Stack"
+BETTERSTACK_CONNECTION="your connection ID from Better Stack"
+SALT_ROUNDS="10"
+JWT_SECRET="your-secret-key"
+COOKIE_SECRET="your-cookie-secret"
+ACCESS_TOKEN_EXPIRATION="3600s"
+REFRESH_TOKEN_EXPIRATION="7d"
+CONFIRMATION_TOKEN_EXPIRATION="1h"
+JWT_ISSUER="EnglishConversationsAPI"
+RESEND_API_KEY="your Resend.com API key"
+FRONTEND_URL="http://localhost:4000"
+LOGO_URL="S3 public URL"
+USER_PLACEHOLDER="S3 default avatar URL"
+AWS_REGION="your AWS region"
+AWS_ACCESS_KEY="your AWS access key"
+AWS_SECRET_ACCESS_KEY="your AWS secret"
+AWS_BUCKET_NAME="your S3 bucket name"
+PRESIGNED_URL_EXPIRATION="60000"
 ```
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+````

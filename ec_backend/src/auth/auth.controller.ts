@@ -77,14 +77,12 @@ export class AuthController {
 
     response.cookie('ec_refreshToken', tokens.refreshToken, {
       httpOnly: true,
-      secure: true,
       sameSite: 'strict',
       maxAge: refreshCookieExpiration,
     });
 
     response.cookie('ec_accessToken', tokens.accessToken, {
       httpOnly: true,
-      secure: true,
       sameSite: 'strict',
       maxAge: accessCookieExpiration,
     });
@@ -177,14 +175,12 @@ export class AuthController {
 
     response.cookie('ec_refreshToken', tokens.refreshToken, {
       httpOnly: true,
-      secure: true,
       sameSite: 'strict',
       maxAge: refreshCookieExpiration,
     });
 
     response.cookie('ec_accessToken', tokens.accessToken, {
       httpOnly: true,
-      secure: true,
       sameSite: 'strict',
       maxAge: accessCookieExpiration,
     });
@@ -272,5 +268,10 @@ export class AuthController {
     @Body() data: GenerateResetTokenDTO,
   ): Promise<{ message: string }> {
     return this.authService.generateResetToken(data.email);
+  }
+
+  @Get('session')
+  async checkSession(): Promise<{ message: string }> {
+    return { message: 'user is logged' };
   }
 }

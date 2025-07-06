@@ -28,6 +28,8 @@ import generateResetTemplate from '../helper/functions/templates/generateResetEm
 import generateEmailConfirmationTemplate from '../helper/functions/templates/generateEmailConfirmation';
 import { UserRoles } from '../../generated/prisma';
 import generateWelcomeEmail from '../helper/functions/templates/generateWelcomeEmail';
+import Cookies from '../common/types/cookies';
+import getCookies from '../helper/functions/getCookies';
 
 @Injectable()
 export class AuthService {

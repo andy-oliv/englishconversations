@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
-import { MenuComponent } from '../../components/menu/menu.component';
 
 @Component({
   selector: 'app-progress',
-  imports: [MenuComponent],
+  imports: [],
   templateUrl: './progress.component.html',
   styleUrl: './progress.component.scss',
 })

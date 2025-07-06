@@ -1,0 +1,21 @@
+@use "../styles/colors.scss" as colors;
+
+body {
+  display: flex;
+}
+
+.openMenu {
+  width: 14%;
+  height: 100vh;
+}
+
+.closedMenu {
+  width: 4%;
+  height: 100vh;
+}
+
+main {
+  padding: 3em;
+  width: 100%;
+  background-color: colors.$backgroundColor;
+}

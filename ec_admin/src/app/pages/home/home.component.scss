@@ -1,0 +1,11 @@
+@use "../../../styles/colors.scss" as colors;
+@use "../../../styles/fonts.scss" as fonts;
+
+body {
+  display: flex;
+  height: 100vh;
+}
+
+main {
+  background-color: colors.$backgroundColor;
+}

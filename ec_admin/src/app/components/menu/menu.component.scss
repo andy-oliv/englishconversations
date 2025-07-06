@@ -3,11 +3,12 @@
 
 nav {
   background-color: black;
-  width: 14%;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
 
   .imgContainer {
     width: 60%;
@@ -39,21 +40,88 @@ nav {
   }
 }
 
+.menuItem:hover {
+  color: colors.$hover;
+}
+
+.closedSubMenu {
+  padding: 0 0 0 2em;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: all 0.4s ease-in-out;
+}
+
+.openSubMenu {
+  max-height: 500px;
+  opacity: 1;
+  padding: 0 0 0 2em;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  font-family: fonts.$poppins;
+  color: colors.$inactive;
+  cursor: pointer;
+  .svg {
+    width: 1.8em;
+  }
+}
+
+.item:hover {
+  color: colors.$hover;
+}
+
 .active {
   color: colors.$active;
 }
 
-.subMenu {
-  padding: 0 0 0 2em;
-  .item {
-    display: flex;
+.noAnimation {
+  transition: none;
+}
+
+.menuButton {
+  display: flex;
+  position: fixed;
+  bottom: 2em;
+  width: 2em;
+  color: colors.$inactive;
+  cursor: pointer;
+}
+
+.menuButton:hover {
+  color: colors.$hover;
+}
+
+.closedMenu {
+  .wrapper {
     align-items: center;
-    gap: 0.3em;
-    font-family: fonts.$poppins;
-    color: colors.$inactive;
-    cursor: pointer;
+  }
+
+  p {
+    display: none;
+  }
+
+  .closedSubMenu {
+    padding: 0;
+  }
+
+  .openSubMenu {
+    padding: 0;
+  }
+
+  .item {
     .svg {
-      width: 1.8em;
+      width: 1.3em;
     }
   }
+}
+
+//applying width transition animation to the whole component since the width is being modified externally in app.component
+:host {
+  display: block;
+  height: 100vh;
+  transition: width 0.2s ease-in-out;
 }

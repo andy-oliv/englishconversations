@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
-import { MenuComponent } from '../../components/menu/menu.component';
 
 @Component({
   selector: 'app-media',
-  imports: [MenuComponent],
+  imports: [],
   templateUrl: './media.component.html',
   styleUrl: './media.component.scss',
 })

@@ -1,1 +1,12 @@
-<router-outlet></router-outlet>
+@if (currentRoute() === "/login") {
+  <router-outlet />
+} @else {
+  <body>
+    <app-menu
+      [ngClass]="{ openMenu: isMenuOpen(), closedMenu: !isMenuOpen() }"
+    />
+    <main>
+      <router-outlet />
+    </main>
+  </body>
+}

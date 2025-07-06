@@ -10,14 +10,24 @@ import { TestsComponent } from './pages/tests/tests.component';
 import { NotificationsComponent } from './pages/notifications/notifications.component';
 import { SettingsComponent } from './pages/settings/settings.component';
 import { SecurityComponent } from './pages/security/security.component';
+import { LoginComponent } from './pages/login/login.component';
+import { authGuard } from './guards/auth.guard';
+import { loginGuard } from './guards/login.guard';
 
 export const routes: Routes = [
   {
     path: '',
+    canActivate: [authGuard],
     component: HomeComponent,
   },
   {
+    path: 'login',
+    canActivate: [loginGuard],
+    component: LoginComponent,
+  },
+  {
     path: 'content',
+    canActivate: [authGuard],
     component: ContentComponent,
     children: [
       {
@@ -36,26 +46,32 @@ export const routes: Routes = [
   },
   {
     path: 'users',
+    canActivate: [authGuard],
     component: UsersComponent,
   },
   {
     path: 'progress',
+    canActivate: [authGuard],
     component: ProgressComponent,
   },
   {
     path: 'tests',
+    canActivate: [authGuard],
     component: TestsComponent,
   },
   {
     path: 'notifications',
+    canActivate: [authGuard],
     component: NotificationsComponent,
   },
   {
     path: 'settings',
+    canActivate: [authGuard],
     component: SettingsComponent,
   },
   {
     path: 'security',
+    canActivate: [authGuard],
     component: SecurityComponent,
   },
 ];

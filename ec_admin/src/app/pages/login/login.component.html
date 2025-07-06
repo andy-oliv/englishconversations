@@ -1,0 +1,35 @@
+<body>
+  <div class="mainImgWrapper">
+    <img src="/laptop.jpg" />
+  </div>
+  <div class="container">
+    <div class="wrapper">
+      <div class="imgContainer">
+        <div class="imgWrapper">
+          <img src="/logo_black.png" />
+        </div>
+      </div>
+      <form #loginForm="ngForm" (submit)="onSubmit(loginForm)">
+        <div class="inputWrapper">
+          <label for="email">Email</label>
+          <input
+            type="text"
+            name="email"
+            ngModel
+            placeholder="digite o seu email"
+          />
+        </div>
+        <div class="inputWrapper">
+          <label for="email">Senha</label>
+          <input
+            type="text"
+            name="password"
+            ngModel
+            placeholder="digite a sua senha"
+          />
+        </div>
+        <button>Enviar</button>
+      </form>
+    </div>
+  </div>
+</body>

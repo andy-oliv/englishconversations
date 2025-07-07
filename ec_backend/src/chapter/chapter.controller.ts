@@ -29,9 +29,12 @@ import { FileService } from '../file/file.service';
 import updateFormHandler from '../helper/functions/templates/updateFormHandler';
 import parseJson from '../helper/functions/parseJson';
 import allowedTypes from '../helper/functions/allowedTypes';
+import { AuthType } from '../common/decorators/authType.decorator';
+import { UserRoles } from '../../generated/prisma';
 
 @ApiTags('Chapters')
 @Controller('api/chapters')
+@AuthType(UserRoles.ADMIN)
 @UseGuards(RoleGuard)
 export class ChapterController {
   constructor(

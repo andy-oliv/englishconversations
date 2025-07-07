@@ -19,6 +19,8 @@ import validationMessages_EN from '../helper/messages/validationMessages.en';
 import AddFeedbackDTO from './dto/addFeedback.dto';
 import { SelfGuard } from '../auth/guards/self/self.guard';
 import { RoleGuard } from '../auth/guards/role/role.guard';
+import { AuthType } from '../common/decorators/authType.decorator';
+import { UserRoles } from '../../generated/prisma';
 
 @ApiTags('AnsweredQuizzes')
 @Controller('api/answers/q')
@@ -26,6 +28,7 @@ export class AnsweredQuizController {
   constructor(private readonly answerQuizService: AnsweredQuizService) {}
 
   @Post()
+  @AuthType(UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 201,
@@ -47,6 +50,7 @@ export class AnsweredQuizController {
   }
 
   @Get('query')
+  @AuthType(UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,
@@ -75,6 +79,7 @@ export class AnsweredQuizController {
   }
 
   @Get(':id')
+  @AuthType(UserRoles.ADMIN)
   @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
@@ -103,6 +108,7 @@ export class AnsweredQuizController {
   }
 
   @Get()
+  @AuthType(UserRoles.ADMIN)
   @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
@@ -124,6 +130,7 @@ export class AnsweredQuizController {
   }
 
   @Patch(':id')
+  @AuthType(UserRoles.ADMIN)
   @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
@@ -153,6 +160,7 @@ export class AnsweredQuizController {
   }
 
   @Delete(':id')
+  @AuthType(UserRoles.ADMIN)
   @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,

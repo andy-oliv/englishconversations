@@ -16,10 +16,11 @@ import Return from '../common/types/Return';
 import SaveAnswerDTO from './dto/saveAnswer.dto';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
 import validationMessages_EN from '../helper/messages/validationMessages.en';
-import fetchAnswerByQuery from './dto/fetchAnswerByQuery.dto';
 import UpdateFeedbackDTO from './dto/updateAnsweredExercise.dto';
 import { SelfGuard } from '../auth/guards/self/self.guard';
 import { RoleGuard } from '../auth/guards/role/role.guard';
+import { AuthType } from '../common/decorators/authType.decorator';
+import { UserRoles } from '../../generated/prisma';
 
 @ApiTags('AnsweredExercise')
 @Controller('api/answers/e')
@@ -29,6 +30,7 @@ export class AnsweredExerciseController {
   ) {}
 
   @Post()
+  @AuthType(UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 201,
@@ -52,6 +54,7 @@ export class AnsweredExerciseController {
   }
 
   @Get('query')
+  @AuthType(UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,
@@ -75,6 +78,7 @@ export class AnsweredExerciseController {
   }
 
   @Get(':id')
+  @AuthType(UserRoles.ADMIN)
   @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
@@ -103,6 +107,7 @@ export class AnsweredExerciseController {
   }
 
   @Get()
+  @AuthType(UserRoles.ADMIN)
   @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
@@ -124,6 +129,7 @@ export class AnsweredExerciseController {
   }
 
   @Patch(':id')
+  @AuthType(UserRoles.ADMIN)
   @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
@@ -153,6 +159,7 @@ export class AnsweredExerciseController {
   }
 
   @Delete(':id')
+  @AuthType(UserRoles.ADMIN)
   @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,

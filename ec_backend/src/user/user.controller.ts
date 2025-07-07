@@ -34,6 +34,8 @@ import updateFormHandler from '../helper/functions/templates/updateFormHandler';
 import allowedTypes from '../helper/functions/allowedTypes';
 import { Response } from 'express';
 import { SelfGuard } from '../auth/guards/self/self.guard';
+import { AuthType } from '../common/decorators/authType.decorator';
+import { UserRoles } from '../../generated/prisma';
 
 @ApiTags('Users')
 @Controller('api/users')
@@ -45,6 +47,7 @@ export class UserController {
   ) {}
 
   @Post()
+  @AuthType(UserRoles.ADMIN)
   @UseGuards(RoleGuard)
   @ApiResponse({
     status: 201,
@@ -94,6 +97,7 @@ export class UserController {
   }
 
   @Get('query')
+  @AuthType(UserRoles.ADMIN)
   @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
@@ -120,6 +124,7 @@ export class UserController {
   }
 
   @Get(':id')
+  @AuthType(UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,
@@ -148,6 +153,7 @@ export class UserController {
   }
 
   @Get()
+  @AuthType(UserRoles.ADMIN)
   @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
@@ -169,6 +175,7 @@ export class UserController {
   }
 
   @Patch(':id')
+  @AuthType(UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,
@@ -224,6 +231,7 @@ export class UserController {
   }
 
   @Delete(':id')
+  @AuthType(UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,

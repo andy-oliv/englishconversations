@@ -25,9 +25,12 @@ import { Logger } from 'nestjs-pino';
 import FormDataHandler from '../helper/functions/formDataHandler';
 import FormHandlerReturn from '../common/types/FormHandlerReturn';
 import GenerateFileDTO from './dto/generateFile.dto';
+import { AuthType } from '../common/decorators/authType.decorator';
+import { UserRoles } from '../../generated/prisma';
 
 @ApiTags('Files')
 @Controller('api/files')
+@AuthType(UserRoles.ADMIN)
 @UseGuards(RoleGuard)
 export class FileController {
   constructor(

@@ -32,9 +32,12 @@ import FormDataHandler from '../helper/functions/formDataHandler';
 import updateFormHandler from '../helper/functions/templates/updateFormHandler';
 import UpdateVideoDTO from '../video/dto/updateVideo.dto';
 import parseJson from '../helper/functions/parseJson';
+import { AuthType } from '../common/decorators/authType.decorator';
+import { UserRoles } from '../../generated/prisma';
 
 @ApiTags('Units')
 @Controller('api/units')
+@AuthType(UserRoles.ADMIN)
 @UseGuards(RoleGuard)
 export class UnitController {
   constructor(

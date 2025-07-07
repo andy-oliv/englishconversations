@@ -28,8 +28,6 @@ import generateResetTemplate from '../helper/functions/templates/generateResetEm
 import generateEmailConfirmationTemplate from '../helper/functions/templates/generateEmailConfirmation';
 import { UserRoles } from '../../generated/prisma';
 import generateWelcomeEmail from '../helper/functions/templates/generateWelcomeEmail';
-import Cookies from '../common/types/cookies';
-import getCookies from '../helper/functions/getCookies';
 
 @Injectable()
 export class AuthService {
@@ -246,6 +244,53 @@ export class AuthService {
     }
   }
 
+  async adminVerification(
+    email: string,
+    password: string,
+    ipAddress: string,
+  ): Promise<User> {
+    try {
+      const user: User = await this.prismaService.user.findFirstOrThrow({
+        where: {
+          AND: [{ email }, { role: 'ADMIN' }],
+        },
+      });
+      await this.verifyPassword(password, user.password);
+
+      return user;
+    } catch (error) {
+      if (error.code === 'P2025') {
+        this.logger.warn({
+          message: generateExceptionMessage(
+            'authService',
+            'adminVerification',
+            loggerMessages.auth.adminVerification.status_400,
+          ),
+          data: {
+            email,
+            ipAddress,
+          },
+        });
+
+        throw new BadRequestException(
+          httpMessages_EN.auth.adminVerification.status_400,
+        );
+      }
+
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+
+      handleInternalErrorException(
+        'authService',
+        'adminVerification',
+        loggerMessages.auth.adminVerification.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
   async loginDataVerification(email: string, password: string): Promise<User> {
     try {
       const user: User = await this.prismaService.user.findUniqueOrThrow({
@@ -329,6 +374,27 @@ export class AuthService {
     }
   }
 
+  async generateAdminAccessToken(payload: Payload): Promise<string> {
+    try {
+      const accessToken: string = await this.jwtService.signAsync(payload, {
+        issuer: this.configService.get<string>('JWT_ADMIN_ISSUER'),
+        expiresIn: this.configService.get<string>(
+          'ADMIN_ACCESS_TOKEN_EXPIRATION',
+        ),
+      });
+
+      return accessToken;
+    } catch (error) {
+      handleInternalErrorException(
+        'authService',
+        'generateAdminAccessToken',
+        loggerMessages.auth.generateAdminAccessToken.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
   async generateAccessToken(payload: Payload): Promise<string> {
     try {
       const accessToken: string = await this.jwtService.signAsync(payload, {
@@ -361,6 +427,43 @@ export class AuthService {
         'authService',
         'generateRefreshToken',
         loggerMessages.auth.generateRefreshToken.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  async validateAdminAccessToken(token: string): Promise<Payload> {
+    try {
+      const data: Payload = await this.jwtService.verifyAsync(token);
+      await this.fetchUser(data.id);
+
+      const payload: Payload = {
+        id: data.id,
+        name: data.name,
+        role: data.role,
+        email: data.email,
+      };
+
+      return payload;
+    } catch (error) {
+      if (
+        error.name === 'TokenExpiredError' ||
+        error.name === 'JsonWebTokenError'
+      ) {
+        throw new UnauthorizedException(
+          httpMessages_EN.auth.validateAdminAccessToken.status_401,
+        );
+      }
+
+      if (error instanceof UnauthorizedException) {
+        throw error;
+      }
+
+      handleInternalErrorException(
+        'authService',
+        'validateAdminAccessToken',
+        loggerMessages.auth.validateAccessToken.status_500,
         this.logger,
         error,
       );
@@ -447,6 +550,12 @@ export class AuthService {
     }
   }
 
+  async handleAdminPayload(payload: Payload, user: User): Promise<string> {
+    const accessToken = await this.generateAdminAccessToken(payload);
+
+    return accessToken;
+  }
+
   async handlePayload(payload: Payload, user: User): Promise<GeneratedTokens> {
     const accessToken = await this.generateAccessToken(payload);
     const refreshToken = await this.generateRefreshToken(payload);
@@ -497,6 +606,35 @@ export class AuthService {
         'authService',
         'verifyToken',
         loggerMessages.auth.verifyToken.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  async adminLogin(
+    email: string,
+    password: string,
+    ipAddress: string,
+  ): Promise<string> {
+    const user = await this.adminVerification(email, password, ipAddress);
+
+    try {
+      const payload: Payload = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      };
+
+      const token: string = await this.handleAdminPayload(payload, user);
+
+      return token;
+    } catch (error) {
+      handleInternalErrorException(
+        'authService',
+        'adminLogin',
+        loggerMessages.auth.login.status_500,
         this.logger,
         error,
       );

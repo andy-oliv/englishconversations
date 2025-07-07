@@ -33,9 +33,12 @@ import FormHandlerReturn from '../common/types/FormHandlerReturn';
 import FormDataHandler from '../helper/functions/formDataHandler';
 import updateFormHandler from '../helper/functions/templates/updateFormHandler';
 import parseJson from '../helper/functions/parseJson';
+import { AuthType } from '../common/decorators/authType.decorator';
+import { UserRoles } from '../../generated/prisma';
 
 @ApiTags('Quizzes')
 @Controller('api/quizzes')
+@AuthType(UserRoles.ADMIN)
 @UseGuards(RoleGuard)
 export class QuizController {
   constructor(

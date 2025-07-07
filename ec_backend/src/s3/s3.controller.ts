@@ -15,9 +15,12 @@ import { multerMemoryStorage } from '../config/upload.config';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
 import { RoleGuard } from '../auth/guards/role/role.guard';
+import { AuthType } from '../common/decorators/authType.decorator';
+import { UserRoles } from '../../generated/prisma';
 
 @ApiTags('S3')
 @Controller('api')
+@AuthType(UserRoles.ADMIN)
 @UseGuards(RoleGuard)
 export class S3Controller {
   constructor(private readonly s3Service: S3Service) {}

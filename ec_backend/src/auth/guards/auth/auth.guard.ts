@@ -1,6 +1,7 @@
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -15,6 +16,9 @@ import httpMessages_EN from '../../../helper/messages/httpMessages.en';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from '../../../common/decorators/public.decorator';
 import RequestWithUser from '../../../common/types/RequestWithUser';
+import { AUTH_TYPE } from '../../../common/decorators/authType.decorator';
+import { UserRoles } from '../../../../generated/prisma';
+import * as cookie from 'cookie';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -34,47 +38,80 @@ export class AuthGuard implements CanActivate {
       return true;
     }
 
+    const requiredRole = this.reflector.getAllAndOverride<UserRoles>(
+      AUTH_TYPE,
+      [context.getHandler(), context.getClass()],
+    );
+
     const request: RequestWithUser = context
       .switchToHttp()
       .getRequest<RequestWithUser>();
     const response: Response = context.switchToHttp().getResponse();
-    const cookies: Cookies = getCookies(request.headers.cookie);
 
-    if (cookies.ec_accessToken) {
-      const payload: Payload = await this.authService.validateAccessToken(
-        cookies.ec_refreshToken,
-      );
-
-      request.user = payload;
-
-      this.logger.log(loggerMessages.authGuard.userHasAccessToken);
-
-      return true;
+    if (!request.headers.cookie) {
+      this.logger.log(loggerMessages.authGuard.userWithoutCredentials);
+      throw new UnauthorizedException(httpMessages_EN.authGuard.status_401);
     }
 
-    if (cookies.ec_refreshToken) {
-      const payload: Payload = await this.authService.validateRefreshToken(
-        cookies.ec_refreshToken,
+    if (requiredRole === 'STUDENT') {
+      const cookies: Cookies = getCookies(request.headers.cookie);
+
+      if (cookies.ec_accessToken) {
+        const payload: Payload = await this.authService.validateAccessToken(
+          cookies.ec_accessToken,
+        );
+
+        request.user = payload;
+
+        this.logger.log(loggerMessages.authGuard.userHasAccessToken);
+
+        return true;
+      }
+
+      if (cookies.ec_refreshToken) {
+        const payload: Payload = await this.authService.validateRefreshToken(
+          cookies.ec_refreshToken,
+        );
+        const accessToken: string =
+          await this.authService.generateAccessToken(payload);
+        const accessCookieExpiration: number = 1000 * 60 * 30; //30 minutes
+
+        response.cookie('ec_accessToken', accessToken, {
+          httpOnly: true,
+          secure: true,
+          sameSite: 'strict',
+          maxAge: accessCookieExpiration,
+        });
+
+        request.user = payload;
+
+        this.logger.log(loggerMessages.authGuard.userHasRefreshToken);
+
+        return true;
+      }
+    }
+
+    if (requiredRole === 'ADMIN') {
+      const adminCookie: Record<string, string> = cookie.parse(
+        request.headers.cookie,
       );
-      const accessToken: string =
-        await this.authService.generateAccessToken(payload);
-      const accessCookieExpiration: number = 1000 * 60 * 30; //30 minutes
 
-      response.cookie('ec_accessToken', accessToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'strict',
-        maxAge: accessCookieExpiration,
-      });
+      if (adminCookie) {
+        const payload: Payload =
+          await this.authService.validateAdminAccessToken(
+            adminCookie.ec_admin_access,
+          );
 
-      request.user = payload;
+        request.user = payload;
 
-      this.logger.log(loggerMessages.authGuard.userHasRefreshToken);
+        this.logger.log(loggerMessages.authGuard.userHasAdminToken);
 
-      return true;
+        return true;
+      }
     }
 
     this.logger.log(loggerMessages.authGuard.userWithoutCredentials);
+    response.clearCookie('ec_admin_access');
     response.clearCookie('ec_accessToken');
     response.clearCookie('ec_refreshToken');
     throw new UnauthorizedException(httpMessages_EN.authGuard.status_401);

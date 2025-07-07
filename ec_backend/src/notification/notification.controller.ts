@@ -17,9 +17,12 @@ import GenerateNotificationDTO from './dto/generateNotification.dto';
 import validationMessages_EN from '../helper/messages/validationMessages.en';
 import UpdateNotificationDTO from './dto/updateNotification.dto';
 import { RoleGuard } from '../auth/guards/role/role.guard';
+import { AuthType } from '../common/decorators/authType.decorator';
+import { UserRoles } from '../../generated/prisma';
 
 @ApiTags('Notifications')
 @Controller('api/notifications')
+@AuthType(UserRoles.ADMIN)
 @UseGuards(RoleGuard)
 export class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}

@@ -66,6 +66,12 @@ const loggerMessages = {
     },
   },
   auth: {
+    adminVerification: {
+      status_400:
+        'A user attempted to log into the admin dashboard with incorrect credentials or lacks administrative permissions.',
+      status_500:
+        'An internal error occurred while validating the admin user. Check the error log for more information.',
+    },
     addRefreshTokenToDatabase: {
       status_500:
         'An internal error occurred while adding the refresh token to the database. Check the error log for more information.',
@@ -79,6 +85,10 @@ const loggerMessages = {
         'An internal error occurred while fetching the user data from the payload. Check the error log for more information.',
     },
     generateAccessToken: {
+      status_500:
+        'An internal error occurred while generating the access token. Check the error log for more information.',
+    },
+    generateAdminAccessToken: {
       status_500:
         'An internal error occurred while generating the access token. Check the error log for more information.',
     },
@@ -124,6 +134,10 @@ const loggerMessages = {
       status_500:
         'An internal error occurred while updating the password. Check the error log for more information.',
     },
+    validateAdminAccessToken: {
+      status_500:
+        'An internal error occurred while validating the administrative access token. Check the error log for more information.',
+    },
     validateAccessToken: {
       status_500:
         'An internal error occurred while validating the access token. Check the error log for more information.',
@@ -144,12 +158,14 @@ const loggerMessages = {
     },
   },
   authGuard: {
+    userHasAdminToken:
+      'The user provided a valid administrative access token. Moving forward with the request...',
     userHasAccessToken:
       'The user provided an access token. Moving forward with the request...',
     userHasRefreshToken:
       'The user did not provide an access token but they have a refresh token. Generating new access token and moving forward with the request...',
     userWithoutCredentials:
-      'The user did not provide any credentials. Request denied to access content denied.',
+      'The user did not provide any credentials. Request to access content denied.',
   },
   authRole: {
     status_403:

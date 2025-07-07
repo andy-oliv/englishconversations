@@ -19,6 +19,8 @@ import generateUserNotificationDTO from './dto/generateUserNotification.dto';
 import { SelfGuard } from '../auth/guards/self/self.guard';
 import { RoleGuard } from '../auth/guards/role/role.guard';
 import UpdateUserNotificationDTO from './dto/updateuUserNotification.dto';
+import { UserRoles } from '../../generated/prisma';
+import { AuthType } from '../common/decorators/authType.decorator';
 
 @ApiTags('UserNotifications')
 @Controller('api/users/notifications')
@@ -28,6 +30,7 @@ export class UserNotificationController {
   ) {}
 
   @Post()
+  @AuthType(UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 201,
@@ -52,6 +55,7 @@ export class UserNotificationController {
   }
 
   @Get('query')
+  @AuthType(UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,
@@ -75,6 +79,7 @@ export class UserNotificationController {
   }
 
   @Patch('update')
+  @AuthType(UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,
@@ -104,6 +109,7 @@ export class UserNotificationController {
   }
 
   @Delete(':id')
+  @AuthType(UserRoles.ADMIN)
   @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,

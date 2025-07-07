@@ -29,9 +29,12 @@ import updateFormHandler from '../helper/functions/templates/updateFormHandler';
 import parseJson from '../helper/functions/parseJson';
 import allowedTypes from '../helper/functions/allowedTypes';
 import { RoleGuard } from '../auth/guards/role/role.guard';
+import { UserRoles } from '../../generated/prisma';
+import { AuthType } from '../common/decorators/authType.decorator';
 
 @ApiTags('Videos')
 @Controller('api/videos')
+@AuthType(UserRoles.ADMIN)
 @UseGuards(RoleGuard)
 export class VideoController {
   constructor(

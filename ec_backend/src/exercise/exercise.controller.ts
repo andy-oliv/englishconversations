@@ -33,9 +33,12 @@ import UpdateExerciseDTO from './dto/UpdateExercise.dto';
 import parseJson from '../helper/functions/parseJson';
 import FormDataHandler from '../helper/functions/formDataHandler';
 import defineFileType from '../helper/functions/defineFileType';
+import { AuthType } from '../common/decorators/authType.decorator';
+import { UserRoles } from '../../generated/prisma';
 
 @ApiTags('Exercises')
 @Controller('api/exercises')
+@AuthType(UserRoles.ADMIN)
 @UseGuards(RoleGuard)
 export class ExerciseController {
   constructor(

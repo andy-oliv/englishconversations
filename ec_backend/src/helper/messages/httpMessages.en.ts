@@ -53,6 +53,13 @@ const httpMessages_EN = {
     },
   },
   auth: {
+    adminLogin: {
+      status_200: 'Administrator successfully logged in.',
+    },
+    adminVerification: {
+      status_400:
+        'Please check the request. Either the user or the password are incorrect.',
+    },
     emailConfirmed: {
       status_400: 'The token is expired.',
     },
@@ -85,6 +92,10 @@ const httpMessages_EN = {
     updatePassword: {
       status_200: 'The passsword has been successfully updated.',
       status_400: 'The token is invalid.',
+    },
+    validateAdminAccessToken: {
+      status_401:
+        'Access denied. Your admin session has expired or is invalid.',
     },
     validateAccessToken: {
       status_401: 'Unauthorized: You must login to see this content.',

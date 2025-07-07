@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import GeneratedTokens from '../common/types/GeneratedTokens';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import LoginDTO from './dto/login.dto';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
@@ -34,6 +34,8 @@ import { Logger } from 'nestjs-pino';
 import parseJson from '../helper/functions/parseJson';
 import allowedTypes from '../helper/functions/allowedTypes';
 import { Throttle } from '@nestjs/throttler';
+import { AuthType } from '../common/decorators/authType.decorator';
+import { UserRoles } from '../../generated/prisma';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -44,6 +46,48 @@ export class AuthController {
     private readonly s3Service: S3Service,
     private readonly logger: Logger,
   ) {}
+
+  @Throttle({ default: { ttl: 60000, limit: 3 } })
+  @Public()
+  @Post('admin/login')
+  @ApiResponse({
+    status: 200,
+    description: 'Success',
+    example: httpMessages_EN.auth.adminLogin.status_200,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request',
+    example: httpMessages_EN.auth.adminVerification.status_400,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal Server Error',
+    example: httpMessages_EN.general.status_500,
+  })
+  async adminLogin(
+    @Body() loginData: LoginDTO,
+    @Res({ passthrough: true }) response: Response,
+    @Req() req: Request,
+  ): Promise<{ message: string }> {
+    const rawIp: string = req.ip;
+    const ipAddress: string = rawIp === '::1' ? '127.0.0.1' : rawIp;
+
+    const token: string = await this.authService.adminLogin(
+      loginData.email,
+      loginData.password,
+      ipAddress,
+    );
+
+    const accessCookieExpiration: number = 1000 * 60 * 60; //1 hour
+
+    response.cookie('ec_admin_access', token, {
+      httpOnly: true,
+      sameSite: 'strict',
+      maxAge: accessCookieExpiration,
+    });
+    return { message: httpMessages_EN.auth.adminLogin.status_200 };
+  }
 
   @Throttle({ default: { ttl: 60000, limit: 5 } })
   @Public()
@@ -189,6 +233,7 @@ export class AuthController {
   }
 
   @Get('logout')
+  @Public()
   @ApiResponse({
     status: 200,
     description: 'Success',

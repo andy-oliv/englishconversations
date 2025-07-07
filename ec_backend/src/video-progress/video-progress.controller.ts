@@ -20,6 +20,8 @@ import httpMessages_EN from '../helper/messages/httpMessages.en';
 import validationMessages_EN from '../helper/messages/validationMessages.en';
 import { SelfGuard } from '../auth/guards/self/self.guard';
 import { RoleGuard } from '../auth/guards/role/role.guard';
+import { UserRoles } from '../../generated/prisma';
+import { AuthType } from '../common/decorators/authType.decorator';
 
 @ApiTags('VideoProgress')
 @Controller('api/videos/progress')
@@ -27,6 +29,7 @@ export class VideoProgressController {
   constructor(private readonly videoProgressService: VideoProgressService) {}
 
   @Post()
+  @AuthType(UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 201,
@@ -60,6 +63,7 @@ export class VideoProgressController {
   }
 
   @Get('user/:userId')
+  @AuthType(UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,
@@ -90,6 +94,7 @@ export class VideoProgressController {
   }
 
   @Get('all')
+  @AuthType(UserRoles.ADMIN)
   @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
@@ -111,6 +116,7 @@ export class VideoProgressController {
   }
 
   @Get(':id')
+  @AuthType(UserRoles.ADMIN)
   @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
@@ -139,6 +145,7 @@ export class VideoProgressController {
   }
 
   @Patch('update')
+  @AuthType(UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,
@@ -169,6 +176,7 @@ export class VideoProgressController {
   }
 
   @Delete(':id')
+  @AuthType(UserRoles.ADMIN)
   @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,

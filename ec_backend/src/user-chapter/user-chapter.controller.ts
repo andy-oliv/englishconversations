@@ -18,6 +18,8 @@ import GenerateUserChapterDTO from './dto/generateUserChapter.dto';
 import UpdateUserChapterDTO from './dto/updateUserChapter.dto';
 import { SelfGuard } from '../auth/guards/self/self.guard';
 import { RoleGuard } from '../auth/guards/role/role.guard';
+import { UserRoles } from '../../generated/prisma';
+import { AuthType } from '../common/decorators/authType.decorator';
 
 @ApiTags('UserChapter')
 @Controller('api/users/chapters')
@@ -25,6 +27,7 @@ export class UserChapterController {
   constructor(private readonly userChapterService: UserChapterService) {}
 
   @Post()
+  @AuthType(UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 201,
@@ -53,6 +56,7 @@ export class UserChapterController {
   }
 
   @Get('fetch/:userId')
+  @AuthType(UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,
@@ -81,6 +85,7 @@ export class UserChapterController {
   }
 
   @Get('all')
+  @AuthType(UserRoles.ADMIN)
   @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
@@ -102,6 +107,7 @@ export class UserChapterController {
   }
 
   @Get(':id')
+  @AuthType(UserRoles.ADMIN)
   @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
@@ -130,6 +136,7 @@ export class UserChapterController {
   }
 
   @Patch('query')
+  @AuthType(UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,
@@ -164,6 +171,7 @@ export class UserChapterController {
   }
 
   @Delete(':id')
+  @AuthType(UserRoles.ADMIN)
   @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,

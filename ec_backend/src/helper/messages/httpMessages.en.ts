@@ -112,7 +112,8 @@ const httpMessages_EN = {
     },
   },
   authGuard: {
-    status_401: 'Unauthorized: You must login to see this content.',
+    status_401:
+      'Unauthorized: Please make sure you are logged in and have the required permissions to access this resource.',
   },
   authRole: {
     status_403: 'Forbidden: invalid credentials.',

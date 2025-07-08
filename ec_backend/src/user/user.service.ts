@@ -205,9 +205,18 @@ export class UserService {
     }
   }
 
-  async fetchUsers(): Promise<Return> {
+  async fetchUsers(students?: boolean): Promise<Return> {
     try {
-      const users: User[] = await this.prismaService.user.findMany();
+      let users: User[];
+      if (students) {
+        users = await this.prismaService.user.findMany({
+          where: {
+            role: 'STUDENT',
+          },
+        });
+      } else {
+        users = await this.prismaService.user.findMany();
+      }
 
       if (users.length === 0) {
         throw new NotFoundException(httpMessages_EN.user.fetchUsers.status_404);

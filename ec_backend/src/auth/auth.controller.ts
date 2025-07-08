@@ -8,6 +8,7 @@ import {
   Req,
   Res,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -36,6 +37,8 @@ import allowedTypes from '../helper/functions/allowedTypes';
 import { Throttle } from '@nestjs/throttler';
 import { AuthType } from '../common/decorators/authType.decorator';
 import { UserRoles } from '../../generated/prisma';
+import Payload from '../common/types/Payload';
+import { RoleGuard } from './guards/role/role.guard';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -176,6 +179,7 @@ export class AuthController {
         result.data.id,
         result.data.name,
         result.data.email,
+        result.data.avatar,
         result.data.role,
       );
     }
@@ -186,6 +190,7 @@ export class AuthController {
       result.data.id,
       result.data.name,
       result.data.email,
+      result.data.avatar,
       result.data.role,
     );
   }
@@ -315,8 +320,16 @@ export class AuthController {
     return this.authService.generateResetToken(data.email);
   }
 
-  @Get('session')
-  async checkSession(): Promise<{ message: string }> {
-    return { message: 'user is logged' };
+  @Get('student-session')
+  @AuthType(UserRoles.STUDENT)
+  async checkStudentSession(@Req() req: RequestWithUser): Promise<Return> {
+    return { message: 'user is logged', data: req.user };
+  }
+
+  @Get('admin-session')
+  @AuthType(UserRoles.ADMIN)
+  @UseGuards(RoleGuard)
+  async checkAdminSession(@Req() req: RequestWithUser): Promise<Return> {
+    return { message: 'admin is logged', data: req.user };
   }
 }

@@ -30,7 +30,7 @@ export class UserNotificationController {
   ) {}
 
   @Post()
-  @AuthType(UserRoles.STUDENT)
+  @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 201,
@@ -55,7 +55,7 @@ export class UserNotificationController {
   }
 
   @Get('query')
-  @AuthType(UserRoles.STUDENT)
+  @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,
@@ -79,7 +79,7 @@ export class UserNotificationController {
   }
 
   @Patch('update')
-  @AuthType(UserRoles.STUDENT)
+  @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,

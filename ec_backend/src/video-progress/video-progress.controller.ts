@@ -29,7 +29,7 @@ export class VideoProgressController {
   constructor(private readonly videoProgressService: VideoProgressService) {}
 
   @Post()
-  @AuthType(UserRoles.STUDENT)
+  @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 201,
@@ -63,7 +63,7 @@ export class VideoProgressController {
   }
 
   @Get('user/:userId')
-  @AuthType(UserRoles.STUDENT)
+  @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,
@@ -145,7 +145,7 @@ export class VideoProgressController {
   }
 
   @Patch('update')
-  @AuthType(UserRoles.STUDENT)
+  @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,

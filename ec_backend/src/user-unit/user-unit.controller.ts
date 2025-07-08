@@ -28,7 +28,7 @@ export class UserUnitController {
   constructor(private readonly userUnitService: UserUnitService) {}
 
   @Post()
-  @AuthType(UserRoles.STUDENT)
+  @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 201,
@@ -60,7 +60,7 @@ export class UserUnitController {
   }
 
   @Get('query')
-  @AuthType(UserRoles.STUDENT)
+  @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,
@@ -127,7 +127,7 @@ export class UserUnitController {
   }
 
   @Patch('update')
-  @AuthType(UserRoles.STUDENT)
+  @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,

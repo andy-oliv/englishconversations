@@ -55,6 +55,7 @@ export class AuthService {
           id: payload.id,
           name: payload.name,
           email: payload.email,
+          avatar: payload.avatar,
           role: payload.role,
         },
         user,
@@ -89,6 +90,7 @@ export class AuthService {
     id: string,
     name: string,
     email: string,
+    avatar: string,
     role: UserRoles,
   ): Promise<{ message: string }> {
     try {
@@ -96,6 +98,7 @@ export class AuthService {
         id,
         name,
         email,
+        avatar,
         role,
       };
 
@@ -442,6 +445,7 @@ export class AuthService {
         id: data.id,
         name: data.name,
         role: data.role,
+        avatar: data.avatar,
         email: data.email,
       };
 
@@ -479,6 +483,7 @@ export class AuthService {
         id: data.id,
         name: data.name,
         role: data.role,
+        avatar: data.avatar,
         email: data.email,
       };
 
@@ -523,6 +528,7 @@ export class AuthService {
         id: data.id,
         name: data.name,
         role: data.role,
+        avatar: data.avatar,
         email: data.email,
       };
 
@@ -624,6 +630,7 @@ export class AuthService {
         id: user.id,
         name: user.name,
         email: user.email,
+        avatar: user.avatarUrl,
         role: user.role,
       };
 
@@ -649,6 +656,7 @@ export class AuthService {
         id: user.id,
         name: user.name,
         email: user.email,
+        avatar: user.avatarUrl,
         role: user.role,
       };
 
@@ -670,6 +678,7 @@ export class AuthService {
     try {
       response.clearCookie('ec_accessToken');
       response.clearCookie('ec_refreshToken');
+      response.clearCookie('ec_admin_access');
 
       return { message: httpMessages_EN.auth.logout.status_200 };
     } catch (error) {

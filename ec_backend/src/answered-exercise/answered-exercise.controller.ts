@@ -30,7 +30,7 @@ export class AnsweredExerciseController {
   ) {}
 
   @Post()
-  @AuthType(UserRoles.STUDENT)
+  @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 201,
@@ -54,7 +54,7 @@ export class AnsweredExerciseController {
   }
 
   @Get('query')
-  @AuthType(UserRoles.STUDENT)
+  @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,

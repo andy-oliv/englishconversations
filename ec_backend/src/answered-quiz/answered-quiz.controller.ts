@@ -28,7 +28,7 @@ export class AnsweredQuizController {
   constructor(private readonly answerQuizService: AnsweredQuizService) {}
 
   @Post()
-  @AuthType(UserRoles.STUDENT)
+  @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 201,
@@ -50,7 +50,7 @@ export class AnsweredQuizController {
   }
 
   @Get('query')
-  @AuthType(UserRoles.STUDENT)
+  @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,

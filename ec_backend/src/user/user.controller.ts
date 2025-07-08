@@ -5,6 +5,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseBoolPipe,
   ParseUUIDPipe,
   Patch,
   Post,
@@ -124,7 +125,7 @@ export class UserController {
   }
 
   @Get(':id')
-  @AuthType(UserRoles.STUDENT)
+  @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,
@@ -170,12 +171,12 @@ export class UserController {
     description: 'Internal Server Error',
     example: httpMessages_EN.general.status_500,
   })
-  async fetchUsers(): Promise<Return> {
-    return this.userService.fetchUsers();
+  async fetchUsers(@Query('students') students?: boolean): Promise<Return> {
+    return this.userService.fetchUsers(students);
   }
 
   @Patch(':id')
-  @AuthType(UserRoles.STUDENT)
+  @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,
@@ -231,7 +232,7 @@ export class UserController {
   }
 
   @Delete(':id')
-  @AuthType(UserRoles.STUDENT)
+  @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,

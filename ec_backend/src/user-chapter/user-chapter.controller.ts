@@ -27,7 +27,7 @@ export class UserChapterController {
   constructor(private readonly userChapterService: UserChapterService) {}
 
   @Post()
-  @AuthType(UserRoles.STUDENT)
+  @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 201,
@@ -56,7 +56,7 @@ export class UserChapterController {
   }
 
   @Get('fetch/:userId')
-  @AuthType(UserRoles.STUDENT)
+  @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,
@@ -136,7 +136,7 @@ export class UserChapterController {
   }
 
   @Patch('query')
-  @AuthType(UserRoles.STUDENT)
+  @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
   @UseGuards(SelfGuard)
   @ApiResponse({
     status: 200,

@@ -128,6 +128,10 @@ const loggerMessages = {
       status_500:
         'An internal error occurred while updating the email. Check the error log for more information.',
     },
+    updateLastLogin: {
+      status_500:
+        'An internal error occurred while update the last login. Check the error log for more information.',
+    },
     updatePassword: {
       status_404:
         'A user tried updating their password using an email that was not found in the database.',
@@ -197,6 +201,12 @@ const loggerMessages = {
       status_200: 'A chapter has been updated.',
       status_500:
         'An internal error occurred while updating the chapter. Check the error log for more information.',
+    },
+  },
+  dashboard: {
+    fetchInfo: {
+      status_500:
+        'An internal error occurred while fetching the dashboard data. Check the error log for more information.',
     },
   },
   email: {

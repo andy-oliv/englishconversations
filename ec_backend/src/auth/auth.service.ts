@@ -363,7 +363,6 @@ export class AuthService {
         },
         data: {
           refreshToken: hashedToken,
-          lastLogin: new Date(),
         },
       });
     } catch (error) {
@@ -371,6 +370,27 @@ export class AuthService {
         'authService',
         'addRefreshTokenToDatabase',
         loggerMessages.auth.addRefreshTokenToDatabase.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  async updateLastLogin(user: User): Promise<void> {
+    try {
+      await this.prismaService.user.update({
+        where: {
+          id: user.id,
+        },
+        data: {
+          lastLogin: new Date(),
+        },
+      });
+    } catch (error) {
+      handleInternalErrorException(
+        'authService',
+        'updateLastLogin',
+        loggerMessages.auth.updateLastLogin.status_500,
         this.logger,
         error,
       );
@@ -558,7 +578,7 @@ export class AuthService {
 
   async handleAdminPayload(payload: Payload, user: User): Promise<string> {
     const accessToken = await this.generateAdminAccessToken(payload);
-
+    await this.updateLastLogin(user);
     return accessToken;
   }
 
@@ -566,6 +586,7 @@ export class AuthService {
     const accessToken = await this.generateAccessToken(payload);
     const refreshToken = await this.generateRefreshToken(payload);
     await this.addRefreshTokenToDatabase(refreshToken, user);
+    await this.updateLastLogin(user);
 
     return { accessToken, refreshToken };
   }

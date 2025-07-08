@@ -48,8 +48,6 @@ export class AuthGuard implements CanActivate {
       .getRequest<RequestWithUser>();
     const response: Response = context.switchToHttp().getResponse();
 
-    this.logger.log(`REQUIRED ROLES: ${requiredRoles}`);
-
     if (!request.headers.cookie) {
       this.logger.log(loggerMessages.authGuard.userWithoutCredentials);
       throw new UnauthorizedException(httpMessages_EN.authGuard.status_401);

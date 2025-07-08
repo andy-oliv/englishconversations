@@ -171,8 +171,8 @@ export class UserController {
     description: 'Internal Server Error',
     example: httpMessages_EN.general.status_500,
   })
-  async fetchUsers(@Query('students') students?: boolean): Promise<Return> {
-    return this.userService.fetchUsers(students);
+  async fetchUsers(): Promise<Return> {
+    return this.userService.fetchUsers();
   }
 
   @Patch(':id')

@@ -29,6 +29,7 @@ import { EmailModule } from './email/email.module';
 import { EmailValidationGuard } from './auth/guards/email-validation/email-validation.guard';
 import { VideoProgressModule } from './video-progress/video-progress.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -91,6 +92,7 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
     S3Module,
     EmailModule,
     VideoProgressModule,
+    DashboardModule,
   ],
   controllers: [AppController],
   providers: [

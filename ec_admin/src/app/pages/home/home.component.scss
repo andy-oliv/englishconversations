@@ -3,9 +3,10 @@
 
 body {
   display: flex;
-  height: 100vh;
+  flex-direction: column;
 }
 
-main {
-  background-color: colors.$backgroundColor;
+.cardContainer {
+  display: flex;
+  gap: 1.5em;
 }

@@ -1,1 +1,25 @@
-<h1>DASHBOARD</h1>
+<body>
+  <app-title title="Dashboard" />
+  <div class="cardContainer">
+    <app-info-card
+      legend="Total de alunos"
+      [value]="totalStudents()"
+      cardColor="#bedff3"
+    />
+    <app-info-card
+      legend="Total de Unidades"
+      [value]="totalUnits()"
+      cardColor="#ffa79e"
+    />
+    <app-info-card
+      legend="Total de Vídeos"
+      [value]="totalVideos()"
+      cardColor="#b4edb4"
+    />
+    <app-info-card
+      legend="Total de Exercícios"
+      [value]="totalExercises()"
+      cardColor="#e6acff"
+    />
+  </div>
+</body>

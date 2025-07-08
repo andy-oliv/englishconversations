@@ -9,10 +9,11 @@ nav {
   flex-direction: column;
   align-items: center;
   position: relative;
+  box-shadow: 0 0 20px -1px;
 
   .imgContainer {
     width: 60%;
-    margin: 3em 0;
+    margin: 3em 0 5em 0;
 
     img {
       width: 100%;
@@ -96,6 +97,10 @@ nav {
 }
 
 .closedMenu {
+  .imgContainer {
+    margin: 3em 0 7em 0;
+  }
+
   .wrapper {
     align-items: center;
   }

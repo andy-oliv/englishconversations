@@ -4,11 +4,13 @@ import { MenuComponent } from './components/menu/menu.component';
 import { MenuStateService } from './services/menu-state.service';
 import { NgClass } from '@angular/common';
 import { filter } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { UserComponent } from './components/user/user.component';
+import { UserStateService } from './services/user-state.service';
+import User from '../entities/User';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MenuComponent, NgClass],
+  imports: [RouterOutlet, MenuComponent, NgClass, UserComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
@@ -18,10 +20,15 @@ export class AppComponent implements OnInit {
   constructor(
     private readonly menuState: MenuStateService,
     private readonly router: Router,
-    private readonly httpClient: HttpClient,
+    private readonly userService: UserStateService,
   ) {}
 
   ngOnInit() {
+    const loadedUser: string | null = localStorage.getItem('user');
+    if (loadedUser) {
+      this.userService.setUser(JSON.parse(loadedUser));
+    }
+
     this.currentRoute.set(this.router.url);
 
     this.router.events

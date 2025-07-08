@@ -6,7 +6,10 @@
       [ngClass]="{ openMenu: isMenuOpen(), closedMenu: !isMenuOpen() }"
     />
     <main>
-      <router-outlet />
+      <div class="mainContent">
+        <router-outlet class="mainContent" />
+      </div>
+      <app-user class="userMenu" />
     </main>
   </body>
 }

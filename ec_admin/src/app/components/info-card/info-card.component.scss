@@ -1,0 +1,18 @@
+@use "../../../styles/colors.scss" as colors;
+@use "../../../styles/fonts.scss" as fonts;
+
+.card {
+  font-family: fonts.$poppins;
+  width: max-content;
+  padding: 1em 2em;
+  border-radius: 0.8em;
+
+  .legend {
+    font-weight: 500;
+  }
+
+  .value {
+    font-weight: 800;
+    font-size: 2rem;
+  }
+}

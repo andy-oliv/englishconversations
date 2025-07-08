@@ -12,7 +12,6 @@ import { SettingsComponent } from './pages/settings/settings.component';
 import { SecurityComponent } from './pages/security/security.component';
 import { LoginComponent } from './pages/login/login.component';
 import { authGuard } from './guards/auth.guard';
-import { loginGuard } from './guards/login.guard';
 
 export const routes: Routes = [
   {
@@ -22,7 +21,6 @@ export const routes: Routes = [
   },
   {
     path: 'login',
-    canActivate: [loginGuard],
     component: LoginComponent,
   },
   {

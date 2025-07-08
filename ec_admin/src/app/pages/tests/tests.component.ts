@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
+import { TitleComponent } from '../../components/title/title.component';
 
 @Component({
   selector: 'app-tests',
-  imports: [],
+  imports: [TitleComponent],
   templateUrl: './tests.component.html',
   styleUrl: './tests.component.scss',
 })

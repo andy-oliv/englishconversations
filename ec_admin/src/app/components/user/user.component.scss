@@ -1,0 +1,87 @@
+@use "../../../styles/colors.scss" as colors;
+@use "../../../styles/fonts.scss" as fonts;
+
+.container {
+  display: flex;
+  justify-content: flex-end;
+  position: relative;
+  font-family: fonts.$poppins;
+
+  .wrapper {
+    display: flex;
+    gap: 1em;
+    align-items: center;
+  }
+}
+
+.imgWrapper {
+  width: 40%;
+  cursor: pointer;
+
+  img {
+    width: 100%;
+    height: 75%;
+    object-fit: cover;
+    border-radius: 100em;
+    opacity: 1;
+    transition: opacity 0.4 ease-in-out;
+  }
+
+  img:hover {
+    opacity: 0.9;
+  }
+}
+
+.menu {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  visibility: hidden;
+  opacity: 0;
+  background-color: white;
+  width: 100%;
+  padding: 2em 1em 1em 1em;
+  border-radius: 0.5em;
+  display: flex;
+  transform: translateY(10em);
+  transition: all 0.2s ease-in-out;
+
+  .username {
+    font-weight: 700;
+    margin-bottom: 1em;
+  }
+
+  button {
+    border: none;
+    padding: 0.5em;
+    border-radius: 0.5em;
+    color: colors.$blue;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  button:hover {
+    color: white;
+    background-color: colors.$blue;
+  }
+}
+
+.active {
+  visibility: visible;
+  opacity: 1;
+  box-shadow: 0 0 10px -1px rgba(0, 0, 0, 0.216);
+  transform: translateY(5.5em);
+}
+
+.menuOption {
+  display: flex;
+  gap: 0.5em;
+  cursor: pointer;
+  margin-bottom: 1em;
+  .icon {
+    width: 13%;
+  }
+  .option {
+    font-size: 0.9rem;
+  }
+}

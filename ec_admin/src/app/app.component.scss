@@ -15,7 +15,17 @@ body {
 }
 
 main {
+  display: flex;
+  justify-content: space-between;
   padding: 3em;
   width: 100%;
   background-color: colors.$backgroundColor;
+
+  .mainContent {
+    width: 90%;
+  }
+
+  .userMenu {
+    width: 12%;
+  }
 }

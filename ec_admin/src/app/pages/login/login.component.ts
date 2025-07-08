@@ -21,13 +21,16 @@ export class LoginComponent {
       .post<{
         message: string;
       }>(
-        'http://localhost:3000/auth/login',
+        'http://localhost:3000/auth/admin/login',
         { email, password },
         { withCredentials: true },
       )
       .subscribe({
         complete: () => {
           this.router.navigate(['/']);
+        },
+        error: (error) => {
+          console.log(error.error);
         },
       });
 

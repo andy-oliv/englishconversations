@@ -1,0 +1,38 @@
+.card {
+  font-family: "Poppins", sans-serif;
+  width: -moz-max-content;
+  width: max-content;
+  padding: 1em 2em;
+  border-radius: 0.8em;
+}
+.card .legend {
+  font-weight: 500;
+}
+.card .value {
+  font-weight: 800;
+  font-size: 2rem;
+}
+
+.iconContainer {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+
+.loading .legend {
+  opacity: 0.3;
+  animation: loadingAnimation 1.5s ease-in-out infinite;
+}
+.loading .value {
+  opacity: 0.3;
+  animation: loadingAnimation 1s ease-in-out infinite;
+}
+
+@keyframes loadingAnimation {
+  0% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
+  }
+}/*# sourceMappingURL=info-card.component.css.map */

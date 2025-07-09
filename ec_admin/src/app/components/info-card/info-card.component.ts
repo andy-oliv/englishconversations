@@ -1,4 +1,4 @@
-import { Component, input, signal } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-info-card',
@@ -12,4 +12,6 @@ export class InfoCardComponent {
   cardColor = input<string>('#ffbb80');
   valueColor = input<string>('#000000');
   legendColor = input<string>('#000000');
+  loading = input<boolean>(false);
+  icon = input<string>('');
 }

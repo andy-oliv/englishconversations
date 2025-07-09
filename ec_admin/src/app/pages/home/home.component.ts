@@ -1,7 +1,9 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { InfoCardComponent } from '../../components/info-card/info-card.component';
 import { TitleComponent } from '../../components/title/title.component';
-import { HttpClient } from '@angular/common/http';
+import User from '../../../entities/User';
+import { DashboardService } from '../../services/dashboard.service';
+import dayjs from 'dayjs';
 
 @Component({
   selector: 'app-home',
@@ -10,76 +12,59 @@ import { HttpClient } from '@angular/common/http';
   styleUrl: './home.component.scss',
 })
 export class HomeComponent implements OnInit {
+  lastLoggedUsers = signal<User[]>([]);
   totalStudents = signal<number>(0);
+  totalChapters = signal<number>(0);
   totalUnits = signal<number>(0);
   totalVideos = signal<number>(0);
   totalExercises = signal<number>(0);
+  loading = signal<boolean>(true);
 
-  constructor(private readonly httpClient: HttpClient) {}
+  constructor(private readonly dashboardService: DashboardService) {}
 
   ngOnInit(): void {
-    const users = this.httpClient.get<{ message: string; data: any[] }>(
-      'http://localhost:3000/api/users?students=true',
-      {
-        withCredentials: true,
-      },
-    );
-
-    users.subscribe({
+    this.dashboardService.fetchDashboardData().subscribe({
       next: (response) => {
-        this.totalStudents.set(response.data.length);
+        this.lastLoggedUsers.set(response.data.users);
+        this.totalStudents.set(response.data.students);
+        this.totalChapters.set(response.data.chapters);
+        this.totalUnits.set(response.data.units);
+        this.totalVideos.set(response.data.videos);
+        this.totalExercises.set(response.data.exercises);
       },
       error: (error) => {
-        console.log(error);
+        console.error('Erro ao carregar dados do dashboard:', error);
+      },
+      complete: () => {
+        this.loading.set(false);
       },
     });
+  }
 
-    const units = this.httpClient.get<{ message: string; data: any[] }>(
-      'http://localhost:3000/api/units',
-      {
-        withCredentials: true,
-      },
-    );
+  formatDate(date: Date | undefined): string {
+    const formattedDate =
+      date !== null
+        ? dayjs(date).format('DD/MM/YY - HH:mm:ss')
+        : 'Sem login realizado';
 
-    units.subscribe({
-      next: (response) => {
-        this.totalUnits.set(response.data.length);
-      },
-      error: (error) => {
-        console.log(error);
-      },
+    return formattedDate;
+  }
+
+  getUserProgress(user: User): {
+    completedChapters: number;
+    totalProgress: number;
+  } {
+    let completedChapters: number = 0;
+
+    user.chapters?.forEach((chapter: { status: string }) => {
+      if (chapter.status === 'COMPLETED') {
+        completedChapters = completedChapters + 1;
+      }
     });
 
-    const videos = this.httpClient.get<{ message: string; data: any[] }>(
-      'http://localhost:3000/api/videos',
-      {
-        withCredentials: true,
-      },
-    );
-
-    videos.subscribe({
-      next: (response) => {
-        this.totalVideos.set(response.data.length);
-      },
-      error: (error) => {
-        console.log(error);
-      },
-    });
-
-    const exercises = this.httpClient.get<{ message: string; data: any[] }>(
-      'http://localhost:3000/api/exercises',
-      {
-        withCredentials: true,
-      },
-    );
-
-    exercises.subscribe({
-      next: (response) => {
-        this.totalExercises.set(response.data.length);
-      },
-      error: (error) => {
-        console.log(error);
-      },
-    });
+    return {
+      completedChapters,
+      totalProgress: (completedChapters / this.totalChapters()) * 100,
+    };
   }
 }

@@ -1,4 +1,15 @@
-<div class="card" [style]="{ 'background-color': cardColor() }">
-  <p class="value" [style]="{ color: valueColor() }">{{ value() }}</p>
-  <p class="legend" [style]="{ color: legendColor() }">{{ legend() }}</p>
+<div
+  class="card"
+  [style]="{ 'background-color': loading() ? '#484848' : cardColor() }"
+  [class.loading]="loading()"
+>
+  <div class="iconContainer">
+    <div class="icon"><ng-content></ng-content></div>
+    <p class="value" [style]="{ color: loading() ? 'grey' : valueColor() }">
+      {{ loading() ? 0 : value() }}
+    </p>
+  </div>
+  <p class="legend" [style]="{ color: loading() ? 'grey' : legendColor() }">
+    {{ legend() }}
+  </p>
 </div>

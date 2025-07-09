@@ -1,6 +1,12 @@
 @use "../../../styles/colors.scss" as colors;
 @use "../../../styles/fonts.scss" as fonts;
 
+.header {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
 .title {
   background-color: black;
   width: max-content;

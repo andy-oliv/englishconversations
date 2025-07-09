@@ -17,7 +17,13 @@ export class DashboardService {
   async fetchInfo(): Promise<Return> {
     try {
       const users: User[] = await this.prismaService.user.findMany({
-        take: 6,
+        include: {
+          chapters: {
+            select: {
+              status: true,
+            },
+          },
+        },
         orderBy: {
           lastLogin: 'desc',
         },
@@ -29,6 +35,7 @@ export class DashboardService {
         },
       });
 
+      const chapters: number = await this.prismaService.chapter.count();
       const units: number = await this.prismaService.unit.count();
       const videos: number = await this.prismaService.video.count();
       const exercises: number = await this.prismaService.exercise.count();
@@ -38,8 +45,9 @@ export class DashboardService {
         data: {
           users,
           students,
-          videos,
+          chapters,
           units,
+          videos,
           exercises,
         },
       };

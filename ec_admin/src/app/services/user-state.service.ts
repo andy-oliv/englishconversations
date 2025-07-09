@@ -1,11 +1,11 @@
 import { Injectable, signal } from '@angular/core';
-import User from '../../entities/User';
+import LoggedUser from '../../entities/loggedUser';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserStateService {
-  user = signal<User>({
+  user = signal<LoggedUser>({
     id: '',
     name: '',
     email: '',
@@ -14,17 +14,17 @@ export class UserStateService {
   });
   constructor() {}
 
-  setUser(userData: User) {
+  setLoggedUser(userData: LoggedUser) {
     this.user.set(userData);
     localStorage.setItem('user', JSON.stringify(userData));
   }
 
-  getUser() {
+  getLoggedUser() {
     localStorage.getItem('user');
     return this.user();
   }
 
-  reset() {
+  resetLoggedUser() {
     this.user.set({
       id: '',
       name: '',

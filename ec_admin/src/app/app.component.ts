@@ -4,13 +4,11 @@ import { MenuComponent } from './components/menu/menu.component';
 import { MenuStateService } from './services/menu-state.service';
 import { NgClass } from '@angular/common';
 import { filter } from 'rxjs';
-import { UserComponent } from './components/user/user.component';
 import { UserStateService } from './services/user-state.service';
-import User from '../entities/User';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, MenuComponent, NgClass, UserComponent],
+  imports: [RouterOutlet, MenuComponent, NgClass],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
@@ -26,7 +24,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     const loadedUser: string | null = localStorage.getItem('user');
     if (loadedUser) {
-      this.userService.setUser(JSON.parse(loadedUser));
+      this.userService.setLoggedUser(JSON.parse(loadedUser));
     }
 
     this.currentRoute.set(this.router.url);

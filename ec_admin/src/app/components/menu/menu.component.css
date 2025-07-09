@@ -1,0 +1,117 @@
+nav {
+  background-color: black;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  box-shadow: 0 0 20px -1px;
+}
+nav .imgContainer {
+  width: 60%;
+  margin: 3em 0 5em 0;
+}
+nav .imgContainer img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+nav .wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  font-family: "Poppins", sans-serif;
+  color: #949494;
+  cursor: pointer;
+}
+.menuItem .svg {
+  width: 1.8em;
+}
+
+.menuItem:hover {
+  color: #bedff3;
+}
+
+.closedSubMenu {
+  padding: 0 0 0 2em;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: all 0.4s ease-in-out;
+}
+
+.openSubMenu {
+  max-height: 500px;
+  opacity: 1;
+  padding: 0 0 0 2em;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  font-family: "Poppins", sans-serif;
+  color: #949494;
+  cursor: pointer;
+}
+.item .svg {
+  width: 1.8em;
+}
+
+.item:hover {
+  color: #bedff3;
+}
+
+.active {
+  color: #3ab2f6;
+}
+
+.noAnimation {
+  transition: none;
+}
+
+.menuButton {
+  display: flex;
+  position: fixed;
+  bottom: 2em;
+  width: 2em;
+  color: #949494;
+  cursor: pointer;
+}
+
+.menuButton:hover {
+  color: #bedff3;
+}
+
+.closedMenu .imgContainer {
+  margin: 3em 0 7em 0;
+}
+.closedMenu .wrapper {
+  align-items: center;
+}
+.closedMenu p {
+  display: none;
+}
+.closedMenu .closedSubMenu {
+  padding: 0;
+}
+.closedMenu .openSubMenu {
+  padding: 0;
+}
+.closedMenu .item .svg {
+  width: 1.3em;
+}
+
+:host {
+  display: block;
+  height: 100vh;
+  transition: width 0.2s ease-in-out;
+}/*# sourceMappingURL=menu.component.css.map */

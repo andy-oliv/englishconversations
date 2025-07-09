@@ -1,8 +1,8 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { UserStateService } from '../../services/user-state.service';
-import User from '../../../entities/User';
-import { HttpClient } from '@angular/common/http';
+import User from '../../../entities/loggedUser';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-user',
@@ -18,28 +18,32 @@ export class UserComponent implements OnInit {
     avatar: '',
     role: '',
   });
-  openMenu = signal<boolean>(false);
+  menuFlag = signal<boolean>(false);
 
   constructor(
     private readonly userService: UserStateService,
-    private readonly httpClient: HttpClient,
+    private readonly authService: AuthService,
     private readonly router: Router,
   ) {}
 
   ngOnInit(): void {
-    this.user.set(this.userService.getUser());
+    this.user.set(this.userService.getLoggedUser());
   }
 
-  onClick(): void {
-    this.openMenu.set(!this.openMenu());
+  openMenu(): void {
+    if (this.menuFlag() === false) {
+      this.menuFlag.set(true);
+    }
+  }
+
+  closeMenu(): void {
+    if (this.menuFlag() === true) {
+      this.menuFlag.set(false);
+    }
   }
 
   logout(): void {
-    const subscription = this.httpClient.get<{ message: string }>(
-      'http://localhost:3000/auth/logout',
-      { withCredentials: true },
-    );
-    subscription.subscribe({
+    this.authService.logout().subscribe({
       complete: () => {
         localStorage.removeItem('user');
         this.router.navigate(['/login']);

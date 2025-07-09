@@ -1,8 +1,8 @@
-<div class="container">
-  <div class="imgWrapper" (click)="onClick()">
+<div class="container" (mouseleave)="closeMenu()">
+  <div class="imgWrapper" (mouseenter)="openMenu()">
     <img src="{{ user().avatar }}" />
   </div>
-  <div class="menu" [class.active]="openMenu()">
+  <div class="menu" [class.active]="menuFlag()" (mouseleave)="closeMenu()">
     <p class="username">Olá, {{ user().name.split(" ")[0] }}!</p>
     <div class="menuOption">
       <div class="icon">

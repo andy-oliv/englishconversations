@@ -1,0 +1,17 @@
+.header {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.title {
+  background-color: black;
+  width: -moz-max-content;
+  width: max-content;
+  padding: 0.5em 2em 0.5em 1em;
+  color: white;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  border-radius: 0 0 2em 0;
+  margin-bottom: 2em;
+}/*# sourceMappingURL=title.component.css.map */

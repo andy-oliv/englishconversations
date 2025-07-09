@@ -1,25 +1,143 @@
-<body>
-  <app-title title="Dashboard" />
-  <div class="cardContainer">
-    <app-info-card
-      legend="Total de alunos"
-      [value]="totalStudents()"
-      cardColor="#bedff3"
-    />
-    <app-info-card
-      legend="Total de Unidades"
-      [value]="totalUnits()"
-      cardColor="#ffa79e"
-    />
-    <app-info-card
-      legend="Total de Vídeos"
-      [value]="totalVideos()"
-      cardColor="#b4edb4"
-    />
-    <app-info-card
-      legend="Total de Exercícios"
-      [value]="totalExercises()"
-      cardColor="#e6acff"
-    />
+<app-title title="Dashboard" />
+<div class="cardContainer">
+  <div class="cards">
+    <div class="generalInfo">
+      <app-info-card
+        legend="Total de alunos"
+        [value]="totalStudents()"
+        cardColor="#bedff3"
+        [loading]="loading()"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="32"
+          height="32"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="size-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+          />
+        </svg>
+      </app-info-card>
+      <app-info-card
+        legend="Total de Unidades"
+        [value]="totalUnits()"
+        cardColor="#ffa79e"
+        [loading]="loading()"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="32"
+          height="32"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="size-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M6 6.878V6a2.25 2.25 0 0 1 2.25-2.25h7.5A2.25 2.25 0 0 1 18 6v.878m-12 0c.235-.083.487-.128.75-.128h10.5c.263 0 .515.045.75.128m-12 0A2.25 2.25 0 0 0 4.5 9v.878m13.5-3A2.25 2.25 0 0 1 19.5 9v.878m0 0a2.246 2.246 0 0 0-.75-.128H5.25c-.263 0-.515.045-.75.128m15 0A2.25 2.25 0 0 1 21 12v6a2.25 2.25 0 0 1-2.25 2.25H5.25A2.25 2.25 0 0 1 3 18v-6c0-.98.626-1.813 1.5-2.122"
+          />
+        </svg>
+      </app-info-card>
+
+      <app-info-card
+        legend="Total de Vídeos"
+        [value]="totalVideos()"
+        cardColor="#b4edb4"
+        [loading]="loading()"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="32"
+          height="32"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-camera-icon lucide-camera"
+        >
+          <path
+            d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"
+          />
+          <circle cx="12" cy="13" r="3" />
+        </svg>
+      </app-info-card>
+      <app-info-card
+        legend="Total de Exercícios"
+        [value]="totalExercises()"
+        cardColor="#e6acff"
+        [loading]="loading()"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="32"
+          height="32"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="lucide lucide-notebook-pen-icon lucide-notebook-pen"
+        >
+          <path
+            d="M13.4 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7.4"
+          />
+          <path d="M2 6h4" />
+          <path d="M2 10h4" />
+          <path d="M2 14h4" />
+          <path d="M2 18h4" />
+          <path
+            d="M21.378 5.626a1 1 0 1 0-3.004-3.004l-5.01 5.012a2 2 0 0 0-.506.854l-.837 2.87a.5.5 0 0 0 .62.62l2.87-.837a2 2 0 0 0 .854-.506z"
+          />
+        </svg>
+      </app-info-card>
+    </div>
+
+    <div class="progressTable" [class.loadingTable]="loading()">
+      <div class="tableHeader">
+        <p class="tableHeading">Aluno(a)</p>
+        <p class="tableHeading">Progresso</p>
+        <p class="tableHeading">Total de Trilhas</p>
+      </div>
+
+      @for (user of lastLoggedUsers(); track user.id) {
+        <div class="userProgressContainer">
+          <p class="tableUsername">{{ loading() ? "" : user.name }}</p>
+          <p
+            class="tableProgress"
+            [style]="{ width: loading() ? '100%' : `${getUserProgress(user).totalProgress === 0 ? 1 : getUserProgress(user).totalProgress}%` }"
+          ></p>
+          <p class="totalProgress">
+            {{ loading() ? "0" : getUserProgress(user).completedChapters }}/{{
+              loading() ? "0" : totalChapters()
+            }}
+          </p>
+        </div>
+      }
+    </div>
   </div>
-</body>
+
+  <div class="lastLogins" [class.loading]="loading()">
+    <h3 class="cardTitle">Últimos logins</h3>
+    <div class="users">
+      @for (user of lastLoggedUsers().slice(0, 8); track user.id) {
+        <div class="userInfo">
+          <p class="name">{{ loading() ? "" : user.name }}</p>
+          <p class="date">{{ loading() ? "" : formatDate(user.lastLogin) }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</div>

@@ -16,3 +16,30 @@
     font-size: 2rem;
   }
 }
+
+.iconContainer {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+
+.loading {
+  .legend {
+    opacity: 0.3;
+    animation: loadingAnimation 1.5s ease-in-out infinite;
+  }
+  .value {
+    opacity: 0.3;
+    animation: loadingAnimation 1s ease-in-out infinite;
+  }
+}
+
+@keyframes loadingAnimation {
+  0% {
+    opacity: 0.3;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}

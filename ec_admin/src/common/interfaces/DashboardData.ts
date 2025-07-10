@@ -1,10 +1,13 @@
 import User from '../../entities/User';
 
 export default interface DashboardData {
-  users: User[];
-  students: number;
-  chapters: number;
-  units: number;
-  videos: number;
-  exercises: number;
+  monthlyLogins: { loginDate: string; logins: number }[];
+  latestLogins: Partial<User>[];
+  userProgresses: Partial<User>[];
+  totalStudents: number;
+  totalChapters: number;
+  totalUnits: number;
+  totalVideos: number;
+  totalExercises: number;
+  notifications: Partial<Notification>[];
 }

@@ -1,5 +1,5 @@
 <app-title title="Dashboard" />
-<div class="cardContainer">
+<div class="upperContent">
   <div class="cards">
     <div class="generalInfo">
       <app-info-card
@@ -107,35 +107,41 @@
 
     <div class="progressTable" [class.loadingTable]="loading()">
       <div class="tableHeader">
-        <p class="tableHeading">Aluno(a)</p>
-        <p class="tableHeading">Progresso</p>
+        <div class="filter">
+          <p class="tableHeading">Aluno(a)</p>
+          <select #nameFilter id="studentName" (change)="filterName($event)">
+            <option value="n/a">Selecione</option>
+            <option value="a-z">A-Z</option>
+            <option value="z-a">Z-A</option>
+          </select>
+        </div>
+        <div class="filter">
+          <p class="tableHeading">Progresso</p>
+          <select
+            #progressFilter
+            id="studentProgress"
+            (change)="filterProgress($event)"
+          >
+            <option value="n/a">Selecione</option>
+            <option value="more">Mais alto</option>
+            <option value="less">Mais baixo</option>
+          </select>
+        </div>
         <p class="tableHeading">Total de Trilhas</p>
       </div>
 
-      @for (user of lastLoggedUsers(); track user.id) {
+      @for (user of sortedProgresses(); track user.id) {
         <div class="userProgressContainer">
           <p class="tableUsername">{{ loading() ? "" : user.name }}</p>
           <p
             class="tableProgress"
-            [style]="{ width: loading() ? '100%' : `${getUserProgress(user).totalProgress === 0 ? 1 : getUserProgress(user).totalProgress}%` }"
+            [style]="{ width: loading() ? '100%' : `${user.totalProgress === 0 ? 1 : user.totalProgress}%` }"
           ></p>
           <p class="totalProgress">
-            {{ loading() ? "0" : getUserProgress(user).completedChapters }}/{{
+            {{ loading() ? "0" : user.completedChapters }}/{{
               loading() ? "0" : totalChapters()
             }}
           </p>
-        </div>
-      }
-    </div>
-  </div>
-
-  <div class="lastLogins" [class.loading]="loading()">
-    <h3 class="cardTitle">Últimos logins</h3>
-    <div class="users">
-      @for (user of lastLoggedUsers().slice(0, 8); track user.id) {
-        <div class="userInfo">
-          <p class="name">{{ loading() ? "" : user.name }}</p>
-          <p class="date">{{ loading() ? "" : formatDate(user.lastLogin) }}</p>
         </div>
       }
     </div>

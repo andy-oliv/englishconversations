@@ -9,26 +9,44 @@
           <img src="/logo_black.png" />
         </div>
       </div>
-      <form #loginForm="ngForm" (submit)="onSubmit(loginForm)">
+      <form [formGroup]="loginForm" (submit)="onSubmit()">
         <div class="inputWrapper">
-          <label for="email">Email</label>
+          <label for="email" [class.emailError]="emailError()">Email</label>
           <input
+            formControlName="email"
             type="text"
             name="email"
-            ngModel
             placeholder="digite o seu email"
+            [ngClass]="{ alert: showError() || emailError() }"
           />
         </div>
         <div class="inputWrapper">
-          <label for="email">Senha</label>
+          <label for="password" [class.passwordError]="passwordError()"
+            >Senha</label
+          >
           <input
+            formControlName="password"
             type="text"
             name="password"
-            ngModel
             placeholder="digite a sua senha"
+            [ngClass]="{ alert: showError() || passwordError() }"
           />
         </div>
-        <button>Enviar</button>
+        <button
+          class="btn"
+          [ngClass]="{
+            loading: loading(),
+            error: showError(),
+          }"
+        >
+          {{
+            loading()
+              ? "Enviando..."
+              : showError()
+                ? "Email ou senha inválidos"
+                : "Enviar"
+          }}
+        </button>
       </form>
     </div>
   </div>

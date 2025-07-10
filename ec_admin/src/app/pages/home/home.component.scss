@@ -7,10 +7,11 @@
   justify-content: space-between;
 }
 
-.cardContainer {
+.upperContent {
   display: flex;
-  max-height: 44%;
+  max-height: 45%;
   justify-content: space-between;
+  gap: 2em;
 
   .cards {
     display: flex;
@@ -19,70 +20,10 @@
 
     .generalInfo {
       display: flex;
+      width: 50%;
       gap: 1.5em;
     }
   }
-}
-
-.lastLogins {
-  background-color: colors.$yellow;
-  width: 40%;
-  padding: 1em;
-  border-radius: 0.8em;
-  font-family: fonts.$poppins;
-
-  .cardTitle {
-    margin-bottom: 1em;
-  }
-
-  .users {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.5em 1em;
-
-    .userInfo {
-      background-color: rgb(255, 251, 180);
-      padding: 0.5em;
-      border-radius: 0.8em;
-      min-height: 3em;
-    }
-  }
-}
-
-.loading {
-  background-color: #484848;
-
-  .cardTitle {
-    color: white;
-    animation: loadingAnimation 1s ease-in-out infinite;
-  }
-
-  .users {
-    .userInfo {
-      background-color: white;
-      animation: loadingAnimation 1s ease-in-out infinite;
-    }
-  }
-}
-
-.addContentBtn {
-  display: flex;
-  align-items: center;
-  gap: 0.3em;
-  font-family: fonts.$poppins;
-  background-color: #bdc2c7;
-  color: black;
-  border: none;
-  width: max-content;
-  font-size: 1.1rem;
-  padding: 0.5em 1em;
-  border-radius: 0.5em;
-  cursor: pointer;
-}
-
-.addContentBtn:hover {
-  color: white;
-  background-color: colors.$active;
 }
 
 .progressTable {
@@ -114,8 +55,32 @@
     background-color: rgb(237, 237, 237);
   }
 
+  .filter {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+
+    select {
+      padding: 0.1em 0.5em;
+      font-family: fonts.$poppins;
+      background-color: black;
+      color: white;
+      border-radius: 0.3em;
+
+      option {
+        color: colors.$inactive;
+      }
+    }
+  }
+
   .tableHeading {
     font-weight: 800;
+  }
+
+  .activeFilter {
+    svg {
+      color: colors.$active;
+    }
   }
 
   .tableProgress {

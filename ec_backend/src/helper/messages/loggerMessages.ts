@@ -286,6 +286,28 @@ const loggerMessages = {
         'An internal error occurred while validating the new file. Check the error log for more information.',
     },
   },
+  loginLog: {
+    fetchLogs: {
+      status_500:
+        'An internal error occurred while fetching the logs. Check the error log for more information. ',
+    },
+    fetchMonthlyLogs: {
+      status_500:
+        'An internal error occurred while fetching the logs. Check the error log for more information. ',
+    },
+    fetchTodayLogs: {
+      status_500:
+        'An internal error occurred while fetching the logs. Check the error log for more information. ',
+    },
+    fetchUserLogs: {
+      status_500:
+        'An internal error occurred while fetching the logs. Check the error log for more information. ',
+    },
+    generateLog: {
+      status_500:
+        'An internal error occurred while generating the log. Check the error log for more information. ',
+    },
+  },
   notification: {
     deleteNotification: {
       status_500:

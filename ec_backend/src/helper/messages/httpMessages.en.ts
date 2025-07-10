@@ -225,6 +225,24 @@ const httpMessages_EN = {
     status_4004:
       'The file type is invalid. The accepted types are jpeg, png, svg and webp',
   },
+  loginLog: {
+    fetchLogs: {
+      status_200: 'Logs successfully fetched.',
+      status_404: 'There are no logs to show.',
+    },
+    fetchMonthlyLogs: {
+      status_200: 'Logs successfully fetched.',
+      status_404: 'There are no logs to show.',
+    },
+    fetchTodayLogs: {
+      status_200: 'Logs successfully fetched.',
+      status_404: 'There are no logs to show.',
+    },
+    fetchUserLogs: {
+      status_200: 'Logs successfully fetched.',
+      status_404: 'There are no logs to show or the userId is invalid.',
+    },
+  },
   notification: {
     deleteNotification: {
       status_200: 'The notification has been deleted.',

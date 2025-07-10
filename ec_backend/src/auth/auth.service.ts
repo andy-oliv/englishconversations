@@ -579,6 +579,12 @@ export class AuthService {
   async handleAdminPayload(payload: Payload, user: User): Promise<string> {
     const accessToken = await this.generateAdminAccessToken(payload);
     await this.updateLastLogin(user);
+    await this.prismaService.loginLog.create({
+      data: {
+        userId: user.id,
+        loggedAt: dayjs().toDate(),
+      },
+    });
     return accessToken;
   }
 
@@ -587,6 +593,12 @@ export class AuthService {
     const refreshToken = await this.generateRefreshToken(payload);
     await this.addRefreshTokenToDatabase(refreshToken, user);
     await this.updateLastLogin(user);
+    await this.prismaService.loginLog.create({
+      data: {
+        userId: user.id,
+        loggedAt: dayjs().toDate(),
+      },
+    });
 
     return { accessToken, refreshToken };
   }

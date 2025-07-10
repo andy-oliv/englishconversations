@@ -30,6 +30,7 @@ import { EmailValidationGuard } from './auth/guards/email-validation/email-valid
 import { VideoProgressModule } from './video-progress/video-progress.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { LoginLogModule } from './login-log/login-log.module';
 
 @Module({
   imports: [
@@ -93,6 +94,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
     EmailModule,
     VideoProgressModule,
     DashboardModule,
+    LoginLogModule,
   ],
   controllers: [AppController],
   providers: [

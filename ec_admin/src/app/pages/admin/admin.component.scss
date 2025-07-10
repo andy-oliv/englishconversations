@@ -1,0 +1,55 @@
+@use "../../../styles/colors.scss" as colors;
+
+body {
+  display: flex;
+  max-height: 100vh;
+}
+
+.userMenu {
+  position: absolute;
+  top: 5%;
+  right: 3%;
+}
+
+.modalContainer {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  background-color: rgba(0, 0, 0, 0.712);
+  backdrop-filter: blur(4px);
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.openModal {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.openMenu {
+  width: 14%;
+  height: 100vh;
+}
+
+.closedMenu {
+  width: 4%;
+  height: 100vh;
+}
+
+main {
+  display: flex;
+  justify-content: space-between;
+  padding: 3em;
+  width: 100%;
+  background-color: colors.$backgroundColor;
+
+  .mainContent {
+    width: 100%;
+  }
+
+  .userMenu {
+    width: 12%;
+  }
+}

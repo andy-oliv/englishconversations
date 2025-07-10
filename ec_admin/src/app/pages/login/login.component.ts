@@ -86,7 +86,7 @@ export class LoginComponent implements OnInit {
         .subscribe({
           next: () => {
             this.loading.set(false);
-            this.router.navigate(['/']);
+            this.router.navigate(['admin/home']);
           },
           error: (error) => {
             this.logService.logWarning(

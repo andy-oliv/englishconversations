@@ -1,0 +1,17 @@
+<body>
+  <div [class.openModal]="isModalOpen()" class="modalContainer">
+    <app-modal
+      (closeModal)="closeModal()"
+      menuSelection="{{ selectedOption() }}"
+    />
+  </div>
+  <app-menu [ngClass]="{ openMenu: isMenuOpen(), closedMenu: !isMenuOpen() }" />
+  <main>
+    <div class="mainContent">
+      <router-outlet />
+    </div>
+  </main>
+  <div class="userMenu">
+    <app-user (selectedOption)="handleSelection($event)" />
+  </div>
+</body>

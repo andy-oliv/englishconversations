@@ -63,12 +63,15 @@
     select {
       padding: 0.1em 0.5em;
       font-family: fonts.$poppins;
-      background-color: black;
+      background-color: rgb(102, 158, 203);
+      border: none;
+      outline: none;
       color: white;
       border-radius: 0.3em;
+      cursor: pointer;
 
       option {
-        color: colors.$inactive;
+        color: white;
       }
     }
   }

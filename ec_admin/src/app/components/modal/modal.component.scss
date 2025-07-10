@@ -1,0 +1,28 @@
+.mainContent {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.wrapper {
+  width: 100%;
+  height: 50%;
+}
+
+.component {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.showProfileEditMenu {
+  opacity: 1;
+  visibility: visible;
+}
+
+.showChangePasswordMenu {
+  opacity: 1;
+  visibility: visible;
+}

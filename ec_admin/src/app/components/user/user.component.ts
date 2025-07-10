@@ -1,4 +1,4 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, output, signal } from '@angular/core';
 import { UserStateService } from '../../services/user-state.service';
 import User from '../../../entities/loggedUser';
 import { Router } from '@angular/router';
@@ -19,6 +19,7 @@ export class UserComponent implements OnInit {
     role: '',
   });
   menuFlag = signal<boolean>(false);
+  selectedOption = output<string>();
 
   constructor(
     private readonly userService: UserStateService,
@@ -52,5 +53,13 @@ export class UserComponent implements OnInit {
         console.log(error);
       },
     });
+  }
+
+  editProfile(): void {
+    this.selectedOption.emit('editProfile');
+  }
+
+  changePassword(): void {
+    this.selectedOption.emit('changePassword');
   }
 }

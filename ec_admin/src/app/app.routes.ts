@@ -12,64 +12,82 @@ import { SettingsComponent } from './pages/settings/settings.component';
 import { SecurityComponent } from './pages/security/security.component';
 import { LoginComponent } from './pages/login/login.component';
 import { authGuard } from './guards/auth.guard';
+import { AdminComponent } from './pages/admin/admin.component';
 
 export const routes: Routes = [
   {
     path: '',
-    canActivate: [authGuard],
-    component: HomeComponent,
+    pathMatch: 'full',
+    redirectTo: 'admin/home',
   },
   {
-    path: 'login',
-    component: LoginComponent,
-  },
-  {
-    path: 'content',
+    path: 'admin',
     canActivate: [authGuard],
-    component: ContentComponent,
+    component: AdminComponent,
     children: [
       {
-        path: 'chapters',
-        component: ChaptersComponent,
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'home',
       },
       {
-        path: 'units',
-        component: UnitsComponent,
+        path: 'home',
+        canActivate: [authGuard],
+        component: HomeComponent,
       },
       {
-        path: 'media',
-        component: MediaComponent,
+        path: 'content',
+        canActivate: [authGuard],
+        component: ContentComponent,
+        children: [
+          {
+            path: 'chapters',
+            component: ChaptersComponent,
+          },
+          {
+            path: 'units',
+            component: UnitsComponent,
+          },
+          {
+            path: 'media',
+            component: MediaComponent,
+          },
+        ],
+      },
+      {
+        path: 'users',
+        canActivate: [authGuard],
+        component: UsersComponent,
+      },
+      {
+        path: 'progress',
+        canActivate: [authGuard],
+        component: ProgressComponent,
+      },
+      {
+        path: 'tests',
+        canActivate: [authGuard],
+        component: TestsComponent,
+      },
+      {
+        path: 'notifications',
+        canActivate: [authGuard],
+        component: NotificationsComponent,
+      },
+      {
+        path: 'settings',
+        canActivate: [authGuard],
+        component: SettingsComponent,
+      },
+      {
+        path: 'security',
+        canActivate: [authGuard],
+        component: SecurityComponent,
       },
     ],
   },
   {
-    path: 'users',
-    canActivate: [authGuard],
-    component: UsersComponent,
-  },
-  {
-    path: 'progress',
-    canActivate: [authGuard],
-    component: ProgressComponent,
-  },
-  {
-    path: 'tests',
-    canActivate: [authGuard],
-    component: TestsComponent,
-  },
-  {
-    path: 'notifications',
-    canActivate: [authGuard],
-    component: NotificationsComponent,
-  },
-  {
-    path: 'settings',
-    canActivate: [authGuard],
-    component: SettingsComponent,
-  },
-  {
-    path: 'security',
-    canActivate: [authGuard],
-    component: SecurityComponent,
+    path: 'login',
+    component: LoginComponent,
   },
 ];

@@ -21,7 +21,7 @@
           />
         </svg>
       </div>
-      <p class="option">Editar perfil</p>
+      <p class="option" (click)="editProfile()">Editar perfil</p>
     </div>
     <div class="menuOption">
       <div class="icon">
@@ -40,7 +40,7 @@
           />
         </svg>
       </div>
-      <p class="option">Alterar senha</p>
+      <p class="option" (click)="changePassword()">Alterar senha</p>
     </div>
     <button (click)="logout()">Logout</button>
   </div>

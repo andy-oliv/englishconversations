@@ -19,7 +19,7 @@ import { FileService } from '../file/file.service';
 import { S3Service } from '../s3/s3.service';
 import { Logger } from 'nestjs-pino';
 import CreateExerciseDTO from './dto/CreateExercise.dto';
-import updateFormHandler from '../helper/functions/templates/updateFormHandler';
+import updateFormHandler from '../helper/functions/updateFormHandler';
 import UpdateExerciseDTO from './dto/UpdateExercise.dto';
 
 jest.mock('../helper/functions/formDataHandler');

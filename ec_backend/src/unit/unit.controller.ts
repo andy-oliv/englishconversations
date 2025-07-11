@@ -29,7 +29,7 @@ import { multerMemoryStorage } from '../config/upload.config';
 import allowedTypes from '../helper/functions/allowedTypes';
 import FormHandlerReturn from '../common/types/FormHandlerReturn';
 import FormDataHandler from '../helper/functions/formDataHandler';
-import updateFormHandler from '../helper/functions/templates/updateFormHandler';
+import updateFormHandler from '../helper/functions/updateFormHandler';
 import UpdateVideoDTO from '../video/dto/updateVideo.dto';
 import parseJson from '../helper/functions/parseJson';
 import { AuthType } from '../common/decorators/authType.decorator';

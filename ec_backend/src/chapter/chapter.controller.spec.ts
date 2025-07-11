@@ -18,7 +18,7 @@ import { Logger } from 'nestjs-pino';
 import { FileService } from '../file/file.service';
 import FormHandlerReturn from '../common/types/FormHandlerReturn';
 import allowedTypes from '../helper/functions/allowedTypes';
-import updateFormHandler from '../helper/functions/templates/updateFormHandler';
+import updateFormHandler from '../helper/functions/updateFormHandler';
 import UpdateChapterDTO from './dto/updateChapter.dto';
 
 jest.mock('../helper/functions/formDataHandler');

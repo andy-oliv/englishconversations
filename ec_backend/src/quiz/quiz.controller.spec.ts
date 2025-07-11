@@ -19,7 +19,7 @@ import { S3Service } from '../s3/s3.service';
 import { Logger } from 'nestjs-pino';
 import { faker } from '@faker-js/faker/.';
 import CreateQuizDTO from './dto/createQuiz.dto';
-import updateFormHandler from '../helper/functions/templates/updateFormHandler';
+import updateFormHandler from '../helper/functions/updateFormHandler';
 import UpdateQuizDTO from './dto/updateQuiz.dto';
 
 jest.mock('../helper/functions/allowedTypes');

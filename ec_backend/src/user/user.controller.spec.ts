@@ -16,7 +16,7 @@ import FormDataHandler from '../helper/functions/formDataHandler';
 import { S3Service } from '../s3/s3.service';
 import { Logger } from 'nestjs-pino';
 import RegisterUserDTO from './dto/registerUser.dto';
-import updateFormHandler from '../helper/functions/templates/updateFormHandler';
+import updateFormHandler from '../helper/functions/updateFormHandler';
 import UpdateUserDTO from './dto/updateUser.dto';
 import allowedTypes from '../helper/functions/allowedTypes';
 

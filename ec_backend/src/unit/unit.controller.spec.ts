@@ -17,7 +17,7 @@ import { faker } from '@faker-js/faker/.';
 import allowedTypes from '../helper/functions/allowedTypes';
 import FormDataHandler from '../helper/functions/formDataHandler';
 import CreateUnitDTO from './dto/createUnit.dto';
-import updateFormHandler from '../helper/functions/templates/updateFormHandler';
+import updateFormHandler from '../helper/functions/updateFormHandler';
 import UpdateVideoDTO from '../video/dto/updateVideo.dto';
 
 jest.mock('../helper/functions/formDataHandler');

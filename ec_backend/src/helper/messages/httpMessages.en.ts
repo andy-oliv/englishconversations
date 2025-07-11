@@ -60,6 +60,9 @@ const httpMessages_EN = {
       status_400:
         'Please check the request. Either the user or the password are incorrect.',
     },
+    checkEmailExists: {
+      status_400: 'The email is already in use.',
+    },
     emailConfirmed: {
       status_400: 'The token is expired.',
     },
@@ -70,7 +73,12 @@ const httpMessages_EN = {
       status_200:
         'We have sent you an email with a link to confirm your email address.',
     },
-    generateResetToken: {
+    generateEmailResetToken: {
+      status_200:
+        'If the email is correct, you should have received a link to reset your email.',
+      status_404: 'User not found with the current email.',
+    },
+    generatePasswordResetToken: {
       status_200:
         'If the email is correctly registered, you should have received a link to reset your password.',
     },
@@ -85,12 +93,14 @@ const httpMessages_EN = {
       status_200: 'User successfully logged out.',
     },
     updateEmail: {
-      status_200: 'The email has been successfully updated',
+      status_200:
+        'Your email has been successfully updated. For security reasons, you have been logged out.',
       status_400: 'Invalid email. Check the request.',
-      status_404: 'The user was not found or the ID is invalid.',
+      status_404: 'The user was not found or the email is invalid.',
     },
     updatePassword: {
-      status_200: 'The passsword has been successfully updated.',
+      status_200:
+        'Your password has been successfully updated. If you were logged in, for security reasons, you have been logged out.',
       status_400: 'The token is invalid.',
     },
     validateAdminAccessToken: {
@@ -99,6 +109,10 @@ const httpMessages_EN = {
     },
     validateAccessToken: {
       status_401: 'Unauthorized: You must login to see this content.',
+    },
+    validateEmailJwt: {
+      status_400: 'The token is expired or invalid.',
+      status_404: 'The user was not found.',
     },
     validateRefreshToken: {
       status_401: 'Unauthorized: You must login to see this content.',

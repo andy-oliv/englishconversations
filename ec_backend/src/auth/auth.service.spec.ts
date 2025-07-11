@@ -23,7 +23,7 @@ import generateWelcomeEmail from '../helper/functions/templates/generateWelcomeE
 import * as bcrypt from 'bcrypt';
 import Return from '../common/types/Return';
 import { randomBytes } from 'crypto';
-import generateResetTemplate from '../helper/functions/templates/generateResetEmail';
+import generateResetTemplate from '../helper/functions/templates/generatePasswordReset';
 
 jest.mock('../helper/functions/templates/generateEmailConfirmation');
 jest.mock('../helper/functions/templates/generateWelcomeEmail');

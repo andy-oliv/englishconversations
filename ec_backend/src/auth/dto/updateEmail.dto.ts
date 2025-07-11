@@ -18,5 +18,5 @@ export default class UpdateEmailDTO {
       message: validationMessages_EN.auth.updateEmailDTO.email.isEmail,
     },
   )
-  email: string;
+  updatedEmail: string;
 }

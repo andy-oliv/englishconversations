@@ -26,7 +26,7 @@ import FormDataHandler from '../helper/functions/formDataHandler';
 import { S3Service } from '../s3/s3.service';
 import { Logger } from 'nestjs-pino';
 import { FileService } from '../file/file.service';
-import updateFormHandler from '../helper/functions/templates/updateFormHandler';
+import updateFormHandler from '../helper/functions/updateFormHandler';
 import parseJson from '../helper/functions/parseJson';
 import allowedTypes from '../helper/functions/allowedTypes';
 import { AuthType } from '../common/decorators/authType.decorator';

@@ -16,7 +16,7 @@ import FormDataHandler from '../helper/functions/formDataHandler';
 import FormHandlerReturn from '../common/types/FormHandlerReturn';
 import GenerateVideoDTO from './dto/generateVideo.dto';
 import { faker } from '@faker-js/faker/.';
-import updateFormHandler from '../helper/functions/templates/updateFormHandler';
+import updateFormHandler from '../helper/functions/updateFormHandler';
 import UpdateVideoDTO from './dto/updateVideo.dto';
 import allowedTypes from '../helper/functions/allowedTypes';
 

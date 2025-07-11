@@ -16,18 +16,18 @@ import loggerMessages from '../helper/messages/loggerMessages';
 import Payload from '../common/types/Payload';
 import GeneratedTokens from '../common/types/GeneratedTokens';
 import { ConfigService } from '@nestjs/config';
-import { Response } from 'express';
-import RequestWithUser from '../common/types/RequestWithUser';
+import { response, Response } from 'express';
 import * as dayjs from 'dayjs';
 import Return from '../common/types/Return';
 import { randomBytes } from 'crypto';
 import generateExceptionMessage from '../helper/functions/generateExceptionMessage';
 import { EmailService } from '../email/email.service';
 import ResendObject from '../common/types/ResendObject';
-import generateResetTemplate from '../helper/functions/templates/generateResetEmail';
 import generateEmailConfirmationTemplate from '../helper/functions/templates/generateEmailConfirmation';
 import { UserRoles } from '../../generated/prisma';
 import generateWelcomeEmail from '../helper/functions/templates/generateWelcomeEmail';
+import generatePasswordResetEmailTemplate from '../helper/functions/templates/generatePasswordReset';
+import generateEmailResetTemplate from '../helper/functions/templates/generateEmailReset';
 
 @Injectable()
 export class AuthService {
@@ -47,6 +47,8 @@ export class AuthService {
           id: payload.id,
         },
         data: {
+          emailVerificationToken: null,
+          emailTokenExpires: null,
           isEmailVerified: true,
         },
       });
@@ -55,7 +57,7 @@ export class AuthService {
           id: payload.id,
           name: payload.name,
           email: payload.email,
-          avatar: payload.avatar,
+          avatarUrl: payload.avatarUrl,
           role: payload.role,
         },
         user,
@@ -90,7 +92,7 @@ export class AuthService {
     id: string,
     name: string,
     email: string,
-    avatar: string,
+    avatarUrl: string,
     role: UserRoles,
   ): Promise<{ message: string }> {
     try {
@@ -98,7 +100,7 @@ export class AuthService {
         id,
         name,
         email,
-        avatar,
+        avatarUrl,
         role,
       };
 
@@ -160,7 +162,169 @@ export class AuthService {
     }
   }
 
-  async generateResetToken(email: string): Promise<{ message: string }> {
+  async validateEmailJwt(token: string): Promise<string> {
+    try {
+      const payload: { currentEmail: string; updatedEmail: string } =
+        await this.jwtService.verifyAsync(token, {
+          issuer: this.configService.get<string>('JWT_ISSUER'),
+        });
+
+      const user: User = await this.prismaService.user.findFirstOrThrow({
+        where: {
+          email: payload.currentEmail,
+        },
+      });
+
+      const validToken = await bcrypt.compare(
+        token,
+        user.emailVerificationToken,
+      );
+
+      if (!validToken) {
+        throw new BadRequestException(
+          httpMessages_EN.auth.validateEmailJwt.status_400,
+        );
+      }
+
+      return payload.updatedEmail;
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(
+          httpMessages_EN.auth.validateEmailJwt.status_404,
+        );
+      }
+
+      handleInternalErrorException(
+        'authService',
+        'validateEmailJwt',
+        loggerMessages.auth.validateEmailJwt.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  async generateEmailJwt(
+    currentEmail: string,
+    updatedEmail: string,
+  ): Promise<{ jwt: string; hash: string }> {
+    try {
+      const payload = {
+        currentEmail,
+        updatedEmail,
+      };
+
+      const token: string = await this.jwtService.signAsync(payload, {
+        issuer: this.configService.get<string>('JWT_ISSUER'),
+        expiresIn: this.configService.get<string>('ACCESS_TOKEN_EXPIRATION'),
+      });
+
+      const saltRounds = Number(this.configService.get<string>('SALT_ROUNDS'));
+
+      const hash: string = await bcrypt.hash(
+        token,
+        isNaN(saltRounds) ? 12 : saltRounds,
+      );
+
+      return { jwt: token, hash };
+    } catch (error) {
+      handleInternalErrorException(
+        'authService',
+        'generateEmailJwt',
+        loggerMessages.auth.generateEmailJwt.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  async checkEmailExists(email: string): Promise<void> {
+    try {
+      const emailInUse: User = await this.prismaService.user.findUnique({
+        where: {
+          email,
+        },
+      });
+
+      if (emailInUse) {
+        throw new BadRequestException(
+          httpMessages_EN.auth.checkEmailExists.status_400,
+        );
+      }
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+      handleInternalErrorException(
+        'authService',
+        'checkEmailExists',
+        loggerMessages.auth.checkEmailExists.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  async generateEmailResetToken(
+    currentEmail: string,
+    updatedEmail: string,
+  ): Promise<{ message: string }> {
+    try {
+      await this.checkEmailExists(updatedEmail);
+      const token: { jwt: string; hash: string } = await this.generateEmailJwt(
+        currentEmail,
+        updatedEmail,
+      );
+
+      await this.prismaService.user.update({
+        where: {
+          email: currentEmail,
+        },
+        data: {
+          emailVerificationToken: token.hash,
+          emailTokenExpires: dayjs().add(30, 'minutes').toDate(),
+        },
+      });
+      const template: ResendObject = generateEmailResetTemplate(
+        updatedEmail,
+        token.jwt,
+        this.configService,
+      );
+      await this.emailService.sendEmail(template);
+
+      return {
+        message: httpMessages_EN.auth.generateEmailResetToken.status_200,
+      };
+    } catch (error) {
+      if (error.code === 'P2025') {
+        this.logger.log({
+          message: generateExceptionMessage(
+            'authService',
+            'generateEmailResetToken',
+            loggerMessages.auth.generateEmailResetToken.status_404,
+          ),
+          data: {
+            email: currentEmail,
+          },
+        });
+        throw new NotFoundException(
+          httpMessages_EN.auth.generateEmailResetToken.status_404,
+        );
+      }
+
+      handleInternalErrorException(
+        'authService',
+        'generateEmailResetToken',
+        loggerMessages.auth.generateEmailResetToken.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  async generatePasswordResetToken(
+    email: string,
+  ): Promise<{ message: string }> {
     try {
       const token: string = randomBytes(32).toString('hex');
       const expirationDate: Date = dayjs().add(30, 'minute').toDate();
@@ -173,34 +337,38 @@ export class AuthService {
           resetPasswordExpires: expirationDate,
         },
       });
-      const template: ResendObject = generateResetTemplate(
+      const template: ResendObject = generatePasswordResetEmailTemplate(
         email,
         token,
         this.configService,
       );
       await this.emailService.sendEmail(template);
 
-      return { message: httpMessages_EN.auth.generateResetToken.status_200 };
+      return {
+        message: httpMessages_EN.auth.generatePasswordResetToken.status_200,
+      };
     } catch (error) {
       if (error.code === 'P2025') {
         this.logger.log({
           message: generateExceptionMessage(
             'authService',
-            'generateResetToken',
-            loggerMessages.auth.generateResetToken.status_404,
+            'generatePasswordResetToken',
+            loggerMessages.auth.generatePasswordResetToken.status_404,
           ),
           data: {
             email,
           },
         });
         //intentionally returning 200 to avoid exposing an email
-        return { message: httpMessages_EN.auth.generateResetToken.status_200 };
+        return {
+          message: httpMessages_EN.auth.generatePasswordResetToken.status_200,
+        };
       }
 
       handleInternalErrorException(
         'authService',
-        'generateResetToken',
-        loggerMessages.auth.generateResetToken.status_500,
+        'generatePasswordResetToken',
+        loggerMessages.auth.generatePasswordResetToken.status_500,
         this.logger,
         error,
       );
@@ -465,7 +633,7 @@ export class AuthService {
         id: data.id,
         name: data.name,
         role: data.role,
-        avatar: data.avatar,
+        avatarUrl: data.avatarUrl,
         email: data.email,
       };
 
@@ -503,7 +671,7 @@ export class AuthService {
         id: data.id,
         name: data.name,
         role: data.role,
-        avatar: data.avatar,
+        avatarUrl: data.avatarUrl,
         email: data.email,
       };
 
@@ -548,7 +716,7 @@ export class AuthService {
         id: data.id,
         name: data.name,
         role: data.role,
-        avatar: data.avatar,
+        avatarUrl: data.avatarUrl,
         email: data.email,
       };
 
@@ -601,6 +769,54 @@ export class AuthService {
     });
 
     return { accessToken, refreshToken };
+  }
+
+  async verifyEmailToken(token: string, email: string): Promise<void> {
+    try {
+      const user: User = await this.prismaService.user.findFirstOrThrow({
+        where: {
+          AND: [{ email: email }, { emailVerificationToken: token }],
+        },
+      });
+
+      const currentDate: dayjs.Dayjs = dayjs();
+      const tokenExpirationDate: dayjs.Dayjs = dayjs(user.emailTokenExpires);
+
+      if (currentDate.isAfter(tokenExpirationDate)) {
+        throw new BadRequestException(
+          httpMessages_EN.auth.verifyToken.status_400,
+        );
+      }
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw error;
+      }
+
+      if (error.code === 'P2025') {
+        this.logger.log({
+          message: generateExceptionMessage(
+            'authService',
+            'verifyEmailToken',
+            loggerMessages.auth.verifyToken.status_404,
+          ),
+          data: {
+            email,
+            token,
+          },
+        });
+        throw new BadRequestException(
+          httpMessages_EN.auth.verifyToken.status_400,
+        );
+      }
+
+      handleInternalErrorException(
+        'authService',
+        'verifyEmailToken',
+        loggerMessages.auth.verifyToken.status_500,
+        this.logger,
+        error,
+      );
+    }
   }
 
   async verifyToken(token: string, email: string): Promise<void> {
@@ -663,7 +879,7 @@ export class AuthService {
         id: user.id,
         name: user.name,
         email: user.email,
-        avatar: user.avatarUrl,
+        avatarUrl: user.avatarUrl,
         role: user.role,
       };
 
@@ -689,7 +905,7 @@ export class AuthService {
         id: user.id,
         name: user.name,
         email: user.email,
-        avatar: user.avatarUrl,
+        avatarUrl: user.avatarUrl,
         role: user.role,
       };
 
@@ -726,18 +942,28 @@ export class AuthService {
   }
 
   async updateEmail(
-    request: RequestWithUser,
-    updatedEmail: string,
+    email: string,
+    token: string,
+    response: Response,
   ): Promise<Return> {
+    const updatedEmail: string = await this.validateEmailJwt(token);
+
     try {
       const updatedUser: User = await this.prismaService.user.update({
         where: {
-          id: request.user.id,
+          email: email,
         },
         data: {
           email: updatedEmail,
+          emailVerificationToken: null,
+          emailTokenExpires: null,
         },
       });
+
+      response.clearCookie('ec_accessToken');
+      response.clearCookie('ec_refreshToken');
+      response.clearCookie('ec_admin_access');
+
       return {
         message: httpMessages_EN.auth.updateEmail.status_200,
         data: updatedUser,
@@ -746,13 +972,6 @@ export class AuthService {
       if (error.code === 'P2025') {
         throw new NotFoundException(
           httpMessages_EN.auth.updateEmail.status_404,
-        );
-      }
-
-      //unique constraint error. The email is already in use
-      if (error.code === 'P2002') {
-        throw new BadRequestException(
-          httpMessages_EN.auth.updateEmail.status_400,
         );
       }
 
@@ -770,6 +989,7 @@ export class AuthService {
     email: string,
     updatedPassword: string,
     token: string,
+    response: Response,
   ): Promise<Return> {
     await this.verifyToken(token, email);
 
@@ -791,6 +1011,10 @@ export class AuthService {
           resetPasswordExpires: null,
         },
       });
+
+      response.clearCookie('ec_accessToken');
+      response.clearCookie('ec_refreshToken');
+      response.clearCookie('ec_admin_access');
       return {
         message: httpMessages_EN.auth.updatePassword.status_200,
         data: updatedUser,

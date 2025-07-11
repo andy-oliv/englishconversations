@@ -1,7 +1,7 @@
 import { ConfigService } from '@nestjs/config';
 import ResendObject from '../../../common/types/ResendObject';
 
-export default function generateResetTemplate(
+export default function generateEmailResetTemplate(
   email: string,
   token: string,
   configService: ConfigService,
@@ -9,11 +9,11 @@ export default function generateResetTemplate(
   const template: ResendObject = {
     from: 'Reset - English Conversations <noreply@englishconversations.com.br>',
     to: [email],
-    subject: 'Redefina sua senha',
+    subject: 'Redefina seu email',
     html: `  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Redefinição de Senha</title>
+    <title>Redefinição de Email</title>
     <style type="text/css">
       body {
         margin: 0;
@@ -95,7 +95,7 @@ export default function generateResetTemplate(
                     color: #333333;
                   "
                 >
-                  Redefinição de senha
+                  Redefinição de email
                 </h1>
                 <p
                   style="
@@ -106,7 +106,7 @@ export default function generateResetTemplate(
                   "
                 >
                   Olá! O sistema do English Conversations recebeu uma solicitação
-                  para redefinição de senha.
+                  para redefinição de email.
                 </p>
                 <p
                   style="
@@ -116,7 +116,7 @@ export default function generateResetTemplate(
                     color: #333333;
                   "
                 >
-                  Clique no link abaixo para redefinir sua senha:
+                  Clique no link abaixo para redefinir seu email:
                 </p>
 
                 <table
@@ -139,7 +139,7 @@ export default function generateResetTemplate(
                       <a
                         href="${configService.get<string>(
                           'FRONTEND_URL',
-                        )}auth/reset/password?token=${token}"
+                        )}/email-reset?token=${token}"
                         target="_blank"
                         style="
                           color: white;
@@ -154,7 +154,7 @@ export default function generateResetTemplate(
                           mso-hide: all;
                         "
                       >
-                        Redefinir senha
+                        Redefinir email
                       </a>
                     </td>
                   </tr>

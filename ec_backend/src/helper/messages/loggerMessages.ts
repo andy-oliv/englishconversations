@@ -76,6 +76,10 @@ const loggerMessages = {
       status_500:
         'An internal error occurred while adding the refresh token to the database. Check the error log for more information.',
     },
+    checkEmailExists: {
+      status_500:
+        'An internal error occurred while checking the email. Check the error log for more information.',
+    },
     emailConfirmed: {
       status_500:
         'An internal error occurred while checking the email confirmation token. Check the error log for more information.',
@@ -102,7 +106,17 @@ const loggerMessages = {
       status_500:
         'An internal error occurred while generating the refresh token. Check the error log for more information.',
     },
-    generateResetToken: {
+    generateEmailJwt: {
+      status_500:
+        'An internal error occurred while generating the token. Check the error log for more information.',
+    },
+    generateEmailResetToken: {
+      status_404:
+        'A user tried resetting their email but the register was not found.',
+      status_500:
+        'An internal error occurred while generating the reset token. Check the error log for more information.',
+    },
+    generatePasswordResetToken: {
       status_404:
         'A user tried resetting their password but the register was not found.',
       status_500:
@@ -145,6 +159,10 @@ const loggerMessages = {
     validateAccessToken: {
       status_500:
         'An internal error occurred while validating the access token. Check the error log for more information.',
+    },
+    validateEmailJwt: {
+      status_500:
+        'An internal error occurred while validating the token. Check the error log for more information.',
     },
     validateRefreshToken: {
       status_500:

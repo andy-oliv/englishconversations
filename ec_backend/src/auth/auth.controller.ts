@@ -37,7 +37,6 @@ import allowedTypes from '../helper/functions/allowedTypes';
 import { Throttle } from '@nestjs/throttler';
 import { AuthType } from '../common/decorators/authType.decorator';
 import { UserRoles } from '../../generated/prisma';
-import Payload from '../common/types/Payload';
 import { RoleGuard } from './guards/role/role.guard';
 
 @ApiTags('Auth')
@@ -179,7 +178,7 @@ export class AuthController {
         result.data.id,
         result.data.name,
         result.data.email,
-        result.data.avatar,
+        result.data.avatarUrl,
         result.data.role,
       );
     }
@@ -190,7 +189,7 @@ export class AuthController {
       result.data.id,
       result.data.name,
       result.data.email,
-      result.data.avatar,
+      result.data.avatarUrl,
       result.data.role,
     );
   }
@@ -273,12 +272,19 @@ export class AuthController {
     example: httpMessages_EN.general.status_500,
   })
   async updatePassword(
-    @Query() { token }: CheckTokenDTO,
+    @Query('token') { token }: CheckTokenDTO,
     @Body() data: updatePasswordDTO,
+    @Res({ passthrough: true }) response: Response,
   ): Promise<Return> {
-    return this.authService.updatePassword(data.email, data.password, token);
+    return this.authService.updatePassword(
+      data.email,
+      data.password,
+      token,
+      response,
+    );
   }
 
+  @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
   @Patch('reset/email')
   @ApiResponse({
     status: 200,
@@ -297,27 +303,47 @@ export class AuthController {
   })
   async updateEmail(
     @Req() request: RequestWithUser,
-    @Body() { email }: UpdateEmailDTO,
+    @Query('token') token: string,
+    @Res({ passthrough: true }) response: Response,
   ): Promise<Return> {
-    return this.authService.updateEmail(request, email);
+    return this.authService.updateEmail(request.user.email, token, response);
   }
 
-  @Public()
-  @Get('reset')
+  @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
+  @Get('reset/email')
   @ApiResponse({
     status: 200,
     description: 'Success',
-    example: httpMessages_EN.auth.generateResetToken.status_200,
+    example: httpMessages_EN.auth.generateEmailResetToken.status_200,
   })
   @ApiResponse({
     status: 500,
     description: 'Internal Server Error',
     example: httpMessages_EN.general.status_500,
   })
-  async generateResetToken(
+  async generateEmailResetToken(
+    @Req() request: RequestWithUser,
+    @Body() { email }: GenerateResetTokenDTO,
+  ): Promise<{ message: string }> {
+    return this.authService.generateEmailResetToken(request.user.email, email);
+  }
+
+  @Public()
+  @Get('reset/password')
+  @ApiResponse({
+    status: 200,
+    description: 'Success',
+    example: httpMessages_EN.auth.generatePasswordResetToken.status_200,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal Server Error',
+    example: httpMessages_EN.general.status_500,
+  })
+  async generatePasswordResetToken(
     @Body() data: GenerateResetTokenDTO,
   ): Promise<{ message: string }> {
-    return this.authService.generateResetToken(data.email);
+    return this.authService.generatePasswordResetToken(data.email);
   }
 
   @Get('student-session')

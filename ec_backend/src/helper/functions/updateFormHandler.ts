@@ -1,12 +1,12 @@
 import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 import { BadRequestException } from '@nestjs/common';
-import { S3Service } from '../../../s3/s3.service';
+import { S3Service } from '../../s3/s3.service';
 import { Logger } from 'nestjs-pino';
-import FormHandlerReturn from '../../../common/types/FormHandlerReturn';
-import httpMessages_EN from '../../messages/httpMessages.en';
-import handleInternalErrorException from '../handleErrorException';
-import loggerMessages from '../../messages/loggerMessages';
+import FormHandlerReturn from '../../common/types/FormHandlerReturn';
+import httpMessages_EN from '../messages/httpMessages.en';
+import handleInternalErrorException from './handleErrorException';
+import loggerMessages from '../messages/loggerMessages';
 
 type Constructor<T> = new (...args: any[]) => T;
 

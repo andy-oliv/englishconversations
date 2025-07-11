@@ -25,7 +25,7 @@ import { RoleGuard } from '../auth/guards/role/role.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerMemoryStorage } from '../config/upload.config';
 import FormHandlerReturn from '../common/types/FormHandlerReturn';
-import updateFormHandler from '../helper/functions/templates/updateFormHandler';
+import updateFormHandler from '../helper/functions/updateFormHandler';
 import { S3Service } from '../s3/s3.service';
 import { Logger } from 'nestjs-pino';
 import { FileService } from '../file/file.service';

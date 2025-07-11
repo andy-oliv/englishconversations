@@ -31,7 +31,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { multerMemoryStorage } from '../config/upload.config';
 import FormHandlerReturn from '../common/types/FormHandlerReturn';
 import FormDataHandler from '../helper/functions/formDataHandler';
-import updateFormHandler from '../helper/functions/templates/updateFormHandler';
+import updateFormHandler from '../helper/functions/updateFormHandler';
 import parseJson from '../helper/functions/parseJson';
 import { AuthType } from '../common/decorators/authType.decorator';
 import { UserRoles } from '../../generated/prisma';

@@ -31,7 +31,7 @@ import { S3Service } from '../s3/s3.service';
 import { Logger } from 'nestjs-pino';
 import FormHandlerReturn from '../common/types/FormHandlerReturn';
 import parseJson from '../helper/functions/parseJson';
-import updateFormHandler from '../helper/functions/templates/updateFormHandler';
+import updateFormHandler from '../helper/functions/updateFormHandler';
 import allowedTypes from '../helper/functions/allowedTypes';
 import { Response } from 'express';
 import { SelfGuard } from '../auth/guards/self/self.guard';

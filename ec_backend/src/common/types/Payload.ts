@@ -4,6 +4,6 @@ export default interface Payload {
   id: string;
   name: string;
   email: string;
-  avatar: string;
+  avatarUrl: string;
   role: UserRoles;
 }

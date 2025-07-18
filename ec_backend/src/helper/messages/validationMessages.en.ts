@@ -363,7 +363,7 @@ const validationMessages_EN = {
         isString: 'The city field must be a string.',
       },
       state: {
-        isString: 'The state field must be a string.',
+        isIn: 'The state field must be a string representing the acronym of one of the 27 brazilian states, or the OTHER value for states or provinces from other countries.',
       },
       country: {
         isString: 'The country field must be a string.',

@@ -174,7 +174,7 @@ const loggerMessages = {
     },
     verifyToken: {
       status_404:
-        'A user tried updating their password but no user was found connected to the provided token.',
+        'A user tried updating their password but the token is not connected to the user register.',
       status_500:
         'An internal error occurred while verifying the token. Check the error log for more information.',
     },

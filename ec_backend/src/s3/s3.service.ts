@@ -54,9 +54,13 @@ export class S3Service {
 
   async deleteFileFromS3(databaseUrl: string): Promise<void> {
     try {
-      const url = new URL(databaseUrl);
-      const key: string = url.pathname.slice(1);
-      await this.deleteObject(key);
+      if (
+        databaseUrl !== this.configService.get<string>('AVATAR_PLACEHOLDER_URL')
+      ) {
+        const url = new URL(databaseUrl);
+        const key: string = url.pathname.slice(1);
+        await this.deleteObject(key);
+      }
     } catch (error) {
       handleInternalErrorException(
         's3Service',

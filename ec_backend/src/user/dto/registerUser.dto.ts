@@ -67,12 +67,43 @@ export default class RegisterUserDTO {
     title: 'State',
     required: false,
     type: 'string',
-    example: 'Rio Grande do Sul',
+    example: 'RS',
   })
   @IsOptional()
-  @IsString({
-    message: validationMessages_EN.user.registerUserDTO.state.isString,
-  })
+  @IsIn(
+    [
+      'AC',
+      'AL',
+      'AP',
+      'AM',
+      'BA',
+      'CE',
+      'DF',
+      'ES',
+      'GO',
+      'MA',
+      'MT',
+      'MS',
+      'MG',
+      'PA',
+      'PB',
+      'PR',
+      'PE',
+      'PI',
+      'RJ',
+      'RN',
+      'RS',
+      'RO',
+      'RR',
+      'SC',
+      'SP',
+      'SE',
+      'TO',
+    ],
+    {
+      message: validationMessages_EN.user.registerUserDTO.state.isIn,
+    },
+  )
   state?: string;
 
   @ApiProperty({

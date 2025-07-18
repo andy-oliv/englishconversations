@@ -139,7 +139,7 @@ export default function generatePasswordResetEmailTemplate(
                       <a
                         href="${configService.get<string>(
                           'FRONTEND_URL',
-                        )}/password-reset?token=${token}"
+                        )}password-reset?token=${token}"
                         target="_blank"
                         style="
                           color: white;

@@ -139,7 +139,7 @@ export default function generateEmailResetTemplate(
                       <a
                         href="${configService.get<string>(
                           'FRONTEND_URL',
-                        )}/email-reset?token=${token}"
+                        )}email-reset?token=${token}"
                         target="_blank"
                         style="
                           color: white;

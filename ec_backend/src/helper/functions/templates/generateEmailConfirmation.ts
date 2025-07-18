@@ -60,7 +60,7 @@ export default function generateEmailConfirmationTemplate(
                     <tr>
                       <td align="center" style="border-radius: 8px; background-color: #3ab2f6; padding: 16px 32px;">
                         <a
-                          href="${configService.get<string>('FRONTEND_URL')}/confirm?token=${token}"
+                          href="${configService.get<string>('FRONTEND_URL')}confirm?token=${token}"
                           target="_blank"
                           style="
                             font-size: 16px;

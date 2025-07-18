@@ -61,7 +61,7 @@ const httpMessages_EN = {
         'Please check the request. Either the user or the password are incorrect.',
     },
     checkEmailExists: {
-      status_400: 'The email is already in use.',
+      status_409: 'The email is already in use.',
     },
     emailConfirmed: {
       status_400: 'The token is expired.',

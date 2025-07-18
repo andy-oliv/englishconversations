@@ -49,7 +49,7 @@ export class AuthController {
     private readonly logger: Logger,
   ) {}
 
-  @Throttle({ default: { ttl: 60000, limit: 3 } })
+  @Throttle({ default: { ttl: 60000, limit: 10 } })
   @Public()
   @Post('admin/login')
   @ApiResponse({
@@ -91,7 +91,7 @@ export class AuthController {
     return { message: httpMessages_EN.auth.adminLogin.status_200 };
   }
 
-  @Throttle({ default: { ttl: 60000, limit: 5 } })
+  @Throttle({ default: { ttl: 60000, limit: 10 } })
   @Public()
   @Post('login')
   @ApiResponse({
@@ -135,7 +135,7 @@ export class AuthController {
     return { message: httpMessages_EN.auth.login.status_200 };
   }
 
-  @Throttle({ default: { ttl: 60000, limit: 5 } })
+  @Throttle({ default: { ttl: 60000, limit: 10 } })
   @Public()
   @Post('register')
   @ApiResponse({
@@ -272,7 +272,7 @@ export class AuthController {
     example: httpMessages_EN.general.status_500,
   })
   async updatePassword(
-    @Query('token') { token }: CheckTokenDTO,
+    @Query('token') token: string,
     @Body() data: updatePasswordDTO,
     @Res({ passthrough: true }) response: Response,
   ): Promise<Return> {
@@ -310,7 +310,7 @@ export class AuthController {
   }
 
   @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
-  @Get('reset/email')
+  @Post('reset/email')
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -329,7 +329,7 @@ export class AuthController {
   }
 
   @Public()
-  @Get('reset/password')
+  @Post('reset/password')
   @ApiResponse({
     status: 200,
     description: 'Success',

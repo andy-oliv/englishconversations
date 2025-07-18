@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -194,6 +195,15 @@ export class AuthService {
         );
       }
 
+      if (
+        error.message === 'jwt expired' ||
+        error.message === 'invalid token'
+      ) {
+        throw new BadRequestException(
+          httpMessages_EN.auth.validateEmailJwt.status_400,
+        );
+      }
+
       handleInternalErrorException(
         'authService',
         'validateEmailJwt',
@@ -247,12 +257,12 @@ export class AuthService {
       });
 
       if (emailInUse) {
-        throw new BadRequestException(
-          httpMessages_EN.auth.checkEmailExists.status_400,
+        throw new ConflictException(
+          httpMessages_EN.auth.checkEmailExists.status_409,
         );
       }
     } catch (error) {
-      if (error instanceof BadRequestException) {
+      if (error instanceof ConflictException) {
         throw error;
       }
       handleInternalErrorException(
@@ -296,6 +306,10 @@ export class AuthService {
         message: httpMessages_EN.auth.generateEmailResetToken.status_200,
       };
     } catch (error) {
+      if (error instanceof ConflictException) {
+        throw error;
+      }
+
       if (error.code === 'P2025') {
         this.logger.log({
           message: generateExceptionMessage(

@@ -1,0 +1,20 @@
+<div class="container">
+  <div class="wrapper">
+    <h3>Alteração de email</h3>
+    <p>
+      Informe o novo email. Enviaremos um link de confirmação para garantir a
+      segurança da sua conta.
+    </p>
+    <form [formGroup]="emailForm" (submit)="onSubmit()">
+      <input
+        type="email"
+        formControlName="email"
+        placeholder="Digite aqui o novo email"
+      />
+      <div class="btnContainer">
+        <button id="send">{{ loading() ? "Enviando..." : "Enviar" }}</button>
+        <button id="cancel" (click)="closeModal($event)">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>

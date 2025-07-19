@@ -1,16 +1,35 @@
 <div class="mainContent" (click)="handleClick()">
-  <div class="wrapper">
-    <div
-      class="component"
-      [class.showProfileEditMenu]="selectionComputed() === 'editProfile'"
-    >
-      <app-edit-profile />
-    </div>
-    <div
-      class="component"
-      [class.showChangePasswordMenu]="selectionComputed() === 'changePassword'"
-    >
-      <app-change-password />
+  <div class="container">
+    <div class="wrapper" (click)="$event.stopPropagation()">
+      <div
+        class="component"
+        [class.showProfileEditMenu]="selectionComputed() === 'editProfile'"
+      >
+        <app-edit-profile
+          [setClosed]="resetComponentValues()"
+          (isClosed)="handleClick()"
+        />
+      </div>
+      <div
+        class="component"
+        [class.showChangeEmailMenu]="selectionComputed() === 'changeEmail'"
+      >
+        <app-change-email
+          [setClosed]="resetComponentValues()"
+          (isClosed)="handleClick()"
+        />
+      </div>
+      <div
+        class="component"
+        [class.showChangePasswordMenu]="
+          selectionComputed() === 'changePassword'
+        "
+      >
+        <app-change-password
+          [setClosed]="resetComponentValues()"
+          (isClosed)="handleClick()"
+        />
+      </div>
     </div>
   </div>
 </div>

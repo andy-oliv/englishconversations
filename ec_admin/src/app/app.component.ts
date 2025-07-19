@@ -1,12 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, computed } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { ToastComponent } from './components/toast/toast.component';
+import { ToastService } from './services/toast.service';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, ToastComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  constructor() {}
+  isActive = computed(() => this.toastService.isActive());
+  constructor(private readonly toastService: ToastService) {}
 }

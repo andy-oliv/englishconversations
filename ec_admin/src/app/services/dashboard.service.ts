@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { envinronment } from '../../environments/environment';
-import DashboardData from '../../common/interfaces/DashboardData';
+import { environment } from '../../environments/environment';
+import { Dashboard } from '../../schemas/dashboardData.schema';
 
 @Injectable({
   providedIn: 'root',
@@ -10,9 +10,9 @@ import DashboardData from '../../common/interfaces/DashboardData';
 export class DashboardService {
   constructor(private readonly httpClient: HttpClient) {}
 
-  fetchDashboardData(): Observable<{ message: string; data: DashboardData }> {
-    return this.httpClient.get<{ message: string; data: DashboardData }>(
-      `${envinronment.apiUrl}/dashboard`,
+  fetchDashboardData(): Observable<{ message: string; data: Dashboard }> {
+    return this.httpClient.get<{ message: string; data: Dashboard }>(
+      `${environment.apiUrl}/dashboard`,
       {
         withCredentials: true,
       },

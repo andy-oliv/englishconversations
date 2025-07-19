@@ -1,0 +1,17 @@
+<div class="mainContent">
+  <div class="header">
+    <div class="imgWrapper">
+      <img src="/logo.png" />
+    </div>
+  </div>
+  <div class="container">
+    <div class="wrapper">
+      <h1>Email atualizado com sucesso!</h1>
+      <p>
+        Por segurança, favor realizar um
+        <a class="link" [routerLink]="'/login'" href="">novo login</a>
+        ou aguarde o redirecionamento em <span>{{ secondsToRedirect() }}</span>
+      </p>
+    </div>
+  </div>
+</div>

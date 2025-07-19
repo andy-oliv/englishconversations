@@ -4,7 +4,7 @@
     <div class="generalInfo">
       <app-info-card
         legend="Total de alunos"
-        [value]="totalStudents()"
+        [value]="dashboard().totalStudents"
         cardColor="#bedff3"
         [loading]="loading()"
       >
@@ -27,7 +27,7 @@
       </app-info-card>
       <app-info-card
         legend="Total de Unidades"
-        [value]="totalUnits()"
+        [value]="dashboard().totalUnits"
         cardColor="#ffa79e"
         [loading]="loading()"
       >
@@ -51,7 +51,7 @@
 
       <app-info-card
         legend="Total de Vídeos"
-        [value]="totalVideos()"
+        [value]="dashboard().totalVideos"
         cardColor="#b4edb4"
         [loading]="loading()"
       >
@@ -75,7 +75,7 @@
       </app-info-card>
       <app-info-card
         legend="Total de Exercícios"
-        [value]="totalExercises()"
+        [value]="dashboard().totalExercises"
         cardColor="#e6acff"
         [loading]="loading()"
       >
@@ -139,7 +139,7 @@
           ></p>
           <p class="totalProgress">
             {{ loading() ? "0" : user.completedChapters }}/{{
-              loading() ? "0" : totalChapters()
+              loading() ? "0" : dashboard().totalChapters
             }}
           </p>
         </div>

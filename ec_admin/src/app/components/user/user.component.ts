@@ -1,6 +1,5 @@
-import { Component, OnInit, output, signal } from '@angular/core';
+import { Component, computed, output, signal } from '@angular/core';
 import { UserStateService } from '../../services/user-state.service';
-import User from '../../../entities/loggedUser';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 
@@ -10,14 +9,8 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './user.component.html',
   styleUrl: './user.component.scss',
 })
-export class UserComponent implements OnInit {
-  user = signal<User>({
-    id: '',
-    name: '',
-    email: '',
-    avatar: '',
-    role: '',
-  });
+export class UserComponent {
+  user = computed(() => this.userService.userSignal());
   menuFlag = signal<boolean>(false);
   selectedOption = output<string>();
 
@@ -26,10 +19,6 @@ export class UserComponent implements OnInit {
     private readonly authService: AuthService,
     private readonly router: Router,
   ) {}
-
-  ngOnInit(): void {
-    this.user.set(this.userService.getLoggedUser());
-  }
 
   openMenu(): void {
     if (this.menuFlag() === false) {
@@ -46,7 +35,9 @@ export class UserComponent implements OnInit {
   logout(): void {
     this.authService.logout().subscribe({
       complete: () => {
-        localStorage.removeItem('user');
+        sessionStorage.removeItem('user');
+        sessionStorage.removeItem('loggedUser');
+        sessionStorage.removeItem('timeReference');
         this.router.navigate(['/login']);
       },
       error: (error) => {
@@ -57,6 +48,10 @@ export class UserComponent implements OnInit {
 
   editProfile(): void {
     this.selectedOption.emit('editProfile');
+  }
+
+  changeEmail(): void {
+    this.selectedOption.emit('changeEmail');
   }
 
   changePassword(): void {

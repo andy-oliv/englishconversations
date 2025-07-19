@@ -1,0 +1,12 @@
+.toastNotification {
+  position: absolute;
+  top: 3em;
+  right: 3em;
+  z-index: 2;
+  pointer-events: visible;
+  visibility: hidden;
+}
+
+.active {
+  visibility: visible;
+}

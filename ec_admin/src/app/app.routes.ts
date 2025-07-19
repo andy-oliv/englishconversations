@@ -13,6 +13,8 @@ import { SecurityComponent } from './pages/security/security.component';
 import { LoginComponent } from './pages/login/login.component';
 import { authGuard } from './guards/auth.guard';
 import { AdminComponent } from './pages/admin/admin.component';
+import { EmailComponent } from './pages/reset/email/email.component';
+import { PasswordComponent } from './pages/reset/password/password.component';
 
 export const routes: Routes = [
   {
@@ -89,5 +91,13 @@ export const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
+  },
+  {
+    path: 'email-reset',
+    component: EmailComponent,
+  },
+  {
+    path: 'password-reset',
+    component: PasswordComponent,
   },
 ];

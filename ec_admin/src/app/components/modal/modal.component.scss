@@ -1,28 +1,29 @@
 .mainContent {
   width: 100%;
   height: 100%;
-
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.wrapper {
+.container {
   width: 100%;
-  height: 50%;
+  display: flex;
+  justify-content: center;
 }
 
 .component {
-  opacity: 0;
-  visibility: hidden;
+  display: none;
+}
+
+.showChangeEmailMenu {
+  display: block;
 }
 
 .showProfileEditMenu {
-  opacity: 1;
-  visibility: visible;
+  display: block;
 }
 
 .showChangePasswordMenu {
-  opacity: 1;
-  visibility: visible;
+  display: block;
 }

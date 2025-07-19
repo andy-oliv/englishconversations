@@ -10,6 +10,9 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { LogService } from '../../services/log.service';
+import { ToastService } from '../../services/toast.service';
+import { ToastTypes } from '../../../common/types/ToastTypes';
+import { toastMessages } from '../../../common/messages/toastMessages';
 
 @Component({
   selector: 'app-login',
@@ -23,12 +26,15 @@ export class LoginComponent implements OnInit {
   showError = signal<boolean>(false);
   emailError = signal<boolean>(false);
   passwordError = signal<boolean>(false);
+  isPasswordVisible = signal<boolean>(false);
+  isLoginSuccessful = signal<boolean>(false);
 
   constructor(
     private readonly httpClient: HttpClient,
     private readonly router: Router,
     private readonly logService: LogService,
     private formBuilder: FormBuilder,
+    private readonly toastService: ToastService,
   ) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
@@ -64,6 +70,10 @@ export class LoginComponent implements OnInit {
     });
   }
 
+  changePasswordVisibility(): void {
+    this.isPasswordVisible.set(!this.isPasswordVisible());
+  }
+
   onSubmit(): void {
     if (this.loginForm.invalid) {
       this.showError.set(true);
@@ -86,22 +96,50 @@ export class LoginComponent implements OnInit {
         .subscribe({
           next: () => {
             this.loading.set(false);
-            this.router.navigate(['admin/home']);
+            this.isLoginSuccessful.set(true);
+
+            this.toastService.toast.set({
+              type: ToastTypes.SUCCESS,
+              message: toastMessages.login.status_200,
+              duration: 2000,
+            });
+            this.toastService.callToast(this.toastService.toast().duration);
+
+            setTimeout(() => {
+              this.loginForm.reset();
+              this.router.navigate(['admin/home']);
+            }, this.toastService.toast().duration);
           },
           error: (error) => {
-            this.logService.logWarning(
-              'Failed login attempt',
-              error.error.message,
-            );
-            this.loading.set(false);
-            this.showError.set(true);
-            setTimeout(() => {
-              this.showError.set(false);
-            }, 2000);
+            if (error.status === 429) {
+              this.loading.set(false);
+
+              this.toastService.toast.set({
+                type: ToastTypes.WARNING,
+                message: toastMessages.login.status_429,
+                duration: 5000,
+              });
+              this.toastService.callToast(this.toastService.toast().duration);
+            } else {
+              this.logService.logWarning(
+                'Failed login attempt',
+                error.error.message,
+              );
+              this.loading.set(false);
+              this.showError.set(true);
+
+              this.toastService.toast.set({
+                type: ToastTypes.FAILURE,
+                message: toastMessages.login.status_400,
+                duration: 3000,
+              });
+              this.toastService.callToast(this.toastService.toast().duration);
+              setTimeout(() => {
+                this.showError.set(false);
+              }, this.toastService.toast().duration);
+            }
           },
         });
-
-      this.loginForm.reset();
     }
   }
 }

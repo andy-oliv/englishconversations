@@ -7,10 +7,10 @@ import {
 } from '@angular/core';
 import { InfoCardComponent } from '../../components/info-card/info-card.component';
 import { TitleComponent } from '../../components/title/title.component';
-import User from '../../../entities/User';
+import { User } from '../../../schemas/user.schema';
 import { DashboardService } from '../../services/dashboard.service';
 import dayjs from 'dayjs';
-import Notification from '../../../entities/Notification';
+import { Dashboard } from '../../../schemas/dashboardData.schema';
 
 @Component({
   selector: 'app-home',
@@ -22,11 +22,19 @@ export class HomeComponent implements OnInit {
   @ViewChild('nameFilter') nameFilter!: ElementRef;
   @ViewChild('progressFilter') progressFilter!: ElementRef;
 
-  monthlyLogins = signal<{ loginDate: string; logins: number }[]>([]);
-  latestLogins = signal<Partial<User>[]>([]);
-  notifications = signal<Partial<Notification>[]>([]);
-  userProgressesRaw = signal<Partial<User>[]>([]);
-  userProgresses = signal<
+  dashboard = signal<Dashboard>({
+    monthlyLogins: [],
+    latestLogins: [],
+    userProgresses: [],
+    totalStudents: 0,
+    totalChapters: 0,
+    totalUnits: 0,
+    totalVideos: 0,
+    totalExercises: 0,
+    notifications: [],
+  });
+
+  unsortedProgresses = signal<
     {
       id: string | undefined;
       name: string | undefined;
@@ -42,11 +50,6 @@ export class HomeComponent implements OnInit {
       totalProgress: number;
     }[]
   >([]);
-  totalStudents = signal<number>(0);
-  totalChapters = signal<number>(0);
-  totalUnits = signal<number>(0);
-  totalVideos = signal<number>(0);
-  totalExercises = signal<number>(0);
   dataset = signal<{ date: string; logins: number }[]>([]);
   loading = signal<boolean>(true);
 
@@ -55,15 +58,17 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
     this.dashboardService.fetchDashboardData().subscribe({
       next: (response) => {
-        this.monthlyLogins.set(response.data.monthlyLogins);
-        this.latestLogins.set(response.data.latestLogins);
-        this.userProgressesRaw.set(response.data.userProgresses);
-        this.totalStudents.set(response.data.totalStudents);
-        this.totalChapters.set(response.data.totalChapters);
-        this.totalUnits.set(response.data.totalUnits);
-        this.totalVideos.set(response.data.totalVideos);
-        this.totalExercises.set(response.data.totalExercises);
-        this.notifications.set(response.data.notifications);
+        this.dashboard.set({
+          monthlyLogins: response.data.monthlyLogins,
+          latestLogins: response.data.latestLogins,
+          userProgresses: response.data.userProgresses,
+          totalStudents: response.data.totalStudents,
+          totalChapters: response.data.totalChapters,
+          totalUnits: response.data.totalUnits,
+          totalVideos: response.data.totalVideos,
+          totalExercises: response.data.totalExercises,
+          notifications: response.data.notifications,
+        });
 
         this.generateProgressArray();
 
@@ -86,7 +91,7 @@ export class HomeComponent implements OnInit {
       totalProgress: number;
     }[] = [];
 
-    this.userProgressesRaw().forEach((user: Partial<User>) => {
+    this.dashboard().userProgresses.forEach((user) => {
       temporaryProgresses.push({
         id: user.id,
         name: user.name,
@@ -94,8 +99,8 @@ export class HomeComponent implements OnInit {
       });
     });
 
-    this.userProgresses.set(temporaryProgresses);
-    this.sortedProgresses.set(this.userProgresses());
+    this.unsortedProgresses.set(temporaryProgresses);
+    this.sortedProgresses.set(this.unsortedProgresses());
   }
 
   getUserProgress(user: Partial<User>): {
@@ -104,7 +109,7 @@ export class HomeComponent implements OnInit {
   } {
     let completedChapters: number = 0;
 
-    user.chapters?.forEach((chapter: { status: string }) => {
+    user.chapters?.forEach((chapter) => {
       if (chapter.status === 'COMPLETED') {
         completedChapters = completedChapters + 1;
       }
@@ -112,7 +117,7 @@ export class HomeComponent implements OnInit {
 
     return {
       completedChapters,
-      totalProgress: (completedChapters / this.totalChapters()) * 100,
+      totalProgress: (completedChapters / this.dashboard().totalChapters) * 100,
     };
   }
 
@@ -129,7 +134,7 @@ export class HomeComponent implements OnInit {
     let temporarySet: { date: string; logins: number }[] = [];
 
     allDates.forEach((date) => {
-      this.monthlyLogins().forEach((entry) => {
+      this.dashboard().monthlyLogins.forEach((entry) => {
         if (date === entry.loginDate) {
           temporarySet.push({ date: date, logins: entry.logins });
         } else {
@@ -149,21 +154,21 @@ export class HomeComponent implements OnInit {
     }
 
     if (selection === 'a-z') {
-      const sorted = [...this.userProgresses()].sort((a, b) =>
+      const sorted = [...this.unsortedProgresses()].sort((a, b) =>
         (a.name || '').localeCompare(b.name || ''),
       );
       this.sortedProgresses.set(sorted);
     }
 
     if (selection === 'z-a') {
-      const sorted = [...this.userProgresses()].sort((a, b) =>
+      const sorted = [...this.unsortedProgresses()].sort((a, b) =>
         (b.name || '').localeCompare(a.name || ''),
       );
       this.sortedProgresses.set(sorted);
     }
 
     if (selection === 'n/a') {
-      this.sortedProgresses.set(this.userProgresses());
+      this.sortedProgresses.set(this.unsortedProgresses());
     }
   }
 
@@ -175,21 +180,21 @@ export class HomeComponent implements OnInit {
     }
 
     if (selection === 'more') {
-      const sorted = [...this.userProgresses()].sort(
+      const sorted = [...this.unsortedProgresses()].sort(
         (a, b) => b.totalProgress - a.totalProgress,
       );
       this.sortedProgresses.set(sorted);
     }
 
     if (selection === 'less') {
-      const sorted = [...this.userProgresses()].sort(
+      const sorted = [...this.unsortedProgresses()].sort(
         (a, b) => a.totalProgress - b.totalProgress,
       );
       this.sortedProgresses.set(sorted);
     }
 
     if (selection === 'n/a') {
-      this.sortedProgresses.set(this.userProgresses());
+      this.sortedProgresses.set(this.unsortedProgresses());
     }
   }
 }

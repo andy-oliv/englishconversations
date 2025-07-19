@@ -1,0 +1,7 @@
+<div class="timer" [ngClass]="{ alert: changeStyle(), animate: animate() }">
+  <div class="hourBox box">{{ hour() }}</div>
+  <p class="separator">:</p>
+  <div class="minuteBox box">{{ minute() }}</div>
+  <p class="separator">:</p>
+  <div class="secondBox box">{{ second() }}</div>
+</div>

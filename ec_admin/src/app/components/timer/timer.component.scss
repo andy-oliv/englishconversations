@@ -1,0 +1,57 @@
+@use "../../../styles/fonts.scss" as fonts;
+
+.timer {
+  display: flex;
+  background-color: #242424;
+  padding: 0.4em;
+  border-radius: 0.3em;
+  font-size: 2rem;
+  font-weight: 600;
+  gap: 0.3em;
+  align-items: center;
+  box-shadow: 0 0 10px -1px;
+  backdrop-filter: blur(1px);
+
+  .separator {
+    color: white;
+  }
+
+  .box {
+    background-color: white;
+    color: black;
+    font-family: fonts.$poppins;
+    padding: 0.2em;
+    text-align: center;
+    width: 2em;
+    border-radius: 0.1em;
+  }
+}
+
+.alert {
+  background-color: rgba(255, 53, 53, 0.908);
+
+  .box {
+    background-color: rgba(183, 19, 19, 0.908);
+    color: white;
+  }
+}
+
+.animate {
+  .box {
+    animation: flicker 1s ease-in-out infinite;
+  }
+}
+
+@keyframes flicker {
+  0% {
+    color: white;
+  }
+
+  50% {
+    color: rgb(255, 0, 0);
+  }
+
+  100% {
+    color: white;
+  }
+}

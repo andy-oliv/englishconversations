@@ -1,5 +1,95 @@
 <div class="container">
   <div class="wrapper">
-    <h3>Edite o seu perfil</h3>
+    <form [formGroup]="profileForm" (submit)="saveChanges()">
+      <div class="imgWrapper">
+        <div class="imgContainer">
+          <div class="fileInputWrapper">
+            <div class="inputFrame">
+              <input
+                type="file"
+                class="fileInput"
+                accept="image/jpeg,
+      image/png,
+      image/svg+xml,
+      image/webp,"
+                (change)="onFileChange($event)"
+              />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                width="30"
+                height="30"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"
+                />
+              </svg>
+            </div>
+          </div>
+          <img src="{{ previewUrl() ? previewUrl() : user()?.avatarUrl }}" />
+        </div>
+        <div>
+          <h3>{{ user()?.name }}</h3>
+          <p>{{ user()?.city }}/{{ user()?.state }}</p>
+        </div>
+      </div>
+      <div class="inputWrapper">
+        <div class="inputContainer">
+          <label>Nome</label>
+          <input
+            name="name"
+            placeholder="Digite o seu nome"
+            formControlName="name"
+          />
+        </div>
+        <div class="inputContainer">
+          <label>Bio</label>
+          <textarea
+            cols="20"
+            formControlName="bio"
+            placeholder="Digite a sua bio"
+          ></textarea>
+        </div>
+        <div class="inputContainer">
+          <label>Data de nascimento</label>
+          <input type="date" formControlName="birthdate" />
+        </div>
+        <div class="inputContainer">
+          <label>Estado</label>
+          <select (change)="fetchCities()" formControlName="state">
+            <option value="n/a">Selecione</option>
+            @for (state of states(); track state.id) {
+              <option [value]="state.sigla">
+                {{ state.sigla }}
+              </option>
+            }
+          </select>
+        </div>
+        <div class="inputContainer">
+          <label>Cidade</label>
+          <select formControlName="city">
+            <option value="n/a">Selecione</option>
+            @for (city of cities(); track city.id) {
+              <option [value]="city.nome">{{ city.nome }}</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="buttonContainer">
+        <button id="saveBtn">{{ loading() ? "Salvando..." : "Salvar" }}</button>
+        <button id="cancelBtn" (click)="closeModal($event)">Cancelar</button>
+      </div>
+    </form>
   </div>
 </div>

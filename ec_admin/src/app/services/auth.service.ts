@@ -1,18 +1,22 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { envinronment } from '../../environments/environment';
-import LoggedUser from '../../entities/loggedUser';
+import { environment } from '../../environments/environment';
+import { LoggedUser } from '../../schemas/loggedUser.schema';
+import { UserStateService } from './user-state.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private readonly httpClient: HttpClient) {}
+  constructor(
+    private readonly httpClient: HttpClient,
+    private readonly userService: UserStateService,
+  ) {}
 
   login(): Observable<{ message: string }> {
     return this.httpClient.get<{ message: string }>(
-      `${envinronment.authUrl}/admin/login`,
+      `${environment.authUrl}/admin/login`,
       {
         withCredentials: true,
       },
@@ -20,8 +24,13 @@ export class AuthService {
   }
 
   logout(): Observable<{ message: string }> {
+    this.userService.resetLoggedUser();
+    sessionStorage.removeItem('user');
+    sessionStorage.removeItem('loggedUser');
+    sessionStorage.removeItem('timeReference');
+
     return this.httpClient.get<{ message: string }>(
-      `${envinronment.authUrl}/logout`,
+      `${environment.authUrl}/logout`,
       {
         withCredentials: true,
       },
@@ -30,7 +39,7 @@ export class AuthService {
 
   sessionCheck(): Observable<{ message: string; data: LoggedUser }> {
     return this.httpClient.get<{ message: string; data: LoggedUser }>(
-      `${envinronment.authUrl}/admin-session`,
+      `${environment.authUrl}/admin-session`,
       {
         withCredentials: true,
       },

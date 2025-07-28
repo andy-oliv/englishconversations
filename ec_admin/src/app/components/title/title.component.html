@@ -1,3 +1,6 @@
 <div class="header">
   <h1 class="title">{{ title() }}</h1>
+  <button [class.active]="activeBtn()">
+    <a href="" [routerLink]="link()">{{ btnLabel() }}</a>
+  </button>
 </div>

@@ -1,0 +1,29 @@
+.mainContent {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.component {
+  display: none;
+}
+
+.showChangeEmailMenu {
+  display: block;
+}
+
+.showProfileEditMenu {
+  display: block;
+}
+
+.showChangePasswordMenu {
+  display: block;
+}/*# sourceMappingURL=modal.component.css.map */

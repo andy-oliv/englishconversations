@@ -1,27 +1,12 @@
-body {
-  display: flex;
+.toastNotification {
+  position: absolute;
+  top: 3em;
+  right: 3em;
+  z-index: 2;
+  pointer-events: visible;
+  visibility: hidden;
 }
 
-.openMenu {
-  width: 14%;
-  height: 100vh;
-}
-
-.closedMenu {
-  width: 4%;
-  height: 100vh;
-}
-
-main {
-  display: flex;
-  justify-content: space-between;
-  padding: 3em;
-  width: 100%;
-  background-color: #f8f6ed;
-}
-main .mainContent {
-  width: 100%;
-}
-main .userMenu {
-  width: 12%;
+.active {
+  visibility: visible;
 }/*# sourceMappingURL=app.component.css.map */

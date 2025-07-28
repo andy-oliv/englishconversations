@@ -15,6 +15,7 @@ import { authGuard } from './guards/auth.guard';
 import { AdminComponent } from './pages/admin/admin.component';
 import { EmailComponent } from './pages/reset/email/email.component';
 import { PasswordComponent } from './pages/reset/password/password.component';
+import { AddChapterComponent } from './pages/chapters/add-chapter/add-chapter.component';
 
 export const routes: Routes = [
   {
@@ -45,6 +46,13 @@ export const routes: Routes = [
           {
             path: 'chapters',
             component: ChaptersComponent,
+            children: [
+              {
+                path: 'add',
+                canActivate: [authGuard],
+                component: AddChapterComponent,
+              },
+            ],
           },
           {
             path: 'units',

@@ -4,19 +4,17 @@
   position: relative;
   font-family: "Poppins", sans-serif;
 }
-.container .wrapper {
-  display: flex;
-  gap: 1em;
-  align-items: center;
-}
 
 .imgWrapper {
-  width: 5%;
+  width: 200px;
+  height: 200px;
   cursor: pointer;
+  display: flex;
+  justify-content: flex-end;
 }
 .imgWrapper img {
-  width: 100%;
-  height: 75%;
+  width: 40%;
+  height: 40%;
   -o-object-fit: cover;
      object-fit: cover;
   border-radius: 100em;
@@ -34,7 +32,7 @@
   visibility: hidden;
   opacity: 0;
   background-color: rgba(0, 0, 0, 0.863);
-  width: 20%;
+  width: 100%;
   padding: 2em 1em 1em 1em;
   border-radius: 0.5em;
   display: flex;

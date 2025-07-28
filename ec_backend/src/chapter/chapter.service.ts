@@ -78,7 +78,22 @@ export class ChapterService {
 
   async fetchChapters(): Promise<Return> {
     try {
-      const chapters: Chapter[] = await this.prismaService.chapter.findMany();
+      const chapters: Chapter[] = await this.prismaService.chapter.findMany({
+        include: {
+          file: {
+            select: {
+              url: true,
+            },
+          },
+          units: {
+            select: {
+              id: true,
+              name: true,
+              description: true,
+            },
+          },
+        },
+      });
 
       if (chapters.length === 0) {
         throw new NotFoundException(

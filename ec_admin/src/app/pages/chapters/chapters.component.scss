@@ -1,0 +1,42 @@
+@use "../../../styles/colors.scss" as colors;
+@use "../../../styles/fonts.scss" as fonts;
+
+.chapters {
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  background-color: white;
+  width: 60%;
+  border-radius: 1em;
+  font-family: fonts.$poppins;
+}
+
+.imgWrapper {
+  width: 400px;
+  height: 150px;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 1em 0 0 1em;
+  }
+}
+
+.chapterDescription {
+  display: flex;
+  flex-direction: column;
+  padding: 1em;
+}
+
+.interactive {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1em;
+}

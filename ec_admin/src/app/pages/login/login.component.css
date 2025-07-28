@@ -1,3 +1,4 @@
+@charset "UTF-8";
 body {
   display: flex;
   justify-content: space-between;
@@ -49,12 +50,55 @@ form {
 }
 .inputWrapper label {
   font-weight: 600;
+  position: relative;
 }
 .inputWrapper input {
   font-size: 1.2rem;
   padding: 0.5em;
   border-radius: 0.3em;
   border-width: 1px;
+}
+
+.emailError::after {
+  content: "forneça um email válido, ex: eu@mail.com";
+  position: absolute;
+  top: 5.6em;
+  left: 0.6em;
+  color: red;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.passwordError::after {
+  content: "a senha precisa ter ao menos 8 caracteres sendo 1 letra maiúscula, 1 minúscula, 1 número e um caractere especial";
+  position: absolute;
+  top: 5.6em;
+  left: 0.6em;
+  color: red;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+#password {
+  position: relative;
+}
+
+.icon {
+  position: absolute;
+  bottom: 0.2em;
+  right: 1em;
+  cursor: pointer;
+}
+.icon #hide {
+  display: block;
+}
+.icon #show {
+  display: none;
+}
+
+.alert {
+  border: 1px solid red;
+  outline-color: red;
 }
 
 .imgWrapper {
@@ -69,7 +113,7 @@ form {
      object-fit: contain;
 }
 
-button {
+.btn {
   font-weight: 600;
   font-size: 1.3rem;
   background-color: rgb(69, 69, 69);
@@ -81,6 +125,35 @@ button {
   margin: 1.5em 0;
 }
 
-button:hover {
+.btn:hover {
   background-color: rgb(92, 92, 92);
+}
+
+.loading {
+  background-color: rgb(104, 152, 181);
+  cursor: default;
+}
+
+.loading:hover {
+  background-color: rgb(104, 152, 181);
+}
+
+.error {
+  background-color: rgb(244, 56, 56);
+  font-weight: 400;
+  cursor: default;
+}
+
+.error:hover {
+  background-color: rgb(244, 56, 56);
+}
+
+.invalid {
+  background-color: rgb(244, 56, 56);
+  font-weight: 400;
+  cursor: default;
+}
+
+.invalid:hover {
+  background-color: rgb(244, 56, 56);
 }/*# sourceMappingURL=login.component.css.map */

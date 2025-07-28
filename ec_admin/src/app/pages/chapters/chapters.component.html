@@ -1,3 +1,35 @@
 <body>
-  <app-title title="Trilhas" />
+  <app-title
+    title="Trilhas"
+    [activeBtn]="true"
+    btnLabel="adicionar trilha"
+    link="/admin/content/chapters/add"
+  />
+  @if (currentUrl() === addChapterURL()) {
+    <router-outlet />
+  } @else {
+    @if (status404()) {
+      <p>Não há trilhas para exibir</p>
+    }
+    <div class="chapters">
+      @for (chapter of chapters(); track chapter.id) {
+        <div class="container">
+          <div class="imgWrapper">
+            <img [src]="chapter.file.url" />
+          </div>
+          <div class="chapterDescription">
+            <h3>{{ chapter.name }}</h3>
+            <p>{{ chapter.description }}</p>
+          </div>
+          <div class="interactive">
+            <p>1000</p>
+            <div>
+              <button>delete</button>
+              <button>edit</button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
 </body>

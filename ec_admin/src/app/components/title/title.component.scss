@@ -16,3 +16,37 @@
   border-radius: 0 0 2em 0;
   margin-bottom: 2em;
 }
+
+button {
+  display: none;
+  width: max-content;
+  height: max-content;
+  margin-right: 10em;
+  margin-top: 1.2em;
+  font-family: fonts.$poppins;
+  font-size: 1rem;
+  padding: 0.5em 1.5em;
+  cursor: pointer;
+  border-radius: 10em;
+  border: none;
+  background-color: colors.$active;
+  color: white;
+}
+
+button:hover {
+  background-color: colors.$btnHover;
+}
+
+a {
+  text-decoration: none;
+  color: white;
+}
+
+a:active {
+  color: white;
+  text-decoration: none;
+}
+
+.active {
+  display: block;
+}

@@ -106,6 +106,6 @@ export class ChangePasswordComponent implements OnChanges {
     }
 
     this.isClosed.emit(true);
-    this.passwordForm.get('password')?.setValue('');
+    this.passwordForm.get('email')?.setValue('');
   }
 }

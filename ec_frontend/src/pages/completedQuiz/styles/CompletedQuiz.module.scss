@@ -1,0 +1,59 @@
+@use "../../../styles/variables" as var;
+
+.screen {
+  height: 100vh;
+  background-color: var.$backgroundColor;
+  padding-top: 3em;
+}
+
+.mainContainer {
+  background-color: var.$backgroundColor;
+  padding: 3em;
+  display: flex;
+  height: 90%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.decorativeLine {
+  width: 100%;
+  height: 3em;
+  background: var.$signatureGradient;
+}
+
+.title {
+  font-family: var.$outfit;
+  font-size: 3rem;
+}
+
+.metricsWrapper {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  gap: 2em;
+  margin-top: 5em;
+}
+
+.btnWrapper {
+  margin-top: 7em;
+  display: flex;
+  gap: 2em;
+}
+
+.btn {
+  background-color: var.$blue;
+  color: white;
+  font-family: var.$poppins;
+  width: max-content;
+  font-weight: 500;
+  font-size: 1rem;
+  border-radius: 10em;
+  border: 2px transparent;
+  cursor: pointer;
+  padding: 0.5em 2em;
+}
+
+.btn:hover {
+  background-color: var.$btnHover;
+}

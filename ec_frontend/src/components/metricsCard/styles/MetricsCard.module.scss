@@ -1,0 +1,25 @@
+@use "../../../styles/variables" as var;
+
+.wrapper {
+  background-color: var.$darkBlue;
+  color: white;
+  font-family: var.$outfit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 1em;
+  padding: 3em 0;
+  width: 15%;
+  box-shadow: 1em 0.5em 2em -1em rgba(0, 0, 0, 0.551);
+}
+
+.value {
+  font-size: 3.5rem;
+  margin-bottom: 0.5em;
+}
+
+.label {
+  font-size: 1.3rem;
+  font-weight: 300;
+}

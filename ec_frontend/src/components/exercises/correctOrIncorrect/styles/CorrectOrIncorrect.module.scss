@@ -1,0 +1,21 @@
+@use "../../../../styles/variables" as var;
+
+.title {
+  font-family: var.$outfit;
+  font-size: 2.5rem;
+}
+
+.description {
+  font-family: var.$poppins;
+  font-size: 1.4rem;
+  margin-top: 0.5em;
+}
+
+.options {
+  display: flex;
+  gap: 3em;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  margin-top: 7.2em;
+}

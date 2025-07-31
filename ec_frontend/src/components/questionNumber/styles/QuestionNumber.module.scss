@@ -1,0 +1,7 @@
+@use "../../../styles/variables" as var;
+
+.text {
+  font-family: var.$poppins;
+  color: var.$blue;
+  font-weight: 500;
+}

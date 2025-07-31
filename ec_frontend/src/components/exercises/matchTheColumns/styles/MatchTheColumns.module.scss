@@ -1,0 +1,49 @@
+@use "../../../../styles/variables" as var;
+
+.title {
+  font-family: var.$outfit;
+  font-size: 2.5rem;
+}
+
+.description {
+  font-family: var.$poppins;
+  font-size: 1.4rem;
+  margin-top: 0.5em;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  justify-items: center;
+  width: 50%;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1em;
+  margin-top: 3em;
+}
+
+.option {
+  font-family: var.$poppins;
+  font-size: 1.1rem;
+}
+
+.answerContainer {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+
+.answerInput {
+  border-radius: 0.5em;
+  border: 1px solid black;
+  font-family: var.$outfit;
+  font-size: 1.1rem;
+  font-weight: 500;
+  display: flex;
+  text-align: center;
+  padding-left: 0.6em;
+}

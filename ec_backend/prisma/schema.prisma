@@ -59,6 +59,7 @@ model Exercise {
   columnB Json?
   file File? @relation(fields: [fileId], references: [id])
   fileId String? @unique
+  contentUrl String? @db.VarChar(250)
   level CEFRLevels
   difficulty Difficulty
   options Json?

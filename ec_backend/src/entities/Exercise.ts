@@ -14,6 +14,7 @@ export default interface Exercise {
   columnA?: Prisma.JsonValue; //optional field for 'match the columns' exercises
   columnB?: Prisma.JsonValue; //optional field for 'match the columns' exercises
   fileId?: string;
+  contentUrl?: string;
   level: CEFRLevels;
   difficulty: Difficulty;
   options?: Prisma.JsonValue; //optional field because the 'match the columns' exercises don't have predefined answers

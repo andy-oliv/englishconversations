@@ -143,7 +143,7 @@ const validationMessages_EN = {
         isNotEmpty: 'The description field cannot be empty.',
         isString: 'The description must be a string',
       },
-      fileId: {
+      contentUrl: {
         isUrl: 'The fileId field must be a valid URL.',
       },
       level: {

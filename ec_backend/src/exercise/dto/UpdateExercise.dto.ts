@@ -58,7 +58,7 @@ export default class UpdateExerciseDTO {
   description?: string;
 
   @ApiProperty({
-    title: 'FileID',
+    title: 'ContentUrl',
     required: false,
     type: 'string',
     example: 'https://google.com',
@@ -67,10 +67,11 @@ export default class UpdateExerciseDTO {
   @IsUrl(
     {},
     {
-      message: validationMessages_EN.exercises.createExerciseDTO.fileId.isUrl,
+      message:
+        validationMessages_EN.exercises.createExerciseDTO.contentUrl.isUrl,
     },
   )
-  fileId?: string;
+  contentUrl?: string;
 
   @ApiProperty({
     title: 'Level',

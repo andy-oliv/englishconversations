@@ -22,7 +22,10 @@ export default function CompletedQuiz(): ReactElement {
 
         if (
           userAnswer &&
-          _.isEqual(userAnswer.answer, question.correctAnswer)
+          _.isEqual(
+            userAnswer.answer.map((answer) => answer.toLowerCase()),
+            question.correctAnswer.map((answer) => answer.toLowerCase())
+          )
         ) {
           return acc + 1;
         }

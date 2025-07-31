@@ -24,7 +24,18 @@ export default function QuizResults(): ReactElement {
               ? questions.map((question, index) => (
                   <div
                     key={question.id}
-                    className={`${styles.answer} ${_.isEqual(question.correctAnswer, answers[question.id].answer) ? styles.rightAnswer : styles.wrongAnswer}`}
+                    className={`${styles.answer} ${
+                      _.isEqual(
+                        question.correctAnswer.map((answer) =>
+                          answer.toLowerCase()
+                        ),
+                        answers[question.id].answer.map((answer) =>
+                          answer.toLowerCase()
+                        )
+                      )
+                        ? styles.rightAnswer
+                        : styles.wrongAnswer
+                    }`}
                   >
                     <p className={styles.questionNumber}>
                       Question {index + 1}

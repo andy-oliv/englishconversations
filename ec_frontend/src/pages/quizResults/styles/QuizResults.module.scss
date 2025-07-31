@@ -13,6 +13,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  animation: transitionY 0.7s ease-in-out forwards;
 }
 
 .decorativeLine {
@@ -118,4 +119,17 @@
     rgba(255, 255, 255, 0.811) 98%,
     rgba(242, 38, 38, 0.793)
   );
+}
+
+@keyframes transitionY {
+  0% {
+    transform: translateY(2em);
+    opacity: 0;
+    filter: blur(2px);
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+    filter: blur(0);
+  }
 }

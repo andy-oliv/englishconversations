@@ -1,4 +1,4 @@
-import { useEffect, type ReactElement } from "react";
+import { useEffect, useState, type ReactElement } from "react";
 import styles from "./styles/Quiz.module.scss";
 import { sampleQuiz } from "../../db/sampleQuiz";
 import { exerciseComponentMap } from "../../helper/maps/exerciseComponent.map";
@@ -8,6 +8,8 @@ import { useQuizAnswerStore } from "../../stores/quizAnswerStore";
 
 export default function Quiz(): ReactElement {
   function handleForwardClick(): void {
+    setMovingForward(true);
+    setMovingBackwards(false);
     const nextIndex: number =
       useActiveQuizStore.getState().currentExerciseIndex;
 
@@ -17,10 +19,18 @@ export default function Quiz(): ReactElement {
     activeQuiz.increaseCurrentExerciseIndex();
   }
 
+  function handleBackwardsClick(): void {
+    setMovingBackwards(true);
+    setMovingForward(false);
+    activeQuiz.decreaseCurrentExerciseIndex();
+  }
+
   const activeQuiz = useActiveQuizStore();
   const setExercises = useActiveQuizStore((state) => state.setExercises);
   const userAnswer = useQuizAnswerStore();
   const prepareAnswers = useQuizAnswerStore((state) => state.prepareAnswers);
+  const [movingForward, setMovingForward] = useState<boolean>(false);
+  const [movingBackwards, setMovingBackwards] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -50,15 +60,21 @@ export default function Quiz(): ReactElement {
               }
 
               return (
-                <ExerciseComponent key={exercise.id} exercise={exercise} />
+                <div
+                  key={exercise.id}
+                  className={`${styles.quizWrapper} ${movingForward ? styles.animateForward : null} ${movingBackwards ? styles.animateBackwards : null}`}
+                >
+                  <ExerciseComponent exercise={exercise} />
+                </div>
               );
             }
           })}
+
           <div className={styles.navBtnWrapper}>
             {activeQuiz.currentExerciseIndex != 0 ? (
               <button
-                className={styles.backBtn}
-                onClick={() => activeQuiz.decreaseCurrentExerciseIndex()}
+                className={styles.btn}
+                onClick={() => handleBackwardsClick()}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -80,7 +96,7 @@ export default function Quiz(): ReactElement {
               ""
             )}
             <button
-              className={`${styles.forwardBtn} ${activeQuiz.currentExerciseIndex === activeQuiz.lastQuestion ? styles.finishQuiz : ""}`}
+              className={`${styles.btn} ${activeQuiz.currentExerciseIndex === activeQuiz.lastQuestion ? styles.finishQuiz : ""}`}
               onClick={() => handleForwardClick()}
             >
               {activeQuiz.currentExerciseIndex === activeQuiz.lastQuestion ? (

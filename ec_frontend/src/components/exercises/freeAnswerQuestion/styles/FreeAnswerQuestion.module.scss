@@ -2,4 +2,36 @@
 
 .title {
   font-family: var.$outfit;
+  font-size: 2.5rem;
+}
+
+.description {
+  font-family: var.$poppins;
+  font-size: 1.4rem;
+  margin-top: 0.5em;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4em;
+  width: 130%;
+  align-items: center;
+  margin-top: 3em;
+}
+
+.optionContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  width: 100%;
+  margin-top: 3em;
+}
+
+.inputText {
+  font-family: var.$poppins;
+  font-size: 1rem;
+  padding: 0.5em;
+  border-radius: 0.4em;
+  border: 1px solid rgba(0, 0, 0, 0.385);
 }

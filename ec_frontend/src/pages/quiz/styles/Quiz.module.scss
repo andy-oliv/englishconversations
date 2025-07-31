@@ -17,6 +17,7 @@
   border-radius: 1em;
   background-color: var.$inactive;
   transition: all 0.5s;
+  animation: fadeIn 1s ease-in-out forwards;
 }
 
 .activeExercise {
@@ -33,6 +34,14 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  animation: start 1s ease-in-out forwards;
+}
+
+.quizWrapper {
+  display: flex;
+  width: 50%;
+  flex-direction: column;
+  align-items: center;
 }
 
 .navBtnWrapper {
@@ -42,20 +51,7 @@
   margin-top: 4em;
 }
 
-.backBtn {
-  background-color: transparent;
-  padding: 0.1em 2em;
-  border-radius: 10em;
-  border: 2px solid;
-  cursor: pointer;
-}
-
-.backBtn:hover {
-  background-color: rgba(255, 255, 255, 0.538);
-  color: rgb(76, 76, 76);
-}
-
-.forwardBtn {
+.btn {
   background-color: var.$blue;
   color: white;
   padding: 0.2em 2em;
@@ -64,7 +60,7 @@
   cursor: pointer;
 }
 
-.forwardBtn:hover {
+.btn:hover {
   background-color: var.$btnHover;
 }
 
@@ -74,4 +70,58 @@
 
 .finishQuiz:hover {
   background-color: var.$greenHover;
+}
+
+.animateForward {
+  animation: transitionForwards 0.6s ease-in-out forwards;
+}
+
+.animateBackwards {
+  animation: transitionBackwards 0.6s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes start {
+  0% {
+    transform: translateY(2em);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes transitionForwards {
+  0% {
+    transform: translateX(3em) scale(0.95);
+    opacity: 0;
+    filter: blur(1.5px);
+  }
+  100% {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+@keyframes transitionBackwards {
+  0% {
+    transform: translateX(-3em) scale(0.95);
+    opacity: 0;
+    filter: blur(1.5px);
+  }
+  100% {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+    filter: blur(0);
+  }
 }

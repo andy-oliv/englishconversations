@@ -106,3 +106,30 @@
 .forgotPasswordBtn:hover {
   color: rgb(206, 206, 206);
 }
+
+.error {
+  color: rgb(255, 72, 72);
+  font-family: var.$poppins;
+  font-weight: 300;
+  margin-top: -0.5em;
+}
+
+.loading {
+  position: relative;
+  width: 100%;
+  text-align: center;
+  animation: loadingAnimation 1s ease-in-out infinite;
+  background-color: #213d4b;
+}
+
+@keyframes loadingAnimation {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
+  }
+}

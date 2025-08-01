@@ -1,0 +1,31 @@
+@use "../../../../styles/variables" as var;
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: var.$backgroundColor;
+}
+
+.title {
+  font-family: var.$outfit;
+  font-size: 4rem;
+  font-weight: 900;
+  animation: flicker 0.8s ease-in-out infinite;
+  background: var.$signatureGradient;
+  background-clip: text;
+  color: transparent;
+}
+
+@keyframes flicker {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
+  }
+}

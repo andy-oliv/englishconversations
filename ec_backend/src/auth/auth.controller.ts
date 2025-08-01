@@ -34,7 +34,7 @@ import { S3Service } from '../s3/s3.service';
 import { Logger } from 'nestjs-pino';
 import parseJson from '../helper/functions/parseJson';
 import allowedTypes from '../helper/functions/allowedTypes';
-import { Throttle } from '@nestjs/throttler';
+import { SkipThrottle, Throttle } from '@nestjs/throttler';
 import { AuthType } from '../common/decorators/authType.decorator';
 import { UserRoles } from '../../generated/prisma';
 import { RoleGuard } from './guards/role/role.guard';

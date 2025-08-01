@@ -9,7 +9,10 @@ import { ConfigService } from '@nestjs/config';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
-    cors: { origin: ['http://localhost:4200'], credentials: true },
+    cors: {
+      origin: ['http://localhost:4200', 'http://localhost:5173'],
+      credentials: true,
+    },
   });
   const configService = app.get(ConfigService);
   app.useGlobalPipes(

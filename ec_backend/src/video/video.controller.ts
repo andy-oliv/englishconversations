@@ -19,7 +19,6 @@ import httpMessages_EN from '../helper/messages/httpMessages.en';
 import UpdateVideoDTO from './dto/updateVideo.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerMemoryStorage } from '../config/upload.config';
-import { FileService } from '../file/file.service';
 import FormHandlerReturn from '../common/types/FormHandlerReturn';
 import FormDataHandler from '../helper/functions/formDataHandler';
 import GenerateVideoDTO from './dto/generateVideo.dto';
@@ -29,7 +28,7 @@ import updateFormHandler from '../helper/functions/updateFormHandler';
 import parseJson from '../helper/functions/parseJson';
 import allowedTypes from '../helper/functions/allowedTypes';
 import { RoleGuard } from '../auth/guards/role/role.guard';
-import { UserRoles } from '../../generated/prisma';
+import { UserRoles } from '@prisma/client';
 import { AuthType } from '../common/decorators/authType.decorator';
 
 @ApiTags('Videos')
@@ -39,7 +38,6 @@ import { AuthType } from '../common/decorators/authType.decorator';
 export class VideoController {
   constructor(
     private readonly videoService: VideoService,
-    private readonly fileService: FileService,
     private readonly s3Service: S3Service,
     private readonly logger: Logger,
   ) {}
@@ -70,16 +68,10 @@ export class VideoController {
       this.logger,
       'videos/thumbnails',
     );
-    const thumbnail: Return = await this.fileService.generateFile({
-      name: file.originalname,
-      type: 'IMAGE',
-      size: file.size,
-      url: videoData.fileUrl,
-    });
 
     return this.videoService.generateVideo({
       ...videoData.data,
-      thumbnailId: thumbnail.data.id,
+      thumbnailUrl: videoData.fileUrl,
     });
   }
 
@@ -169,16 +161,9 @@ export class VideoController {
         metadata,
       );
 
-      const thumbnail: Return = await this.fileService.generateFile({
-        name: file.originalname,
-        type: 'IMAGE',
-        size: file.size,
-        url: videoData.fileUrl,
-      });
-
       return this.videoService.updateVideo(id, {
         ...videoData.data,
-        thumbnailId: thumbnail.data.id,
+        thumbnailUrl: videoData.fileUrl,
       });
     }
 

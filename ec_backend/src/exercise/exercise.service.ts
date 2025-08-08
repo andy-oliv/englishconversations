@@ -14,14 +14,12 @@ import handleInternalErrorException from '../helper/functions/handleErrorExcepti
 import { CEFRLevels, Difficulty, ExerciseTypes } from '../../generated/prisma';
 import generateExceptionMessage from '../helper/functions/generateExceptionMessage';
 import UpdateExerciseDTO from './dto/UpdateExercise.dto';
-import { FileService } from '../file/file.service';
 
 @Injectable()
 export class ExerciseService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly logger: Logger,
-    private readonly fileService: FileService,
   ) {}
 
   /*Ideally, this method should be part of QuizService. However, to avoid a circular dependency,
@@ -224,15 +222,6 @@ export class ExerciseService {
                     title: true,
                   },
                 },
-              },
-            },
-            file: {
-              select: {
-                id: true,
-                type: true,
-                name: true,
-                size: true,
-                url: true,
               },
             },
           },

@@ -12,14 +12,14 @@ import handleInternalErrorException from '../helper/functions/handleErrorExcepti
 import loggerMessages from '../helper/messages/loggerMessages';
 import UpdateChapterDTO from './dto/updateChapter.dto';
 import generateExceptionMessage from '../helper/functions/generateExceptionMessage';
-import { FileService } from '../file/file.service';
+import { S3Service } from '../s3/s3.service';
 
 @Injectable()
 export class ChapterService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly logger: Logger,
-    private readonly fileService: FileService,
+    private readonly s3Service: S3Service,
   ) {}
 
   async throwIfChapterExists(chapterData: Chapter): Promise<void> {
@@ -80,11 +80,6 @@ export class ChapterService {
     try {
       const chapters: Chapter[] = await this.prismaService.chapter.findMany({
         include: {
-          file: {
-            select: {
-              url: true,
-            },
-          },
           units: {
             select: {
               id: true,
@@ -133,14 +128,6 @@ export class ChapterService {
                 id: true,
                 name: true,
                 description: true,
-              },
-            },
-            file: {
-              select: {
-                id: true,
-                name: true,
-                size: true,
-                url: true,
               },
             },
           },
@@ -217,8 +204,8 @@ export class ChapterService {
         },
       });
 
-      if (deletedchapter.fileId) {
-        await this.fileService.deleteFile(deletedchapter.fileId);
+      if (deletedchapter.imageUrl) {
+        await this.s3Service.deleteFileFromS3(deletedchapter.imageUrl);
       }
 
       this.logger.log({

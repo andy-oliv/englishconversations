@@ -9,7 +9,7 @@ import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { LoginLogService } from './login-log.service';
 import Return from '../common/types/Return';
 import { AuthType } from '../common/decorators/authType.decorator';
-import { UserRoles } from '../../generated/prisma';
+import { UserRoles } from '@prisma/client';
 import { RoleGuard } from '../auth/guards/role/role.guard';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
 

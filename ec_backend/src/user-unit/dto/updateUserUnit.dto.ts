@@ -1,7 +1,7 @@
 import { IsBoolean, IsDate, IsIn, IsNumber, IsOptional } from 'class-validator';
 import validationMessages_EN from '../../helper/messages/validationMessages.en';
 import { ApiProperty } from '@nestjs/swagger';
-import { Status } from '../../../generated/prisma';
+import { Status } from '@prisma/client';
 
 export default class UpdateUserUnitDTO {
   @ApiProperty({

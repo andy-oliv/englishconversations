@@ -92,11 +92,7 @@ export class UserProgressService {
             select: {
               name: true,
               description: true,
-              file: {
-                select: {
-                  url: true,
-                },
-              },
+              imageUrl: true,
             },
           },
         },

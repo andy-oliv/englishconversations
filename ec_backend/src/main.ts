@@ -5,6 +5,7 @@ import { Logger } from 'nestjs-pino';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
 import { ConfigService } from '@nestjs/config';
+import * as fs from 'fs';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -33,7 +34,7 @@ async function bootstrap() {
     )
     .setVersion('1.0')
     .build();
-  const documentFactory = () => SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, config);
 
   const swaggerOptions = {
     customSiteTitle: 'English Conversations API Docs',
@@ -54,7 +55,9 @@ async function bootstrap() {
   `,
   };
 
-  SwaggerModule.setup('docs', app, documentFactory, swaggerOptions);
+  SwaggerModule.setup('docs', app, document, swaggerOptions);
+
+  fs.writeFileSync('./swagger.json', JSON.stringify(document, null, 2));
 
   await app.listen(3000);
 }

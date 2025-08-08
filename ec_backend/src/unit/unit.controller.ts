@@ -23,7 +23,6 @@ import CreateUnitDTO from './dto/createUnit.dto';
 import { RoleGuard } from '../auth/guards/role/role.guard';
 import { Logger } from 'nestjs-pino';
 import { S3Service } from '../s3/s3.service';
-import { FileService } from '../file/file.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { multerMemoryStorage } from '../config/upload.config';
 import allowedTypes from '../helper/functions/allowedTypes';
@@ -33,7 +32,7 @@ import updateFormHandler from '../helper/functions/updateFormHandler';
 import UpdateVideoDTO from '../video/dto/updateVideo.dto';
 import parseJson from '../helper/functions/parseJson';
 import { AuthType } from '../common/decorators/authType.decorator';
-import { UserRoles } from '../../generated/prisma';
+import { UserRoles } from '@prisma/client';
 
 @ApiTags('Units')
 @Controller('api/units')
@@ -44,7 +43,6 @@ export class UnitController {
     private readonly unitService: UnitService,
     private readonly s3Service: S3Service,
     private readonly logger: Logger,
-    private readonly fileService: FileService,
   ) {}
 
   @Post()
@@ -84,16 +82,10 @@ export class UnitController {
         this.logger,
         'images/unit',
       );
-      const thumbnail: Return = await this.fileService.generateFile({
-        name: file.originalname,
-        type: 'IMAGE',
-        size: file.size,
-        url: unitData.fileUrl,
-      });
 
       return this.unitService.createUnit({
         ...unitData.data,
-        fileId: thumbnail.data.id,
+        imageUrl: unitData.fileUrl,
       });
     }
     if (!metadata) {
@@ -215,16 +207,9 @@ export class UnitController {
         metadata,
       );
 
-      const thumbnail: Return = await this.fileService.generateFile({
-        name: file.originalname,
-        type: 'IMAGE',
-        size: file.size,
-        url: unitData.fileUrl,
-      });
-
       return this.unitService.updateUnit(id, {
         ...unitData.data,
-        fileId: thumbnail.data.id,
+        imageUrl: unitData.fileUrl,
       });
     }
 

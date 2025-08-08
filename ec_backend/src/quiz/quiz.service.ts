@@ -15,7 +15,7 @@ import { CEFRLevels, Difficulty } from '../../generated/prisma';
 import UpdateQuizDTO from './dto/updateQuiz.dto';
 import { ExerciseService } from '../exercise/exercise.service';
 import Exercise from '../entities/Exercise';
-import { FileService } from '../file/file.service';
+import { S3Service } from '../s3/s3.service';
 
 @Injectable()
 export class QuizService {
@@ -52,7 +52,7 @@ export class QuizService {
     private readonly prismaService: PrismaService,
     private readonly logger: Logger,
     private readonly exerciseService: ExerciseService,
-    private readonly fileService: FileService,
+    private readonly s3Service: S3Service,
   ) {}
 
   async validateAddition(quizId: string, exerciseId: number): Promise<void> {
@@ -384,8 +384,8 @@ export class QuizService {
         },
       });
 
-      if (deletedQuiz.fileId) {
-        await this.fileService.deleteFile(deletedQuiz.fileId);
+      if (deletedQuiz.imageUrl) {
+        await this.s3Service.deleteFileFromS3(deletedQuiz.imageUrl);
       }
 
       this.logger.log({

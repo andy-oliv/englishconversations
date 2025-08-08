@@ -8,7 +8,7 @@ export default function generateMockVideo(): Video {
     description: faker.person.bio(),
     url: faker.internet.url(),
     duration: faker.number.int(),
-    thumbnailId: faker.string.uuid(),
+    thumbnailUrl: faker.internet.url(),
     unitId: faker.number.int(),
   };
 

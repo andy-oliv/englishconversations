@@ -24,7 +24,6 @@ import UpdateQuizDTO from './dto/updateQuiz.dto';
 import AddOrRemoveExerciseDTO from './dto/addOrRemoveExercise.dto';
 import { RoleGuard } from '../auth/guards/role/role.guard';
 import { S3Service } from '../s3/s3.service';
-import { FileService } from '../file/file.service';
 import { Logger } from 'nestjs-pino';
 import allowedTypes from '../helper/functions/allowedTypes';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -34,7 +33,7 @@ import FormDataHandler from '../helper/functions/formDataHandler';
 import updateFormHandler from '../helper/functions/updateFormHandler';
 import parseJson from '../helper/functions/parseJson';
 import { AuthType } from '../common/decorators/authType.decorator';
-import { UserRoles } from '../../generated/prisma';
+import { UserRoles } from '@prisma/client';
 
 @ApiTags('Quizzes')
 @Controller('api/quizzes')
@@ -44,7 +43,6 @@ export class QuizController {
   constructor(
     private readonly quizService: QuizService,
     private readonly s3Service: S3Service,
-    private readonly fileService: FileService,
     private readonly logger: Logger,
   ) {}
 
@@ -84,16 +82,10 @@ export class QuizController {
         this.logger,
         'images/quiz',
       );
-      const thumbnail: Return = await this.fileService.generateFile({
-        name: file.originalname,
-        type: 'IMAGE',
-        size: file.size,
-        url: quizData.fileUrl,
-      });
 
       return this.quizService.createQuiz({
         ...quizData.data,
-        fileId: thumbnail.data.id,
+        imageUrl: quizData.fileUrl,
       });
     }
 
@@ -274,16 +266,9 @@ export class QuizController {
         metadata,
       );
 
-      const thumbnail: Return = await this.fileService.generateFile({
-        name: file.originalname,
-        type: 'IMAGE',
-        size: file.size,
-        url: quizData.fileUrl,
-      });
-
       return this.quizService.updateQuiz(id, {
         ...quizData.data,
-        fileId: thumbnail.data.id,
+        imageUrl: quizData.fileUrl,
       });
     }
 

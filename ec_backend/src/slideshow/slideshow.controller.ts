@@ -11,7 +11,7 @@ import {
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SlideshowService } from './slideshow.service';
 import Return from '../common/types/Return';
-import { UserRoles } from '../../generated/prisma';
+import { UserRoles } from '@prisma/client';
 import { AuthType } from '../common/decorators/authType.decorator';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
 import GenerateSlideShowDTO from './dto/generateSlideshow.dto';

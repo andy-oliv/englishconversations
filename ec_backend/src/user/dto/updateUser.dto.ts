@@ -1,5 +1,4 @@
-import { IsDate, IsIn, IsOptional, IsString, IsUrl } from 'class-validator';
-import { CEFRLevels, UserRoles } from '../../../generated/prisma';
+import { IsDate, IsOptional, IsString, IsUrl } from 'class-validator';
 import validationMessages_EN from '../../helper/messages/validationMessages.en';
 import { ApiProperty } from '@nestjs/swagger';
 

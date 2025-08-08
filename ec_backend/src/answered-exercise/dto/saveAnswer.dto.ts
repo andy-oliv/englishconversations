@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Prisma } from '../../../generated/prisma';
+import { Prisma } from '@prisma/client';
 import {
   IsArray,
   IsBoolean,
@@ -98,22 +98,6 @@ export default class SaveAnswerDTO {
       validationMessages_EN.answeredExercise.saveAnswerDTO.textAnswer.isString,
   })
   textAnswer?: string;
-
-  @ApiProperty({
-    title: 'FileId',
-    required: false,
-    type: 'string',
-    example: 'http://google.com/audio/1401f0SIx',
-  })
-  @IsOptional()
-  @IsUrl(
-    {},
-    {
-      message:
-        validationMessages_EN.answeredExercise.saveAnswerDTO.fileId.isUrl,
-    },
-  )
-  fileId?: string;
 
   @ApiProperty({
     title: 'IsCorrectAnswer',

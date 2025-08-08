@@ -25,12 +25,11 @@ import { multerMemoryStorage } from '../config/upload.config';
 import FormDataHandler from '../helper/functions/formDataHandler';
 import { S3Service } from '../s3/s3.service';
 import { Logger } from 'nestjs-pino';
-import { FileService } from '../file/file.service';
 import updateFormHandler from '../helper/functions/updateFormHandler';
 import parseJson from '../helper/functions/parseJson';
 import allowedTypes from '../helper/functions/allowedTypes';
 import { AuthType } from '../common/decorators/authType.decorator';
-import { UserRoles } from '../../generated/prisma';
+import { UserRoles } from '@prisma/client';
 
 @ApiTags('Chapters')
 @Controller('api/chapters')
@@ -39,7 +38,6 @@ import { UserRoles } from '../../generated/prisma';
 export class ChapterController {
   constructor(
     private readonly chapterService: ChapterService,
-    private readonly fileService: FileService,
     private readonly s3Service: S3Service,
     private readonly logger: Logger,
   ) {}
@@ -75,16 +73,10 @@ export class ChapterController {
       this.logger,
       'images/chapter',
     );
-    const thumbnail: Return = await this.fileService.generateFile({
-      name: file.originalname,
-      type: 'IMAGE',
-      size: file.size,
-      url: chapterData.fileUrl,
-    });
 
     return this.chapterService.generateChapter({
       ...chapterData.data,
-      fileId: thumbnail.data.id,
+      imageUrl: chapterData.fileUrl,
     });
   }
 
@@ -175,16 +167,9 @@ export class ChapterController {
         metadata,
       );
 
-      const thumbnail: Return = await this.fileService.generateFile({
-        name: file.originalname,
-        type: 'IMAGE',
-        size: file.size,
-        url: chapterData.fileUrl,
-      });
-
       return this.chapterService.updateChapter(id, {
         ...chapterData.data,
-        fileId: thumbnail.data.id,
+        imageUrl: chapterData.fileUrl,
       });
     }
 

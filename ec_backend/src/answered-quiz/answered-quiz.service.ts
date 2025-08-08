@@ -168,7 +168,6 @@ export class AnsweredQuizService {
                 elapsedTime: true,
                 textAnswer: true,
                 selectedAnswers: true,
-                fileId: true,
                 isCorrectAnswer: true,
                 feedback: true,
               },

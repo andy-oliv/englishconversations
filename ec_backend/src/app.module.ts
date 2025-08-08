@@ -14,7 +14,6 @@ import { AnsweredQuizModule } from './answered-quiz/answered-quiz.module';
 import { UnitModule } from './unit/unit.module';
 import { TagModule } from './tag/tag.module';
 import { VideoModule } from './video/video.module';
-import { FileModule } from './file/file.module';
 import { ChapterModule } from './chapter/chapter.module';
 import { UserModule } from './user/user.module';
 import { UserChapterModule } from './user-chapter/user-chapter.module';
@@ -86,7 +85,6 @@ import { SlideshowProgressModule } from './slideshow-progress/slideshow-progress
     UnitModule,
     TagModule,
     VideoModule,
-    FileModule,
     ChapterModule,
     UserModule,
     UserChapterModule,

@@ -13,7 +13,7 @@ export default function generateMockQuiz(): Quiz {
     description: faker.book.title(),
     level: generateRandomLevel(),
     difficulty: generateRandomDifficulty(),
-    fileId: faker.string.uuid(),
+    imageUrl: faker.internet.url(),
     unitId: faker.number.int(),
   };
 

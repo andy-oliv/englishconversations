@@ -1,4 +1,4 @@
-import { SlideType } from '../../generated/prisma';
+import { SlideType } from '@prisma/client';
 
 export default interface Slide {
   id?: string;

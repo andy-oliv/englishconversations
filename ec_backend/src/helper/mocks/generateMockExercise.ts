@@ -10,7 +10,7 @@ export default function generateMockExercise(): Exercise {
     id: faker.number.int(),
     type: generateRandomExerciseType(),
     description: faker.book.title(),
-    fileId: faker.string.uuid(),
+    contentUrl: faker.internet.url(),
     level: generateRandomLevel(),
     difficulty: generateRandomDifficulty(),
     options: [

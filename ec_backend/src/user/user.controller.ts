@@ -5,7 +5,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseBoolPipe,
   ParseUUIDPipe,
   Patch,
   Post,
@@ -36,7 +35,7 @@ import allowedTypes from '../helper/functions/allowedTypes';
 import { Response } from 'express';
 import { SelfGuard } from '../auth/guards/self/self.guard';
 import { AuthType } from '../common/decorators/authType.decorator';
-import { UserRoles } from '../../generated/prisma';
+import { UserRoles } from '@prisma/client';
 
 @ApiTags('Users')
 @Controller('api/users')

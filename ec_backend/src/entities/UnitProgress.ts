@@ -1,4 +1,4 @@
-import { Status } from '../../generated/prisma';
+import { Status } from '@prisma/client';
 
 export default interface UnitProgress {
   status: Status;

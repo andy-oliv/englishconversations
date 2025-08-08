@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -58,8 +57,6 @@ model Exercise {
   description String @db.Text
   columnA Json?
   columnB Json?
-  file File? @relation(fields: [fileId], references: [id])
-  fileId String? @unique
   contentUrl String? @db.VarChar(250)
   level CEFRLevels
   difficulty Difficulty
@@ -88,8 +85,6 @@ model AnsweredExercise {
   isRetry Boolean @default(false)
   selectedAnswers Json?
   textAnswer String? @db.VarChar(255)
-  file File? @relation(fields: [fileId], references: [id])
-  fileId String? @unique
   isCorrectAnswer Boolean @default(false)
   feedback String? @db.Text
   elapsedTime Int @default(0)
@@ -106,8 +101,7 @@ model Quiz {
   isTest Boolean @default(false)
   title String @db.VarChar(50)
   description String @db.Text
-  file File? @relation(fields: [fileId], references: [id])
-  fileId String? @unique
+  imageUrl String? @db.VarChar(250)
   level CEFRLevels?
   difficulty Difficulty
   tags QuizTag[]
@@ -193,8 +187,7 @@ model Unit {
   id Int @id @default(autoincrement())
   name String @db.VarChar(150)
   description String @db.Text
-  file File? @relation(fields: [fileId], references: [id])
-  fileId String? @unique
+  imageUrl String? @db.VarChar(250)
   chapter Chapter @relation(fields: [chapterId], references: [id])
   chapterId String 
   videos Video[]
@@ -227,8 +220,7 @@ model Chapter {
   id String @id @default(uuid())
   name String @db.VarChar(100)
   description String @db.Text
-  file File? @relation(fields: [fileId], references: [id])
-  fileId String? @unique
+  imageUrl String? @db.VarChar(250)
   units Unit[]
   usersProgress UserChapter[]
   createdAt DateTime @default(now())
@@ -258,8 +250,7 @@ model Video {
   description String? @db.Text
   url String @db.VarChar(250)
   duration Int? 
-  thumbnail File? @relation(fields: [thumbnailId], references: [id])
-  thumbnailId String? @unique
+  thumbnailUrl String? @db.VarChar(250)
   feedback Int @default(0)
   videoTags VideoTag[]
   unit Unit? @relation(fields: [unitId], references: [id])
@@ -286,22 +277,6 @@ model VideoProgress {
   note String? @db.Text 
   
   @@unique([userId, videoId])
-}
-
-model File {
-  id String @id @default(uuid())
-  name String @db.VarChar(250)
-  type FileTypes
-  url String @db.VarChar(250)
-  size Float
-  exercise Exercise?
-  exerciseAnswer AnsweredExercise?
-  quiz Quiz?
-  unit Unit?
-  chapter Chapter?
-  video Video?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 model Notification {

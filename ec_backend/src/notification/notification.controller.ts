@@ -18,7 +18,7 @@ import validationMessages_EN from '../helper/messages/validationMessages.en';
 import UpdateNotificationDTO from './dto/updateNotification.dto';
 import { RoleGuard } from '../auth/guards/role/role.guard';
 import { AuthType } from '../common/decorators/authType.decorator';
-import { UserRoles } from '../../generated/prisma';
+import { UserRoles } from '@prisma/client';
 
 @ApiTags('Notifications')
 @Controller('api/notifications')

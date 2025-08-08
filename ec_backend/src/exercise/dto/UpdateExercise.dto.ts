@@ -6,12 +6,7 @@ import {
   IsUrl,
   IsUUID,
 } from 'class-validator';
-import {
-  CEFRLevels,
-  Difficulty,
-  ExerciseTypes,
-  Prisma,
-} from '../../../generated/prisma';
+import { CEFRLevels, Difficulty, ExerciseTypes, Prisma } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 import validationMessages_EN from '../../helper/messages/validationMessages.en';
 

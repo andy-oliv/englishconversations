@@ -1,9 +1,4 @@
-import {
-  CEFRLevels,
-  Difficulty,
-  ExerciseTypes,
-  Prisma,
-} from '../../generated/prisma';
+import { CEFRLevels, Difficulty, ExerciseTypes, Prisma } from '@prisma/client';
 
 //since MySQL doesn't accept the use of arrays as valid data types, Prisma.JsonValue is the type that allows the use of arrays
 
@@ -13,7 +8,6 @@ export default interface Exercise {
   description: string;
   columnA?: Prisma.JsonValue; //optional field for 'match the columns' exercises
   columnB?: Prisma.JsonValue; //optional field for 'match the columns' exercises
-  fileId?: string;
   contentUrl?: string;
   level: CEFRLevels;
   difficulty: Difficulty;

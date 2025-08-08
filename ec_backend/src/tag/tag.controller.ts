@@ -19,7 +19,7 @@ import AddOrRemoveTagDTO from './dto/addOrRemoveTag.dto';
 import FetchContentByTag from './dto/fetchContentByTag.dto';
 import { RoleGuard } from '../auth/guards/role/role.guard';
 import { AuthType } from '../common/decorators/authType.decorator';
-import { UserRoles } from '../../generated/prisma';
+import { UserRoles } from '@prisma/client';
 
 @ApiTags('Tags')
 @Controller('api/tags')

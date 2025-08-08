@@ -23,7 +23,6 @@ import { UserService } from '../user/user.service';
 import RegisterUserDTO from '../user/dto/registerUser.dto';
 import RequestWithUser from '../common/types/RequestWithUser';
 import updatePasswordDTO from './dto/updatePassword.dto';
-import UpdateEmailDTO from './dto/updateEmail.dto';
 import GenerateResetTokenDTO from './dto/generateResetToken.dto';
 import CheckTokenDTO from './dto/checkToken.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -34,9 +33,9 @@ import { S3Service } from '../s3/s3.service';
 import { Logger } from 'nestjs-pino';
 import parseJson from '../helper/functions/parseJson';
 import allowedTypes from '../helper/functions/allowedTypes';
-import { SkipThrottle, Throttle } from '@nestjs/throttler';
+import { Throttle } from '@nestjs/throttler';
 import { AuthType } from '../common/decorators/authType.decorator';
-import { UserRoles } from '../../generated/prisma';
+import { UserRoles } from '@prisma/client';
 import { RoleGuard } from './guards/role/role.guard';
 
 @ApiTags('Auth')

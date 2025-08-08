@@ -19,7 +19,7 @@ import validationMessages_EN from '../helper/messages/validationMessages.en';
 import UpdateUserUnitDTO from './dto/updateUserUnit.dto';
 import { SelfGuard } from '../auth/guards/self/self.guard';
 import { RoleGuard } from '../auth/guards/role/role.guard';
-import { UserRoles } from '../../generated/prisma';
+import { UserRoles } from '@prisma/client';
 import { AuthType } from '../common/decorators/authType.decorator';
 
 @ApiTags('UserUnits')

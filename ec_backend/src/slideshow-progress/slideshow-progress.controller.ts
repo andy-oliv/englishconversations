@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { SlideshowProgressService } from './slideshow-progress.service';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { UserRoles } from '../../generated/prisma';
+import { UserRoles } from '@prisma/client';
 import { AuthType } from '../common/decorators/authType.decorator';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
 import validationMessages_EN from '../helper/messages/validationMessages.en';

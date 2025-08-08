@@ -20,7 +20,7 @@ import UpdateFeedbackDTO from './dto/updateAnsweredExercise.dto';
 import { SelfGuard } from '../auth/guards/self/self.guard';
 import { RoleGuard } from '../auth/guards/role/role.guard';
 import { AuthType } from '../common/decorators/authType.decorator';
-import { UserRoles } from '../../generated/prisma';
+import { UserRoles } from '@prisma/client';
 
 @ApiTags('AnsweredExercise')
 @Controller('api/answers/e')

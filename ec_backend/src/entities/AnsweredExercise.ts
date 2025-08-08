@@ -1,4 +1,4 @@
-import { Prisma } from '../../generated/prisma';
+import { Prisma } from '@prisma/client';
 
 export default interface AnsweredExercise {
   id?: string;
@@ -8,7 +8,6 @@ export default interface AnsweredExercise {
   isRetry?: boolean;
   selectedAnswers?: Prisma.JsonValue;
   textAnswer?: string;
-  fileId?: string;
   isCorrectAnswer?: boolean;
   feedback?: string;
   elapsedTime: number; //in seconds

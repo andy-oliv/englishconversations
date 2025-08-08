@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { SlideType } from '../../../generated/prisma';
+import { SlideType } from '@prisma/client';
 import {
   IsIn,
   IsInt,

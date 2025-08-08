@@ -3,18 +3,15 @@ import {
   Get,
   Param,
   ParseUUIDPipe,
-  Req,
   UseGuards,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import Return from '../common/types/Return';
 import { UserProgressService } from './user-progress.service';
 import { AuthType } from '../common/decorators/authType.decorator';
-import { UserRoles } from '../../generated/prisma';
+import { UserRoles } from '@prisma/client';
 import { SelfGuard } from '../auth/guards/self/self.guard';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
-import validationMessages_EN from '../helper/messages/validationMessages.en';
-import RequestWithUser from '../common/types/RequestWithUser';
 
 @ApiTags('UserProgress')
 @Controller('api/user-progress')

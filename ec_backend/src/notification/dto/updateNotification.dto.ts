@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDate, IsIn, IsOptional, IsString, IsUrl } from 'class-validator';
 import validationMessages_EN from '../../helper/messages/validationMessages.en';
-import { NotificationTypes } from '../../../generated/prisma';
+import { NotificationTypes } from '@prisma/client';
 
 export default class UpdateNotificationDTO {
   @ApiProperty({

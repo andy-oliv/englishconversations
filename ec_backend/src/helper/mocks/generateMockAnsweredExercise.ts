@@ -10,7 +10,6 @@ export default function generateMockAnsweredExercise(): AnsweredExercise {
     isRetry: faker.datatype.boolean(),
     selectedAnswers: [faker.person.middleName()],
     textAnswer: faker.book.title(),
-    fileId: faker.string.uuid(),
     isCorrectAnswer: faker.datatype.boolean(),
     feedback: faker.person.bio(),
     elapsedTime: faker.number.int(),

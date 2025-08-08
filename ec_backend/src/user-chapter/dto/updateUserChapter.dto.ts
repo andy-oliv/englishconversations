@@ -1,6 +1,6 @@
 import { IsDate, IsIn, IsNumber, IsOptional } from 'class-validator';
 import validationMessages_EN from '../../helper/messages/validationMessages.en';
-import { Status } from '../../../generated/prisma';
+import { Status } from '@prisma/client';
 
 export default class UpdateUserChapterDTO {
   @IsOptional()

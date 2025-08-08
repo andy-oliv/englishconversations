@@ -17,7 +17,7 @@ import loggerMessages from '../helper/messages/loggerMessages';
 import Payload from '../common/types/Payload';
 import GeneratedTokens from '../common/types/GeneratedTokens';
 import { ConfigService } from '@nestjs/config';
-import { response, Response } from 'express';
+import { Response } from 'express';
 import * as dayjs from 'dayjs';
 import Return from '../common/types/Return';
 import { randomBytes } from 'crypto';

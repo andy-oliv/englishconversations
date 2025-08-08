@@ -28,13 +28,12 @@ import FormHandlerReturn from '../common/types/FormHandlerReturn';
 import updateFormHandler from '../helper/functions/updateFormHandler';
 import { S3Service } from '../s3/s3.service';
 import { Logger } from 'nestjs-pino';
-import { FileService } from '../file/file.service';
 import UpdateExerciseDTO from './dto/UpdateExercise.dto';
 import parseJson from '../helper/functions/parseJson';
 import FormDataHandler from '../helper/functions/formDataHandler';
 import defineFileType from '../helper/functions/defineFileType';
 import { AuthType } from '../common/decorators/authType.decorator';
-import { UserRoles } from '../../generated/prisma';
+import { UserRoles } from '@prisma/client';
 
 @ApiTags('Exercises')
 @Controller('api/exercises')
@@ -45,7 +44,6 @@ export class ExerciseController {
     private readonly exerciseService: ExerciseService,
     private readonly s3Service: S3Service,
     private readonly logger: Logger,
-    private readonly fileService: FileService,
   ) {}
 
   @Post()
@@ -84,16 +82,9 @@ export class ExerciseController {
         'multimedia/exercise',
       );
 
-      const generatedFile: Return = await this.fileService.generateFile({
-        name: file.originalname,
-        type: defineFileType(file.mimetype),
-        size: file.size,
-        url: exerciseData.fileUrl,
-      });
-
       return this.exerciseService.createExercise({
         ...exerciseData.data,
-        fileId: generatedFile.data.id,
+        contentUrl: exerciseData.fileUrl,
       });
     }
 
@@ -226,16 +217,9 @@ export class ExerciseController {
         metadata,
       );
 
-      const generatedFile: Return = await this.fileService.generateFile({
-        name: file.originalname,
-        type: defineFileType(file.mimetype),
-        size: file.size,
-        url: exerciseData.fileUrl,
-      });
-
       return this.exerciseService.updateExercise(id, {
         ...exerciseData.data,
-        fileId: generatedFile.data.id,
+        fileId: exerciseData.fileUrl,
       });
     }
 

@@ -2,7 +2,7 @@ import { Controller, Get, UseGuards } from '@nestjs/common';
 import Return from '../common/types/Return';
 import { DashboardService } from './dashboard.service';
 import { AuthType } from '../common/decorators/authType.decorator';
-import { UserRoles } from '../../generated/prisma';
+import { UserRoles } from '@prisma/client';
 import { RoleGuard } from '../auth/guards/role/role.guard';
 import { ApiTags } from '@nestjs/swagger';
 

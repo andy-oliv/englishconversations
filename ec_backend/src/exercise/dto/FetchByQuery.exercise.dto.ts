@@ -1,7 +1,7 @@
 import { IsIn, IsOptional, IsUUID } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import validationMessages_EN from '../../helper/messages/validationMessages.en';
-import { CEFRLevels, Difficulty } from '../../../generated/prisma';
+import { CEFRLevels, Difficulty } from '@prisma/client';
 
 export default class FetchByQueryDTO {
   @ApiProperty({

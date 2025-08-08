@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { CEFRLevels, Difficulty } from '../../../generated/prisma';
+import { CEFRLevels, Difficulty } from '@prisma/client';
 import {
   IsBoolean,
   IsIn,

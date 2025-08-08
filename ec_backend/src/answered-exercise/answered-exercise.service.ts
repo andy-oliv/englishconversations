@@ -86,7 +86,6 @@ export class AnsweredExerciseService {
             isRetry: answerValidation.alreadyAnswered,
             selectedAnswers: data.selectedAnswers,
             textAnswer: data.textAnswer,
-            fileId: data.fileId,
             isCorrectAnswer: isEqual(
               answerValidation.exercise.correctAnswer,
               data.selectedAnswers,

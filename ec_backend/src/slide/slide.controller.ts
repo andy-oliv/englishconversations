@@ -2,18 +2,15 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
   Param,
   ParseUUIDPipe,
   Patch,
   Post,
-  UseGuards,
 } from '@nestjs/common';
 import { SlideService } from './slide.service';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
-import { UserRoles } from '../../generated/prisma';
+import { UserRoles } from '@prisma/client';
 import { AuthType } from '../common/decorators/authType.decorator';
-import { SelfGuard } from '../auth/guards/self/self.guard';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
 import validationMessages_EN from '../helper/messages/validationMessages.en';
 import Return from '../common/types/Return';

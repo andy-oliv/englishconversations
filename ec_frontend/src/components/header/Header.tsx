@@ -1,4 +1,4 @@
-import { useEffect, type ReactElement } from "react";
+import { useEffect, useState, type ReactElement } from "react";
 import styles from "./styles/Header.module.scss";
 import UserMenu from "../userMenu/UserMenu";
 import axios from "axios";
@@ -17,16 +17,22 @@ export default function Header(): ReactElement {
   const userProgress: UserProgress | null = useUserProgressStore(
     (state) => state.data
   );
+  const [loading, setLoading] = useState<boolean>(true);
   const setData = useUserProgressStore((state) => state.setData);
 
   useEffect(() => {
-    if (!user?.id) return;
+    setLoading(true);
+    if (!user?.id) {
+      setLoading(false);
+      return;
+    }
 
     const cached = sessionStorage.getItem("userProgress");
     if (cached) {
       const parsed = UserProgressSchema.safeParse(JSON.parse(cached));
       if (parsed.success) {
         setData(parsed.data);
+        setLoading(false);
         return;
       }
       sessionStorage.removeItem("userProgress");
@@ -43,10 +49,12 @@ export default function Header(): ReactElement {
         const parsedResponse = UserProgressSchema.safeParse(response.data.data);
         if (parsedResponse.success) {
           setData(parsedResponse.data);
+          console.log(parsedResponse.data);
           sessionStorage.setItem(
             "userProgress",
             JSON.stringify(parsedResponse.data)
           );
+          setLoading(false);
           return;
         }
 
@@ -57,6 +65,7 @@ export default function Header(): ReactElement {
           },
         });
       } catch (error) {
+        setLoading(false);
         Sentry.captureException(error, {
           extra: {
             component: "header",
@@ -71,38 +80,81 @@ export default function Header(): ReactElement {
 
   return (
     <>
-      <div className={styles.container}>
-        <div className={styles.progressContainer}>
-          <h2>meu progresso</h2>
-          <div>
-            <div>
-              <p>
-                trilhas:{" "}
-                {userProgress ? userProgress.totalCompletedChapters : ""} de{" "}
-                {userProgress ? userProgress.totalChapters : ""}
-              </p>
-              <div className={styles.progressBar}></div>
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <div className={styles.container}>
+          <div className={styles.progressContainer}>
+            <div className={styles.cardContainer}>
+              <div className={styles.picture}>
+                <img
+                  className={styles.chapterCard}
+                  src={
+                    userProgress
+                      ? userProgress.currentChapter.chapter.imageUrl
+                      : ""
+                  }
+                />
+              </div>
+              <h2 className={styles.title}>meu progresso</h2>
             </div>
-            <div>
-              <p>
-                unidades: {userProgress ? userProgress.totalCompletedUnits : ""}{" "}
-                de {userProgress ? userProgress.totalUnits : ""}
-              </p>
-              <div className={styles.progressBar}></div>
-            </div>
-            <div>
-              <p>
-                testes: {userProgress ? userProgress.totalCompletedTests : ""}{" "}
-                de {userProgress ? userProgress.totalTests : ""}
-              </p>
-              <div className={styles.progressBar}></div>
+            <div className={styles.progressInfo}>
+              <div className={styles.progressInfoContainer}>
+                <div className={styles.progressInfoWrapper}>
+                  <p>
+                    trilhas concluídas:{" "}
+                    {userProgress ? userProgress.totalCompletedChapters : ""} de{" "}
+                    {userProgress ? userProgress.totalChapters : ""}
+                  </p>
+                </div>
+                <div className={styles.progressInfoWrapper}>
+                  <p>
+                    unidades concluídas:{" "}
+                    {userProgress ? userProgress.totalCompletedUnits : ""} de{" "}
+                    {userProgress ? userProgress.totalUnits : ""}
+                  </p>
+                </div>
+                <div className={styles.progressInfoWrapper}>
+                  <p>
+                    testes concluídos:{" "}
+                    {userProgress ? userProgress.totalCompletedTests : ""} de{" "}
+                    {userProgress ? userProgress.totalTests : ""}
+                  </p>
+                </div>
+              </div>
+              <div className={styles.progressBarContainer}>
+                <div className={styles.progressBar}>
+                  <div
+                    className={styles.progressBarFill}
+                    style={{
+                      width: `${userProgress?.totalChapters ? (userProgress.totalCompletedChapters / userProgress.totalChapters) * 100 : 0}%`,
+                    }}
+                  ></div>
+                </div>
+                <div className={styles.progressBar}>
+                  <div
+                    className={styles.progressBarFill}
+                    style={{
+                      width: `${userProgress?.totalUnits ? (userProgress.totalCompletedUnits / userProgress.totalUnits) * 100 : 0}%`,
+                    }}
+                  ></div>
+                </div>
+                <div className={styles.progressBar}>
+                  <div
+                    className={styles.progressBarFill}
+                    style={{
+                      width: `${userProgress?.totalTests ? (userProgress.totalCompletedTests / userProgress.totalTests) * 100 : 0}%`,
+                    }}
+                  ></div>
+                </div>
+              </div>
             </div>
           </div>
+          <div className={styles.userMenuContainer}>
+            <UserMenu />
+          </div>
         </div>
-        <div className={styles.userMenuContainer}>
-          <UserMenu />
-        </div>
-      </div>
+      )}
     </>
   );
 }

@@ -17,9 +17,7 @@ export const UserProgressSchema = z.object({
     chapter: z.object({
       name: z.string(),
       description: z.string(),
-      file: z.object({
-        url: z.url(),
-      }),
+      imageUrl: z.url(),
     }),
   }),
   totalChapters: z.number(),

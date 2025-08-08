@@ -6,7 +6,7 @@ import { ToastContainer } from "react-toastify";
 export default function App(): ReactElement {
   return (
     <>
-      <RouterProvider router={router} />;
+      <RouterProvider router={router} />
       <ToastContainer
         progressClassName="custom-toast-progress"
         toastStyle={{

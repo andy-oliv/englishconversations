@@ -63,21 +63,27 @@ export class ChapterController {
     @UploadedFile() file: Express.Multer.File,
     @Body('metadata') metadata: string,
   ): Promise<Return> {
-    allowedTypes(file);
+    if (file) {
+      allowedTypes(file);
 
-    const chapterData: FormHandlerReturn = await FormDataHandler(
-      GenerateChapterDTO,
-      file,
-      metadata,
-      this.s3Service,
-      this.logger,
-      'images/chapter',
-    );
+      const chapterData: FormHandlerReturn = await FormDataHandler(
+        GenerateChapterDTO,
+        file,
+        metadata,
+        this.s3Service,
+        this.logger,
+        'images/chapter',
+      );
 
-    return this.chapterService.generateChapter({
-      ...chapterData.data,
-      imageUrl: chapterData.fileUrl,
-    });
+      return this.chapterService.generateChapter({
+        ...chapterData.data,
+        imageUrl: chapterData.fileUrl,
+      });
+    }
+
+    const data = await parseJson(GenerateChapterDTO, metadata);
+
+    return this.chapterService.generateChapter(data);
   }
 
   @Get(':id')

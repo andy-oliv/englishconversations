@@ -13,6 +13,7 @@ import loggerMessages from '../helper/messages/loggerMessages';
 import UpdateChapterDTO from './dto/updateChapter.dto';
 import generateExceptionMessage from '../helper/functions/generateExceptionMessage';
 import { S3Service } from '../s3/s3.service';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class ChapterService {
@@ -21,6 +22,30 @@ export class ChapterService {
     private readonly logger: Logger,
     private readonly s3Service: S3Service,
   ) {}
+
+  async generateUserChapterRelations(chapterId: string) {
+    try {
+      const users: Partial<User>[] = await this.prismaService.user.findMany({
+        select: { id: true },
+      });
+
+      const progresses: { userId: string; chapterId: string }[] = users.map(
+        (user) => ({ userId: user.id, chapterId: chapterId }),
+      );
+
+      await this.prismaService.userChapter.createMany({
+        data: progresses,
+      });
+    } catch (error) {
+      handleInternalErrorException(
+        'ChapterService',
+        'generateUserChapterRelations',
+        loggerMessages.chapter.generateUserChapterRelations.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
 
   async throwIfChapterExists(chapterData: Chapter): Promise<void> {
     try {
@@ -60,6 +85,8 @@ export class ChapterService {
       const chapter: Chapter = await this.prismaService.chapter.create({
         data,
       });
+
+      await this.generateUserChapterRelations(chapter.id);
 
       return {
         message: httpMessages_EN.chapter.generateChapter.status_200,

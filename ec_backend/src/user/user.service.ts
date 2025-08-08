@@ -17,6 +17,7 @@ import generateExceptionMessage from '../helper/functions/generateExceptionMessa
 import UpdateUserDTO from './dto/updateUser.dto';
 import { S3Service } from '../s3/s3.service';
 import { Response } from 'express';
+import Chapter from '../entities/Chapter';
 
 @Injectable()
 export class UserService {
@@ -73,6 +74,31 @@ export class UserService {
     private readonly configService: ConfigService,
     private readonly s3service: S3Service,
   ) {}
+
+  async generateUserChapterRelations(userId: string) {
+    try {
+      const chapters: Partial<Chapter>[] =
+        await this.prismaService.chapter.findMany({
+          select: { id: true },
+        });
+
+      const progresses: { userId: string; chapterId: string }[] = chapters.map(
+        (chapter) => ({ userId: userId, chapterId: chapter.id }),
+      );
+
+      await this.prismaService.userChapter.createMany({
+        data: progresses,
+      });
+    } catch (error) {
+      handleInternalErrorException(
+        'UserService',
+        'generateUserChapterRelations',
+        loggerMessages.chapter.generateUserChapterRelations.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
 
   async throwIfNotUser(userId: string): Promise<void> {
     try {
@@ -181,6 +207,8 @@ export class UserService {
           password: hashedPassword,
         },
       });
+
+      await this.generateUserChapterRelations(user.id);
 
       this.logger.log(
         generateExceptionMessage(

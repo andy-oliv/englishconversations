@@ -23,9 +23,6 @@ const validationMessages_EN = {
       textAnswer: {
         isString: 'The textAnswer field must be a string.',
       },
-      fileId: {
-        isUrl: 'The fileId field is not a valid URL.',
-      },
       isCorrectAnswer: {
         isBoolean: 'The isCorrectAnswer field must be a boolean.',
       },
@@ -130,8 +127,8 @@ const validationMessages_EN = {
         isNotEmpty: 'The description field must not be empty.',
         isString: 'The description field must be a string.',
       },
-      fileId: {
-        isUUID: 'The fileId field must be a valid UUID.',
+      imageUrl: {
+        isUrl: 'The imageUrl field must be a valid URL.',
       },
     },
   },
@@ -146,7 +143,7 @@ const validationMessages_EN = {
         isString: 'The description must be a string',
       },
       contentUrl: {
-        isUrl: 'The fileId field must be a valid URL.',
+        isUrl: 'The contentUrl field must be a valid URL.',
       },
       level: {
         isNotEmpty: 'The level field cannot be empty.',
@@ -236,7 +233,7 @@ const validationMessages_EN = {
         isNotEmpty: 'The description field must not be empty.',
         isString: 'The difficulty field must be a string.',
       },
-      fileId: {
+      imageUrl: {
         isUrl: 'The imageUrl field must be a valid URL.',
       },
       level: {
@@ -402,8 +399,8 @@ const validationMessages_EN = {
         isNotEmpty: 'The chapterId field must not be empty.',
         isUUID: 'The chapterId field must be a UUID.',
       },
-      fileId: {
-        isUUID: 'The fileId field must be a valid UUID.',
+      imageUrl: {
+        isUrl: 'The imageUrl field must be a valid URL.',
       },
     },
   },
@@ -561,8 +558,8 @@ const validationMessages_EN = {
       duration: {
         isInt: 'The duration field must be a number in seconds.',
       },
-      thumbnailId: {
-        isUUID: 'The thumbnailId must be a UUID.',
+      thumbnailUrl: {
+        isUrl: 'The thumbnailUrl must be a URL.',
       },
       unitId: {
         isInt: 'The unitId must be a number.',

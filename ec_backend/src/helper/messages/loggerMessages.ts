@@ -211,6 +211,10 @@ const loggerMessages = {
       status_500:
         'An internal error occurred while generating the chapter. Check the error log for more information.',
     },
+    generateUserChapterRelations: {
+      status_500:
+        'An internal error occurred while generating the userChapter relations.',
+    },
     throwIfChapterExists: {
       status_500:
         'An internal error occurred while checking for conflict with the chapter being created. Check the error log for more information.',

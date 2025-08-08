@@ -52,7 +52,7 @@ export default class CreateQuizDTO {
   description: string;
 
   @ApiProperty({
-    title: 'FileID',
+    title: 'ImageUrl',
     required: false,
     type: 'string',
     example: 'http://google.com/images/114kfafiP',
@@ -60,9 +60,9 @@ export default class CreateQuizDTO {
   @IsOptional()
   @IsUrl(
     {},
-    { message: validationMessages_EN.quizzes.createQuizDTO.fileId.isUrl },
+    { message: validationMessages_EN.quizzes.createQuizDTO.imageUrl.isUrl },
   )
-  fileId?: string;
+  imageUrl?: string;
 
   @ApiProperty({
     title: 'Level',

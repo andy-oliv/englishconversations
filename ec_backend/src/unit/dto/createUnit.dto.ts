@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUrl,
+  IsUUID,
+} from 'class-validator';
 import validationMessages_EN from '../../helper/messages/validationMessages.en';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -32,16 +38,19 @@ export default class CreateUnitDTO {
   description: string;
 
   @ApiProperty({
-    title: 'FileID',
+    title: 'ImageUrl',
     required: false,
     type: 'string',
     example: '77988c17-0e05-4ac3-96f3-a3ba16c0709f',
   })
   @IsOptional()
-  @IsUUID('all', {
-    message: validationMessages_EN.unit.createUnitDTO.fileId.isUUID,
-  })
-  fileId?: string;
+  @IsUrl(
+    {},
+    {
+      message: validationMessages_EN.unit.createUnitDTO.imageUrl.isUrl,
+    },
+  )
+  imageUrl?: string;
 
   @ApiProperty({
     title: 'ChapterID',

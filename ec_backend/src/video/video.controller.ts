@@ -58,21 +58,23 @@ export class VideoController {
     @UploadedFile() file: Express.Multer.File,
     @Body('metadata') metadata: string,
   ): Promise<Return> {
-    allowedTypes(file);
+    if (file) {
+      allowedTypes(file);
 
-    const videoData: FormHandlerReturn = await FormDataHandler(
-      GenerateVideoDTO,
-      file,
-      metadata,
-      this.s3Service,
-      this.logger,
-      'videos/thumbnails',
-    );
+      const videoData: FormHandlerReturn = await FormDataHandler(
+        GenerateVideoDTO,
+        file,
+        metadata,
+        this.s3Service,
+        this.logger,
+        'videos/thumbnails',
+      );
 
-    return this.videoService.generateVideo({
-      ...videoData.data,
-      thumbnailUrl: videoData.fileUrl,
-    });
+      return this.videoService.generateVideo({
+        ...videoData.data,
+        thumbnailUrl: videoData.fileUrl,
+      });
+    }
   }
 
   @Get(':id')

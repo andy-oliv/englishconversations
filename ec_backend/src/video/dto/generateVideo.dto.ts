@@ -4,7 +4,6 @@ import {
   IsOptional,
   IsString,
   IsUrl,
-  IsUUID,
 } from 'class-validator';
 import validationMessages_EN from '../../helper/messages/validationMessages.en';
 import { ApiProperty } from '@nestjs/swagger';
@@ -66,16 +65,19 @@ export default class GenerateVideoDTO {
   duration?: number;
 
   @ApiProperty({
-    title: 'ThumbnailID',
+    title: 'ThumbnailUrl',
     required: false,
     type: 'string',
     example: 'eda07b8a-6170-4dad-aa5d-bdc3d3d4aadb',
   })
   @IsOptional()
-  @IsUUID('all', {
-    message: validationMessages_EN.video.generateVideoDTO.thumbnailId.isUUID,
-  })
-  thumbnailId?: string;
+  @IsUrl(
+    {},
+    {
+      message: validationMessages_EN.video.generateVideoDTO.thumbnailUrl.isUrl,
+    },
+  )
+  thumbnailUrl?: string;
 
   @ApiProperty({
     title: 'UnitID',

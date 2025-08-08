@@ -1,8 +1,13 @@
 import { PrismaClient } from '@prisma/client';
+import chapterSeed from './seeds/chapterSeed';
+import userChapterSeed from './seeds/userChapterSeed';
 
 const prisma = new PrismaClient();
 
-async function seed() {}
+async function seed() {
+  await chapterSeed();
+  await userChapterSeed();
+}
 
 async function main() {
   let success = false;

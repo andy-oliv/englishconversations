@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsOptional, IsString, IsUrl } from 'class-validator';
 import validationMessages_EN from '../../helper/messages/validationMessages.en';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -29,14 +29,17 @@ export default class UpdateChapterDTO {
   description: string;
 
   @ApiProperty({
-    title: 'FileID',
+    title: 'ImageUrl',
     required: true,
     type: 'string',
     example: '1fljv240)*$k4dl10jf',
   })
   @IsOptional()
-  @IsUUID('all', {
-    message: validationMessages_EN.chapter.generateChapterDTO.fileId.isUUID,
-  })
-  fileId?: string;
+  @IsUrl(
+    {},
+    {
+      message: validationMessages_EN.chapter.generateChapterDTO.imageUrl.isUrl,
+    },
+  )
+  imageUrl?: string;
 }

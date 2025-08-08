@@ -219,7 +219,7 @@ export class ExerciseController {
 
       return this.exerciseService.updateExercise(id, {
         ...exerciseData.data,
-        fileId: exerciseData.fileUrl,
+        contentUrl: exerciseData.fileUrl,
       });
     }
 

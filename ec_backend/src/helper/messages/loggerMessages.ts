@@ -409,6 +409,64 @@ const loggerMessages = {
     warn: `Attempt to access unauthorized resource. ID override.`,
     status_403: 'Blocked access attempt by role ${request.user.role}',
   },
+  slide: {
+    deleteSlide: {
+      status_500:
+        'An internal error occurred while deleting the slide. Check the error log for more information.',
+    },
+    generateSlide: {
+      status_500:
+        'An internal error occurred while generating the slide. Check the error log for more information.',
+    },
+    updateSlide: {
+      status_500:
+        'An internal error occurred while updating the slide. Check the error log for more information.',
+    },
+  },
+  slideshow: {
+    deleteSlideshow: {
+      status_500:
+        'An internal error occurred while deleting the slideshow. Check the error log for more information.',
+    },
+    generateSlideshow: {
+      status_500:
+        'An internal error occurred while generating the slideshow. Check the error log for more information.',
+    },
+    fetchSlideshows: {
+      status_500:
+        'An internal error occurred while fetching the slideshows. Check the error log for more information.',
+    },
+    fetchSlideshowById: {
+      status_500:
+        'An internal error occurred while fetching the slideshow. Check the error log for more information.',
+    },
+  },
+  slideshowProgress: {
+    deleteProgress: {
+      status_500:
+        'An internal error occurred while deleting the progress. Check the error log for more information.',
+    },
+    generateProgress: {
+      status_500:
+        'An internal error occurred while generating the progress. Check the error log for more information.',
+    },
+    fetchProgresses: {
+      status_500:
+        'An internal error occurred while fetching the progresses. Check the error log for more information.',
+    },
+    fetchProgressById: {
+      status_500:
+        'An internal error occurred while fetching the progress. Check the error log for more information.',
+    },
+    fetchProgressesByUser: {
+      status_500:
+        'An internal error occurred while fetching the progress. Check the error log for more information.',
+    },
+    updateProgress: {
+      status_500:
+        'An internal error occurred while updating the progress. Check the error log for more information.',
+    },
+  },
   student: {
     deleteStudent: {
       status_200: 'A student has been deleted.',
@@ -614,6 +672,12 @@ const loggerMessages = {
     updateUserNotification: {
       status_500:
         'An internal error occurred while updating the notification. Check the error log for more information.',
+    },
+  },
+  userProgress: {
+    fetchProgress: {
+      status_500:
+        'An internal error occurred while fetching the user progress. Check the error log for more information.',
     },
   },
   userUnit: {

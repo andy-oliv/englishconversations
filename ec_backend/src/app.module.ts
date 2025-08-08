@@ -31,6 +31,10 @@ import { VideoProgressModule } from './video-progress/video-progress.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { DashboardModule } from './dashboard/dashboard.module';
 import { LoginLogModule } from './login-log/login-log.module';
+import { UserProgressModule } from './user-progress/user-progress.module';
+import { SlideshowModule } from './slideshow/slideshow.module';
+import { SlideModule } from './slide/slide.module';
+import { SlideshowProgressModule } from './slideshow-progress/slideshow-progress.module';
 
 @Module({
   imports: [
@@ -95,6 +99,10 @@ import { LoginLogModule } from './login-log/login-log.module';
     VideoProgressModule,
     DashboardModule,
     LoginLogModule,
+    UserProgressModule,
+    SlideshowModule,
+    SlideModule,
+    SlideshowProgressModule,
   ],
   controllers: [AppController],
   providers: [

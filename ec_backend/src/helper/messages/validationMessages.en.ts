@@ -1,3 +1,5 @@
+import { isNotEmpty } from 'class-validator';
+
 const validationMessages_EN = {
   answeredExercise: {
     saveAnswerDTO: {
@@ -251,6 +253,64 @@ const validationMessages_EN = {
       },
       difficulty: {
         isIn: 'The difficulty is invalid.',
+      },
+    },
+  },
+  Slide: {
+    generateSlideDTO: {
+      slideshowId: {
+        isNotEmpty: 'The slideshowId field must not be empty.',
+        isUUID: 'The slideshowId field must be a UUUID.',
+      },
+      title: {
+        isNotEmpty: 'The title field must not be empty.',
+        isString: 'The title field must be a string.',
+      },
+      description: {
+        isNotEmpty: 'The description field must not be empty.',
+        isString: 'The description field must be a string.',
+      },
+      type: {
+        isNotEmpty: 'The type field must not be empty.',
+        isIn: 'The type field is invalid.',
+      },
+      url: {
+        isNotEmpty: 'The url field must not be empty.',
+        isUrl: 'The url field must be a valid URL.',
+      },
+      order: {
+        isNotEmpty: 'The order field must not be empty.',
+        isInt: 'The order field must be a number.',
+      },
+    },
+  },
+  slideshow: {
+    generateSlideshowDTO: {
+      unitId: {
+        isNotEmpty: 'The unitId field must not be empty.',
+        isInt: 'The unitId field must be a number.',
+      },
+      title: {
+        isNotEmpty: 'The title field must not be empty.',
+        isString: 'The title field must be a string.',
+      },
+    },
+  },
+  slideshowProgress: {
+    generateProgressDTO: {
+      userId: {
+        isNotEmpty: 'The userId field must not be empty.',
+        isUUID: 'The userId must be a UUID.',
+      },
+      slideshowId: {
+        isNotEmpty: 'The slideshowId field must not be empty.',
+        isUUID: 'The slideshowId must be a UUID.',
+      },
+      status: {
+        isIn: 'The status is invalid.',
+      },
+      progress: {
+        isNumber: 'The progress must be a valid number.',
       },
     },
   },

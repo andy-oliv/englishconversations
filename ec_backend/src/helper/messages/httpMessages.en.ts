@@ -329,6 +329,61 @@ const httpMessages_EN = {
   selfGuard: {
     status_403: 'Access denied.',
   },
+  slide: {
+    deleteSlide: {
+      status_200: 'The slide has been deleted.',
+      status_404: 'The ID is invalid or the slide does not exist.',
+    },
+    generateSlide: {
+      status_200: 'The slide has been created!',
+    },
+    updateSlide: {
+      status_200: 'The slide has been updated.',
+      status_404: 'The ID is invalid or the slide does not exist.',
+    },
+  },
+  slideshow: {
+    deleteSlideshow: {
+      status_200: 'The slideshow has been deleted.',
+      status_404: 'The ID is invalid or the slideshow does not exist.',
+    },
+    generateSlideshow: {
+      status_200: 'The slideshow has been created!',
+    },
+    fetchSlideshows: {
+      status_200: 'The slideshows have been fetched.',
+      status_404: 'There are no slideshows to show.',
+    },
+    fetchSlideshowById: {
+      status_200: 'The slideshow has been fetched.',
+      status_404: 'The ID is invalid or the slideshow does not exist.',
+    },
+  },
+  slideshowProgress: {
+    deleteProgress: {
+      status_200: 'The progress has been deleted.',
+      status_404: 'The ID is invalid or the progress does not exist.',
+    },
+    generateProgress: {
+      status_200: 'The progress has been created!',
+    },
+    fetchProgresses: {
+      status_200: 'The progresses have been fetched.',
+      status_404: 'There are no progresses to show.',
+    },
+    fetchProgressesByUser: {
+      status_200: 'The progresses have been fetched.',
+      status_404: 'There are no progresses to show.',
+    },
+    fetchProgressById: {
+      status_200: 'The progress has been fetched.',
+      status_404: 'The ID is invalid or the progress does not exist.',
+    },
+    updateProgress: {
+      status_200: 'The progress has been updated.',
+      status_404: 'The ID is invalid or the progress does not exist.',
+    },
+  },
   student: {
     deleteStudent: {
       status_200: 'The student has been successfully deleted!',
@@ -520,6 +575,11 @@ const httpMessages_EN = {
       status_200: 'The notification has been updated!',
       status_404:
         'Please, check the request. Either the user or the desired notification do not exist',
+    },
+  },
+  userProgress: {
+    fetchProgress: {
+      status_200: 'The progress has been successfully fetched!',
     },
   },
   userUnit: {

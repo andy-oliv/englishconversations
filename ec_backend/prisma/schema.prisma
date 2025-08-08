@@ -41,6 +41,7 @@ model User {
   answeredExercises AnsweredExercise[]
   answeredQuizzes AnsweredQuiz[]
   videoProgresses VideoProgress[]
+  slideshowProgresses SlideshowProgress []
   notifications UserNotification[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -200,6 +201,7 @@ model Unit {
   tags UnitTag[]
   quizzes Quiz[]
   users UserUnit[]
+  slideshows Slideshow[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -326,6 +328,42 @@ model UserNotification {
   deliveredViaApp Boolean?
 }
 
+model Slideshow {
+  id String @id @default(uuid())
+  title String @db.VarChar(100)
+  unit Unit @relation(fields: [unitId], references: [id])
+  unitId Int
+  slides Slide[]
+  userProgresses SlideshowProgress[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Slide {
+  id String @id @default(uuid())
+  slideshow Slideshow @relation(fields: [slideshowId], references: [id])
+  slideshowId String
+  title String @db.VarChar(100)
+  description String @db.Text
+  type SlideType
+  url String @db.VarChar(250)
+  order Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SlideshowProgress {
+  id String @id @default(uuid())
+  slideshow Slideshow @relation(fields: [slideshowId], references: [id])
+  slideshowId String
+  user User @relation(fields: [userId], references: [id])
+  userId String
+  status Status @default(LOCKED)
+  progress Float? @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 enum NotificationTypes {
   INFO
   REMINDER
@@ -376,4 +414,9 @@ enum Status {
   LOCKED
   IN_PROGRESS
   COMPLETED
+}
+
+enum SlideType {
+  IMAGE
+  VIDEO
 }

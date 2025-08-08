@@ -39,7 +39,7 @@ export default function UnscrambleWord({
           exercise.id,
           [reordered.toString().replaceAll(",", "")],
           true,
-          0
+          time
         );
         return;
       }
@@ -55,7 +55,7 @@ export default function UnscrambleWord({
           exercise.id,
           [updatedOptions.toString().replaceAll(",", "")],
           true,
-          0
+          time
         );
       }
     }
@@ -68,6 +68,7 @@ export default function UnscrambleWord({
   const { setAnswer } = useQuizAnswerStore();
   const getAnswer = useQuizAnswerStore((state) => state.getAnswer);
   const { setNodeRef } = useDroppable({ id: "droppable" });
+  const [time, setTime] = useState<number>(0);
 
   useEffect(() => {
     if (
@@ -79,6 +80,12 @@ export default function UnscrambleWord({
       setDroppedElements(answer);
       setIsAnswered(true);
     }
+
+    const interval = setInterval(() => {
+      setTime((time) => time + 1000);
+    }, 1000);
+
+    return () => clearInterval(interval);
   }, [getAnswer, exercise]);
 
   return (

@@ -111,7 +111,7 @@ export const sampleQuiz: Exercise[] = [
     contentUrl:
       "https://englishconversations-files.s3.us-east-1.amazonaws.com/images/exercise/car.jpg",
     level: "A1",
-    difficulty: "EASY",
+    difficulty: "MEDIUM",
     options: ["Dog", "Chair", "Car", "Pencil"],
     correctAnswer: ["Car"],
     quizId: "cf15d680-8163-4d9c-ab80-938431898a07",
@@ -137,7 +137,7 @@ export const sampleQuiz: Exercise[] = [
     columnB: null,
     contentUrl: null,
     level: "A1",
-    difficulty: "EASY",
+    difficulty: "HARD",
     options: ["Good day", "Good afternoon", "Good evening", "Good morning"],
     correctAnswer: ["Good morning"],
     quizId: "cf15d680-8163-4d9c-ab80-938431898a07",

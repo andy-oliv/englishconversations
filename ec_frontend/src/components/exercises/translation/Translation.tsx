@@ -1,4 +1,4 @@
-import { useState, type ReactElement } from "react";
+import { useEffect, useState, type ReactElement } from "react";
 import styles from "./styles/Translation.module.scss";
 import type ExerciseComponentProps from "../ExerciseComponent.types";
 import { useActiveQuizStore } from "../../../stores/activeQuizStore";
@@ -11,11 +11,11 @@ export default function Translation({
 }: ExerciseComponentProps): ReactElement {
   function handleSelection(option: string): void {
     setSelection(option);
-    setAnswer(exercise.id, [option], true, 0);
+    setAnswer(exercise.id, [option], true, time);
   }
 
   function inputChange(event: React.ChangeEvent<HTMLInputElement>): void {
-    setAnswer(exercise.id, [event.target.value], true, 0);
+    setAnswer(exercise.id, [event.target.value], true, time);
   }
 
   const { currentExerciseIndex } = useActiveQuizStore();
@@ -27,6 +27,15 @@ export default function Translation({
       ? getAnswer(exercise.id)?.answer?.[0]
       : ""
   );
+  const [time, setTime] = useState<number>(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime((time) => time + 1000);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>

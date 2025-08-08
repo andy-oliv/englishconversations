@@ -5,6 +5,11 @@ import { LoginSchema, type Login } from "../../schemas/login.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import ForgotPassword from "../../components/forgotPassword/ForgotPassword";
+import * as Sentry from "@sentry/react";
+import { environment } from "../../environment/environment";
+import { toast } from "react-toastify";
+import { toastMessages } from "../../helpers/messages/toastMessages";
 
 export default function Login(): ReactElement {
   const {
@@ -15,18 +20,32 @@ export default function Login(): ReactElement {
     resolver: zodResolver(LoginSchema),
   });
   const [isLoading, setLoading] = useState<boolean>(false);
+  const [loginActive, setLoginActive] = useState<boolean>(true);
+
   const navigate = useNavigate();
 
   const onSubmit: SubmitHandler<Login> = async (data): Promise<void> => {
     try {
       setLoading(true);
-      await axios.post("http://localhost:3000/auth/login", data, {
+      await axios.post(`${environment.backendAuthUrl}/login`, data, {
         withCredentials: true,
       });
+
       setLoading(false);
+      Sentry.setUser({
+        email: data.email,
+      });
       navigate("/");
     } catch (error) {
-      console.log(error);
+      toast.error(toastMessages.internalError, {
+        autoClose: 3000,
+      });
+      Sentry.captureException(error, {
+        extra: {
+          endpoint: "/login",
+          userEmail: data.email,
+        },
+      });
     }
   };
 
@@ -34,10 +53,12 @@ export default function Login(): ReactElement {
     <>
       <div className={styles.loginContainer}>
         <picture className={styles.loginImageFrame}>
-          <img src="/man_on_computer.jpg" className={styles.loginImage} />
+          <img src="/teacher_andrew_2.jpg" className={styles.loginImage} />
         </picture>
         <div className={styles.loginFormWrapper}>
-          <div className={styles.formBackground}>
+          <div
+            className={`${styles.formBackground} ${loginActive ? styles.activeLogin : ""}`}
+          >
             <picture className={styles.logoFrame}>
               <img src="/logo.png" className={styles.logo} />
             </picture>
@@ -51,6 +72,7 @@ export default function Login(): ReactElement {
                   type="email"
                   placeholder="Digite o seu email"
                   {...register("email", { required: true })}
+                  className={styles.loginInput}
                 />
               </div>
               {errors.email ? (
@@ -62,6 +84,7 @@ export default function Login(): ReactElement {
                   type="password"
                   placeholder="Digite a sua senha"
                   {...register("password", { required: true })}
+                  className={styles.loginInput}
                 />
               </div>
               {errors.password ? (
@@ -72,8 +95,36 @@ export default function Login(): ReactElement {
               >
                 {isLoading ? "Enviando..." : "Enviar"}
               </button>
-              <p className={styles.forgotPasswordBtn}>esqueci minha senha</p>
+              <p
+                className={styles.forgotPasswordBtn}
+                onClick={() => setLoginActive(false)}
+              >
+                esqueci minha senha
+              </p>
             </form>
+          </div>
+          <div
+            className={`${styles.forgotPasswordWrapper} ${!loginActive ? styles.activePassword : ""}`}
+          >
+            <div className={styles.icon} onClick={() => setLoginActive(true)}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="lucide lucide-arrow-left-icon lucide-arrow-left"
+              >
+                <path d="m12 19-7-7 7-7" />
+                <path d="M19 12H5" />
+              </svg>
+              <p>voltar</p>
+            </div>
+            <ForgotPassword />
           </div>
         </div>
       </div>

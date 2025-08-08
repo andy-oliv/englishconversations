@@ -1,4 +1,4 @@
-import { useState, type ReactElement } from "react";
+import { useEffect, useState, type ReactElement } from "react";
 import styles from "./styles/Pictionary.module.scss";
 import type ExerciseComponentProps from "../ExerciseComponent.types";
 import { useQuizAnswerStore } from "../../../stores/quizAnswerStore";
@@ -12,17 +12,26 @@ export default function Pictionary({
 }: ExerciseComponentProps): ReactElement {
   function handleSelection(option: string): void {
     setSelection(option);
-    setAnswer(exercise.id, [option], true, 0);
+    setAnswer(exercise.id, [option], true, time);
   }
 
   function inputChange(inputValue: string): void {
-    setAnswer(exercise.id, [inputValue], true, 0);
+    setAnswer(exercise.id, [inputValue], true, time);
   }
 
   const { currentExerciseIndex } = useActiveQuizStore();
   const [selection, setSelection] = useState<string>("");
   const setAnswer = useQuizAnswerStore((state) => state.setAnswer);
   const getAnswer = useQuizAnswerStore((state) => state.getAnswer);
+  const [time, setTime] = useState<number>(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime((time) => time + 1000);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>

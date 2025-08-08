@@ -8,7 +8,6 @@ export default function QuizFreeInput({
 }: QuizFreeInputProps): ReactElement {
   return (
     <>
-      <label htmlFor="text">Type your answer</label>
       <input
         type="text"
         name="textInput"
@@ -17,6 +16,7 @@ export default function QuizFreeInput({
         onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
           onChange(event.target.value)
         }
+        placeholder="Type your answer here"
         defaultValue={defaultValue}
       />
     </>

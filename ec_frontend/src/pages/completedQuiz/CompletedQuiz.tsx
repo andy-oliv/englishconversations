@@ -5,17 +5,23 @@ import { useActiveQuizStore } from "../../stores/activeQuizStore";
 import type { Exercise } from "../../schemas/exercise.schema";
 import { useQuizAnswerStore, type Answer } from "../../stores/quizAnswerStore";
 import _ from "lodash";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function CompletedQuiz(): ReactElement {
   const questions: Exercise[] = useActiveQuizStore((state) => state.exercises);
+  const elapsedTime: number = useActiveQuizStore((state) => state.elapsedTime);
   const answers: Record<number, Answer> = useQuizAnswerStore(
     (state) => state.answers
   );
   const [totalCorrectAnswers, setTotalCorrectAnswers] = useState<number>(0);
   const [isReady, setIsReady] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    if (questions.length === 0) {
+      navigate("/dashboard", { replace: true });
+    }
+
     const total: number = questions.reduce(
       (acc: number, question: Exercise) => {
         const userAnswer = answers[question.id];
@@ -36,7 +42,7 @@ export default function CompletedQuiz(): ReactElement {
     );
     setTotalCorrectAnswers(total);
     setIsReady(true);
-  }, [answers, questions]);
+  }, [answers, questions, navigate]);
 
   return (
     <>
@@ -59,6 +65,12 @@ export default function CompletedQuiz(): ReactElement {
               <MetricsCard
                 value={`${totalCorrectAnswers}`}
                 label="Respostas corretas"
+              />
+              <MetricsCard
+                value={`${Math.floor(elapsedTime / 1000 / 60)
+                  .toString()
+                  .padStart(2, "0")}:${(elapsedTime / 1000) % 60}`}
+                label="Tempo"
               />
             </div>
             <div className={styles.btnWrapper}>

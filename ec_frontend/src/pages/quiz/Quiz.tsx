@@ -14,7 +14,8 @@ export default function Quiz(): ReactElement {
       useActiveQuizStore.getState().currentExerciseIndex;
 
     if (nextIndex === activeQuiz.lastQuestion) {
-      navigate("/completed-quiz");
+      activeQuiz.setElapsedTime(time);
+      navigate("/completed-quiz", { replace: true });
     }
     activeQuiz.increaseCurrentExerciseIndex();
   }
@@ -31,11 +32,15 @@ export default function Quiz(): ReactElement {
   const prepareAnswers = useQuizAnswerStore((state) => state.prepareAnswers);
   const [movingForward, setMovingForward] = useState<boolean>(false);
   const [movingBackwards, setMovingBackwards] = useState<boolean>(false);
+  const [time, setTime] = useState<number>(0);
   const navigate = useNavigate();
 
   useEffect(() => {
     setExercises(sampleQuiz);
     prepareAnswers(sampleQuiz);
+    const interval = setInterval(() => setTime((time) => time + 1000), 1000);
+
+    return () => clearInterval(interval);
   }, [setExercises, prepareAnswers]);
 
   return (

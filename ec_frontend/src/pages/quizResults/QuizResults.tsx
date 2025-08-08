@@ -1,4 +1,4 @@
-import type { ReactElement } from "react";
+import { useEffect, type ReactElement } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./styles/QuizResults.module.scss";
 import type { Exercise } from "../../schemas/exercise.schema";
@@ -12,6 +12,12 @@ export default function QuizResults(): ReactElement {
   const answers: Record<number, Answer> = useQuizAnswerStore(
     (state) => state.answers
   );
+
+  useEffect(() => {
+    if (questions.length === 0) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [questions, navigate]);
 
   return (
     <>
@@ -37,9 +43,36 @@ export default function QuizResults(): ReactElement {
                         : styles.wrongAnswer
                     }`}
                   >
-                    <p className={styles.questionNumber}>
-                      Question {index + 1}
-                    </p>
+                    <div className={styles.heading}>
+                      <p className={styles.questionNumber}>
+                        Question {index + 1}
+                      </p>
+                      <div className={styles.iconContainer}>
+                        <div className={styles.icon}>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="lucide lucide-clock4-icon lucide-clock-4"
+                          >
+                            <path d="M12 6v6l4 2" />
+                            <circle cx="12" cy="12" r="10" />
+                          </svg>
+                        </div>
+                        <p className={styles.time}>
+                          {answers[question.id].elapsedTime / 1000}{" "}
+                          {answers[question.id].elapsedTime / 1000 > 1
+                            ? "segundos"
+                            : "segundo"}
+                        </p>
+                      </div>
+                    </div>
                     <h2 className={styles.questionType}>
                       {question.type.replaceAll("_", " ")}
                     </h2>

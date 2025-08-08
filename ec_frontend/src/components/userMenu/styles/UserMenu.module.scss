@@ -1,0 +1,99 @@
+@use "../../../styles/variables" as var;
+
+.container {
+  width: 10%;
+  position: relative;
+}
+
+.wrapper {
+  width: 5em;
+  height: 5em;
+
+  .menuPicture {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 100%;
+    cursor: pointer;
+  }
+
+  .menuPicture:hover {
+    box-shadow: 0 0 10px 0px rgba(0, 0, 0, 0.84);
+  }
+}
+
+.menu {
+  position: absolute;
+  background-color: rgb(26, 26, 26);
+  color: rgb(238, 237, 237);
+  padding: 1em;
+  border-radius: 0.5em;
+  top: 4.5em;
+  right: 0;
+  width: max-content;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  opacity: 0;
+  transform: translateY(2em);
+  transition: all 0.3s ease-in-out;
+  pointer-events: none;
+  color: rgb(143, 142, 142);
+
+  .menuTitle {
+    font-family: var.$poppins;
+    font-weight: 600;
+    color: rgb(217, 217, 217);
+  }
+}
+
+.menuOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.menuOption {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.menuOption:hover {
+  color: var.$blue;
+}
+
+.btn {
+  width: 100%;
+  font-family: var.$poppins;
+  font-weight: 600;
+  border: none;
+  border-radius: 0.3em;
+  padding: 0.5em 1em;
+  color: rgb(105, 205, 255);
+  background-color: rgb(81, 81, 81);
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: var.$blue;
+  color: white;
+}
+
+.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.link {
+  text-decoration: none;
+  font-family: var.$poppins;
+  font-size: 1rem;
+  color: rgb(143, 142, 142);
+  cursor: pointer;
+}
+
+.link:hover {
+  color: var.$blue;
+}

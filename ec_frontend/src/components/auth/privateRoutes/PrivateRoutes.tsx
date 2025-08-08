@@ -1,10 +1,10 @@
 import axios from "axios";
 import { useEffect, useState, type ReactElement } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import styles from "./styles/PrivateRoutes.module.scss";
 import { LoggedUserStore } from "../../../stores/loggedUserStore";
 import { LoggedUserSchema } from "../../../schemas/loggedUser.schema";
 import { fetchUser } from "../../../helper/functions/fetchUser";
+import Spinner from "../../spinner/Spinner";
 
 export default function PrivateRoutes(): ReactElement {
   const [isAuth, setIsAuth] = useState<boolean | null>(null);
@@ -42,12 +42,7 @@ export default function PrivateRoutes(): ReactElement {
     isAuthenticated();
   }, [setUser]);
 
-  if (isAuth === null)
-    return (
-      <div className={styles.loadingContainer}>
-        <h1 className={styles.title}>Carregando...</h1>
-      </div>
-    );
+  if (isAuth === null) return <Spinner />;
 
   return isAuth ? <Outlet /> : <Navigate to="/login" />;
 }

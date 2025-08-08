@@ -1,0 +1,11 @@
+@use "./styles/variables" as var;
+
+.custom-toast {
+  background-color: "rgb(26, 26, 26)";
+  color: "#d9d7ceff";
+  font-family: var.$poppins;
+}
+
+.custom-toast-progress {
+  background: var.$signatureGradient;
+}

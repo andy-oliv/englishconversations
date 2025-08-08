@@ -22,6 +22,28 @@
   background: var.$signatureGradient;
 }
 
+.heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.iconContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  color: rgba(0, 0, 0, 0.578);
+  background-color: rgba(121, 179, 197, 0.159);
+  padding: 0.2em 1em;
+  border-radius: 0.5em;
+}
+
+.time {
+  font-family: var.$poppins;
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
 .questionNumber {
   font-family: var.$poppins;
   font-size: 0.8rem;

@@ -1,4 +1,4 @@
-import { useState, type ReactElement } from "react";
+import { useEffect, useState, type ReactElement } from "react";
 import styles from "./styles/MultipleChoiceQuestion.module.scss";
 import type ExerciseComponentProps from "../ExerciseComponent.types";
 import QuizOption from "../../quizOption/QuizOption";
@@ -11,12 +11,21 @@ export default function MultipleChoiceQuestion({
 }: ExerciseComponentProps): ReactElement {
   function handleSelection(option: string): void {
     setSelected(option);
-    setAnswer(exercise.id, [option], true, 0);
+    setAnswer(exercise.id, [option], true, time);
   }
 
   const { currentExerciseIndex } = useActiveQuizStore();
   const [selected, setSelected] = useState<string>("");
   const { setAnswer, answers } = useQuizAnswerStore();
+  const [time, setTime] = useState<number>(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime((time) => time + 1000);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>

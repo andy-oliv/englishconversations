@@ -1,12 +1,21 @@
 import type { ReactElement } from "react";
-import { LoggedUserStore } from "../../stores/loggedUserStore";
+import MainMenu from "../../components/mainMenu/MainMenu";
+import styles from "./styles/Home.module.scss";
+import { Outlet } from "react-router-dom";
+import Header from "../../components/header/Header";
 
 export default function Home(): ReactElement {
-  const loggedUser = LoggedUserStore();
-
   return (
     <>
-      <h1>Olá, {loggedUser.data?.name.split(" ")[0]}!</h1>
+      <div className={styles.homeScreen}>
+        <div className={styles.menuWrapper}>
+          <MainMenu />
+        </div>
+        <div className={styles.mainContent}>
+          <Header />
+          <Outlet />
+        </div>
+      </div>
     </>
   );
 }

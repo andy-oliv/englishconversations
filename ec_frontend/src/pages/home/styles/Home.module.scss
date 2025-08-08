@@ -1,0 +1,19 @@
+@use "../../../styles/variables" as var;
+
+.homeScreen {
+  height: 100vh;
+  background-color: var.$backgroundColor;
+  display: flex;
+}
+
+.menuWrapper {
+  width: 12%;
+}
+
+.mainContent {
+  padding: 2.5em 3em;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}

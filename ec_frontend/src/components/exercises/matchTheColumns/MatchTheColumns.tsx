@@ -13,7 +13,7 @@ export default function MatchTheColumns({
     index: number
   ) {
     answerRef.current[index] = event.target.value;
-    setAnswer(exercise.id, [...Object.values(answerRef.current)], true, 0);
+    setAnswer(exercise.id, [...Object.values(answerRef.current)], true, time);
   }
 
   const { currentExerciseIndex } = useActiveQuizStore();
@@ -21,6 +21,7 @@ export default function MatchTheColumns({
   const getAnswer = useQuizAnswerStore((state) => state.getAnswer);
   const answerRef = useRef<Record<number, string>>({});
   const [answersInStore, setAnswersInStore] = useState<string[]>([]);
+  const [time, setTime] = useState<number>(0);
 
   useEffect(() => {
     if (getAnswer(exercise.id).isAnswered) {
@@ -29,6 +30,12 @@ export default function MatchTheColumns({
         answerRef.current[index] = answer;
       });
     }
+
+    const interval = setInterval(() => {
+      setTime((time) => time + 1000);
+    }, 1000);
+
+    return () => clearInterval(interval);
   }, [setAnswer, getAnswer, exercise]);
 
   return (

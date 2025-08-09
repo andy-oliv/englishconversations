@@ -94,7 +94,7 @@ export default function UserMenu(): ReactElement {
                   <rect x="2" y="4" width="20" height="16" rx="2" />
                 </svg>
               </div>
-              <Link to="/reset-email" className={styles.link}>
+              <Link to="/edit-email" className={styles.link}>
                 Alterar email
               </Link>
             </div>
@@ -116,7 +116,7 @@ export default function UserMenu(): ReactElement {
                   <circle cx="16.5" cy="7.5" r=".5" fill="currentColor" />
                 </svg>
               </div>
-              <Link to="/reset-password" className={styles.link}>
+              <Link to="/edit-password" className={styles.link}>
                 Alterar senha
               </Link>
             </div>

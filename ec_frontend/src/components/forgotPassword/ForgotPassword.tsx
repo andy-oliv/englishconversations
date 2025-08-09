@@ -9,7 +9,7 @@ import {
 import axios from "axios";
 import { toast } from "react-toastify";
 import { environment } from "../../environment/environment";
-import { toastMessages } from "../../helpers/messages/toastMessages";
+import { toastMessages } from "../../helper/messages/toastMessages";
 
 export default function ForgotPassword(): ReactElement {
   const onSubmit: SubmitHandler<ForgotPassword> = async (
@@ -21,6 +21,7 @@ export default function ForgotPassword(): ReactElement {
         withCredentials: true,
       });
       setLoading(false);
+      reset();
       toast.success(toastMessages.forgotPassword.success, {
         autoClose: 5000,
       });
@@ -35,6 +36,7 @@ export default function ForgotPassword(): ReactElement {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<ForgotPassword>({
     resolver: zodResolver(ForgotPasswordSchema),

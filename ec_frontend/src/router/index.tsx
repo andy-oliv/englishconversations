@@ -12,6 +12,8 @@ import IsLogged from "../components/auth/isLogged/IsLogged";
 import EditProfile from "../pages/editProfile/EditProfile";
 import ResetEmail from "../pages/resetEmail/ResetEmail";
 import ResetPassword from "../pages/resetPassword/ResetPassword";
+import ChangeEmail from "../pages/changeEmail/ChangeEmail";
+import ChangePassword from "../pages/changePassword/ChangePassword";
 
 export const router = createBrowserRouter([
   {
@@ -53,12 +55,20 @@ export const router = createBrowserRouter([
         element: <EditProfile />,
       },
       {
-        path: "reset-email",
+        path: "edit-email",
         element: <ResetEmail />,
       },
       {
-        path: "reset-password",
+        path: "email-reset",
+        element: <ChangeEmail />,
+      },
+      {
+        path: "edit-password",
         element: <ResetPassword />,
+      },
+      {
+        path: "password-reset",
+        element: <ChangePassword />,
       },
       {
         path: "/quiz",

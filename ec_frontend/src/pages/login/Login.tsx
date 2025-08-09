@@ -9,12 +9,13 @@ import ForgotPassword from "../../components/forgotPassword/ForgotPassword";
 import * as Sentry from "@sentry/react";
 import { environment } from "../../environment/environment";
 import { toast } from "react-toastify";
-import { toastMessages } from "../../helpers/messages/toastMessages";
+import { toastMessages } from "../../helper/messages/toastMessages";
 
 export default function Login(): ReactElement {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<Login>({
     resolver: zodResolver(LoginSchema),
@@ -32,6 +33,7 @@ export default function Login(): ReactElement {
       });
 
       setLoading(false);
+      reset();
       Sentry.setUser({
         email: data.email,
       });

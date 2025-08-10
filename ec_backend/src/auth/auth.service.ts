@@ -197,7 +197,8 @@ export class AuthService {
 
       if (
         error.message === 'jwt expired' ||
-        error.message === 'invalid token'
+        error.message === 'invalid token' ||
+        error.message.includes('jwt malformed')
       ) {
         throw new BadRequestException(
           httpMessages_EN.auth.validateEmailJwt.status_400,

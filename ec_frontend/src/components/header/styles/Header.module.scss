@@ -93,7 +93,7 @@
 }
 
 .loadingProgressContainer {
-  background-color: var.$dark;
+  background-color: var.$loadingBackground;
   width: 60%;
   height: 100%;
   border-radius: 1em;
@@ -138,6 +138,7 @@
   height: 10%;
   background-color: grey;
   animation: loading ease-in-out 0.9s infinite;
+  border-radius: 0.5em;
 }
 
 @keyframes loading {

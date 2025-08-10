@@ -6,6 +6,7 @@ import { environment } from "../../environment/environment";
 import { toastMessages } from "../../helper/messages/toastMessages";
 import { LoggedUserStore } from "../../stores/loggedUserStore";
 import { logout } from "../../helper/functions/logout";
+import Spinner from "../../components/spinner/Spinner";
 
 export default function ChangeEmail(): ReactElement {
   const location = useLocation();
@@ -72,31 +73,36 @@ export default function ChangeEmail(): ReactElement {
 
     return () => clearInterval(interval);
   }, [seconds, navigate, isDone, user, resetUser]);
+
   return (
     <>
-      <div className={styles.container}>
-        <div className={styles.decorativeLine}></div>
-        <div className={styles.window}>
-          {success ? (
-            <div className={styles.icon}>
-              <img src="/carlton_dancing_meme.gif" />
-            </div>
-          ) : (
-            <div className={styles.icon}>
-              <img src="/sad_michael_scott_meme.gif" />
-            </div>
-          )}
+      {success === null ? (
+        <Spinner />
+      ) : (
+        <div className={styles.container}>
+          <div className={styles.decorativeLine}></div>
+          <div className={styles.window}>
+            {success ? (
+              <div className={styles.icon}>
+                <img src="/carlton_dancing_meme.gif" />
+              </div>
+            ) : (
+              <div className={styles.icon}>
+                <img src="/sad_michael_scott_meme.gif" />
+              </div>
+            )}
 
-          <h1 className={styles.title}>{message}</h1>
-          <p className={styles.message}>
-            A página será redirecionada em <span>{seconds} </span>segundos.{" "}
-            <Link to="/" className={styles.link}>
-              Clique aqui
-            </Link>
-            <span> para redirecionar automaticamente.</span>
-          </p>
+            <h1 className={styles.title}>{message}</h1>
+            <p className={styles.message}>
+              A página será redirecionada em <span>{seconds} </span>segundos.{" "}
+              <Link to="/" className={styles.link}>
+                Clique aqui
+              </Link>
+              <span> para redirecionar automaticamente.</span>
+            </p>
+          </div>
         </div>
-      </div>
+      )}
     </>
   );
 }

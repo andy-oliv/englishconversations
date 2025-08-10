@@ -10,4 +10,11 @@ export const toastMessages = {
     success: "Verifique a sua caixa de email",
   },
   internalError: "Um erro interno ocorreu",
+  login: {
+    badRequest: "Verifique o email ou senha",
+  },
+  updateEmail: {
+    error: "O token está expirado ou é inválido",
+    success: "Email atualizado com sucesso!",
+  },
 };

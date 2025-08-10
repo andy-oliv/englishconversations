@@ -37,6 +37,7 @@ export default function ResetEmail(): ReactElement {
       toast.success(toastMessages.changeEmail.success, {
         autoClose: 3000,
       });
+      navigate(-1);
     } catch (error) {
       setLoading(false);
       if (axios.isAxiosError(error) && error.status === 409) {

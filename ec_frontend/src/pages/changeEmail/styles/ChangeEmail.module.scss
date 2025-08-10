@@ -1,1 +1,57 @@
 @use "../../../styles/variables" as var;
+
+.container {
+  height: 100vh;
+  width: 100%;
+  background: linear-gradient(120deg, #1d262b, var.$darkBlue 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.decorativeLine {
+  width: 100%;
+  height: 3%;
+  background: var.$signatureGradient;
+  margin-bottom: 1em;
+  margin-top: 2em;
+}
+
+.window {
+  width: 100%;
+  height: 60%;
+  border-radius: 1em;
+  padding: 2em;
+  font-family: var.$poppins;
+  color: rgb(239, 239, 239);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon {
+  margin-bottom: 5em;
+  img {
+    border-radius: 0.5em;
+  }
+}
+
+.title {
+  color: rgb(241, 215, 101);
+  text-transform: uppercase;
+}
+
+.message {
+  margin-top: 0.2em;
+  text-align: center;
+}
+
+.link {
+  text-decoration: none;
+  color: var.$blue;
+}
+
+.link:hover {
+  color: var.$btnHover;
+}

@@ -37,6 +37,7 @@ export default function ResetPassword(): ReactElement {
       toast.success(toastMessages.changePassword.success, {
         autoClose: 3000,
       });
+      navigate(-1);
     } catch (error) {
       setLoading(false);
       toast.error(toastMessages.internalError, { autoClose: 3000 });

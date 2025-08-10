@@ -2,32 +2,9 @@ import { useState, type ReactElement } from "react";
 import { LoggedUserStore } from "../../stores/loggedUserStore";
 import styles from "./styles/UserMenu.module.scss";
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
-import * as Sentry from "@sentry/react";
-import { environment } from "../../environment/environment";
+import { logout } from "../../helper/functions/logout";
 
 export default function UserMenu(): ReactElement {
-  async function logout(): Promise<void> {
-    try {
-      await axios.get(`${environment.backendAuthUrl}/logout`, {
-        withCredentials: true,
-      });
-      sessionStorage.removeItem("loggedUser");
-      sessionStorage.removeItem("user");
-      sessionStorage.removeItem("userProgress");
-      resetUser();
-      navigate("/login");
-    } catch (error) {
-      Sentry.captureException(error, {
-        extra: {
-          id: user?.id,
-          userEmail: user?.email,
-          userName: user?.name,
-        },
-      });
-    }
-  }
-
   function mouseEnter(): void {
     setShowMenu(true);
   }
@@ -120,7 +97,10 @@ export default function UserMenu(): ReactElement {
                 Alterar senha
               </Link>
             </div>
-            <button className={styles.btn} onClick={() => logout()}>
+            <button
+              className={styles.btn}
+              onClick={() => logout(user, resetUser, navigate)}
+            >
               Logout
             </button>
           </div>

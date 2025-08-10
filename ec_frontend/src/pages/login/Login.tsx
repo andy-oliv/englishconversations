@@ -3,7 +3,7 @@ import { useForm, type SubmitHandler } from "react-hook-form";
 import styles from "./styles/Login.module.scss";
 import { LoginSchema, type Login } from "../../schemas/login.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useNavigate } from "react-router-dom";
 import ForgotPassword from "../../components/forgotPassword/ForgotPassword";
 import * as Sentry from "@sentry/react";
@@ -39,6 +39,14 @@ export default function Login(): ReactElement {
       });
       navigate("/");
     } catch (error) {
+      setLoading(false);
+
+      if (error instanceof AxiosError && error.status === 400) {
+        toast.error(toastMessages.login.badRequest, {
+          autoClose: 3000,
+        });
+        return;
+      }
       toast.error(toastMessages.internalError, {
         autoClose: 3000,
       });

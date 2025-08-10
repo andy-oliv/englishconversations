@@ -17,7 +17,7 @@ export default function Header(): ReactElement {
   const userProgress: UserProgress | null = useUserProgressStore(
     (state) => state.data
   );
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const setData = useUserProgressStore((state) => state.setData);
 
   useEffect(() => {
@@ -81,7 +81,19 @@ export default function Header(): ReactElement {
   return (
     <>
       {loading ? (
-        <p>Loading...</p>
+        <div className={styles.container}>
+          <div className={styles.loadingProgressContainer}>
+            <div className={styles.loadingCardContainer}>
+              <div className={styles.loadingPicture}></div>
+              <div className={styles.loadingTitle}></div>
+            </div>
+            <div className={styles.loadingProgressInfo}>
+              <div className={styles.loadingProgressBar}></div>
+              <div className={styles.loadingProgressBar}></div>
+              <div className={styles.loadingProgressBar}></div>
+            </div>
+          </div>
+        </div>
       ) : (
         <div className={styles.container}>
           <div className={styles.progressContainer}>

@@ -86,6 +86,10 @@
   pointer-events: auto;
 }
 
+.icon:hover {
+  color: rgb(143, 142, 142);
+}
+
 .link {
   text-decoration: none;
   font-family: var.$poppins;

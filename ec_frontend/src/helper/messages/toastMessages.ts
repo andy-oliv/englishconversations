@@ -17,4 +17,8 @@ export const toastMessages = {
     error: "O token está expirado ou é inválido",
     success: "Email atualizado com sucesso!",
   },
+  updatePassword: {
+    error: "O token está expirado ou é inválido",
+    success: "Senha atualizada com sucesso!",
+  },
 };

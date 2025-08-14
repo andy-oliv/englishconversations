@@ -1,4 +1,4 @@
-import { useState, type ReactElement } from "react";
+import { useEffect, useState, type ReactElement } from "react";
 import { LoggedUserStore } from "../../stores/loggedUserStore";
 import styles from "./styles/UserMenu.module.scss";
 import { Link, useNavigate } from "react-router-dom";
@@ -17,16 +17,29 @@ export default function UserMenu(): ReactElement {
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const resetUser = LoggedUserStore((state) => state.resetUser);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!user) {
+      setLoading(true);
+    } else {
+      setLoading(false);
+    }
+  }, [user]);
 
   return (
     <>
       <div className={styles.container} onMouseLeave={() => mouseLeave()}>
         <div className={styles.wrapper}>
-          <img
-            className={styles.menuPicture}
-            src={user?.avatarUrl}
-            onMouseEnter={() => mouseEnter()}
-          />
+          {loading ? (
+            <div className={styles.loader}></div>
+          ) : (
+            <img
+              className={styles.menuPicture}
+              src={user?.avatarUrl}
+              onMouseEnter={() => mouseEnter()}
+            />
+          )}
         </div>
         <div className={`${styles.menu} ${showMenu ? styles.active : ""}`}>
           <p className={styles.menuTitle}>Olá, {user?.name.split(" ")[0]}!</p>

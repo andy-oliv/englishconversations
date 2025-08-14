@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactElement } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./styles/ChangeEmail.module.scss";
 import axios, { AxiosError } from "axios";
 import { environment } from "../../environment/environment";
@@ -95,9 +95,12 @@ export default function ChangeEmail(): ReactElement {
             <h1 className={styles.title}>{message}</h1>
             <p className={styles.message}>
               A página será redirecionada em <span>{seconds} </span>segundos.{" "}
-              <Link to="/" className={styles.link}>
+              <button
+                type="button"
+                onClick={() => logout(user, resetUser, navigate)}
+              >
                 Clique aqui
-              </Link>
+              </button>
               <span> para redirecionar automaticamente.</span>
             </p>
           </div>

@@ -67,10 +67,6 @@ export const router = createBrowserRouter([
         element: <ResetPassword />,
       },
       {
-        path: "password-reset",
-        element: <ChangePassword />,
-      },
-      {
         path: "/quiz",
         element: <Quiz />,
       },
@@ -83,5 +79,9 @@ export const router = createBrowserRouter([
         element: <QuizResults />,
       },
     ],
+  },
+  {
+    path: "password-reset",
+    element: <ChangePassword />,
   },
 ]);

@@ -109,7 +109,7 @@ export const sampleQuiz: Exercise[] = [
     columnA: null,
     columnB: null,
     contentUrl:
-      "https://englishconversations-files.s3.us-east-1.amazonaws.com/images/exercise/car.jpg",
+      "https://englishconversations-files.s3.us-east-1.amazonaws.com/images/car_picture.jpg",
     level: "A1",
     difficulty: "MEDIUM",
     options: ["Dog", "Chair", "Car", "Pencil"],

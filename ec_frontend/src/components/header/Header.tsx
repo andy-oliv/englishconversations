@@ -104,7 +104,7 @@ export default function Header(): ReactElement {
                   src={
                     userProgress
                       ? userProgress.currentChapter.chapter.imageUrl
-                      : ""
+                      : undefined
                   }
                 />
               </div>

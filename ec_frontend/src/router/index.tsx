@@ -37,6 +37,10 @@ export const router = createBrowserRouter([
             element: <Navigate to="/dashboard" replace />,
           },
           {
+            path: "edit-profile",
+            element: <EditProfile />,
+          },
+          {
             path: "/dashboard",
             element: <Dashboard />,
           },
@@ -49,10 +53,6 @@ export const router = createBrowserRouter([
             element: <Library />,
           },
         ],
-      },
-      {
-        path: "edit-profile",
-        element: <EditProfile />,
       },
       {
         path: "edit-email",

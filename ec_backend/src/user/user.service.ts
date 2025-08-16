@@ -330,7 +330,11 @@ export class UserService {
             },
           });
 
-        if (currentUser.avatarUrl) {
+        if (
+          currentUser.avatarUrl &&
+          currentUser.avatarUrl !==
+            this.configService.get<string>('AVATAR_PLACEHOLDER_URL')
+        ) {
           await this.s3service.deleteFileFromS3(currentUser.avatarUrl); //deleting previous avatar from S3
         }
 
@@ -391,7 +395,11 @@ export class UserService {
         },
       });
 
-      if (deletedUser.avatarUrl) {
+      if (
+        deletedUser.avatarUrl &&
+        deletedUser.avatarUrl !==
+          this.configService.get<string>('AVATAR_PLACEHOLDER_URL')
+      ) {
         await this.s3service.deleteFileFromS3(deletedUser.avatarUrl);
       }
 

@@ -22,6 +22,17 @@ import { UserSchema } from "../../schemas/user.schema";
 import Modal from "../../components/modal/Modal";
 
 export default function EditProfile(): ReactElement {
+  function handleImgCrop(blob: Blob): void {
+    setImgBlob(blob);
+    setImgShown(URL.createObjectURL(blob));
+  }
+
+  function handleFileChange(): void {
+    if (avatarFile.current?.files?.[0]) {
+      setImgShown(URL.createObjectURL(avatarFile.current.files[0]));
+    }
+  }
+
   const user = UserStore((state) => state.data);
   const setLoggedUser = LoggedUserStore((state) => state.setUser);
   const setUser = UserStore((state) => state.setUser);
@@ -36,14 +47,16 @@ export default function EditProfile(): ReactElement {
   const { register, handleSubmit } = useForm<UserEdit>({
     resolver: zodResolver(UserEditSchema),
   });
+  const [imgBlob, setImgBlob] = useState<Blob | null>(null);
+  const [imgShown, setImgShown] = useState<string | null>(null);
 
   const onSubmit: SubmitHandler<UserEdit> = async (data) => {
     setSaveLoader(true);
     const formData = new FormData();
     formData.append("metadata", JSON.stringify(data));
 
-    if (avatarFile.current?.files?.[0]) {
-      formData.append("file", avatarFile.current.files[0]);
+    if (imgBlob) {
+      formData.append("file", imgBlob);
     }
 
     try {
@@ -57,7 +70,12 @@ export default function EditProfile(): ReactElement {
 
       if (parsedLoggedUser.success && parsedUser.success) {
         setLoggedUser(parsedLoggedUser.data);
+        sessionStorage.setItem(
+          "loggedUser",
+          JSON.stringify(parsedLoggedUser.data)
+        );
         setUser(parsedUser.data);
+        sessionStorage.setItem("user", JSON.stringify(parsedUser.data));
         setEdit(false);
         setSaveLoader(false);
         return;
@@ -177,7 +195,12 @@ export default function EditProfile(): ReactElement {
           {isOpen ? (
             <Modal
               onClose={() => setIsOpen(false)}
-              src={`${user?.avatarUrl}`}
+              src={
+                avatarFile.current?.files?.[0]
+                  ? avatarFile.current.files[0]
+                  : null
+              }
+              getBlob={handleImgCrop}
             />
           ) : null}
 
@@ -193,11 +216,7 @@ export default function EditProfile(): ReactElement {
                   onMouseOut={() => setHover(false)}
                 >
                   <img
-                    src={
-                      avatarFile.current?.files?.[0]
-                        ? URL.createObjectURL(avatarFile.current.files[0])
-                        : user?.avatarUrl
-                    }
+                    src={imgShown ? imgShown : user?.avatarUrl}
                     className={styles.editAvatar}
                   />
                   <input
@@ -206,6 +225,7 @@ export default function EditProfile(): ReactElement {
                     id="file"
                     accept=".png, .jpg, .jpeg"
                     ref={avatarFile}
+                    onChange={() => handleFileChange()}
                   />
                   <div
                     className={`${styles.frame} ${hover ? styles.active : null}`}

@@ -1,4 +1,5 @@
 export default interface ModalProps {
-  src: string;
+  src: File | null;
   onClose: () => void;
+  getBlob: (blob: Blob) => void;
 }

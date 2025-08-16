@@ -1,3 +1,5 @@
+@use "../../../styles/variables" as var;
+
 .modalOverlay {
   position: absolute;
   width: 100%;
@@ -13,17 +15,58 @@
 }
 
 .modalContent {
-  background-color: white;
-  width: 600px;
-  height: 600px;
-  padding: 1em;
-  border-radius: 1em;
+  background-color: var.$darkBackground;
+  width: 50%;
+  height: 70%;
+  padding: 1em 1em 2em 1em;
+  border-radius: 1em 1em 4em 4em;
   box-shadow: 0 0 10px -1px rgba(0, 0, 0, 0.495);
 }
 
-canvas {
+.cropArea {
+  position: relative;
+  height: 90%;
   width: 100%;
-  height: 100%;
-  object-fit: contain;
-  border-radius: 1em;
+}
+
+.btnContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+  height: 10%;
+}
+
+.saveBtn {
+  margin-top: 2em;
+  padding: 0.5em 2em;
+  border-radius: 0.5em;
+  border: none;
+  font-family: var.$poppins;
+  font-weight: 600;
+  font-size: 1rem;
+  background-color: var.$blue;
+  color: white;
+  cursor: pointer;
+}
+
+.saveBtn:hover {
+  background-color: var.$btnHover;
+}
+
+.cancelBtn {
+  margin-top: 2em;
+  padding: 0.5em 2em;
+  border-radius: 0.5em;
+  border: none;
+  font-family: var.$poppins;
+  font-weight: 600;
+  font-size: 1rem;
+  background-color: rgb(164, 164, 164);
+  color: white;
+  cursor: pointer;
+}
+
+.cancelBtn:hover {
+  background-color: rgb(183, 182, 182);
 }

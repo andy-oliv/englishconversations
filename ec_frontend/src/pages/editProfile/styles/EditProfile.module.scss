@@ -218,6 +218,12 @@
   background-color: var.$btnHover;
 }
 
+.inactive {
+  pointer-events: none;
+  background-color: var.$inactive;
+  color: rgba(0, 0, 0, 0.281);
+}
+
 @keyframes loader {
   0% {
     opacity: 1;

@@ -255,7 +255,7 @@ export default function EditProfile(): ReactElement {
                   </div>
                 </div>
                 <button
-                  className={styles.imgEditBtn}
+                  className={`${styles.imgEditBtn} ${!avatarFile.current?.files?.[0] ? styles.inactive : ""}`}
                   onClick={() => setIsOpen(true)}
                 >
                   <svg

@@ -27,8 +27,8 @@ export default function Modal({
 
     if (!ctx) return null;
 
-    canvas.width = 300;
-    canvas.height = 300;
+    canvas.width = 600;
+    canvas.height = 600;
 
     ctx.drawImage(
       image,

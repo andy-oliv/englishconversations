@@ -28,7 +28,7 @@ export default class CreateContentDTO {
     message:
       validationMessages_EN.content.createContentDTO.contentType.isNotEmpty,
   })
-  @IsIn(['SLIDESHOW', 'QUIZ', 'VIDEO'], {
+  @IsIn(['SLIDESHOW', 'QUIZ', 'VIDEO', 'TEST'], {
     message: validationMessages_EN.content.createContentDTO.contentType.isIn,
   })
   contentType: ContentTypes;

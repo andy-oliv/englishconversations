@@ -291,6 +291,10 @@ const validationMessages_EN = {
         isNotEmpty: 'The title field must not be empty.',
         isString: 'The title field must be a string.',
       },
+      description: {
+        isNotEmpty: 'The description field must not be empty.',
+        isString: 'The description field must be a string.',
+      },
     },
   },
   slideshowProgress: {

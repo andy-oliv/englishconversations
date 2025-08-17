@@ -306,6 +306,7 @@ model UserNotification {
 model Slideshow {
   id String @id @default(uuid())
   title String @db.VarChar(100)
+  description String @db.Text
   unit Unit @relation(fields: [unitId], references: [id])
   unitId Int
   slides Slide[]

@@ -33,4 +33,20 @@ export default class GenerateSlideShowDTO {
       validationMessages_EN.slideshow.generateSlideshowDTO.title.isString,
   })
   title: string;
+
+  @ApiProperty({
+    title: 'Description',
+    required: true,
+    type: 'string',
+    example: 'Learning past simple with ease',
+  })
+  @IsNotEmpty({
+    message:
+      validationMessages_EN.slideshow.generateSlideshowDTO.title.isNotEmpty,
+  })
+  @IsString({
+    message:
+      validationMessages_EN.slideshow.generateSlideshowDTO.title.isString,
+  })
+  description: string;
 }

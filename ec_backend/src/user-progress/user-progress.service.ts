@@ -93,6 +93,35 @@ export class UserProgressService {
               name: true,
               description: true,
               imageUrl: true,
+              units: {
+                select: {
+                  id: true,
+                  name: true,
+                  description: true,
+                  imageUrl: true,
+                  quizzes: {
+                    select: {
+                      id: true,
+                      title: true,
+                      description: true,
+                    },
+                  },
+                  slideshows: {
+                    select: {
+                      id: true,
+                      title: true,
+                      description: true,
+                    },
+                  },
+                  videos: {
+                    select: {
+                      id: true,
+                      title: true,
+                      description: true,
+                    },
+                  },
+                },
+              },
             },
           },
         },

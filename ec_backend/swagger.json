@@ -5820,11 +5820,17 @@
             "type": "string",
             "title": "Title",
             "example": "Unit 1 - Past Simple"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description",
+            "example": "Learning past simple with ease"
           }
         },
         "required": [
           "unitId",
-          "title"
+          "title",
+          "description"
         ]
       },
       "GenerateSlideDTO": {

@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsUrl, IsUUID } from 'class-validator';
+import { IsInt, IsOptional, IsString, IsUrl, IsUUID } from 'class-validator';
 import validationMessages_EN from '../../helper/messages/validationMessages.en';
 import { ApiProperty } from '@nestjs/swagger';
 
@@ -41,6 +41,16 @@ export default class UpdateUnitDTO {
     },
   )
   imageUrl?: string;
+
+  @ApiProperty({
+    title: 'Order',
+    required: false,
+    type: 'number',
+    example: 1,
+  })
+  @IsOptional()
+  @IsInt({ message: validationMessages_EN.unit.createUnitDTO.order.isInt })
+  order?: number;
 
   @ApiProperty({
     title: 'ChapterID',

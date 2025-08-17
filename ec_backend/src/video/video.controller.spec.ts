@@ -9,7 +9,6 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { FileService } from '../file/file.service';
 import { S3Service } from '../s3/s3.service';
 import { Logger } from 'nestjs-pino';
 import FormDataHandler from '../helper/functions/formDataHandler';
@@ -27,7 +26,6 @@ jest.mock('../helper/functions/allowedTypes');
 describe('VideoController', () => {
   let videoController: VideoController;
   let videoService: VideoService;
-  let fileService: FileService;
   let s3Service: S3Service;
   let logger: Logger;
   let video: Video;
@@ -52,12 +50,6 @@ describe('VideoController', () => {
           },
         },
         {
-          provide: FileService,
-          useValue: {
-            generateFile: jest.fn(),
-          },
-        },
-        {
           provide: S3Service,
           useValue: {},
         },
@@ -72,7 +64,6 @@ describe('VideoController', () => {
 
     videoController = module.get<VideoController>(VideoController);
     videoService = module.get<VideoService>(VideoService);
-    fileService = module.get<FileService>(FileService);
     s3Service = module.get<S3Service>(S3Service);
     logger = module.get<Logger>(Logger);
     video = generateMockVideo();
@@ -93,7 +84,7 @@ describe('VideoController', () => {
     thumbnail = {
       message: httpMessages_EN.file.generateFile.status_200,
       data: {
-        id: video.thumbnailId,
+        id: video.thumbnailUrl,
         name: uploadedFile.originalname,
         type: 'IMAGE',
         url: faker.internet.url(),
@@ -114,7 +105,6 @@ describe('VideoController', () => {
     it('should generate a video', async () => {
       (allowedTypes as jest.Mock).mockReturnValue(undefined);
       (FormDataHandler as jest.Mock).mockResolvedValue(returnedData);
-      (fileService.generateFile as jest.Mock).mockResolvedValue(thumbnail);
       (videoService.generateVideo as jest.Mock).mockResolvedValue({
         message: httpMessages_EN.video.generateVideo.status_200,
         data: video,
@@ -133,12 +123,6 @@ describe('VideoController', () => {
       expect(videoService.generateVideo).toHaveBeenCalledWith({
         ...video,
         thumbnailId: thumbnail.data.id,
-      });
-      expect(fileService.generateFile).toHaveBeenCalledWith({
-        name: uploadedFile.originalname,
-        type: 'IMAGE',
-        size: uploadedFile.size,
-        url: returnedData.fileUrl,
       });
       expect(FormDataHandler).toHaveBeenCalledWith(
         GenerateVideoDTO,
@@ -252,7 +236,6 @@ describe('VideoController', () => {
     it('should update video', async () => {
       (allowedTypes as jest.Mock).mockReturnValue(undefined);
       (updateFormHandler as jest.Mock).mockResolvedValue(returnedData);
-      (fileService.generateFile as jest.Mock).mockResolvedValue(thumbnail);
       (videoService.updateVideo as jest.Mock).mockResolvedValue({
         message: httpMessages_EN.video.updateVideo.status_200,
         data: video,
@@ -272,12 +255,6 @@ describe('VideoController', () => {
       expect(videoService.updateVideo).toHaveBeenCalledWith(video.id, {
         ...returnedData.data,
         thumbnailId: thumbnail.data.id,
-      });
-      expect(fileService.generateFile).toHaveBeenCalledWith({
-        name: uploadedFile.originalname,
-        type: 'IMAGE',
-        size: uploadedFile.size,
-        url: returnedData.fileUrl,
       });
       expect(updateFormHandler).toHaveBeenCalledWith(
         s3Service,

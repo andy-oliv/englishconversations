@@ -8,5 +8,4 @@ export default interface Quiz {
   imageUrl?: string;
   level?: CEFRLevels;
   difficulty: Difficulty;
-  unitId?: number;
 }

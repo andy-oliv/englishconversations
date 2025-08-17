@@ -93,21 +93,9 @@ export class UnitService {
               description: true,
             },
           },
-          videos: {
-            select: {
-              id: true,
-              title: true,
-              description: true,
-              duration: true,
-            },
-          },
-          quizzes: {
-            select: {
-              id: true,
-              title: true,
-              description: true,
-              difficulty: true,
-              isTest: true,
+          contents: {
+            orderBy: {
+              order: 'asc',
             },
           },
         },

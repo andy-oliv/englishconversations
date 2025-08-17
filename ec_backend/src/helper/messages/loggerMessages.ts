@@ -225,6 +225,25 @@ const loggerMessages = {
         'An internal error occurred while updating the chapter. Check the error log for more information.',
     },
   },
+  content: {
+    createContent: {
+      status_500:
+        'An internal error occurred while creating the content. Check the error log for more information.',
+    },
+    deleteContent: {
+      status_200: 'A content has been deleted from the database.',
+      status_500:
+        'An internal error occurred while deleting the content. Check the error log for more information.',
+    },
+    fetchContents: {
+      status_500:
+        'An internal error occurred while fetching the contents. Check the error log for more information.',
+    },
+    fetchContentsByUnit: {
+      status_500:
+        'An internal error occurred while fetching the contents. Check the error log for more information.',
+    },
+  },
   dashboard: {
     fetchInfo: {
       status_500:

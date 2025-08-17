@@ -27,15 +27,6 @@ export class QuizService {
         description: true,
       },
     },
-    file: {
-      select: {
-        id: true,
-        name: true,
-        type: true,
-        size: true,
-        url: true,
-      },
-    },
     tags: {
       select: {
         tag: {

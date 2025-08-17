@@ -132,6 +132,31 @@ const validationMessages_EN = {
       },
     },
   },
+  content: {
+    createContentDTO: {
+      unitId: {
+        isNotEmpty: 'The unitId field must not be empty.',
+        isInt: 'The unitId field must be a number.',
+      },
+      contentType: {
+        isNotEmpty: 'The contentType field must not be empty.',
+        isIn: 'The contentType field is invalid.',
+      },
+      videoId: {
+        isUUID: 'The videoId field must be a UUID.',
+      },
+      slideshowId: {
+        isUUID: 'The slideshowId field must be a UUID.',
+      },
+      quizId: {
+        isUUID: 'The quizId field must be a UUID.',
+      },
+      order: {
+        isNotEmpty: 'The order field must not be empty.',
+        isInt: 'The order field must be a number.',
+      },
+    },
+  },
   exercises: {
     createExerciseDTO: {
       type: {
@@ -283,10 +308,6 @@ const validationMessages_EN = {
   },
   slideshow: {
     generateSlideshowDTO: {
-      unitId: {
-        isNotEmpty: 'The unitId field must not be empty.',
-        isInt: 'The unitId field must be a number.',
-      },
       title: {
         isNotEmpty: 'The title field must not be empty.',
         isString: 'The title field must be a string.',
@@ -405,6 +426,10 @@ const validationMessages_EN = {
       },
       imageUrl: {
         isUrl: 'The imageUrl field must be a valid URL.',
+      },
+      order: {
+        isNotEmpty: 'The order field must not be empty.',
+        isInt: 'The order field must be a number.',
       },
     },
   },
@@ -564,9 +589,6 @@ const validationMessages_EN = {
       },
       thumbnailUrl: {
         isUrl: 'The thumbnailUrl must be a URL.',
-      },
-      unitId: {
-        isInt: 'The unitId must be a number.',
       },
     },
   },

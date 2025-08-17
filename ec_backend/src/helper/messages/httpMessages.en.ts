@@ -162,6 +162,23 @@ const httpMessages_EN = {
       status_404: 'The chapter was not found or the ID is invalid.',
     },
   },
+  content: {
+    createContent: {
+      status_201: 'The content has been successfully created!',
+    },
+    deleteContent: {
+      status_200: 'The content has been deleted.',
+      status_404: 'The content was not found or the ID is invalid.',
+    },
+    fetchContents: {
+      status_200: 'The contents have successfully been fetched.',
+      status_404: 'There are no contents to show.',
+    },
+    fetchContentsByUnit: {
+      status_200: 'The contents have successfully been fetched.',
+      status_404: 'There are no contents to show.',
+    },
+  },
   dashboard: {
     fetchInfo: {
       status_200: 'Dashboard data successfully fetched!',

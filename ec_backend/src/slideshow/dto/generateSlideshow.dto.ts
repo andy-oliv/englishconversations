@@ -1,23 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 import validationMessages_EN from '../../helper/messages/validationMessages.en';
 
 export default class GenerateSlideShowDTO {
-  @ApiProperty({
-    title: 'UnitID',
-    required: true,
-    type: 'number',
-    example: 1,
-  })
-  @IsNotEmpty({
-    message:
-      validationMessages_EN.slideshow.generateSlideshowDTO.unitId.isNotEmpty,
-  })
-  @IsInt({
-    message: validationMessages_EN.slideshow.generateSlideshowDTO.unitId.isInt,
-  })
-  unitId: number;
-
   @ApiProperty({
     title: 'Title',
     required: true,

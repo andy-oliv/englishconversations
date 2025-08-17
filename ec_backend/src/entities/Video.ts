@@ -5,5 +5,4 @@ export default interface Video {
   url: string;
   duration?: number;
   thumbnailUrl?: string;
-  unitId?: number;
 }

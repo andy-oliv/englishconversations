@@ -89,12 +89,4 @@ export default class CreateQuizDTO {
     message: validationMessages_EN.quizzes.createQuizDTO.difficulty.isIn,
   })
   difficulty: Difficulty;
-
-  @ApiProperty({
-    title: 'UnitID',
-    required: false,
-    type: 'string',
-    example: 5,
-  })
-  unitId?: number;
 }

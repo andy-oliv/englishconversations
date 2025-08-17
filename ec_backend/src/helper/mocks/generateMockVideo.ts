@@ -9,7 +9,6 @@ export default function generateMockVideo(): Video {
     url: faker.internet.url(),
     duration: faker.number.int(),
     thumbnailUrl: faker.internet.url(),
-    unitId: faker.number.int(),
   };
 
   return video;

@@ -3,5 +3,6 @@ export default interface Unit {
   name: string;
   description: string;
   imageUrl?: string;
+  order: number;
   chapterId: string;
 }

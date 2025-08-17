@@ -5324,6 +5324,188 @@
           "SlideshowProgress"
         ]
       }
+    },
+    "/api/contents": {
+      "post": {
+        "operationId": "ContentController_createContent",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateContentDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "example": "The content has been successfully created!"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": "The contentType field is invalid."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "Content"
+        ]
+      },
+      "get": {
+        "operationId": "ContentController_fetchContents",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "The contents have successfully been fetched."
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "example": "There are no contents to show."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "Content"
+        ]
+      }
+    },
+    "/api/contents/unit/{unitId}": {
+      "get": {
+        "operationId": "ContentController_fetchContentsByUnit",
+        "parameters": [
+          {
+            "name": "unitId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "The contents have successfully been fetched."
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": "Validation failed (numeric string is expected)"
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "example": "There are no contents to show."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "Content"
+        ]
+      }
+    },
+    "/api/contents/{id}": {
+      "delete": {
+        "operationId": "ContentController_deleteContent",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "The content has been deleted."
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": "Validation failed (numeric string is expected)"
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "example": "The content was not found or the ID is invalid."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "Content"
+        ]
+      }
     }
   },
   "info": {
@@ -5811,11 +5993,6 @@
       "GenerateSlideShowDTO": {
         "type": "object",
         "properties": {
-          "unitId": {
-            "type": "number",
-            "title": "UnitID",
-            "example": 1
-          },
           "title": {
             "type": "string",
             "title": "Title",
@@ -5828,7 +6005,6 @@
           }
         },
         "required": [
-          "unitId",
           "title",
           "description"
         ]
@@ -5956,6 +6132,40 @@
             "example": 0.5
           }
         }
+      },
+      "CreateContentDTO": {
+        "type": "object",
+        "properties": {
+          "unitId": {
+            "type": "number",
+            "title": "UnitID",
+            "example": 1
+          },
+          "contentType": {
+            "type": "string",
+            "title": "ContentType",
+            "example": "VIDEO"
+          },
+          "videoId": {
+            "type": "string",
+            "title": "VideoId",
+            "example": "a5fb9011-1c42-4d54-a949-4c767db592a7"
+          },
+          "slideshowId": {
+            "type": "string",
+            "title": "SlideshowId",
+            "example": "a5fb9011-1c42-4d54-a949-4c767db592a7"
+          },
+          "quizId": {
+            "type": "string",
+            "title": "quizId",
+            "example": "a5fb9011-1c42-4d54-a949-4c767db592a7"
+          }
+        },
+        "required": [
+          "unitId",
+          "contentType"
+        ]
       }
     }
   }

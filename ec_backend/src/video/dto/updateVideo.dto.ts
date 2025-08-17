@@ -68,16 +68,4 @@ export default class UpdateVideoDTO {
     },
   )
   thumbnailUrl?: string;
-
-  @ApiProperty({
-    title: 'UnitID',
-    required: false,
-    type: 'number',
-    example: 2,
-  })
-  @IsOptional()
-  @IsInt({
-    message: validationMessages_EN.video.generateVideoDTO.duration.isInt,
-  })
-  unitId?: number;
 }

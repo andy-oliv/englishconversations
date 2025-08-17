@@ -8,6 +8,7 @@ import ChapterProgress from '../entities/ChapterProgress';
 import UnitProgress from '../entities/UnitProgress';
 import Progress from '../common/types/Progress';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
+import CurrentChapter from 'src/common/types/CurrentChapter';
 
 @Injectable()
 export class UserProgressService {
@@ -79,53 +80,61 @@ export class UserProgressService {
             },
           },
         });
-      const currentChapter = await this.prismaService.userChapter.findFirst({
-        where: {
-          AND: [{ userId }, { status: 'IN_PROGRESS' }],
-        },
-        orderBy: {
-          updatedAt: 'desc',
-        },
-        take: 1,
-        select: {
-          chapter: {
-            select: {
-              name: true,
-              description: true,
-              imageUrl: true,
-              units: {
-                select: {
-                  id: true,
-                  name: true,
-                  description: true,
-                  imageUrl: true,
-                  quizzes: {
-                    select: {
-                      id: true,
-                      title: true,
-                      description: true,
-                    },
-                  },
-                  slideshows: {
-                    select: {
-                      id: true,
-                      title: true,
-                      description: true,
-                    },
-                  },
-                  videos: {
-                    select: {
-                      id: true,
-                      title: true,
-                      description: true,
+      const currentChapter: CurrentChapter =
+        await this.prismaService.userChapter.findFirst({
+          where: {
+            AND: [{ userId }, { status: 'IN_PROGRESS' }],
+          },
+          orderBy: {
+            updatedAt: 'desc',
+          },
+          take: 1,
+          select: {
+            chapter: {
+              select: {
+                name: true,
+                description: true,
+                imageUrl: true,
+                units: {
+                  select: {
+                    id: true,
+                    name: true,
+                    description: true,
+                    imageUrl: true,
+                    contents: {
+                      orderBy: {
+                        order: 'asc',
+                      },
+                      select: {
+                        id: true,
+                        contentType: true,
+                        slideshow: {
+                          select: {
+                            title: true,
+                            description: true,
+                          },
+                        },
+                        video: {
+                          select: {
+                            title: true,
+                            description: true,
+                          },
+                        },
+                        quiz: {
+                          select: {
+                            title: true,
+                            description: true,
+                            isTest: true,
+                          },
+                        },
+                      },
                     },
                   },
                 },
               },
             },
           },
-        },
-      });
+        });
 
       const data: Progress = {
         currentChapter,

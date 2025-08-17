@@ -14,7 +14,6 @@ export default function generateMockQuiz(): Quiz {
     level: generateRandomLevel(),
     difficulty: generateRandomDifficulty(),
     imageUrl: faker.internet.url(),
-    unitId: faker.number.int(),
   };
 
   return quiz;

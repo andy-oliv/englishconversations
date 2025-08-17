@@ -54,7 +54,6 @@ export default function Header(): ReactElement {
             JSON.stringify(parsedResponse.data)
           );
           setLoading(false);
-          console.log(parsedResponse.data);
           return;
         }
 
@@ -62,14 +61,19 @@ export default function Header(): ReactElement {
           extra: {
             component: "header",
             context: "UserProgressSchema.safeParse",
+            errors: parsedResponse.error.issues,
           },
         });
+        console.log(response);
+        console.log(parsedResponse.error.issues);
+        setLoading(false);
       } catch (error) {
         setLoading(false);
         Sentry.captureException(error, {
           extra: {
             component: "header",
             context: "fetchProgressData()",
+            error: error,
           },
         });
       }

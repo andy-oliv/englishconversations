@@ -26,24 +26,24 @@ export const UserProgressSchema = z.object({
           imageUrl: z.url(),
           contents: z.array(
             z.object({
-              id: z.number,
-              contentType: z.enum(["SLIDESHOW", "VIDEO", "QUIZ"]),
+              id: z.number(),
+              contentType: z.enum(["SLIDESHOW", "VIDEO", "QUIZ", "TEST"]),
               slideshow: z
                 .object({
-                  title: z.string,
-                  description: z.string,
+                  title: z.string(),
+                  description: z.string(),
                 })
                 .nullable(),
-              videos: z
+              video: z
                 .object({
-                  title: z.string,
-                  description: z.string,
+                  title: z.string(),
+                  description: z.string(),
                 })
                 .nullable(),
               quiz: z
                 .object({
-                  title: z.string,
-                  description: z.string,
+                  title: z.string(),
+                  description: z.string(),
                   isTest: z.boolean(),
                 })
                 .nullable(),

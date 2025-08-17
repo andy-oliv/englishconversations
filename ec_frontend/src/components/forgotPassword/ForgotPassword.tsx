@@ -54,6 +54,8 @@ export default function ForgotPassword(): ReactElement {
           <input
             type="email"
             placeholder="digite o email cadastrado"
+            id="forgotEmail"
+            autoComplete="on"
             className={styles.emailInput}
             {...register("email", { required: true })}
           />

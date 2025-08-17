@@ -77,10 +77,14 @@ export default function Login(): ReactElement {
               onSubmit={handleSubmit(onSubmit)}
             >
               <div className={styles.loginInputWrapper}>
-                <label id={styles.email}>Email</label>
+                <label id={styles.email} htmlFor="email">
+                  Email
+                </label>
                 <input
                   type="email"
                   placeholder="Digite o seu email"
+                  id="email"
+                  autoComplete="on"
                   {...register("email", { required: true })}
                   className={styles.loginInput}
                 />
@@ -89,10 +93,12 @@ export default function Login(): ReactElement {
                 <p className={styles.error}>{errors.email.message}</p>
               ) : null}
               <div className={styles.loginInputWrapper}>
-                <label>Senha</label>
+                <label htmlFor="password">Senha</label>
                 <input
                   type="password"
                   placeholder="Digite a sua senha"
+                  autoComplete="on"
+                  id="password"
                   {...register("password", { required: true })}
                   className={styles.loginInput}
                 />

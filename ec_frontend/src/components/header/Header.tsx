@@ -49,12 +49,12 @@ export default function Header(): ReactElement {
         const parsedResponse = UserProgressSchema.safeParse(response.data.data);
         if (parsedResponse.success) {
           setData(parsedResponse.data);
-          console.log(parsedResponse.data);
           sessionStorage.setItem(
             "userProgress",
             JSON.stringify(parsedResponse.data)
           );
           setLoading(false);
+          console.log(parsedResponse.data);
           return;
         }
 

@@ -23,7 +23,7 @@ export const UserProgressSchema = z.object({
           id: z.number(),
           name: z.string(),
           description: z.string(),
-          imageUrl: z.url(),
+          imageUrl: z.url().nullable(),
           contents: z.array(
             z.object({
               id: z.number(),

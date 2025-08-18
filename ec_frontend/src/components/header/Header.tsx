@@ -64,8 +64,6 @@ export default function Header(): ReactElement {
             errors: parsedResponse.error.issues,
           },
         });
-        console.log(response);
-        console.log(parsedResponse.error.issues);
         setLoading(false);
       } catch (error) {
         setLoading(false);

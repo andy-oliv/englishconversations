@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Logger } from 'nestjs-pino';
 import Return from 'src/common/types/Return';
 import Content from 'src/entities/Content';
@@ -20,9 +16,18 @@ export class ContentService {
   ) {}
 
   async createContent(contentData: CreateContentDTO): Promise<Return> {
+    if (!contentData.order) {
+      const contentNumber: number = await this.prismaService.content.count({
+        where: {
+          unitId: contentData.unitId,
+        },
+      });
+      contentData.order = contentNumber + 1;
+    }
+
     try {
       const content: Content = await this.prismaService.content.create({
-        data: contentData,
+        data: contentData as Content,
       });
       return {
         message: httpMessages_EN.content.createContent.status_201,

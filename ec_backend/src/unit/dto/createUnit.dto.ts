@@ -54,18 +54,6 @@ export default class CreateUnitDTO {
   imageUrl?: string;
 
   @ApiProperty({
-    title: 'Order',
-    required: true,
-    type: 'number',
-    example: 1,
-  })
-  @IsNotEmpty({
-    message: validationMessages_EN.unit.createUnitDTO.order.isNotEmpty,
-  })
-  @IsInt({ message: validationMessages_EN.unit.createUnitDTO.order.isInt })
-  order: number;
-
-  @ApiProperty({
     title: 'ChapterID',
     required: true,
     type: 'string',

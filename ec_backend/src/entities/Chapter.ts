@@ -3,4 +3,5 @@ export default interface Chapter {
   name: string;
   description: string;
   imageUrl?: string;
+  order?: number;
 }

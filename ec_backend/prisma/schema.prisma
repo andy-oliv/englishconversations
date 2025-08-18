@@ -219,6 +219,7 @@ model Chapter {
   name String @db.VarChar(100)
   description String @db.Text
   imageUrl String? @db.VarChar(250)
+  order Int?
   units Unit[]
   usersProgress UserChapter[]
   createdAt DateTime @default(now())

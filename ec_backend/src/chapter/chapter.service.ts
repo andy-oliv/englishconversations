@@ -25,16 +25,26 @@ export class ChapterService {
 
   async generateUserChapterRelations(chapterId: string) {
     try {
-      const users: Partial<User>[] = await this.prismaService.user.findMany({
+      const users: { id: string }[] = await this.prismaService.user.findMany({
         select: { id: true },
       });
 
+      const firstChapter: Chapter = await this.prismaService.chapter.findFirst({
+        where: {
+          order: 1,
+        },
+      });
+
       const progresses: { userId: string; chapterId: string }[] = users.map(
-        (user) => ({ userId: user.id, chapterId: chapterId }),
+        (user) =>
+          chapterId === firstChapter.id
+            ? { userId: user.id, chapterId: chapterId, status: 'IN_PROGRESS' }
+            : { userId: user.id, chapterId: chapterId },
       );
 
       await this.prismaService.userChapter.createMany({
         data: progresses,
+        skipDuplicates: true,
       });
     } catch (error) {
       handleInternalErrorException(
@@ -80,6 +90,8 @@ export class ChapterService {
 
   async generateChapter(data: Chapter): Promise<Return> {
     await this.throwIfChapterExists(data);
+    const chapterNumber: number = await this.prismaService.chapter.count();
+    data.order = chapterNumber + 1;
 
     try {
       const chapter: Chapter = await this.prismaService.chapter.create({

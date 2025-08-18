@@ -8,6 +8,7 @@ import loggerMessages from '../helper/messages/loggerMessages';
 import Return from '../common/types/Return';
 import UpdateUnitDTO from './dto/updateUnit.dto';
 import { S3Service } from '../s3/s3.service';
+import Chapter from 'src/entities/Chapter';
 
 @Injectable()
 export class UnitService {
@@ -17,11 +18,58 @@ export class UnitService {
     private readonly s3Service: S3Service,
   ) {}
 
+  async generateUserUnitRelations(unitId: number) {
+    try {
+      const users: { id: string }[] = await this.prismaService.user.findMany({
+        select: { id: true },
+      });
+
+      const firstChapter: Chapter = await this.prismaService.chapter.findFirst({
+        where: {
+          order: 1,
+        },
+      });
+
+      const firstChapterFirstUnit: Unit =
+        await this.prismaService.unit.findFirst({
+          where: {
+            chapterId: firstChapter.id,
+            order: 1,
+          },
+        });
+
+      const progresses: { userId: string; unitId: number }[] = users.map(
+        (user) =>
+          unitId === firstChapterFirstUnit.id
+            ? { userId: user.id, unitId: unitId, status: 'IN_PROGRESS' }
+            : { userId: user.id, unitId: unitId },
+      );
+
+      await this.prismaService.userUnit.createMany({
+        data: progresses,
+        skipDuplicates: true,
+      });
+    } catch (error) {
+      handleInternalErrorException(
+        'UnitService',
+        'generateUserUnitRelations',
+        loggerMessages.unit.generateUserUnitRelations.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
   async createUnit(data: Unit): Promise<Return> {
+    const unitNumber: number = await this.prismaService.unit.count();
+    data.order = unitNumber + 1;
+
     try {
       const unit: Unit = await this.prismaService.unit.create({
         data,
       });
+
+      await this.generateUserUnitRelations(unit.id);
 
       return {
         message: httpMessages_EN.unit.createUnit.status_200,

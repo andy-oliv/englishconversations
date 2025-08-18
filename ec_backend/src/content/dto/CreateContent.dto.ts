@@ -69,11 +69,9 @@ export default class CreateContentDTO {
   })
   quizId?: string;
 
-  @IsNotEmpty({
-    message: validationMessages_EN.content.createContentDTO.order.isNotEmpty,
-  })
+  @IsOptional()
   @IsInt({
     message: validationMessages_EN.content.createContentDTO.order.isInt,
   })
-  order: number;
+  order?: number;
 }

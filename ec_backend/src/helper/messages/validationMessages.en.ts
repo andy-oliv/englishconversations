@@ -130,6 +130,9 @@ const validationMessages_EN = {
       imageUrl: {
         isUrl: 'The imageUrl field must be a valid URL.',
       },
+      order: {
+        isInt: 'The order field must be a number.',
+      },
     },
   },
   content: {

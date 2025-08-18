@@ -599,6 +599,10 @@ const loggerMessages = {
       status_500:
         'An internal error occurred while fetching the units. Check the error log for more information.',
     },
+    generateUserUnitRelations: {
+      status_500:
+        'An internal error occurred while generating the userUnit progresses. Check the error log for more information.',
+    },
     updateUnit: {
       status_500:
         'An internal error occurred while updating the unit. Check the error log for more information.',

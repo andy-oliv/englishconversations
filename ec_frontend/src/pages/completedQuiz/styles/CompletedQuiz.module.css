@@ -1,0 +1,83 @@
+.screen {
+  height: 100vh;
+  background-color: #f8f6ed;
+  padding-top: 3em;
+}
+
+.mainContainer {
+  background-color: #f8f6ed;
+  padding: 3em;
+  display: flex;
+  height: 90%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  animation: pop 0.5s ease-in-out forwards;
+}
+
+.decorativeLine {
+  width: 100%;
+  height: 3em;
+  background: linear-gradient(to right, #f9d748, #3ab2f6);
+  animation: transitionWidth 0.5s ease-in-out forwards;
+}
+
+.title {
+  font-family: "Outfit", sans-serif;
+  font-size: 3rem;
+}
+
+.metricsWrapper {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  gap: 2em;
+  margin-top: 5em;
+}
+
+.btnWrapper {
+  margin-top: 7em;
+  display: flex;
+  gap: 2em;
+}
+
+.btn {
+  background-color: #3ab2f6;
+  color: white;
+  font-family: "Poppins", sans-serif;
+  width: -moz-max-content;
+  width: max-content;
+  font-weight: 500;
+  font-size: 1rem;
+  border-radius: 10em;
+  border: 2px transparent;
+  cursor: pointer;
+  padding: 0.5em 2em;
+}
+
+.btn:hover {
+  background-color: #69c2f6;
+}
+
+@keyframes transitionWidth {
+  0% {
+    width: 0%;
+    transform: scaleY(0.5);
+  }
+  100% {
+    width: 100%;
+    transform: scaleY(1);
+  }
+}
+@keyframes pop {
+  0% {
+    transform: scale(0.9);
+    opacity: 0;
+    filter: blur(2px);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+    filter: blur(0);
+  }
+}/*# sourceMappingURL=CompletedQuiz.module.css.map */

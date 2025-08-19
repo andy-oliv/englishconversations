@@ -1,0 +1,151 @@
+.container {
+  width: 100%;
+  height: 12%;
+  margin-bottom: 4em;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.progressContainer {
+  background: linear-gradient(to right, #f9d748, #3ab2f6);
+  width: 70%;
+  height: 100%;
+  border-radius: 1em;
+  padding: 0 2em;
+  display: flex;
+}
+
+.cardContainer {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  width: 60%;
+}
+
+.picture {
+  width: 30%;
+  height: 100%;
+}
+.picture .chapterCard {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+.title {
+  font-family: "Outfit", sans-serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+.progressInfo {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 1em;
+  border-left: 3px solid #f8f6ed;
+  padding: 0 1em;
+}
+
+.progressInfoContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.progressInfoWrapper {
+  display: flex;
+  align-items: center;
+  font-family: "Poppins", sans-serif;
+  font-weight: 300;
+}
+
+.progressBarContainer {
+  width: 50%;
+  height: 100%;
+  display: flex;
+  gap: 0.9em;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.progressBarContainer .progressBar {
+  width: 100%;
+  height: 10%;
+  background-color: white;
+  border-radius: 0.2em;
+}
+
+.progressBarFill {
+  height: 100%;
+  background-color: #0d2938;
+  border-radius: 0.2em;
+}
+
+.userMenuContainer {
+  width: 50%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.loadingProgressContainer {
+  background-color: rgb(49, 49, 49);
+  width: 60%;
+  height: 100%;
+  border-radius: 1em;
+  padding: 0 2em;
+  display: flex;
+}
+
+.loadingCardContainer {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+  width: 50%;
+}
+
+.loadingPicture {
+  width: 20%;
+  height: 100%;
+  background-color: grey;
+  animation: loading ease-in-out 0.9s infinite;
+}
+
+.loadingTitle {
+  width: 50%;
+  height: 30%;
+  background-color: grey;
+  animation: loading ease-in-out 0.9s infinite;
+}
+
+.loadingProgressInfo {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 40%;
+  height: 100%;
+  gap: 1em;
+  border-left: 3px solid #f8f6ed;
+  padding: 0 1em;
+}
+
+.loadingProgressBar {
+  width: 100%;
+  height: 10%;
+  background-color: grey;
+  animation: loading ease-in-out 0.9s infinite;
+  border-radius: 0.5em;
+}
+
+@keyframes loading {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}/*# sourceMappingURL=Header.module.css.map */

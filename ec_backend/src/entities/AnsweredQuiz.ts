@@ -5,4 +5,5 @@ export default interface AnsweredQuiz {
   score: number;
   feedback?: string;
   elapsedTime: number;
+  userContentId: number;
 }

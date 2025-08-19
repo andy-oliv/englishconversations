@@ -91,6 +91,7 @@ export class AnsweredQuizService {
             feedback: data.feedback,
             elapsedTime: data.elapsedTime,
             isRetry: retry,
+            userContentId: data.userContentId,
           },
         },
       );

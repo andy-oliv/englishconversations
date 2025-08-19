@@ -683,6 +683,28 @@ const loggerMessages = {
         'An internal error occurred while updating the user progress. Check the error log for more information.',
     },
   },
+  userContent: {
+    createUserContent: {
+      status_500:
+        'An error occurred while creating the progress. Check the error log for more information.',
+    },
+    deleteUserContent: {
+      status_500:
+        'An error occurred while deleting the progress. Check the error log for more information.',
+    },
+    fetchUserContents: {
+      status_500:
+        'An error occurred while fetching the progresses. Check the error log for more information.',
+    },
+    fetchUserContentsByUser: {
+      status_500:
+        'An error occurred while fetching the progresses. Check the error log for more information.',
+    },
+    updateUserContent: {
+      status_500:
+        'An error occurred while updating the progress. Check the error log for more information.',
+    },
+  },
   userNotification: {
     deleteUserNotification: {
       status_500:

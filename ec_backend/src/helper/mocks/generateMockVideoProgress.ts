@@ -15,6 +15,7 @@ export default function generateMockVideoProgress(): VideoProgress {
     completed: faker.datatype.boolean(),
     isFavorite: faker.datatype.boolean(),
     note: faker.person.bio(),
+    userContentId: faker.number.int(),
   };
 
   return videoProgress;

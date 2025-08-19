@@ -5506,6 +5506,248 @@
           "Content"
         ]
       }
+    },
+    "/api/user/contents": {
+      "post": {
+        "operationId": "UserContentController_createUserContent",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserContentDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "The progress has been successfully registered."
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": "The userId field must not be empty."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "UserContent"
+        ]
+      },
+      "get": {
+        "operationId": "UserContentController_fetchUserContentsByUser",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "The progresses have been successfully fetched."
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": "The userId field must not be empty."
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "example": "There are no progresses to show or the userId is invalid."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "UserContent"
+        ]
+      }
+    },
+    "/api/user/contents/all": {
+      "get": {
+        "operationId": "UserContentController_fetchUserContents",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "The progresses have been successfully fetched."
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "example": "There are no progresses to show."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "UserContent"
+        ]
+      }
+    },
+    "/api/user/contents/{id}": {
+      "patch": {
+        "operationId": "UserContentController_updateUserContent",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserContentDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "The progress has been successfully updated."
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": "The userId field must not be empty."
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "example": "The progress was not found or the id is invalid."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "UserContent"
+        ]
+      },
+      "delete": {
+        "operationId": "UserContentController_deleteUserContent",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "The progress has been successfully delete."
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": "Validation failed (numeric string is expected)"
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "example": "The progress was not found or the id is invalid."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "UserContent"
+        ]
+      }
     }
   },
   "info": {
@@ -5622,13 +5864,19 @@
             "type": "boolean",
             "title": "Is Retry",
             "example": false
+          },
+          "userContentId": {
+            "type": "number",
+            "title": "UserContentId",
+            "example": 2
           }
         },
         "required": [
           "quizId",
           "userId",
           "score",
-          "elapsedTime"
+          "elapsedTime",
+          "userContentId"
         ]
       },
       "AddFeedbackDTO": {
@@ -5933,11 +6181,17 @@
             "type": "string",
             "title": "VideoID",
             "example": "47d96219-e87a-4089-8718-93b469eeb40b"
+          },
+          "userContentId": {
+            "type": "number",
+            "title": "UserContentId",
+            "example": 2
           }
         },
         "required": [
           "userId",
-          "videoId"
+          "videoId",
+          "userContentId"
         ]
       },
       "UpdateVideoProgressDTO": {
@@ -5987,8 +6241,16 @@
             "type": "string",
             "title": "VideoID",
             "example": "great video!"
+          },
+          "userContentId": {
+            "type": "number",
+            "title": "UserContentId",
+            "example": 2
           }
-        }
+        },
+        "required": [
+          "userContentId"
+        ]
       },
       "GenerateSlideShowDTO": {
         "type": "object",
@@ -6111,11 +6373,17 @@
             "type": "number",
             "title": "Progress",
             "example": 0.5
+          },
+          "userContentId": {
+            "type": "number",
+            "title": "UserContentId",
+            "example": 2
           }
         },
         "required": [
           "userId",
-          "slideshowId"
+          "slideshowId",
+          "userContentId"
         ]
       },
       "UpdateProgressDTO": {
@@ -6130,8 +6398,16 @@
             "type": "number",
             "title": "Progress",
             "example": 0.5
+          },
+          "userContentId": {
+            "type": "number",
+            "title": "UserContentId",
+            "example": 2
           }
-        }
+        },
+        "required": [
+          "userContentId"
+        ]
       },
       "CreateContentDTO": {
         "type": "object",
@@ -6166,6 +6442,50 @@
           "unitId",
           "contentType"
         ]
+      },
+      "CreateUserContentDTO": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "title": "UserID",
+            "example": "a03427d5-a08f-4f32-b33f-1fd4f59b9cb8"
+          },
+          "contentId": {
+            "type": "number",
+            "title": "ContentID",
+            "example": 2
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "example": "LOCKED"
+          },
+          "progress": {
+            "type": "number",
+            "title": "Progress",
+            "example": 0.5
+          }
+        },
+        "required": [
+          "userId",
+          "contentId"
+        ]
+      },
+      "UpdateUserContentDTO": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "example": "LOCKED"
+          },
+          "progress": {
+            "type": "number",
+            "title": "Progress",
+            "example": 0.5
+          }
+        }
       }
     }
   }

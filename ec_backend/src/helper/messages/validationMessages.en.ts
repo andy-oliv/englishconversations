@@ -1,4 +1,5 @@
 import { isNotEmpty } from 'class-validator';
+import CreateUserContentDTO from 'src/user-content/dto/CreateUserContent.dto';
 
 const validationMessages_EN = {
   answeredExercise: {
@@ -69,6 +70,10 @@ const validationMessages_EN = {
     },
     isRetry: {
       isBoolean: 'The isRetry field must be a boolean.',
+    },
+    userContentId: {
+      isNotEmpty: 'The userContentId field must not be empty.',
+      isInt: 'The userContentId field must be a number.',
     },
   },
   auth: {
@@ -337,6 +342,10 @@ const validationMessages_EN = {
       progress: {
         isNumber: 'The progress must be a valid number.',
       },
+      userContentId: {
+        isNotEmpty: 'The userContentId field must not be empty.',
+        isInt: 'The userContentId field must be a number.',
+      },
     },
   },
   students: {
@@ -518,6 +527,24 @@ const validationMessages_EN = {
       },
     },
   },
+  userContent: {
+    createUserContentDTO: {
+      userId: {
+        isNotEmpty: 'The userId field must not be empty.',
+        isUUID: 'The userId field must be a UUID.',
+      },
+      contentId: {
+        isNotEmpty: 'The contentId field must not be empty.',
+        isInt: 'The contentId field must be a number.',
+      },
+      status: {
+        isIn: 'The status field is invalid.',
+      },
+      progress: {
+        isNumber: 'The progress field must be a number.',
+      },
+    },
+  },
   userNotification: {
     userId: {
       isNotEmpty: 'The userId field must not be empty.',
@@ -604,6 +631,10 @@ const validationMessages_EN = {
       videoId: {
         isNotEmpty: 'The videoId field must not be empty.',
         isUUID: 'The videoId field must be a UUID.',
+      },
+      userContentId: {
+        isNotEmpty: 'The userContentId field must not be empty.',
+        isInt: 'The userContentId field must be a number.',
       },
     },
     updateVideoProgressDTO: {

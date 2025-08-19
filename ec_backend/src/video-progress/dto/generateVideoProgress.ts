@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsUUID } from 'class-validator';
+import { IsInt, IsNotEmpty, IsUUID } from 'class-validator';
 import validationMessages_EN from '../../helper/messages/validationMessages.en';
 
 export default class GenerateVideoProgressDTO {
@@ -38,4 +38,22 @@ export default class GenerateVideoProgressDTO {
         .isUUID,
   })
   videoId: string;
+
+  @ApiProperty({
+    title: 'UserContentId',
+    required: true,
+    type: 'number',
+    example: 2,
+  })
+  @IsNotEmpty({
+    message:
+      validationMessages_EN.videoProgress.generateVideoProgressDTO.userContentId
+        .isNotEmpty,
+  })
+  @IsInt({
+    message:
+      validationMessages_EN.videoProgress.generateVideoProgressDTO.userContentId
+        .isInt,
+  })
+  userContentId: number;
 }

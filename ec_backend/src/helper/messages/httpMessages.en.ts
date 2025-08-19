@@ -574,6 +574,27 @@ const httpMessages_EN = {
       status_404: 'The user progress was not found or the IDs are invalid.',
     },
   },
+  userContent: {
+    createUserContent: {
+      status_201: 'The progress has been successfully registered.',
+    },
+    deleteUserContent: {
+      status_200: 'The progress has been successfully delete.',
+      status_404: 'The progress was not found or the id is invalid.',
+    },
+    fetchUserContents: {
+      status_200: 'The progresses have been successfully fetched.',
+      status_404: 'There are no progresses to show.',
+    },
+    fetchUserContentsByUser: {
+      status_200: 'The progresses have been successfully fetched.',
+      status_404: 'There are no progresses to show or the userId is invalid.',
+    },
+    updateUserContent: {
+      status_200: 'The progress has been successfully updated.',
+      status_404: 'The progress was not found or the id is invalid.',
+    },
+  },
   userNotification: {
     deleteUserNotification: {
       status_200: 'The notification has been deleted.',

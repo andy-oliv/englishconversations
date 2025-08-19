@@ -11,4 +11,5 @@ export default interface VideoProgress {
   completed?: boolean;
   isFavorite?: boolean;
   note?: string;
+  userContentId: number;
 }

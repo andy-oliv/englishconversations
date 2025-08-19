@@ -1,0 +1,40 @@
+.menuContainer {
+  width: 100%;
+  height: 100%;
+  background-color: rgb(26, 26, 26);
+  padding: 3em 2em;
+  box-shadow: 1px 0 10px 1px black;
+}
+
+.logoContainer .logo {
+  width: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+.menuOptions {
+  margin-top: 6em;
+  font-family: "Poppins", sans-serif;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+.menuOptions .menuOption {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  color: #d8d8d8;
+  text-decoration: none;
+  font-size: 1.1rem;
+}
+.menuOptions .menuOption:hover {
+  color: white;
+}
+.menuOptions .active {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  color: #3ab2f6;
+  text-decoration: none;
+  font-size: 1.1rem;
+}/*# sourceMappingURL=MainMenu.module.css.map */

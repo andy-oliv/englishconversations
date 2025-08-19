@@ -37,6 +37,7 @@ model User {
   logins LoginLog[]
   units UserUnit[]
   chapters UserChapter[]
+  contentProgresses UserContent[]
   answeredExercises AnsweredExercise[]
   answeredQuizzes AnsweredQuiz[]
   videoProgresses VideoProgress[]
@@ -126,6 +127,8 @@ model AnsweredQuiz {
   feedback String? @db.Text
   elapsedTime Int @default(0)
   isRetry Boolean @default(false)
+  userContent UserContent @relation(fields: [userContentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userContentId Int @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -272,7 +275,11 @@ model VideoProgress {
   completedAt DateTime? @db.DateTime()
   completed Boolean @default(false)
   isFavorite Boolean @default(false)
-  note String? @db.Text 
+  note String? @db.Text
+  userContent UserContent @relation(fields: [userContentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userContentId Int @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
   
   @@unique([userId, videoId])
 }
@@ -333,6 +340,8 @@ model SlideshowProgress {
   userId String
   status Status @default(LOCKED)
   progress Float? @default(0)
+  userContent UserContent @relation(fields: [userContentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userContentId Int @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -349,8 +358,24 @@ model Content {
   quiz Quiz? @relation(fields: [quizId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   quizId String? @unique
   order Int
+  userProgresses UserContent[]
 
   @@unique([unitId, order])
+}
+
+model UserContent {
+  id Int @id @default(autoincrement())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String
+  content Content @relation(fields: [contentId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  contentId Int
+  status Status @default(LOCKED)
+  progress Float? @default(0)
+  quizProgress AnsweredQuiz?
+  videoProgress VideoProgress?
+  slideshowProgress SlideshowProgress?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
 }
 
 enum NotificationTypes {

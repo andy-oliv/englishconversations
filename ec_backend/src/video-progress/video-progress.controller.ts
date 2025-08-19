@@ -59,6 +59,7 @@ export class VideoProgressController {
     return this.videoProgressService.generateVideoProgress(
       data.userId,
       data.videoId,
+      data.userContentId,
     );
   }
 

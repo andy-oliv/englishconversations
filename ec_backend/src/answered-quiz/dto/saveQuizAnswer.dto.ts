@@ -85,4 +85,16 @@ export default class SaveQuizAnswerDTO {
     message: validationMessages_EN.answeredQuiz.isRetry.isBoolean,
   })
   isRetry?: boolean;
+
+  @ApiProperty({
+    title: 'UserContentId',
+    required: true,
+    type: 'number',
+    example: 2,
+  })
+  @IsNotEmpty({
+    message: validationMessages_EN.answeredQuiz.userContentId.isNotEmpty,
+  })
+  @IsInt({ message: validationMessages_EN.answeredQuiz.userContentId.isInt })
+  userContentId: number;
 }

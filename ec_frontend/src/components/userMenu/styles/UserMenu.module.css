@@ -1,0 +1,120 @@
+.container {
+  width: 10%;
+  position: relative;
+}
+
+.wrapper {
+  width: 5em;
+  height: 5em;
+}
+.wrapper .menuPicture {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 100%;
+  cursor: pointer;
+}
+.wrapper .menuPicture:hover {
+  box-shadow: 0 0 10px 0px rgba(0, 0, 0, 0.84);
+}
+
+.menu {
+  position: absolute;
+  background-color: rgb(26, 26, 26);
+  color: rgb(238, 237, 237);
+  padding: 1em;
+  border-radius: 0.5em;
+  top: 4.5em;
+  right: 0;
+  width: -moz-max-content;
+  width: max-content;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  opacity: 0;
+  transform: translateY(2em);
+  transition: all 0.3s ease-in-out;
+  pointer-events: none;
+  color: rgb(143, 142, 142);
+}
+.menu .menuTitle {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  color: rgb(217, 217, 217);
+}
+
+.menuOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.menuOption {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.menuOption:hover {
+  color: #3ab2f6;
+}
+
+.btn {
+  width: 100%;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  border: none;
+  border-radius: 0.3em;
+  padding: 0.5em 1em;
+  color: rgb(105, 205, 255);
+  background-color: rgb(81, 81, 81);
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #3ab2f6;
+  color: white;
+}
+
+.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.icon:hover {
+  color: rgb(143, 142, 142);
+}
+
+.link {
+  text-decoration: none;
+  font-family: "Poppins", sans-serif;
+  font-size: 1rem;
+  color: rgb(143, 142, 142);
+  cursor: pointer;
+}
+
+.link:hover {
+  color: #3ab2f6;
+}
+
+.loader {
+  width: 50px;
+  padding: 8px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: linear-gradient(to right, #f9d748, #3ab2f6);
+  --_m: conic-gradient(#0000 10%, #000), linear-gradient(#000 0 0) content-box;
+  -webkit-mask: var(--_m);
+          mask: var(--_m);
+  -webkit-mask-composite: source-out;
+          mask-composite: subtract;
+  animation: rotate 1s infinite linear;
+}
+
+@keyframes rotate {
+  to {
+    transform: rotate(1turn);
+  }
+}/*# sourceMappingURL=UserMenu.module.css.map */

@@ -9,6 +9,7 @@ export default function generateMockAnsweredQuiz(): AnsweredQuiz {
     score: faker.number.int(),
     feedback: faker.person.bio(),
     elapsedTime: faker.number.int(),
+    userContentId: faker.number.int(),
   };
 
   return answer;

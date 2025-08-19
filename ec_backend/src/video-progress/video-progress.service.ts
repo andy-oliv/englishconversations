@@ -52,6 +52,7 @@ export class VideoProgressService {
   async generateVideoProgress(
     userId: string,
     videoId: string,
+    userContentId: number,
   ): Promise<Return> {
     await this.throwIfProgressExists(userId, videoId);
 
@@ -61,6 +62,7 @@ export class VideoProgressService {
           data: {
             userId,
             videoId,
+            userContentId,
           },
         });
       return {

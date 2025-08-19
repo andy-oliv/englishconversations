@@ -45,4 +45,8 @@ a {
 a:active {
   color: white;
   text-decoration: none;
+}
+
+.active {
+  display: block;
 }/*# sourceMappingURL=title.component.css.map */

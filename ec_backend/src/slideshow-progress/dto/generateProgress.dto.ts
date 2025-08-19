@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Status } from '@prisma/client';
 import {
   IsIn,
+  IsInt,
   IsNotEmpty,
   IsNumber,
   IsOptional,
@@ -74,4 +75,22 @@ export default class GenerateProgressDTO {
     },
   )
   progress?: number;
+
+  @ApiProperty({
+    title: 'UserContentId',
+    required: true,
+    type: 'number',
+    example: 2,
+  })
+  @IsNotEmpty({
+    message:
+      validationMessages_EN.slideshowProgress.generateProgressDTO.userContentId
+        .isNotEmpty,
+  })
+  @IsInt({
+    message:
+      validationMessages_EN.slideshowProgress.generateProgressDTO.userContentId
+        .isInt,
+  })
+  userContentId: number;
 }

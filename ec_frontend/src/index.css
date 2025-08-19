@@ -1,0 +1,9 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.custom-toast-progress {
+  background: linear-gradient(to right, #f9d748, #3ab2f6);
+}/*# sourceMappingURL=index.css.map */

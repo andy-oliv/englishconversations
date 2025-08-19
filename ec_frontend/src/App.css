@@ -1,0 +1,9 @@
+.custom-toast {
+  background-color: "rgb(26, 26, 26)";
+  color: "#d9d7ceff";
+  font-family: "Poppins", sans-serif;
+}
+
+.custom-toast-progress {
+  background: linear-gradient(to right, #f9d748, #3ab2f6);
+}/*# sourceMappingURL=App.css.map */

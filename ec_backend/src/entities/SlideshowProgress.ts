@@ -6,4 +6,5 @@ export default interface SlideshowProgress {
   slideshowId: string;
   status?: Status;
   progress?: number;
+  userContentId: number;
 }

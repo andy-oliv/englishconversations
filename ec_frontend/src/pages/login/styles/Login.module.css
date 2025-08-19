@@ -1,0 +1,188 @@
+.loginContainer {
+  display: flex;
+  overflow: hidden;
+  height: 100vh;
+  background: linear-gradient(to right, #4f504f, #08222f);
+}
+
+.loginImageFrame {
+  width: 40%;
+}
+
+.loginImage {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  -o-object-position: 0px 0em;
+     object-position: 0px 0em;
+  border-radius: 0 16em 0 0;
+}
+
+.loginFormWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 60%;
+}
+
+.formBackground {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4em;
+  background-color: rgba(0, 0, 0, 0.175);
+  padding: 6em 0;
+  border-radius: 1em;
+  box-shadow: 0px 0px 10px -2px rgba(0, 0, 0, 0.744);
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-3em);
+  transition: all 0.5s ease-in-out;
+}
+
+.loginForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.logoFrame {
+  width: 50%;
+}
+
+.logo {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+.loginInputWrapper {
+  display: flex;
+  gap: 1em;
+}
+.loginInputWrapper label {
+  width: -moz-max-content;
+  width: max-content;
+  font-family: "Poppins", sans-serif;
+  font-size: 1.2rem;
+  color: white;
+}
+.loginInputWrapper .loginInput {
+  width: 100%;
+  padding: 0.3em;
+  font-family: "Poppins", sans-serif;
+  border-radius: 0.4em;
+  border: 1px solid rgba(255, 255, 255, 0.623);
+  font-size: 1rem;
+  outline: none;
+  background-color: #e8f0fe;
+  color: black;
+}
+
+#email {
+  margin-right: 0.4em;
+}
+
+.submitBtn {
+  padding: 0.5em;
+  border-radius: 0.5em;
+  border: none;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  background-color: #3ab2f6;
+  color: white;
+  cursor: pointer;
+}
+
+.submitBtn:hover {
+  background-color: #69c2f6;
+}
+
+.forgotPasswordBtn {
+  text-align: center;
+  color: white;
+  font-family: "Poppins", sans-serif;
+  font-weight: 300;
+  cursor: pointer;
+}
+
+.forgotPasswordBtn:hover {
+  color: rgb(206, 206, 206);
+}
+
+.error {
+  color: rgb(254, 129, 101);
+  font-family: "Poppins", sans-serif;
+  font-weight: 300;
+  font-size: 0.8rem;
+  margin-top: -0.5em;
+  text-align: center;
+}
+
+.loading {
+  position: relative;
+  width: 100%;
+  text-align: center;
+  animation: loadingAnimation 1s ease-in-out infinite;
+}
+
+.forgotPasswordWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1em;
+  background-color: rgba(0, 0, 0, 0.175);
+  padding: 6em 4em;
+  border-radius: 1em;
+  box-shadow: 0px 0px 10px -2px rgba(0, 0, 0, 0.744);
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(3em);
+  transition: all 0.5s ease-in-out;
+}
+
+.icon {
+  color: white;
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  display: flex;
+  gap: 0.3em;
+  align-items: center;
+}
+
+.icon:hover {
+  color: rgb(206, 206, 206);
+}
+
+.activeLogin {
+  margin-left: 18em;
+  visibility: visible;
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: all;
+}
+
+.activePassword {
+  margin-right: 25em;
+  visibility: visible;
+  transform: translateX(0);
+  opacity: 1;
+  pointer-events: all;
+}
+
+@keyframes loadingAnimation {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
+  }
+}/*# sourceMappingURL=Login.module.css.map */

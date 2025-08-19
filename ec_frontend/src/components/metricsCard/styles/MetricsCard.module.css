@@ -1,0 +1,23 @@
+.wrapper {
+  background-color: #0d2938;
+  color: white;
+  font-family: "Outfit", sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 1em;
+  padding: 3em 0;
+  width: 15%;
+  box-shadow: 1em 0.5em 2em -1em rgba(0, 0, 0, 0.551);
+}
+
+.value {
+  font-size: 3.5rem;
+  margin-bottom: 0.5em;
+}
+
+.label {
+  font-size: 1.3rem;
+  font-weight: 300;
+}/*# sourceMappingURL=MetricsCard.module.css.map */

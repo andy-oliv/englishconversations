@@ -1,0 +1,16 @@
+.homeScreen {
+  height: 100vh;
+  background-color: #f8f6ed;
+  display: flex;
+}
+
+.menuWrapper {
+  width: 12%;
+}
+
+.mainContent {
+  padding: 2.5em 3em;
+  display: flex;
+  flex-direction: column;
+  width: 88%;
+}/*# sourceMappingURL=Home.module.css.map */

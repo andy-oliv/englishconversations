@@ -1,0 +1,1 @@
+{"version":3,"sources":["Spinner.module.scss","../../../styles/_variables.scss","Spinner.module.css"],"names":[],"mappings":"AAEA;EACE,aAAA;EACA,uBAAA;EACA,mBAAA;EACA,aAAA;EACA,yBCLgB;ACIlB;;AFIA;EACE,SAAA;EACA,aAAA;EACA,eAAA;EACA,kBAAA;EACA,uDCHkB;EDIlB,4EAAA;EACA,uBAAA;EACA,eAAA;EACA,kCAAA;EACA,wBAAA;EACA,gCAAA;AEDF;;AFIA;EACE;IACE,wBAAA;EEDF;AACF","file":"Spinner.module.css"}

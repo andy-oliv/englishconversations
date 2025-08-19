@@ -132,4 +132,18 @@ export default class UpdateVideoProgressDTO {
       validationMessages_EN.videoProgress.updateVideoProgressDTO.note.isString,
   })
   note?: string;
+
+  @ApiProperty({
+    title: 'UserContentId',
+    required: true,
+    type: 'number',
+    example: 2,
+  })
+  @IsOptional()
+  @IsInt({
+    message:
+      validationMessages_EN.videoProgress.generateVideoProgressDTO.userContentId
+        .isInt,
+  })
+  userContentId: number;
 }

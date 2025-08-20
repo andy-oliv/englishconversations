@@ -12,8 +12,7 @@ import httpMessages_EN from '../helper/messages/httpMessages.en';
 import loggerMessages from '../helper/messages/loggerMessages';
 import UpdateUserChapterDTO from './dto/updateUserChapter.dto';
 import Chapter from 'src/entities/Chapter';
-import { Status, Unit } from '@prisma/client';
-import generateExceptionMessage from 'src/helper/functions/generateExceptionMessage';
+import { CEFRLevels, Status, Unit } from '@prisma/client';
 import UserUnit from 'src/entities/UserUnit';
 
 @Injectable()
@@ -38,6 +37,30 @@ export class UserChapterService {
     private readonly prismaService: PrismaService,
     private readonly logger: Logger,
   ) {}
+
+  async syncUserLanguageLevel(
+    userId: string,
+    nextChapterName: string,
+  ): Promise<void> {
+    try {
+      await this.prismaService.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          languageLevel: CEFRLevels[nextChapterName],
+        },
+      });
+    } catch (error) {
+      handleInternalErrorException(
+        'UserChapterService',
+        'syncUserLanguageLevel',
+        loggerMessages.userChapter.syncUserLanguageLevel.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
 
   //this function was created in order to avoid circular dependencies between userChapter and userUnit
   async unlockFirstUnit(userId: string, nextChapterId: string): Promise<void> {
@@ -97,6 +120,25 @@ export class UserChapterService {
           },
         });
 
+      const currentChapterProgress: UserChapter =
+        await this.prismaService.userChapter.findFirst({
+          where: {
+            userId,
+            chapterId: currentChapterId,
+          },
+        });
+
+      if (currentChapterProgress.status !== Status.COMPLETED) {
+        await this.prismaService.userChapter.update({
+          where: {
+            id: currentChapterProgress.id,
+          },
+          data: {
+            status: Status.COMPLETED,
+          },
+        });
+      }
+
       const nextChapter: Chapter = await this.prismaService.chapter.findFirst({
         where: { order: { gt: currentChapter.order } },
         orderBy: { order: 'asc' },
@@ -121,6 +163,7 @@ export class UserChapterService {
         });
 
         await this.unlockFirstUnit(userId, nextChapter.id);
+        await this.syncUserLanguageLevel(userId, nextChapter.name);
       }
     } catch (error) {
       if (error.code === 'P2025') {

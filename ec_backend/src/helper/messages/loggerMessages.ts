@@ -689,6 +689,10 @@ const loggerMessages = {
       status_500:
         'An internal error occurred while generating the user progress. Check the error log for more information.',
     },
+    syncUserLanguageLevel: {
+      status_500:
+        'An internal error occurred while syncing the user language level. Check the error log for more information.',
+    },
     throwIfUserChapterExists: {
       status_500:
         'An internal error occurred while checking if the user progress exists. Check the error log for more information.',
@@ -778,6 +782,10 @@ const loggerMessages = {
     generateUserUnit: {
       status_500:
         'An internal error occurred while generating the user progress. Check the error log for more information.',
+    },
+    unlockFirstContent: {
+      status_500:
+        'An internal error occurred while unlocking the first content. Check the error log for more information.',
     },
     unlockNextUnit: {
       status_500:

@@ -11,10 +11,11 @@ import httpMessages_EN from '../helper/messages/httpMessages.en';
 import handleInternalErrorException from '../helper/functions/handleErrorException';
 import loggerMessages from '../helper/messages/loggerMessages';
 import generateExceptionMessage from '../helper/functions/generateExceptionMessage';
-import { Status } from '@prisma/client';
+import { Status, UserContent } from '@prisma/client';
 import UpdateUserUnitDTO from './dto/updateUserUnit.dto';
 import Unit from 'src/entities/Unit';
 import { UserChapterService } from 'src/user-chapter/user-chapter.service';
+import Content from 'src/entities/Content';
 
 @Injectable()
 export class UserUnitService {
@@ -23,6 +24,45 @@ export class UserUnitService {
     private readonly logger: Logger,
     private readonly userChapterService: UserChapterService,
   ) {}
+
+  private async unlockFirstContent(userUnitProgress: UserUnit): Promise<void> {
+    try {
+      const firstContent: Content = await this.prismaService.content.findFirst({
+        where: {
+          unitId: userUnitProgress.unitId,
+          order: 1,
+        },
+      });
+
+      //if the first content doesn't exist then it means the unit doesn't have any contents
+      if (firstContent) {
+        const firstContentProgress: UserContent =
+          await this.prismaService.userContent.findFirst({
+            where: {
+              contentId: firstContent.id,
+              userId: userUnitProgress.userId,
+            },
+          });
+
+        await this.prismaService.userContent.update({
+          where: {
+            id: firstContentProgress.id,
+          },
+          data: {
+            status: Status.IN_PROGRESS,
+          },
+        });
+      }
+    } catch (error) {
+      handleInternalErrorException(
+        'UserUnitService',
+        'unlockFirstContent',
+        loggerMessages.userUnit.unlockFirstContent.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
 
   async unlockNextUnit(
     userId: string,
@@ -60,7 +100,7 @@ export class UserUnitService {
             },
           });
 
-        await this.prismaService.userUnit.update({
+        const updatedProgress = await this.prismaService.userUnit.update({
           where: {
             id: userNextUnitProgress.id,
           },
@@ -68,6 +108,8 @@ export class UserUnitService {
             status: Status.IN_PROGRESS,
           },
         });
+
+        await this.unlockFirstContent(updatedProgress);
       } else {
         //if there isn't another unit to unlock, it unlocks the next chapter
         await this.userChapterService.unlockNextChapter(

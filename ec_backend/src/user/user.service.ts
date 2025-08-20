@@ -18,6 +18,9 @@ import UpdateUserDTO from './dto/updateUser.dto';
 import { S3Service } from '../s3/s3.service';
 import { Response } from 'express';
 import Chapter from '../entities/Chapter';
+import Unit from 'src/entities/Unit';
+import Content from 'src/entities/Content';
+import { Status } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -75,25 +78,130 @@ export class UserService {
     private readonly s3service: S3Service,
   ) {}
 
-  async generateUserChapterRelations(userId: string) {
+  private async generateUserChapterRelations(userId: string) {
     try {
       const chapters: Partial<Chapter>[] =
-        await this.prismaService.chapter.findMany({
-          select: { id: true },
-        });
+        await this.prismaService.chapter.findMany();
 
       const progresses: { userId: string; chapterId: string }[] = chapters.map(
-        (chapter) => ({ userId: userId, chapterId: chapter.id }),
+        (chapter) =>
+          chapter.order === 1
+            ? {
+                userId: userId,
+                chapterId: chapter.id,
+                status: 'IN_PROGRESS',
+              }
+            : { userId: userId, chapterId: chapter.id },
       );
 
       await this.prismaService.userChapter.createMany({
         data: progresses,
+        skipDuplicates: true,
       });
     } catch (error) {
       handleInternalErrorException(
         'UserService',
         'generateUserChapterRelations',
-        loggerMessages.chapter.generateUserChapterRelations.status_500,
+        loggerMessages.user.generateUserChapterRelations.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  private async generateUserUnitRelations(userId: string) {
+    try {
+      const units: Partial<Unit>[] = await this.prismaService.unit.findMany({
+        select: { id: true },
+      });
+
+      const firstChapter: Partial<Chapter> =
+        await this.prismaService.chapter.findFirst({
+          where: {
+            order: 1,
+          },
+          select: {
+            id: true,
+          },
+        });
+
+      const firstUnitFirstChapter = await this.prismaService.unit.findFirst({
+        where: {
+          order: 1,
+          chapterId: firstChapter.id,
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      const progresses: { userId: string; unitId: number }[] = units.map(
+        (unit) =>
+          firstUnitFirstChapter.id === unit.id
+            ? { userId: userId, unitId: unit.id, status: Status.IN_PROGRESS }
+            : { userId: userId, unitId: unit.id },
+      );
+
+      await this.prismaService.userUnit.createMany({
+        data: progresses,
+        skipDuplicates: true,
+      });
+    } catch (error) {
+      handleInternalErrorException(
+        'UserService',
+        'generateUserUnitRelations',
+        loggerMessages.user.generateUserUnitRelations.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  private async generateUserContentRelations(userId: string) {
+    try {
+      const contents: Partial<Content>[] =
+        await this.prismaService.content.findMany();
+
+      const firstChapter: Partial<Chapter> =
+        await this.prismaService.chapter.findFirst({
+          where: {
+            order: 1,
+          },
+          select: {
+            id: true,
+          },
+        });
+
+      const firstUnitFirstChapter = await this.prismaService.unit.findFirst({
+        where: {
+          order: 1,
+          chapterId: firstChapter.id,
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      const progresses: { userId: string; contentId: number }[] = contents.map(
+        (content) =>
+          content.unitId === firstUnitFirstChapter.id && content.order === 1
+            ? {
+                userId: userId,
+                contentId: content.id,
+                status: Status.IN_PROGRESS,
+              }
+            : { userId: userId, contentId: content.id },
+      );
+
+      await this.prismaService.userContent.createMany({
+        data: progresses,
+        skipDuplicates: true,
+      });
+    } catch (error) {
+      handleInternalErrorException(
+        'UserService',
+        'generateUserContentRelations',
+        loggerMessages.user.generateUserContentRelations.status_500,
         this.logger,
         error,
       );
@@ -209,6 +317,8 @@ export class UserService {
       });
 
       await this.generateUserChapterRelations(user.id);
+      await this.generateUserUnitRelations(user.id);
+      await this.generateUserContentRelations(user.id);
 
       this.logger.log(
         generateExceptionMessage(

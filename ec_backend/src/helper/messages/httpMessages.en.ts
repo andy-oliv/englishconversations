@@ -569,6 +569,13 @@ const httpMessages_EN = {
     throwIfChapterExists: {
       status_409: 'There is another user progress with the same definitions.',
     },
+    unlockFirstUnit: {
+      status_404: 'The next unit progress was not found.',
+    },
+    unlockNextChapter: {
+      status_404:
+        'The current chapter or the next chapter progresses was not found.',
+    },
     updateUserChapter: {
       status_200: 'The user progress has been successfully updated!',
       status_404: 'The user progress was not found or the IDs are invalid.',
@@ -589,6 +596,10 @@ const httpMessages_EN = {
     fetchUserContentsByUser: {
       status_200: 'The progresses have been successfully fetched.',
       status_404: 'There are no progresses to show or the userId is invalid.',
+    },
+    unlockNextContent: {
+      status_404:
+        'The current content progress, next content progress or the current unit progress was not found.',
     },
     updateUserContent: {
       status_200: 'The progress has been successfully updated.',
@@ -643,6 +654,10 @@ const httpMessages_EN = {
     },
     throwIfUserUnitExists: {
       status_409: 'There is another user progress with the same definitions.',
+    },
+    unlockNextUnit: {
+      status_404:
+        'Either the current unit or the next unit progress was not found.',
     },
     updateUserUnit: {
       status_200: 'The user progress has been successfully updated!',

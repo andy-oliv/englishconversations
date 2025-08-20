@@ -58,16 +58,21 @@ export class VideoController {
     @UploadedFile() file: Express.Multer.File,
     @Body('metadata') metadata: string,
   ): Promise<Return> {
+    if (!metadata && !file) {
+      throw new BadRequestException(
+        httpMessages_EN.video.updateVideo.status_400,
+      );
+    }
     if (file) {
       allowedTypes(file);
 
-      const videoData: FormHandlerReturn = await FormDataHandler(
-        GenerateVideoDTO,
-        file,
-        metadata,
+      const videoData: Partial<FormHandlerReturn> = await updateFormHandler(
         this.s3Service,
         this.logger,
         'videos/thumbnails',
+        UpdateVideoDTO,
+        file,
+        metadata,
       );
 
       return this.videoService.generateVideo({
@@ -75,6 +80,15 @@ export class VideoController {
         thumbnailUrl: videoData.fileUrl,
       });
     }
+
+    if (!metadata) {
+      throw new BadRequestException(
+        httpMessages_EN.video.updateVideo.status_4002,
+      );
+    }
+
+    const videoData: any = await parseJson(GenerateVideoDTO, metadata);
+    return this.videoService.generateVideo(videoData);
   }
 
   @Get(':id')

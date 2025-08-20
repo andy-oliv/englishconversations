@@ -9,6 +9,7 @@ import loggerMessages from '../helper/messages/loggerMessages';
 import generateExceptionMessage from '../helper/functions/generateExceptionMessage';
 import UpdateVideoDTO from './dto/updateVideo.dto';
 import { S3Service } from '../s3/s3.service';
+import Content from 'src/entities/Content';
 
 @Injectable()
 export class VideoService {

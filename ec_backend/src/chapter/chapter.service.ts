@@ -13,7 +13,7 @@ import loggerMessages from '../helper/messages/loggerMessages';
 import UpdateChapterDTO from './dto/updateChapter.dto';
 import generateExceptionMessage from '../helper/functions/generateExceptionMessage';
 import { S3Service } from '../s3/s3.service';
-import { User } from '@prisma/client';
+import { Status } from '@prisma/client';
 
 @Injectable()
 export class ChapterService {
@@ -38,7 +38,11 @@ export class ChapterService {
       const progresses: { userId: string; chapterId: string }[] = users.map(
         (user) =>
           chapterId === firstChapter.id
-            ? { userId: user.id, chapterId: chapterId, status: 'IN_PROGRESS' }
+            ? {
+                userId: user.id,
+                chapterId: chapterId,
+                status: Status.IN_PROGRESS,
+              }
             : { userId: user.id, chapterId: chapterId },
       );
 

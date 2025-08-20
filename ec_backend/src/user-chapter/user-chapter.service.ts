@@ -11,6 +11,10 @@ import Return from '../common/types/Return';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
 import loggerMessages from '../helper/messages/loggerMessages';
 import UpdateUserChapterDTO from './dto/updateUserChapter.dto';
+import Chapter from 'src/entities/Chapter';
+import { Status, Unit } from '@prisma/client';
+import generateExceptionMessage from 'src/helper/functions/generateExceptionMessage';
+import UserUnit from 'src/entities/UserUnit';
 
 @Injectable()
 export class UserChapterService {
@@ -34,6 +38,106 @@ export class UserChapterService {
     private readonly prismaService: PrismaService,
     private readonly logger: Logger,
   ) {}
+
+  //this function was created in order to avoid circular dependencies between userChapter and userUnit
+  async unlockFirstUnit(userId: string, nextChapterId: string): Promise<void> {
+    try {
+      const nextChapterFirstUnit: Unit =
+        await this.prismaService.unit.findFirst({
+          where: {
+            chapterId: nextChapterId,
+            order: 1,
+          },
+        });
+
+      if (nextChapterFirstUnit) {
+        const firstUnitProgress: UserUnit =
+          await this.prismaService.userUnit.findFirstOrThrow({
+            where: {
+              unitId: nextChapterFirstUnit.id,
+              userId,
+            },
+          });
+
+        await this.prismaService.userUnit.update({
+          where: {
+            id: firstUnitProgress.id,
+          },
+          data: {
+            status: Status.IN_PROGRESS,
+          },
+        });
+      }
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(
+          httpMessages_EN.userChapter.unlockFirstUnit.status_404,
+        );
+      }
+
+      handleInternalErrorException(
+        'UserChapterService',
+        'unlockFirstUnit',
+        loggerMessages.userChapter.unlockFirstUnit.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  async unlockNextChapter(
+    userId: string,
+    currentChapterId: string,
+  ): Promise<void> {
+    try {
+      const currentChapter: Chapter =
+        await this.prismaService.chapter.findUniqueOrThrow({
+          where: {
+            id: currentChapterId,
+          },
+        });
+
+      const nextChapter: Chapter = await this.prismaService.chapter.findFirst({
+        where: { order: { gt: currentChapter.order } },
+        orderBy: { order: 'asc' },
+      });
+
+      if (nextChapter) {
+        const userNextChapterProgress: UserChapter =
+          await this.prismaService.userChapter.findFirstOrThrow({
+            where: {
+              chapterId: nextChapter.id,
+              userId,
+            },
+          });
+
+        await this.prismaService.userChapter.update({
+          where: {
+            id: userNextChapterProgress.id,
+          },
+          data: {
+            status: Status.IN_PROGRESS,
+          },
+        });
+
+        await this.unlockFirstUnit(userId, nextChapter.id);
+      }
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(
+          httpMessages_EN.userChapter.unlockNextChapter.status_404,
+        );
+      }
+
+      handleInternalErrorException(
+        'UserChapterService',
+        'unlockNextChapter',
+        loggerMessages.userChapter.unlockNextChapter.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
 
   async throwIfUserChapterExists(
     userId: string,
@@ -208,6 +312,10 @@ export class UserChapterService {
           },
           data: updatedData,
         });
+
+      if (updatedData.status === Status.COMPLETED) {
+        await this.unlockNextChapter(userId, updatedProgress.chapterId);
+      }
 
       return {
         message: httpMessages_EN.userChapter.updateUserChapter.status_200,

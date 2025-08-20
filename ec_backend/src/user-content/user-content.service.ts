@@ -8,13 +8,84 @@ import handleInternalErrorException from 'src/helper/functions/handleErrorExcept
 import loggerMessages from 'src/helper/messages/loggerMessages';
 import httpMessages_EN from 'src/helper/messages/httpMessages.en';
 import UpdateUserContentDTO from './dto/UpdateUserContent.dto';
+import Content from 'src/entities/Content';
+import { Status, Unit, UserUnit } from '@prisma/client';
+import { UserUnitService } from 'src/user-unit/user-unit.service';
 
 @Injectable()
 export class UserContentService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly logger: Logger,
+    private readonly userUnitService: UserUnitService,
   ) {}
+
+  private async unlockNextContent(
+    currentUserContent: UserContent,
+  ): Promise<void> {
+    try {
+      const currentContent: Content =
+        await this.prismaService.content.findFirstOrThrow({
+          where: {
+            id: currentUserContent.contentId,
+          },
+        });
+
+      const nextContent: Content = await this.prismaService.content.findFirst({
+        where: {
+          order: { gt: currentContent.order },
+        },
+        orderBy: { order: 'asc' },
+      });
+
+      if (nextContent) {
+        const userNextContentProgress: UserContent =
+          await this.prismaService.userContent.findFirstOrThrow({
+            where: {
+              contentId: nextContent.id,
+              userId: currentUserContent.userId,
+            },
+          });
+
+        await this.prismaService.userContent.update({
+          where: {
+            id: userNextContentProgress.id,
+          },
+          data: {
+            status: Status.IN_PROGRESS,
+          },
+        });
+      } else {
+        //if there isn't another content to unlock, it unlocks the next unit
+        const currentUnitProgress: UserUnit =
+          await this.prismaService.userUnit.findFirstOrThrow({
+            where: {
+              userId: currentUserContent.userId,
+              unitId: currentContent.unitId,
+            },
+          });
+
+        await this.userUnitService.unlockNextUnit(
+          currentUserContent.userId,
+          currentUnitProgress,
+        );
+      }
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(
+          httpMessages_EN.userContent.unlockNextContent.status_404,
+        );
+      }
+
+      handleInternalErrorException(
+        'userContentService',
+        'unlockNextContent',
+        loggerMessages.userContent.unlockNextContent.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
 
   async createUserContent(data: CreateUserContentDTO): Promise<Return> {
     try {
@@ -110,6 +181,8 @@ export class UserContentService {
         },
         data,
       });
+
+      await this.unlockNextContent(updatedUserContent);
 
       return {
         message: httpMessages_EN.userContent.updateUserContent.status_200,

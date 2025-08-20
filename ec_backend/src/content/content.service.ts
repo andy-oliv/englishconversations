@@ -7,6 +7,8 @@ import CreateContentDTO from './dto/CreateContent.dto';
 import handleInternalErrorException from 'src/helper/functions/handleErrorException';
 import loggerMessages from 'src/helper/messages/loggerMessages';
 import httpMessages_EN from 'src/helper/messages/httpMessages.en';
+import User from 'src/entities/User';
+import { Status } from '@prisma/client';
 
 @Injectable()
 export class ContentService {
@@ -14,6 +16,51 @@ export class ContentService {
     private readonly prismaService: PrismaService,
     private readonly logger: Logger,
   ) {}
+
+  private async generateUserContent(
+    contentId: number,
+    unitId: number,
+  ): Promise<void> {
+    try {
+      const users: Partial<User>[] = await this.prismaService.user.findMany({
+        select: {
+          id: true,
+        },
+      });
+
+      const unit = await this.prismaService.unit.findUniqueOrThrow({
+        where: {
+          id: unitId,
+        },
+        include: {
+          chapter: {
+            select: {
+              order: true,
+            },
+          },
+        },
+      });
+
+      const progresses = users.map((user) =>
+        unit.chapter.order === 1 && unit.order === 1
+          ? { userId: user.id, contentId, status: Status.IN_PROGRESS }
+          : { userId: user.id, contentId },
+      );
+
+      await this.prismaService.userContent.createMany({
+        data: progresses,
+        skipDuplicates: true,
+      });
+    } catch (error) {
+      handleInternalErrorException(
+        'ContentService',
+        'generateUserContent',
+        loggerMessages.content.generateUserContent.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
 
   async createContent(contentData: CreateContentDTO): Promise<Return> {
     if (!contentData.order) {
@@ -29,6 +76,9 @@ export class ContentService {
       const content: Content = await this.prismaService.content.create({
         data: contentData as Content,
       });
+
+      await this.generateUserContent(content.id, content.unitId);
+
       return {
         message: httpMessages_EN.content.createContent.status_201,
         data: content,

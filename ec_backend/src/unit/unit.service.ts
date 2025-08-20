@@ -24,17 +24,24 @@ export class UnitService {
         select: { id: true },
       });
 
-      const firstChapter: Chapter = await this.prismaService.chapter.findFirst({
-        where: {
-          order: 1,
-        },
-      });
+      const firstChapter: Partial<Chapter> =
+        await this.prismaService.chapter.findFirst({
+          where: {
+            order: 1,
+          },
+          select: {
+            id: true,
+          },
+        });
 
-      const firstChapterFirstUnit: Unit =
+      const firstChapterFirstUnit: Partial<Unit> =
         await this.prismaService.unit.findFirst({
           where: {
             chapterId: firstChapter.id,
             order: 1,
+          },
+          select: {
+            id: true,
           },
         });
 

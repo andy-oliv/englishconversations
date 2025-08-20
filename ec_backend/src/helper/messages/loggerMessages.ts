@@ -243,6 +243,10 @@ const loggerMessages = {
       status_500:
         'An internal error occurred while fetching the contents. Check the error log for more information.',
     },
+    generateUserContent: {
+      status_500:
+        'An internal error occurred while generating the userContents. Check the error log for more information.',
+    },
   },
   dashboard: {
     fetchInfo: {
@@ -626,6 +630,18 @@ const loggerMessages = {
       status_500:
         'An internal error occurred while fetching the user. Check the error log for more information.',
     },
+    generateUserChapterRelations: {
+      status_500:
+        'An internal error occurred while generating the userChapter relations.',
+    },
+    generateUserContentRelations: {
+      status_500:
+        'An internal error occurred while generating the userContent relations.',
+    },
+    generateUserUnitRelations: {
+      status_500:
+        'An internal error occurred while generating the userUnit relations.',
+    },
     hashPassword: {
       status_500:
         'An internal error occurred while hashing the password. Check the error log for more information.',
@@ -677,6 +693,14 @@ const loggerMessages = {
       status_500:
         'An internal error occurred while checking if the user progress exists. Check the error log for more information.',
     },
+    unlockFirstUnit: {
+      status_500:
+        'An internal error occurred while unlocking the first unit. Check the error log for more information.',
+    },
+    unlockNextChapter: {
+      status_500:
+        'An internal error occurred while unlocking the next chapter. Check the error log for more information.',
+    },
     updateUserChapter: {
       status_200: 'A chapter has been updated.',
       status_500:
@@ -699,6 +723,10 @@ const loggerMessages = {
     fetchUserContentsByUser: {
       status_500:
         'An error occurred while fetching the progresses. Check the error log for more information.',
+    },
+    unlockNextContent: {
+      status_500:
+        'An error occurred while unlocking the next content. Check the error log for more information.',
     },
     updateUserContent: {
       status_500:
@@ -751,6 +779,10 @@ const loggerMessages = {
       status_500:
         'An internal error occurred while generating the user progress. Check the error log for more information.',
     },
+    unlockNextUnit: {
+      status_500:
+        'An internal error occurred while unlocking the next unit. Check the error log for more information.',
+    },
     throwIfUserUnitExists: {
       status_500:
         'An internal error occurred while checking if the user progress already exists. Check the error log for more information.',
@@ -765,24 +797,24 @@ const loggerMessages = {
     deleteVideo: {
       status_200: 'A video has been deleted.',
       status_500:
-        'An internal error occurred while deleting the video file. Check the error log for more information.',
+        'An internal error occurred while deleting the video. Check the error log for more information.',
     },
     fetchVideos: {
       status_500:
-        'An internal error occurred while fetching the video files. Check the error log for more information.',
+        'An internal error occurred while fetching the videos. Check the error log for more information.',
     },
     fetchVideoById: {
       status_500:
-        'An internal error occurred while fetching the video file. Check the error log for more information.',
+        'An internal error occurred while fetching the video. Check the error log for more information.',
     },
     generateVideo: {
       status_500:
-        'An internal error occurred while generating the video file. Check the error log for more information.',
+        'An internal error occurred while generating the video. Check the error log for more information.',
     },
     updateVideo: {
       status_200: 'A video has been updated.',
       status_500:
-        'An internal error occurred while updating the video file. Check the error log for more information.',
+        'An internal error occurred while updating the video. Check the error log for more information.',
     },
   },
   videoProgress: {

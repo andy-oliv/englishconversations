@@ -11,15 +11,86 @@ import httpMessages_EN from '../helper/messages/httpMessages.en';
 import handleInternalErrorException from '../helper/functions/handleErrorException';
 import loggerMessages from '../helper/messages/loggerMessages';
 import generateExceptionMessage from '../helper/functions/generateExceptionMessage';
-import { Status } from '../../generated/prisma';
+import { Status } from '@prisma/client';
 import UpdateUserUnitDTO from './dto/updateUserUnit.dto';
+import Unit from 'src/entities/Unit';
+import { UserChapterService } from 'src/user-chapter/user-chapter.service';
 
 @Injectable()
 export class UserUnitService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly logger: Logger,
+    private readonly userChapterService: UserChapterService,
   ) {}
+
+  async unlockNextUnit(
+    userId: string,
+    currentUnitProgress: UserUnit,
+  ): Promise<void> {
+    try {
+      if (currentUnitProgress.status !== Status.COMPLETED) {
+        await this.prismaService.userUnit.update({
+          where: {
+            id: currentUnitProgress.id,
+          },
+          data: {
+            status: Status.COMPLETED,
+          },
+        });
+      }
+
+      const currentUnit: Unit = await this.prismaService.unit.findFirstOrThrow({
+        where: {
+          id: currentUnitProgress.unitId,
+        },
+      });
+
+      const nextUnit: Unit = await this.prismaService.unit.findFirst({
+        where: { order: { gt: currentUnit.order } },
+        orderBy: { order: 'asc' },
+      });
+
+      if (nextUnit) {
+        const userNextUnitProgress: UserUnit =
+          await this.prismaService.userUnit.findFirstOrThrow({
+            where: {
+              unitId: nextUnit.id,
+              userId,
+            },
+          });
+
+        await this.prismaService.userUnit.update({
+          where: {
+            id: userNextUnitProgress.id,
+          },
+          data: {
+            status: Status.IN_PROGRESS,
+          },
+        });
+      } else {
+        //if there isn't another unit to unlock, it unlocks the next chapter
+        await this.userChapterService.unlockNextChapter(
+          userId,
+          currentUnit.chapterId,
+        );
+      }
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(
+          httpMessages_EN.userUnit.unlockNextUnit.status_404,
+        );
+      }
+
+      handleInternalErrorException(
+        'userUnitService',
+        'unlockNextUnit',
+        loggerMessages.userUnit.unlockNextUnit.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
 
   async throwIfUserUnitExists(unitId: number, userId: string): Promise<void> {
     try {
@@ -209,6 +280,8 @@ export class UserUnitService {
           loggerMessages.userUnit.updateUserUnit.status_200,
         ),
       });
+
+      await this.unlockNextUnit(userId, updatedUserUnit);
 
       return {
         message: httpMessages_EN.userUnit.updateUserUnit.status_200,

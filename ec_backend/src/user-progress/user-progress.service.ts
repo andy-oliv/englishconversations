@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Logger } from 'nestjs-pino';
 import { PrismaService } from '../prisma/prisma.service';
 import Return from '../common/types/Return';
@@ -9,6 +9,12 @@ import UnitProgress from '../entities/UnitProgress';
 import Progress from '../common/types/Progress';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
 import CurrentChapter from 'src/common/types/CurrentChapter';
+import UserChapter from 'src/entities/userChapter';
+import UserUnit from 'src/entities/UserUnit';
+import Unit from 'src/entities/Unit';
+import UserContent from 'src/entities/UserContent';
+import Content from 'src/entities/Content';
+import CurrentChapterProgress from 'src/entities/CurrentChapterProgress';
 
 @Injectable()
 export class UserProgressService {
@@ -95,42 +101,6 @@ export class UserProgressService {
                 name: true,
                 description: true,
                 imageUrl: true,
-                units: {
-                  select: {
-                    id: true,
-                    name: true,
-                    description: true,
-                    imageUrl: true,
-                    contents: {
-                      orderBy: {
-                        order: 'asc',
-                      },
-                      select: {
-                        id: true,
-                        contentType: true,
-                        slideshow: {
-                          select: {
-                            title: true,
-                            description: true,
-                          },
-                        },
-                        video: {
-                          select: {
-                            title: true,
-                            description: true,
-                          },
-                        },
-                        quiz: {
-                          select: {
-                            title: true,
-                            description: true,
-                            isTest: true,
-                          },
-                        },
-                      },
-                    },
-                  },
-                },
               },
             },
           },
@@ -156,6 +126,122 @@ export class UserProgressService {
         'UserProgressService',
         'fetchProgress',
         loggerMessages.userProgress.fetchProgress.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  async fetchCurrentChapterProgress(userId: string): Promise<Return> {
+    try {
+      const currentChapter: UserChapter =
+        await this.prismaService.userChapter.findFirstOrThrow({
+          where: {
+            AND: [{ userId }, { status: 'IN_PROGRESS' }],
+          },
+        });
+
+      const units = await this.prismaService.unit.findMany({
+        where: {
+          chapterId: currentChapter.chapterId,
+        },
+        orderBy: {
+          order: 'asc',
+        },
+        include: {
+          unitProgress: {
+            where: {
+              userId,
+            },
+            select: {
+              id: true,
+              progress: true,
+              status: true,
+            },
+          },
+          contents: {
+            orderBy: {
+              order: 'asc',
+            },
+            select: {
+              id: true,
+              contentType: true,
+              order: true,
+              quiz: {
+                select: {
+                  id: true,
+                  isTest: true,
+                  title: true,
+                  description: true,
+                },
+              },
+              video: {
+                select: {
+                  id: true,
+                  title: true,
+                  description: true,
+                },
+              },
+              slideshow: {
+                select: {
+                  id: true,
+                  title: true,
+                  description: true,
+                },
+              },
+              contentProgress: {
+                where: {
+                  userId,
+                },
+                select: {
+                  id: true,
+                  contentId: true,
+                  progress: true,
+                  status: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      if (units.length === 0) {
+        throw new NotFoundException(
+          httpMessages_EN.userProgress.fetchCurrentChapterProgress.status_4042,
+        );
+      }
+
+      const normalizedUnits: CurrentChapterProgress[] = units.map((unit) => ({
+        ...unit,
+        unitProgress: unit.unitProgress[0] ?? null,
+        contents: unit.contents.map((content) => ({
+          ...content,
+          contentProgress: content.contentProgress[0] ?? null,
+        })),
+      }));
+
+      return {
+        message:
+          httpMessages_EN.userProgress.fetchCurrentChapterProgress.status_200,
+        data: {
+          progress: normalizedUnits,
+        },
+      };
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(
+          httpMessages_EN.userProgress.fetchCurrentChapterProgress.status_404,
+        );
+      }
+
+      if (error instanceof NotFoundException) {
+        throw error;
+      }
+
+      handleInternalErrorException(
+        'UserProgressService',
+        'fetchCurrentChapterProgress',
+        loggerMessages.userProgress.fetchCurrentChapterProgress.status_500,
         this.logger,
         error,
       );

@@ -627,6 +627,12 @@ const httpMessages_EN = {
     },
   },
   userProgress: {
+    fetchCurrentChapterProgress: {
+      status_200: 'The progress has been successfully fetched.',
+      status_404: 'The chapter was not found.',
+      status_4042: 'There are no units to show in the chapter.',
+      status_4043: 'There are no progresses to show.',
+    },
     fetchProgress: {
       status_200: 'The progress has been successfully fetched!',
     },

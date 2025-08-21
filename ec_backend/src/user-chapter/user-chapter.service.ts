@@ -14,6 +14,7 @@ import UpdateUserChapterDTO from './dto/updateUserChapter.dto';
 import Chapter from 'src/entities/Chapter';
 import { CEFRLevels, Status, Unit } from '@prisma/client';
 import UserUnit from 'src/entities/UserUnit';
+import * as dayjs from 'dayjs';
 
 @Injectable()
 export class UserChapterService {
@@ -128,13 +129,17 @@ export class UserChapterService {
           },
         });
 
-      if (currentChapterProgress.status !== Status.COMPLETED) {
+      if (
+        currentChapterProgress.status !== Status.COMPLETED ||
+        !currentChapterProgress.completedAt
+      ) {
         await this.prismaService.userChapter.update({
           where: {
             id: currentChapterProgress.id,
           },
           data: {
             status: Status.COMPLETED,
+            completedAt: dayjs().toISOString(),
           },
         });
       }

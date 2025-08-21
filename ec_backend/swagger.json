@@ -4648,6 +4648,58 @@
         ]
       }
     },
+    "/api/user-progress/units/{userId}": {
+      "get": {
+        "operationId": "UserProgressController_fetchCurrentChapterProgress",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "The progress has been successfully fetched."
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": "Validation failed (uuid is expected)"
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "example": "The chapter was not found."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "UserProgress"
+        ]
+      }
+    },
     "/api/user-progress/{userId}": {
       "get": {
         "operationId": "UserProgressController_fetchProgress",

@@ -195,7 +195,7 @@ model Unit {
   chapterId String 
   contents Content[]
   tags UnitTag[]
-  users UserUnit[]
+  unitProgress UserUnit[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -358,7 +358,7 @@ model Content {
   quiz Quiz? @relation(fields: [quizId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   quizId String? @unique
   order Int
-  userProgresses UserContent[]
+  contentProgress UserContent[]
 
   @@unique([unitId, order])
 }

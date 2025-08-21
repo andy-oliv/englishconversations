@@ -756,6 +756,10 @@ const loggerMessages = {
     },
   },
   userProgress: {
+    fetchCurrentChapterProgress: {
+      status_500:
+        'An internal error occurred while fetching the chapter progress. Check the error log for more information.',
+    },
     fetchProgress: {
       status_500:
         'An internal error occurred while fetching the user progress. Check the error log for more information.',

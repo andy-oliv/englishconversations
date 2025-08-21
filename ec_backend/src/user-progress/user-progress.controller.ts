@@ -18,6 +18,37 @@ import httpMessages_EN from '../helper/messages/httpMessages.en';
 export class UserProgressController {
   constructor(private readonly userProgressService: UserProgressService) {}
 
+  @Get('units/:userId')
+  @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
+  @UseGuards(SelfGuard)
+  @ApiResponse({
+    status: 200,
+    description: 'Success',
+    example:
+      httpMessages_EN.userProgress.fetchCurrentChapterProgress.status_200,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request',
+    example: 'Validation failed (uuid is expected)',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Not Found',
+    example:
+      httpMessages_EN.userProgress.fetchCurrentChapterProgress.status_404,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal Server Error',
+    example: httpMessages_EN.general.status_500,
+  })
+  async fetchCurrentChapterProgress(
+    @Param('userId', new ParseUUIDPipe()) userId: string,
+  ): Promise<Return> {
+    return this.userProgressService.fetchCurrentChapterProgress(userId);
+  }
+
   @Get(':userId')
   @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
   @UseGuards(SelfGuard)

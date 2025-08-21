@@ -16,6 +16,7 @@ import UpdateUserUnitDTO from './dto/updateUserUnit.dto';
 import Unit from 'src/entities/Unit';
 import { UserChapterService } from 'src/user-chapter/user-chapter.service';
 import Content from 'src/entities/Content';
+import * as dayjs from 'dayjs';
 
 @Injectable()
 export class UserUnitService {
@@ -69,13 +70,17 @@ export class UserUnitService {
     currentUnitProgress: UserUnit,
   ): Promise<void> {
     try {
-      if (currentUnitProgress.status !== Status.COMPLETED) {
+      if (
+        currentUnitProgress.status !== Status.COMPLETED ||
+        !currentUnitProgress.completedAt
+      ) {
         await this.prismaService.userUnit.update({
           where: {
             id: currentUnitProgress.id,
           },
           data: {
             status: Status.COMPLETED,
+            completedAt: dayjs().toISOString(),
           },
         });
       }

@@ -18,39 +18,6 @@ export const UserProgressSchema = z.object({
       name: z.string(),
       description: z.string(),
       imageUrl: z.url(),
-      units: z.array(
-        z.object({
-          id: z.number(),
-          name: z.string(),
-          description: z.string(),
-          imageUrl: z.url().nullable(),
-          contents: z.array(
-            z.object({
-              id: z.number(),
-              contentType: z.enum(["SLIDESHOW", "VIDEO", "QUIZ", "TEST"]),
-              slideshow: z
-                .object({
-                  title: z.string(),
-                  description: z.string(),
-                })
-                .nullable(),
-              video: z
-                .object({
-                  title: z.string(),
-                  description: z.string(),
-                })
-                .nullable(),
-              quiz: z
-                .object({
-                  title: z.string(),
-                  description: z.string(),
-                  isTest: z.boolean(),
-                })
-                .nullable(),
-            })
-          ),
-        })
-      ),
     }),
   }),
   totalChapters: z.number(),

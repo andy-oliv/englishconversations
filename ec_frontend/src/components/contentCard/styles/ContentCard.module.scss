@@ -1,0 +1,47 @@
+@use "../../../styles/variables" as var;
+
+.card {
+  border-radius: 0.8em;
+  padding: 1em;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  font-family: var.$poppins;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+
+  .icon {
+    margin-right: 1em;
+    color: rgb(81, 81, 81);
+  }
+}
+
+.title {
+  font-size: 1.1rem;
+}
+
+.description {
+  font-size: 0.9rem;
+}
+
+.card:hover {
+  transform: scale(1.04);
+}
+
+.video {
+  background-color: var.$videoContent;
+}
+
+.quiz {
+  background-color: var.$quizContent;
+}
+
+.test {
+  background-color: var.$testContent;
+}
+
+.slideshow {
+  background-color: var.$slideshowContent;
+}

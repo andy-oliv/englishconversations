@@ -84,7 +84,28 @@ export default function Dashboard(): ReactElement {
   return (
     <>
       {loading ? (
-        <p>loading state</p>
+        <div className={styles.loaderWindow}>
+          <div className={styles.loaderGrid}>
+            <div className={styles.unitLoaderContainer}>
+              <div className={styles.unitLoader}>
+                <div className={styles.imgLoader}></div>
+              </div>
+              <div className={styles.unitLoader}>
+                <div className={styles.imgLoader}></div>
+              </div>
+              <div className={styles.unitLoader}>
+                <div className={styles.imgLoader}></div>
+              </div>
+            </div>
+            <div className={styles.contentLoaderContainer}>
+              <div className={styles.contentLoader}></div>
+              <div className={styles.contentLoader}></div>
+              <div className={styles.contentLoader}></div>
+              <div className={styles.contentLoader}></div>
+              <div className={styles.contentLoader}></div>
+            </div>
+          </div>
+        </div>
       ) : (
         <div className={styles.mainContent}>
           <div className={styles.unitContainer}>

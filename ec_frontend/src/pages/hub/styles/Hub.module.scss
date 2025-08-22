@@ -1,0 +1,40 @@
+@use "../../../styles/variables" as var;
+
+.window {
+  width: 100%;
+  height: 100vh;
+  background-color: var.$backgroundColor;
+  padding: 2em;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  height: 10%;
+}
+
+.heading {
+  width: 25%;
+  height: 100%;
+  background: var.$signatureGradient;
+  border-radius: 1em;
+  display: flex;
+  align-items: center;
+  gap: 2em;
+}
+
+.picture {
+  width: 7.5em;
+
+  .img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.unitName {
+  font-family: var.$poppins;
+  font-weight: 400;
+  font-size: 1.7rem;
+}

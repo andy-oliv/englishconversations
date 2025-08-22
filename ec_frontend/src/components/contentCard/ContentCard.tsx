@@ -34,10 +34,10 @@ export default function ContentCard({
   const navigate = useNavigate();
   const setCurrentContent = useCurrentContentStore((state) => state.setContent);
   const link: Record<string, string> = {
-    VIDEO: "/video",
+    VIDEO: "/hub/video",
     QUIZ: "/quiz",
     TEST: "/quiz",
-    SLIDESHOW: "/slides",
+    SLIDESHOW: "/hub/slideshow",
   };
 
   const cardStyle: Record<string, unknown> = {

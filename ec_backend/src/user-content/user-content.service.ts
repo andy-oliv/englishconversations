@@ -11,6 +11,7 @@ import UpdateUserContentDTO from './dto/UpdateUserContent.dto';
 import Content from 'src/entities/Content';
 import { Status, Unit, UserUnit } from '@prisma/client';
 import { UserUnitService } from 'src/user-unit/user-unit.service';
+import { UserProgressService } from 'src/user-progress/user-progress.service';
 
 @Injectable()
 export class UserContentService {
@@ -18,6 +19,7 @@ export class UserContentService {
     private readonly prismaService: PrismaService,
     private readonly logger: Logger,
     private readonly userUnitService: UserUnitService,
+    private readonly userProgressService: UserProgressService,
   ) {}
 
   private async unlockNextContent(
@@ -182,12 +184,44 @@ export class UserContentService {
         data,
       });
 
-      await this.unlockNextContent(updatedUserContent);
-
       return {
         message: httpMessages_EN.userContent.updateUserContent.status_200,
         data: updatedUserContent,
       };
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(
+          httpMessages_EN.userContent.updateUserContent.status_404,
+        );
+      }
+
+      handleInternalErrorException(
+        'UserContentService',
+        'updateUserContent',
+        loggerMessages.userContent.updateUserContent.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  async completeContent(id: number) {
+    try {
+      const updatedUserContent = await this.prismaService.userContent.update({
+        where: {
+          id,
+        },
+        data: {
+          progress: 1,
+          status: Status.COMPLETED,
+        },
+      });
+
+      await this.unlockNextContent(updatedUserContent);
+
+      return await this.userProgressService.fetchCurrentChapterProgress(
+        updatedUserContent.userId,
+      );
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException(

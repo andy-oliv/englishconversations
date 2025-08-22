@@ -22,7 +22,7 @@ model User {
   city String? @db.VarChar(50)
   state String? @db.VarChar(50)
   country String? @db.VarChar(50)
-  avatarUrl String? @db.VarChar(250) @default("https://englishconversations-files.s3.us-east-1.amazonaws.com/images/user_placeholder.png")
+  avatarUrl String? @db.VarChar(250) @default("https://englishconversations-files.s3.us-east-1.amazonaws.com/images/avatar_placeholder.png")
   languageLevel CEFRLevels @default(A1)
   email String @db.VarChar(250) @unique
   isEmailVerified Boolean @default(false)

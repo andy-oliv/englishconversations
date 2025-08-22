@@ -170,6 +170,37 @@ export class UserChapterController {
     );
   }
 
+  @Patch('complete')
+  @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
+  @UseGuards(SelfGuard)
+  @ApiResponse({
+    status: 200,
+    description: 'Success',
+    example:
+      httpMessages_EN.userProgress.fetchCurrentChapterProgress.status_200,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request',
+    example: 'Validation failed (uuid is expected)',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Not Found',
+    example: httpMessages_EN.userChapter.updateUserChapter.status_404,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal Server Error',
+    example: httpMessages_EN.general.status_500,
+  })
+  async completeChapter(
+    @Query('id', new ParseUUIDPipe()) id: string,
+    @Query('userId', new ParseUUIDPipe()) userId: string,
+  ): Promise<Return> {
+    return await this.userChapterService.completeChapter(id, userId);
+  }
+
   @Delete(':id')
   @AuthType(UserRoles.ADMIN)
   @UseGuards(RoleGuard)

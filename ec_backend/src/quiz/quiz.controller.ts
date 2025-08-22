@@ -37,8 +37,6 @@ import { UserRoles } from '@prisma/client';
 
 @ApiTags('Quizzes')
 @Controller('api/quizzes')
-@AuthType(UserRoles.ADMIN)
-@UseGuards(RoleGuard)
 export class QuizController {
   constructor(
     private readonly quizService: QuizService,
@@ -47,6 +45,8 @@ export class QuizController {
   ) {}
 
   @Post()
+  @AuthType(UserRoles.ADMIN)
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 201,
     description: 'Success',
@@ -98,6 +98,8 @@ export class QuizController {
   }
 
   @Get('query')
+  @AuthType(UserRoles.ADMIN)
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -126,6 +128,7 @@ export class QuizController {
   }
 
   @Get(':id')
+  @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -153,6 +156,8 @@ export class QuizController {
   }
 
   @Get()
+  @AuthType(UserRoles.ADMIN)
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -173,6 +178,8 @@ export class QuizController {
   }
 
   @Patch('exercise/add')
+  @AuthType(UserRoles.ADMIN)
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -199,6 +206,8 @@ export class QuizController {
   }
 
   @Delete('exercise/remove')
+  @AuthType(UserRoles.ADMIN)
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -225,6 +234,8 @@ export class QuizController {
   }
 
   @Patch(':id')
+  @AuthType(UserRoles.ADMIN)
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -283,6 +294,8 @@ export class QuizController {
   }
 
   @Delete(':id')
+  @AuthType(UserRoles.ADMIN)
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',

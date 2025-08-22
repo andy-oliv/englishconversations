@@ -20,13 +20,7 @@ import { S3Service } from '../s3/s3.service';
 @Injectable()
 export class QuizService {
   private includeExercises = {
-    exercises: {
-      select: {
-        id: true,
-        type: true,
-        description: true,
-      },
-    },
+    exercises: true,
     tags: {
       select: {
         tag: {

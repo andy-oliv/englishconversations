@@ -1,21 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsIn, IsNumber, IsOptional } from 'class-validator';
-import { Status } from '@prisma/client';
+import { IsNumber, IsOptional } from 'class-validator';
 import validationMessages_EN from 'src/helper/messages/validationMessages.en';
 
 export default class UpdateUserContentDTO {
-  @ApiProperty({
-    title: 'Status',
-    required: false,
-    type: 'string',
-    example: 'LOCKED',
-  })
-  @IsOptional()
-  @IsIn(['LOCKED', 'IN_PROGRESS', 'COMPLETED'], {
-    message: validationMessages_EN.userContent.createUserContentDTO.status.isIn,
-  })
-  status?: Status;
-
   @ApiProperty({
     title: 'Progress',
     required: false,

@@ -103,6 +103,36 @@ export class UserContentController {
     return this.userContentService.fetchUserContentsByUser(userId);
   }
 
+  @Patch('complete/:id')
+  @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
+  @UseGuards(SelfGuard)
+  @ApiResponse({
+    status: 200,
+    description: 'Success',
+    example:
+      httpMessages_EN.userProgress.fetchCurrentChapterProgress.status_200,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request',
+    example: 'Validation failed (numeric string is expected)',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Not Found',
+    example: httpMessages_EN.userContent.updateUserContent.status_404,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal Server Error',
+    example: httpMessages_EN.general.status_500,
+  })
+  async completeContent(
+    @Param('id', new ParseIntPipe()) id: number,
+  ): Promise<Return> {
+    return this.userContentService.completeContent(id);
+  }
+
   @Patch(':id')
   @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
   @UseGuards(SelfGuard)

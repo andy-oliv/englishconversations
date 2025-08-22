@@ -15,6 +15,7 @@ import Chapter from 'src/entities/Chapter';
 import { CEFRLevels, Status, Unit } from '@prisma/client';
 import UserUnit from 'src/entities/UserUnit';
 import * as dayjs from 'dayjs';
+import { UserProgressService } from 'src/user-progress/user-progress.service';
 
 @Injectable()
 export class UserChapterService {
@@ -37,6 +38,7 @@ export class UserChapterService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly logger: Logger,
+    private readonly userProgressService: UserProgressService,
   ) {}
 
   async syncUserLanguageLevel(
@@ -361,14 +363,45 @@ export class UserChapterService {
           data: updatedData,
         });
 
-      if (updatedData.status === Status.COMPLETED) {
-        await this.unlockNextChapter(userId, updatedProgress.chapterId);
-      }
-
       return {
         message: httpMessages_EN.userChapter.updateUserChapter.status_200,
         data: updatedProgress,
       };
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(
+          httpMessages_EN.userChapter.updateUserChapter.status_404,
+        );
+      }
+
+      handleInternalErrorException(
+        'userChapterService',
+        'updateUserChapter',
+        loggerMessages.userChapter.updateUserChapter.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  async completeChapter(id: string, userId: string): Promise<Return> {
+    try {
+      const updatedProgress: UserChapter =
+        await this.prismaService.userChapter.update({
+          where: {
+            id,
+            userId,
+          },
+          data: {
+            status: Status.COMPLETED,
+            progress: 1,
+            completedAt: dayjs().toISOString(),
+          },
+        });
+
+      await this.unlockNextChapter(userId, updatedProgress.chapterId);
+
+      return await this.userProgressService.fetchCurrentChapterProgress(userId);
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException(

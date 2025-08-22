@@ -17,6 +17,7 @@ import Unit from 'src/entities/Unit';
 import { UserChapterService } from 'src/user-chapter/user-chapter.service';
 import Content from 'src/entities/Content';
 import * as dayjs from 'dayjs';
+import { UserProgressService } from 'src/user-progress/user-progress.service';
 
 @Injectable()
 export class UserUnitService {
@@ -24,6 +25,7 @@ export class UserUnitService {
     private readonly prismaService: PrismaService,
     private readonly logger: Logger,
     private readonly userChapterService: UserChapterService,
+    private readonly userProgressService: UserProgressService,
   ) {}
 
   private async unlockFirstContent(userUnitProgress: UserUnit): Promise<void> {
@@ -328,12 +330,45 @@ export class UserUnitService {
         ),
       });
 
-      await this.unlockNextUnit(userId, updatedUserUnit);
-
       return {
         message: httpMessages_EN.userUnit.updateUserUnit.status_200,
         data: updatedUserUnit,
       };
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(
+          httpMessages_EN.userUnit.updateUserUnit.status_404,
+        );
+      }
+
+      handleInternalErrorException(
+        'userUnitService',
+        'updateUserUnit',
+        loggerMessages.userUnit.updateUserUnit.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  async completeUnit(id: string, userId: string): Promise<Return> {
+    try {
+      const updatedUserUnit: UserUnit =
+        await this.prismaService.userUnit.update({
+          where: {
+            id,
+            userId,
+          },
+          data: {
+            progress: 1,
+            status: Status.COMPLETED,
+            completedAt: dayjs().toISOString(),
+          },
+        });
+
+      await this.unlockNextUnit(userId, updatedUserUnit);
+
+      return await this.userProgressService.fetchCurrentChapterProgress(userId);
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException(

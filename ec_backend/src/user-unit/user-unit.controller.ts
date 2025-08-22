@@ -126,6 +126,32 @@ export class UserUnitController {
     return this.userUnitService.fetchUserUnitById(id);
   }
 
+  @Patch('complete')
+  @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
+  @UseGuards(SelfGuard)
+  @ApiResponse({
+    status: 200,
+    description: 'Success',
+    example:
+      httpMessages_EN.userProgress.fetchCurrentChapterProgress.status_200,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Not Found',
+    example: httpMessages_EN.userUnit.fetchUserUnitsByQuery.status_404,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal Server Error',
+    example: httpMessages_EN.general.status_500,
+  })
+  async completeUnit(
+    @Query('id', new ParseUUIDPipe()) id: string,
+    @Query('userId', new ParseUUIDPipe()) userId: string,
+  ): Promise<Return> {
+    return this.userUnitService.completeUnit(id, userId);
+  }
+
   @Patch('update')
   @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
   @UseGuards(SelfGuard)

@@ -224,7 +224,8 @@ export class UserProgressService {
         message:
           httpMessages_EN.userProgress.fetchCurrentChapterProgress.status_200,
         data: {
-          progress: normalizedUnits,
+          currentChapter,
+          units: normalizedUnits,
         },
       };
     } catch (error) {

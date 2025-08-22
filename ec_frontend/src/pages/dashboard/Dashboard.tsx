@@ -1,39 +1,55 @@
 import { useEffect, useState, type ReactElement } from "react";
 import styles from "./styles/Dashboard.module.scss";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { environment } from "../../environment/environment";
 import { UserStore } from "../../stores/userStore";
 import {
-  type ChapterProgress,
-  ChapterProgressSchemas,
-} from "../../schemas/chapterProgress.schema";
+  type UnitProgress,
+  UnitProgressSchemas,
+} from "../../schemas/unitProgress.schema";
 import * as Sentry from "@sentry/react";
-import { useChapterProgressStore } from "../../stores/chapterProgressStore";
 import UnitCard from "../../components/unitCard/UnitCard";
 import ContentCard from "../../components/contentCard/ContentCard";
+import { useUnitProgressesStore } from "../../stores/unitProgressesStore";
+import { useCurrentUnitStore } from "../../stores/currentUnitStore";
 
 export default function Dashboard(): ReactElement {
   function handleCardClick(title: string): void {
     setClickedCard(title);
     if (units) {
-      const unit: ChapterProgress = units.find((unit) => unit.name === title)!;
+      const unit: UnitProgress = units.find((unit) => unit.name === title)!;
       setSelectedUnit(unit);
+      setCurrentUnit({
+        id: unit.id,
+        title: unit.name,
+        description: unit.description,
+        unitNumber: unit.order,
+      });
+      sessionStorage.setItem(
+        "currentUnit",
+        JSON.stringify({
+          id: unit.id,
+          title: unit.name,
+          description: unit.description,
+          unitNumber: unit.order,
+        })
+      );
     }
   }
 
   const user = UserStore((state) => state.data);
-  const setData = useChapterProgressStore((state) => state.setData);
-  const units = useChapterProgressStore((state) => state.data);
+  const setData = useUnitProgressesStore((state) => state.setData);
+  const units = useUnitProgressesStore((state) => state.data);
+  const setCurrentUnit = useCurrentUnitStore((state) => state.setUnit);
   const [loading, setLoading] = useState<boolean>(false);
   const [clickedCard, setClickedCard] = useState<string | null>(null);
-  const [selectedUnit, setSelectedUnit] = useState<ChapterProgress | null>(
-    null
-  );
+  const [selectedUnit, setSelectedUnit] = useState<UnitProgress | null>(null);
+  const [noUnits, setNoUnits] = useState<boolean>(false);
 
   useEffect(() => {
     async function fetchProgress(): Promise<void> {
       setLoading(true);
-      const cache = sessionStorage.getItem("chapterProgress");
+      const cache = sessionStorage.getItem("unitProgresses");
       if (cache) {
         setData(JSON.parse(cache));
         setLoading(false);
@@ -45,13 +61,13 @@ export default function Dashboard(): ReactElement {
           `${environment.backendApiUrl}/user-progress/units/${user?.id}`,
           { withCredentials: true }
         );
-        const parsedResponse = ChapterProgressSchemas.safeParse(
-          response.data.data.progress
+        const parsedResponse = UnitProgressSchemas.safeParse(
+          response.data.data.units
         );
         if (parsedResponse.success) {
           setData(parsedResponse.data);
           sessionStorage.setItem(
-            "chapterProgress",
+            "unitProgresses",
             JSON.stringify(parsedResponse.data)
           );
           setLoading(false);
@@ -67,6 +83,12 @@ export default function Dashboard(): ReactElement {
         });
         setLoading(false);
       } catch (error) {
+        if (error instanceof AxiosError) {
+          if (error.status === 404) {
+            setNoUnits(true);
+          }
+        }
+
         Sentry.captureException(error, {
           extra: {
             context: "Dashboard",
@@ -106,6 +128,8 @@ export default function Dashboard(): ReactElement {
             </div>
           </div>
         </div>
+      ) : noUnits ? (
+        <p>Não há unidades para mostrar </p>
       ) : (
         <div className={styles.mainContent}>
           <div className={styles.unitContainer}>
@@ -117,6 +141,7 @@ export default function Dashboard(): ReactElement {
                 totalContents={unit.contents.length}
                 imgUrl={unit.imageUrl}
                 isActive={clickedCard === unit.name}
+                isLocked={unit.unitProgress.status === "LOCKED"}
                 handleClick={handleCardClick}
               />
             ))}
@@ -126,30 +151,35 @@ export default function Dashboard(): ReactElement {
           >
             <h2 className={styles.contentCardTitle}>Conteúdo</h2>
             {selectedUnit && selectedUnit.contents?.length > 0 ? (
-              selectedUnit.contents.map((content) => (
-                <ContentCard
-                  key={content.id}
-                  contentType={content.contentType}
-                  title={
-                    content.quiz
-                      ? content.quiz.title
-                      : content.video
-                        ? content.video.title
-                        : content.slideshow
-                          ? content.slideshow.title
-                          : ""
-                  }
-                  description={
-                    content.quiz
-                      ? content.quiz.description
-                      : content.video
-                        ? content.video.description
-                        : content.slideshow
-                          ? content.slideshow.description
-                          : ""
-                  }
-                />
-              ))
+              selectedUnit.contents.map((content) => {
+                const contentMap: Record<
+                  string,
+                  {
+                    id: string;
+                    title: string;
+                    description: string;
+                    isTest?: boolean;
+                  } | null
+                > = {
+                  QUIZ: content.quiz,
+                  VIDEO: content.video,
+                  SLIDESHOW: content.slideshow,
+                  TEST: content.quiz,
+                };
+
+                const currentContent = contentMap[content.contentType];
+
+                return (
+                  <ContentCard
+                    key={content.id}
+                    contentType={content.contentType}
+                    id={`${currentContent?.id}`}
+                    title={currentContent?.title ?? ""}
+                    description={currentContent?.description ?? ""}
+                    isLocked={content.contentProgress.status === "LOCKED"}
+                  />
+                );
+              })
             ) : (
               <p className={styles.noContentMessage}>
                 Não há conteúdo para exibir...

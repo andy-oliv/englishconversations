@@ -5,6 +5,7 @@ import { LoggedUserStore } from "../../../stores/loggedUserStore";
 import { LoggedUserSchema } from "../../../schemas/loggedUser.schema";
 import { fetchUser } from "../../../helper/functions/fetchUser";
 import Spinner from "../../spinner/Spinner";
+import * as Sentry from "@sentry/react";
 
 export default function PrivateRoutes(): ReactElement {
   const [isAuth, setIsAuth] = useState<boolean | null>(null);
@@ -32,10 +33,22 @@ export default function PrivateRoutes(): ReactElement {
         }
 
         setIsAuth(false);
-        console.log(parsedResponse.error?.issues);
+        Sentry.captureException(parsedResponse.error, {
+          extra: {
+            context: "PrivateRoutes",
+            action: "isAuthenticated",
+            issues: parsedResponse.error.issues,
+          },
+        });
       } catch (error) {
-        console.log(error);
         setIsAuth(false);
+        Sentry.captureException(error, {
+          extra: {
+            context: "PrivateRoutes",
+            action: "isAuthenticated",
+            error,
+          },
+        });
       }
     };
 

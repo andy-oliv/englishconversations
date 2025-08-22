@@ -8,6 +8,19 @@ import _ from "lodash";
 import { Link, useNavigate } from "react-router-dom";
 
 export default function CompletedQuiz(): ReactElement {
+  async function saveQuizProgress(): Promise<void> {
+    try {
+      console.log(answers);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  function finishQuiz(): void {
+    saveQuizProgress();
+    navigate("/", { replace: true });
+  }
+
   const questions: Exercise[] = useActiveQuizStore((state) => state.exercises);
   const elapsedTime: number = useActiveQuizStore((state) => state.elapsedTime);
   const answers: Record<number, Answer> = useQuizAnswerStore(
@@ -59,7 +72,7 @@ export default function CompletedQuiz(): ReactElement {
                 label="Total de perguntas"
               />
               <MetricsCard
-                value={`${(totalCorrectAnswers / questions.length) * 100}%`}
+                value={`${Math.floor((totalCorrectAnswers / questions.length) * 100)}%`}
                 label="Porcentagem"
               />
               <MetricsCard
@@ -77,9 +90,9 @@ export default function CompletedQuiz(): ReactElement {
               <Link to="/quiz-results">
                 <button className={styles.btn}>Ver respostas</button>
               </Link>
-              <Link to={"/"}>
-                <button className={styles.btn}>Finalizar</button>
-              </Link>
+              <button className={styles.btn} onClick={() => finishQuiz()}>
+                Finalizar
+              </button>
             </div>
           </div>
         </div>

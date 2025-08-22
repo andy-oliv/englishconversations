@@ -6,6 +6,24 @@
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   font-family: var.$poppins;
+  position: relative;
+}
+
+.locked {
+  filter: saturate(0);
+  pointer-events: none;
+}
+
+.lockIcon {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  color: white;
+  margin-top: -1em; //this was done due to the card padding
+  margin-left: -1em; //this was done due to the card padding
 }
 
 .header {
@@ -44,4 +62,8 @@
 
 .slideshow {
   background-color: var.$slideshowContent;
+}
+
+.lockedBackground {
+  background-color: rgb(151, 151, 151);
 }

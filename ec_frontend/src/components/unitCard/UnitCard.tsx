@@ -8,23 +8,49 @@ export default function UnitCard({
   totalContents,
   imgUrl,
   isActive,
+  isLocked,
   handleClick,
 }: UnitCardProps): ReactElement {
   return (
     <>
       <div
-        className={`${styles.card} ${isActive ? styles.active : null}`}
+        className={`${styles.card} ${isLocked ? styles.locked : null} ${isActive ? styles.active : null}`}
         onClick={() => handleClick(title)}
       >
+        {isLocked ? (
+          <div className={styles.lockedContent}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width={40}
+              height={40}
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-lock-icon lucide-lock"
+            >
+              <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+          </div>
+        ) : null}
+
         <div className={styles.picture}>
-          <img className={styles.cardImg} src={imgUrl} />
+          <img
+            className={`${styles.cardImg} ${isLocked ? styles.inactiveImg : null}`}
+            src={imgUrl}
+          />
         </div>
         <div className={styles.content}>
           <div className={styles.header}>
             <h2 className={styles.title}>{title}</h2>
             <div className={styles.totalContents}>
               <p className={styles.contentValue}>{totalContents}</p>
-              <div className={styles.icon}>
+              <div
+                className={`${styles.icon} ${isLocked ? styles.inactive : null}`}
+              >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"

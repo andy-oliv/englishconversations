@@ -14,6 +14,9 @@ import ResetEmail from "../pages/resetEmail/ResetEmail";
 import ResetPassword from "../pages/resetPassword/ResetPassword";
 import ChangeEmail from "../pages/changeEmail/ChangeEmail";
 import ChangePassword from "../pages/changePassword/ChangePassword";
+import Hub from "../pages/hub/Hub";
+import Video from "../pages/video/Video";
+import Slideshow from "../pages/slideshow/Slideshow";
 
 export const router = createBrowserRouter([
   {
@@ -77,6 +80,20 @@ export const router = createBrowserRouter([
       {
         path: "/quiz-results",
         element: <QuizResults />,
+      },
+      {
+        path: "/hub",
+        element: <Hub />,
+        children: [
+          {
+            path: "video",
+            element: <Video />,
+          },
+          {
+            path: "slideshow",
+            element: <Slideshow />,
+          },
+        ],
       },
     ],
   },

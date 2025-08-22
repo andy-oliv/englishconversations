@@ -6,6 +6,9 @@ export const toastMessages = {
   changePassword: {
     success: "Verifique a sua caixa de email",
   },
+  editProfile: {
+    error: "Houve um erro ao conectar com o serviço de localidades",
+  },
   forgotPassword: {
     success: "Verifique a sua caixa de email",
   },

@@ -6,11 +6,27 @@
   border-radius: 1em;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
+  position: relative;
 }
 
 .card:hover {
   box-shadow: 0 0 8px -1px rgba(77, 77, 77, 0.412);
   transform: scale(1.05);
+}
+
+.locked {
+  background-color: grey;
+  pointer-events: none;
+}
+
+.lockedContent {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .active {
@@ -27,6 +43,10 @@
     height: 100%;
     object-fit: cover;
     border-radius: 1em 0 0 1em;
+  }
+
+  .inactiveImg {
+    filter: saturate(0);
   }
 }
 
@@ -56,6 +76,9 @@
   .icon {
     margin-right: 2em;
     color: var.$blue;
+  }
+  .inactive {
+    color: var.$inactive;
   }
 }
 

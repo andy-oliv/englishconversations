@@ -10,7 +10,7 @@ import { UserStore } from "../../stores/userStore";
 import dayjs from "dayjs";
 import { CitiesSchema, type City } from "../../schemas/city.schema";
 import { StatesSchema, type State } from "../../schemas/state.schema";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import * as Sentry from "@sentry/react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { type UserEdit, UserEditSchema } from "../../schemas/userEdit.schema";
@@ -20,6 +20,8 @@ import { LoggedUserSchema } from "../../schemas/loggedUser.schema";
 import { LoggedUserStore } from "../../stores/loggedUserStore";
 import { UserSchema } from "../../schemas/user.schema";
 import Modal from "../../components/modal/Modal";
+import { toast } from "react-toastify";
+import { toastMessages } from "../../helper/messages/toastMessages";
 
 export default function EditProfile(): ReactElement {
   function handleImgCrop(blob: Blob): void {
@@ -101,6 +103,7 @@ export default function EditProfile(): ReactElement {
 
   const fetchCities = useCallback(
     async (selectedState: string) => {
+      if (states.length === 0 || !states) return;
       const foundState: State =
         states.find((state) => state.sigla === selectedState) || states[0];
 
@@ -151,6 +154,13 @@ export default function EditProfile(): ReactElement {
         });
         setLoading(false);
       } catch (error) {
+        if (error instanceof AxiosError) {
+          if (error.code === "ERR_NETWORK") {
+            toast.error(toastMessages.editProfile.error, {
+              autoClose: 3000,
+            });
+          }
+        }
         Sentry.captureException(error, {
           extra: {
             context: "EditProfile",
@@ -171,7 +181,7 @@ export default function EditProfile(): ReactElement {
       return;
     }
 
-    if (states.length > 0) {
+    if (states && states.length > 0) {
       fetchCities(states[0].sigla);
       setLoading(false);
     }
@@ -310,7 +320,13 @@ export default function EditProfile(): ReactElement {
                     className={styles.formInput}
                     id="states"
                     {...register("state", { required: false })}
-                    defaultValue={user?.state ? user.state : states[0].sigla}
+                    defaultValue={
+                      user?.state
+                        ? user.state
+                        : states && states.length > 0
+                          ? states[0].sigla
+                          : ""
+                    }
                     onChange={(event) => fetchCities(event.target.value)}
                   >
                     {states.length > 0
@@ -329,7 +345,13 @@ export default function EditProfile(): ReactElement {
                   <select
                     id="city"
                     {...register("city", { required: false })}
-                    defaultValue={user?.city ? user.city : cities[0].nome}
+                    defaultValue={
+                      user?.city
+                        ? user.city
+                        : cities && cities.length > 0
+                          ? cities[0].nome
+                          : ""
+                    }
                     className={styles.formInput}
                   >
                     {cities.length > 0
@@ -351,7 +373,7 @@ export default function EditProfile(): ReactElement {
                     id="birthdate"
                     {...register("birthdate", { required: false })}
                     defaultValue={
-                      user && user.birthdate
+                      user && user.birthdate !== null
                         ? dayjs(user.birthdate)
                             .add(1, "day")
                             .format("YYYY-MM-DD")
@@ -388,7 +410,11 @@ export default function EditProfile(): ReactElement {
                 <div className={styles.inputWrapper}>
                   <h3 className={styles.infoTitle}>Data de nascimento</h3>
                   <p className={styles.info}>
-                    {dayjs(user?.birthdate).add(1, "day").format("DD/MM/YYYY")}
+                    {user && user.birthdate
+                      ? dayjs(user?.birthdate)
+                          .add(1, "day")
+                          .format("DD/MM/YYYY")
+                      : "Data de nascimento não informada"}
                   </p>
                 </div>
               </div>

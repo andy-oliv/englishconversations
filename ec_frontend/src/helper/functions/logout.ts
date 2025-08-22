@@ -20,7 +20,9 @@ export async function logout(
     sessionStorage.removeItem("loggedUser");
     sessionStorage.removeItem("user");
     sessionStorage.removeItem("userProgress");
-    sessionStorage.removeItem("ChapterProgress");
+    sessionStorage.removeItem("unitProgresses");
+    sessionStorage.removeItem("currentUnit");
+    sessionStorage.removeItem("currentContent");
     resetUser();
     navigate("/login");
   } catch (error) {

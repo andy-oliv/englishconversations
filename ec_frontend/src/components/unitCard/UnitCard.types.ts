@@ -4,5 +4,6 @@ export default interface UnitCardProps {
   totalContents: number;
   imgUrl: string;
   isActive: boolean;
+  isLocked: boolean;
   handleClick: (name: string) => void;
 }

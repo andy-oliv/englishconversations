@@ -12,6 +12,7 @@ import UnitCard from "../../components/unitCard/UnitCard";
 import ContentCard from "../../components/contentCard/ContentCard";
 import { useUnitProgressesStore } from "../../stores/unitProgressesStore";
 import { useCurrentUnitStore } from "../../stores/currentUnitStore";
+import type { ContentType } from "../../components/contentCard/ContentCard.types";
 
 export default function Dashboard(): ReactElement {
   function handleCardClick(title: string): void {
@@ -24,6 +25,7 @@ export default function Dashboard(): ReactElement {
         title: unit.name,
         description: unit.description,
         unitNumber: unit.order,
+        contents: unit.contents,
       });
       sessionStorage.setItem(
         "currentUnit",
@@ -32,6 +34,7 @@ export default function Dashboard(): ReactElement {
           title: unit.name,
           description: unit.description,
           unitNumber: unit.order,
+          contents: unit.contents,
         })
       );
     }
@@ -153,7 +156,7 @@ export default function Dashboard(): ReactElement {
             {selectedUnit && selectedUnit.contents?.length > 0 ? (
               selectedUnit.contents.map((content) => {
                 const contentMap: Record<
-                  string,
+                  ContentType,
                   {
                     id: string;
                     title: string;
@@ -172,11 +175,16 @@ export default function Dashboard(): ReactElement {
                 return (
                   <ContentCard
                     key={content.id}
+                    id={content.id}
                     contentType={content.contentType}
-                    id={`${currentContent?.id}`}
+                    contentId={`${currentContent?.id}`}
+                    userContentId={content.contentProgress.id}
                     title={currentContent?.title ?? ""}
                     description={currentContent?.description ?? ""}
                     isLocked={content.contentProgress.status === "LOCKED"}
+                    isFavorite={content.contentProgress.isFavorite ?? false}
+                    notes={content.contentProgress.notes ?? ""}
+                    isComplete={content.contentProgress.status === "COMPLETED"}
                   />
                 );
               })

@@ -5,12 +5,14 @@ import type VideoFrameProps from "./VideoFrame.types";
 export default function VideoFrame({
   title,
   videoSrc,
+  width,
+  height,
 }: VideoFrameProps): ReactElement {
   return (
     <>
       <iframe
-        width={560}
-        height={400}
+        width={width ? width : 560}
+        height={height ? height : 400}
         src={videoSrc}
         title={title}
         allowFullScreen

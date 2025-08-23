@@ -1,18 +1,9 @@
 import { create } from "zustand";
+import type { CurrentUnit } from "../schemas/currentUnit.schema";
 
 interface CurrentUnitStoreState {
-  unit: {
-    id: number;
-    title: string;
-    description: string;
-    unitNumber: number;
-  } | null;
-  setUnit: (data: {
-    id: number;
-    title: string;
-    description: string;
-    unitNumber: number;
-  }) => void;
+  unit: CurrentUnit | null;
+  setUnit: (data: CurrentUnit) => void;
   resetUnit: () => void;
 }
 

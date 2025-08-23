@@ -31,6 +31,8 @@ export const ContentSchema = z.object({
     contentId: z.number(),
     progress: z.number(),
     status: z.enum(["LOCKED", "IN_PROGRESS", "COMPLETED"]),
+    isFavorite: z.boolean().nullable(),
+    notes: z.string().nullable(),
   }),
 });
 

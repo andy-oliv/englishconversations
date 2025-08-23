@@ -1,25 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 import validationMessages_EN from 'src/helper/messages/validationMessages.en';
 
-export default class UpdateUserContentDTO {
-  @ApiProperty({
-    title: 'Progress',
-    required: false,
-    type: 'number',
-    example: 0.5,
-  })
-  @IsOptional()
-  @IsNumber(
-    { allowNaN: false },
-    {
-      message:
-        validationMessages_EN.userContent.updateUserContentDTO.progress
-          .isNumber,
-    },
-  )
-  progress?: number;
-
+export default class saveFavoriteAndNotesDTO {
   @ApiProperty({
     title: 'isFavorite',
     required: false,

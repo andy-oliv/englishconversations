@@ -10,10 +10,6 @@ import Progress from '../common/types/Progress';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
 import CurrentChapter from 'src/common/types/CurrentChapter';
 import UserChapter from 'src/entities/userChapter';
-import UserUnit from 'src/entities/UserUnit';
-import Unit from 'src/entities/Unit';
-import UserContent from 'src/entities/UserContent';
-import Content from 'src/entities/Content';
 import CurrentChapterProgress from 'src/entities/CurrentChapterProgress';
 
 @Injectable()
@@ -198,6 +194,8 @@ export class UserProgressService {
                   contentId: true,
                   progress: true,
                   status: true,
+                  isFavorite: true,
+                  notes: true,
                 },
               },
             },

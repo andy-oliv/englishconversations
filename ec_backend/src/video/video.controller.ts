@@ -33,8 +33,6 @@ import { AuthType } from '../common/decorators/authType.decorator';
 
 @ApiTags('Videos')
 @Controller('api/videos')
-@AuthType(UserRoles.ADMIN)
-@UseGuards(RoleGuard)
 export class VideoController {
   constructor(
     private readonly videoService: VideoService,
@@ -43,6 +41,8 @@ export class VideoController {
   ) {}
 
   @Post()
+  @AuthType(UserRoles.ADMIN)
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 201,
     description: 'Success',
@@ -92,6 +92,7 @@ export class VideoController {
   }
 
   @Get(':id')
+  @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -119,6 +120,8 @@ export class VideoController {
   }
 
   @Get()
+  @AuthType(UserRoles.ADMIN)
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -139,6 +142,8 @@ export class VideoController {
   }
 
   @Patch(':id')
+  @AuthType(UserRoles.ADMIN)
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -194,6 +199,8 @@ export class VideoController {
   }
 
   @Delete(':id')
+  @AuthType(UserRoles.ADMIN)
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',

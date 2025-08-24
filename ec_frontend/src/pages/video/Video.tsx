@@ -161,6 +161,7 @@ export default function Video(): ReactElement {
                   <div
                     className={`${styles.notesWrapper} ${openNotes ? styles.showNotes : ""}`}
                   >
+                    <h2 className={styles.notesTitle}>Anotações</h2>
                     <textarea
                       className={styles.noteInput}
                       rows={9}

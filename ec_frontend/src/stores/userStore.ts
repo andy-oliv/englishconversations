@@ -7,8 +7,14 @@ interface UserStoreState {
   resetUser: () => void;
 }
 
-export const UserStore = create<UserStoreState>((set) => ({
-  data: null,
-  setUser: (userData) => set({ data: userData }),
-  resetUser: () => set({ data: null }),
+export const useUserStore = create<UserStoreState>((set) => ({
+  data: JSON.parse(sessionStorage.getItem("user") ?? "null"),
+  setUser: (userData) => {
+    set({ data: userData });
+    sessionStorage.setItem("user", JSON.stringify(userData));
+  },
+  resetUser: () => {
+    set({ data: null });
+    sessionStorage.removeItem("user");
+  },
 }));

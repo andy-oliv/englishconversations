@@ -381,18 +381,23 @@ export class UserContentService {
     data: saveFavoriteAndNotesDTO,
   ): Promise<Return> {
     try {
-      const updatedContent: UserContent =
-        await this.prismaService.userContent.update({
-          where: {
-            id,
+      const updatedContent = await this.prismaService.userContent.update({
+        where: {
+          id,
+        },
+        data,
+        include: {
+          content: {
+            select: {
+              contentType: true,
+            },
           },
-          data,
-        });
+        },
+      });
 
-      return {
-        message: httpMessages_EN.userContent.saveFavoriteAndNotes.status_200,
-        data: updatedContent,
-      };
+      return await this.userProgressService.fetchCurrentChapterProgress(
+        updatedContent.userId,
+      );
     } catch (error) {
       if (error.code === 'P2025') {
         throw new NotFoundException(

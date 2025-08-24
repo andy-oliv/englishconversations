@@ -6,7 +6,7 @@ import {
   type ReactElement,
 } from "react";
 import styles from "./styles/EditProfile.module.scss";
-import { UserStore } from "../../stores/userStore";
+import { useUserStore } from "../../stores/userStore";
 import dayjs from "dayjs";
 import { CitiesSchema, type City } from "../../schemas/city.schema";
 import { StatesSchema, type State } from "../../schemas/state.schema";
@@ -35,9 +35,9 @@ export default function EditProfile(): ReactElement {
     }
   }
 
-  const user = UserStore((state) => state.data);
+  const user = useUserStore((state) => state.data);
   const setLoggedUser = LoggedUserStore((state) => state.setUser);
-  const setUser = UserStore((state) => state.setUser);
+  const setUser = useUserStore((state) => state.setUser);
   const [edit, setEdit] = useState<boolean>(false);
   const [cities, setCities] = useState<City[]>([]);
   const [states, setStates] = useState<State[]>([]);
@@ -61,6 +61,10 @@ export default function EditProfile(): ReactElement {
       formData.append("file", imgBlob);
     }
 
+    if (!imgBlob && avatarFile.current?.files?.[0]) {
+      formData.append("file", avatarFile.current?.files?.[0]);
+    }
+
     try {
       const response = await axios.patch(
         `${environment.backendApiUrl}/users/${user?.id}`,
@@ -72,12 +76,8 @@ export default function EditProfile(): ReactElement {
 
       if (parsedLoggedUser.success && parsedUser.success) {
         setLoggedUser(parsedLoggedUser.data);
-        sessionStorage.setItem(
-          "loggedUser",
-          JSON.stringify(parsedLoggedUser.data)
-        );
         setUser(parsedUser.data);
-        sessionStorage.setItem("user", JSON.stringify(parsedUser.data));
+        setImgShown(null);
         setEdit(false);
         setSaveLoader(false);
         return;
@@ -431,7 +431,10 @@ export default function EditProfile(): ReactElement {
               </button>
               <button
                 className={styles.cancelBtn}
-                onClick={() => setEdit(false)}
+                onClick={() => {
+                  setEdit(false);
+                  setImgShown(null);
+                }}
               >
                 Cancelar
               </button>

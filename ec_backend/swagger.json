@@ -5891,7 +5891,7 @@
             "description": "Success",
             "content": {
               "application/json": {
-                "example": "Information successfully saved!"
+                "example": "The progress has been successfully fetched."
               }
             }
           },

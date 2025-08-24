@@ -1,14 +1,10 @@
 export default interface ContentCardProps {
-  id: number;
-  contentId: string;
-  userContentId: number;
+  contentId: number;
   title: string;
   description: string;
   contentType: ContentType;
   isLocked: boolean;
-  notes: string;
-  isFavorite: boolean;
-  isComplete: boolean;
+  interactiveContentId: string;
 }
 
 export type ContentType = "VIDEO" | "QUIZ" | "SLIDESHOW" | "TEST";

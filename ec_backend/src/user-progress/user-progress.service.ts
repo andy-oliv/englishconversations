@@ -222,7 +222,7 @@ export class UserProgressService {
         message:
           httpMessages_EN.userProgress.fetchCurrentChapterProgress.status_200,
         data: {
-          currentChapter,
+          ...currentChapter,
           units: normalizedUnits,
         },
       };

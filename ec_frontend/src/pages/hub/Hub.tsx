@@ -2,9 +2,9 @@ import { useEffect, type ReactElement } from "react";
 import styles from "./styles/Hub.module.scss";
 import UserMenu from "../../components/userMenu/UserMenu";
 import { useUserProgressStore } from "../../stores/userProgressStore";
-import { useCurrentUnitStore } from "../../stores/currentUnitStore";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import ContentCard from "../../components/contentCard/ContentCard";
+import { useCurrentChapterStore } from "../../stores/currentChapterStore";
 
 export default function Hub(): ReactElement {
   const location = useLocation();
@@ -13,8 +13,8 @@ export default function Hub(): ReactElement {
   const imgUrl = useUserProgressStore(
     (state) => state.data?.currentChapter.chapter.imageUrl
   );
+  const currentUnit = useCurrentChapterStore((state) => state.getCurrentUnit());
 
-  const currentUnit = useCurrentUnitStore((state) => state.unit);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,8 +35,7 @@ export default function Hub(): ReactElement {
               <img className={styles.img} src={imgUrl} />
             </div>
             <h2 className={styles.unitName}>
-              Unidade {currentUnit?.unitNumber}:{" "}
-              <strong>{currentUnit?.title}</strong>{" "}
+              Unidade {currentUnit?.order}: <strong>{currentUnit?.name}</strong>{" "}
             </h2>
           </div>
           <div className={styles.userMenuContainer}>
@@ -73,16 +72,12 @@ export default function Hub(): ReactElement {
                 return (
                   <ContentCard
                     key={content.id}
-                    id={content.id}
+                    contentId={content.id}
                     contentType={content.contentType}
-                    contentId={`${currentContent?.id}`}
-                    userContentId={content.contentProgress.id}
+                    interactiveContentId={`${currentContent?.id}`}
                     title={currentContent?.title ?? ""}
                     description={currentContent?.description ?? ""}
                     isLocked={content.contentProgress.status === "LOCKED"}
-                    notes={content.contentProgress.notes ?? ""}
-                    isFavorite={content.contentProgress.isFavorite ?? false}
-                    isComplete={content.contentProgress.status === "COMPLETED"}
                   />
                 );
               })

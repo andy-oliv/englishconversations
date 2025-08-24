@@ -142,7 +142,8 @@ export class UserContentController {
   @ApiResponse({
     status: 200,
     description: 'Success',
-    example: httpMessages_EN.userContent.saveFavoriteAndNotes.status_200,
+    example:
+      httpMessages_EN.userProgress.fetchCurrentChapterProgress.status_200,
   })
   @ApiResponse({
     status: 400,

@@ -598,7 +598,6 @@ const httpMessages_EN = {
       status_404: 'There are no progresses to show or the userId is invalid.',
     },
     saveFavoriteAndNotes: {
-      status_200: 'Information successfully saved!',
       status_404: 'The userContent was not found or the ID is invalid.',
     },
     unlockNextContent: {

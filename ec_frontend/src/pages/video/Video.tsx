@@ -2,54 +2,80 @@ import { useEffect, useRef, useState, type ReactElement } from "react";
 import VideoFrame from "../../components/videoFrame/VideoFrame";
 import axios from "axios";
 import { environment } from "../../environment/environment";
-import { useCurrentContentStore } from "../../stores/currentContentStore";
 import { VideoSchema, type Video } from "../../schemas/video.schema";
 import styles from "./styles/Video.module.scss";
 import * as Sentry from "@sentry/react";
 import completeContent from "../../helper/functions/completeContent";
-import { useCurrentUnitStore } from "../../stores/currentUnitStore";
+import { useCurrentChapterStore } from "../../stores/currentChapterStore";
+import saveNotes from "../../helper/functions/saveNotes";
+import saveFavorite from "../../helper/functions/saveFavorite";
 
 export default function Video(): ReactElement {
   async function complete(): Promise<void> {
     setSaving(true);
     await completeContent(
       currentContent?.id ?? null,
-      currentContent?.userContentId ?? null,
-      setUnit,
-      setCurrentContent,
+      currentContent?.contentProgress.id ?? null,
+      setCurrentChapter,
       {
         isFavorite,
         notes,
-        videoId: currentContent?.contentId,
+        videoId: currentContent?.video?.id,
       }
     );
     setSaving(false);
   }
 
-  function saveNotes(): void {
-    setOpenNotes(false);
+  function saveNote(): void {
     setNotes(notesRef.current ? notesRef.current.value : "");
+    if (currentContent && notesRef.current) {
+      saveNotes(
+        currentContent?.id ?? null,
+        currentContent?.contentProgress.id ?? null,
+        setCurrentChapter,
+        notesRef.current.value
+      );
+    }
+    setOpenNotes(false);
   }
 
-  const currentContent = useCurrentContentStore((state) => state.content);
+  function saveFavorites(): void {
+    const newFavorite = !isFavorite;
+    setIsFavorite(newFavorite);
+    if (currentContent && notesRef.current) {
+      saveFavorite(
+        currentContent?.id ?? null,
+        currentContent?.contentProgress.id ?? null,
+        setCurrentChapter,
+        newFavorite
+      );
+    }
+  }
+
+  const currentContent = useCurrentChapterStore((state) =>
+    state.getCurrentContent()
+  );
+  const setCurrentChapter = useCurrentChapterStore(
+    (state) => state.setCurrentChapter
+  );
   const [video, setVideo] = useState<Video>();
   const [loading, setLoading] = useState<boolean>(false);
   const [saving, setSaving] = useState<boolean>(false);
   const [isFavorite, setIsFavorite] = useState<boolean>(
-    currentContent?.isFavorite ?? false
+    currentContent?.contentProgress?.isFavorite ?? false
   );
-  const [notes, setNotes] = useState<string>(currentContent?.notes ?? "");
+  const [notes, setNotes] = useState<string>(
+    currentContent?.contentProgress.notes ?? ""
+  );
   const [openNotes, setOpenNotes] = useState<boolean>(false);
   const notesRef = useRef<HTMLTextAreaElement | null>(null);
-  const setUnit = useCurrentUnitStore((state) => state.setUnit);
-  const setCurrentContent = useCurrentContentStore((state) => state.setContent);
 
   useEffect(() => {
     async function fetchVideo(): Promise<void> {
       try {
         setLoading(true);
         const response = await axios.get(
-          `${environment.backendApiUrl}/videos/${currentContent?.contentId}`,
+          `${environment.backendApiUrl}/videos/${currentContent?.video?.id}`,
           { withCredentials: true }
         );
 
@@ -81,7 +107,7 @@ export default function Video(): ReactElement {
     }
 
     fetchVideo();
-  }, [setVideo, currentContent, isFavorite, notes]);
+  }, [setVideo, currentContent?.video?.id]);
 
   return (
     <>
@@ -96,20 +122,26 @@ export default function Video(): ReactElement {
         </div>
       ) : (
         <div>
-          <VideoFrame
-            title={currentContent ? currentContent.title : ""}
-            videoSrc={video ? video.url : ""}
-            width={1480}
-            height={640}
-          />
+          {video ? (
+            <VideoFrame
+              title={
+                currentContent && currentContent.video
+                  ? currentContent.video.title
+                  : ""
+              }
+              videoSrc={video.url}
+              width={1480}
+              height={640}
+            />
+          ) : null}
+
           <div className={styles.info}>
             <div className={styles.videoTitleWrapper}>
-              <h2 className={styles.videoTitle}>{currentContent?.title}</h2>
+              <h2 className={styles.videoTitle}>
+                {currentContent?.video?.title}
+              </h2>
               <div className={styles.icons}>
-                <div
-                  className={styles.icon}
-                  onClick={() => setIsFavorite(!isFavorite)}
-                >
+                <div className={styles.icon} onClick={() => saveFavorites()}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width={34}
@@ -134,11 +166,12 @@ export default function Video(): ReactElement {
                       rows={9}
                       cols={40}
                       ref={notesRef}
-                      defaultValue={currentContent?.notes ?? ""}
+                      id="text"
+                      defaultValue={currentContent?.contentProgress.notes ?? ""}
                     ></textarea>
                     <button
                       className={styles.saveBtn}
-                      onClick={() => saveNotes()}
+                      onClick={() => saveNote()}
                     >
                       Salvar
                     </button>
@@ -171,17 +204,17 @@ export default function Video(): ReactElement {
               </div>
             </div>
             <h3 className={styles.videoDescription}>
-              {currentContent?.description}
+              {currentContent?.video?.description}
             </h3>
             <p className={styles.videoDuration}>
               Duração: {video ? Math.floor(video.duration / 60) : 0} minutos
             </p>
 
             <button
-              className={`${styles.btn} ${saving ? styles.saving : ""} ${currentContent?.isComplete ? styles.completeContent : ""}`}
+              className={`${styles.btn} ${saving ? styles.saving : ""} ${currentContent?.contentProgress?.status === "COMPLETED" ? styles.completeContent : ""}`}
               onClick={() => complete()}
             >
-              {currentContent?.isComplete
+              {currentContent?.contentProgress.status === "COMPLETED"
                 ? "Concluído"
                 : saving
                   ? "Concluindo..."

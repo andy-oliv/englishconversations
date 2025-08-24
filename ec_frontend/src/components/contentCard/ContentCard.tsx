@@ -1,50 +1,28 @@
-import type { ReactElement } from "react";
+import { type ReactElement } from "react";
 import styles from "./styles/ContentCard.module.scss";
 import type ContentCardProps from "./ContentCard.types";
 import { icons } from "./icons";
 import { useNavigate } from "react-router-dom";
-import { useCurrentContentStore } from "../../stores/currentContentStore";
 import type { ContentType } from "./ContentCard.types";
+import { useCurrentChapterStore } from "../../stores/currentChapterStore";
 
 export default function ContentCard({
-  id,
+  contentId,
   title,
   description,
   contentType,
-  userContentId,
-  contentId,
   isLocked,
-  notes,
-  isFavorite,
-  isComplete,
+  interactiveContentId,
 }: ContentCardProps): ReactElement {
   function handleClick() {
-    setCurrentContent({
-      id,
-      userContentId,
-      contentId,
-      type: contentType,
-      title: title,
-      description: description,
-      notes,
-      isFavorite,
-      isComplete,
-    });
-    sessionStorage.setItem(
-      "currentContent",
-      JSON.stringify({
-        userContentId,
-        contentId,
-        type: contentType,
-        title: title,
-        description: description,
-      })
-    );
-    navigate(`${link[contentType]}?id=${contentId}`);
+    setCurrentContentId(contentId);
+    navigate(`${link[contentType]}?id=${interactiveContentId}`);
   }
 
+  const setCurrentContentId = useCurrentChapterStore(
+    (state) => state.setCurrentContentId
+  );
   const navigate = useNavigate();
-  const setCurrentContent = useCurrentContentStore((state) => state.setContent);
   const link: Record<ContentType, string> = {
     VIDEO: "/hub/video",
     QUIZ: "/quiz",

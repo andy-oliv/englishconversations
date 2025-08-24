@@ -9,10 +9,14 @@ interface LoggedUserStoreState {
 }
 
 export const LoggedUserStore = create<LoggedUserStoreState>((set, get) => ({
-  data: null,
+  data: JSON.parse(sessionStorage.getItem("loggedUser") ?? "null"),
   setUser: (userData) => {
     set({ data: userData });
+    sessionStorage.setItem("loggedUser", JSON.stringify(userData));
   },
   getUser: () => get().data,
-  resetUser: () => set({ data: null }),
+  resetUser: () => {
+    set({ data: null });
+    sessionStorage.removeItem("loggedUser");
+  },
 }));

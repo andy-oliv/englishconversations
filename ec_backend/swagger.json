@@ -5814,6 +5814,16 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompleteContentDTO"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Success",
@@ -5836,6 +5846,68 @@
             "content": {
               "application/json": {
                 "example": "The progress was not found or the id is invalid."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "UserContent"
+        ]
+      }
+    },
+    "/api/user/contents/favorite-notes/{id}": {
+      "patch": {
+        "operationId": "UserContentController_saveFavoriteAndNotes",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/saveFavoriteAndNotesDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "The progress has been successfully fetched."
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": "Validation failed (numeric string is expected)"
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "example": "The userContent was not found or the ID is invalid."
               }
             }
           },
@@ -6678,6 +6750,57 @@
           "contentId"
         ]
       },
+      "CompleteContentDTO": {
+        "type": "object",
+        "properties": {
+          "videoId": {
+            "type": "string",
+            "title": "VideoID",
+            "example": "716e52b9-824b-419e-afa2-f02f2e5808c3"
+          },
+          "watchedDuration": {
+            "type": "number",
+            "title": "WatchedDuration",
+            "description": "duration in seconds",
+            "example": 900
+          },
+          "startedAt": {
+            "type": "string",
+            "title": "StartedAt",
+            "example": "2015-04-09 14:07:46"
+          },
+          "slideshowId": {
+            "type": "string",
+            "title": "SlideshowID",
+            "example": "716e52b9-824b-419e-afa2-f02f2e5808c3"
+          },
+          "isFavorite": {
+            "type": "boolean",
+            "title": "isFavorite",
+            "example": true
+          },
+          "notes": {
+            "type": "string",
+            "title": "Notes",
+            "example": "my notes"
+          }
+        }
+      },
+      "saveFavoriteAndNotesDTO": {
+        "type": "object",
+        "properties": {
+          "isFavorite": {
+            "type": "boolean",
+            "title": "isFavorite",
+            "example": true
+          },
+          "notes": {
+            "type": "string",
+            "title": "Notes",
+            "example": "my notes"
+          }
+        }
+      },
       "UpdateUserContentDTO": {
         "type": "object",
         "properties": {
@@ -6685,6 +6808,16 @@
             "type": "number",
             "title": "Progress",
             "example": 0.5
+          },
+          "isFavorite": {
+            "type": "boolean",
+            "title": "isFavorite",
+            "example": true
+          },
+          "notes": {
+            "type": "string",
+            "title": "Notes",
+            "example": "my notes"
           }
         }
       }

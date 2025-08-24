@@ -528,6 +528,21 @@ const validationMessages_EN = {
     },
   },
   userContent: {
+    completeContentDTO: {
+      videoId: {
+        isUUID: 'The video field must be a UUID.',
+      },
+      watchedDuration: {
+        isInt: 'The watchedDuration field must be an integer.',
+      },
+      startedAt: {
+        isDate: 'The startedAt field must be a valid date.',
+      },
+
+      slideshowId: {
+        isUUID: 'The slideshowId field must be a UUID.',
+      },
+    },
     createUserContentDTO: {
       userId: {
         isNotEmpty: 'The userId field must not be empty.',
@@ -542,6 +557,17 @@ const validationMessages_EN = {
       },
       progress: {
         isNumber: 'The progress field must be a number.',
+      },
+    },
+    updateUserContentDTO: {
+      progress: {
+        isNumber: 'The progress field must be a number.',
+      },
+      isFavorite: {
+        isBoolean: 'The isFavorite field must be a boolean.',
+      },
+      notes: {
+        isString: 'The note field must be a string.',
       },
     },
   },

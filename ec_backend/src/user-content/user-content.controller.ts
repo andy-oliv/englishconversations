@@ -22,6 +22,8 @@ import CreateUserContentDTO from './dto/CreateUserContent.dto';
 import Return from 'src/common/types/Return';
 import UpdateUserContentDTO from './dto/UpdateUserContent.dto';
 import { RoleGuard } from 'src/auth/guards/role/role.guard';
+import CompleteContentDTO from './dto/CompleteContent.dto';
+import saveFavoriteAndNotesDTO from './dto/SaveFavoriteAndNotes.dto';
 
 @ApiTags('UserContent')
 @Controller('api/user/contents')
@@ -129,8 +131,40 @@ export class UserContentController {
   })
   async completeContent(
     @Param('id', new ParseIntPipe()) id: number,
+    @Body() data: CompleteContentDTO,
   ): Promise<Return> {
-    return this.userContentService.completeContent(id);
+    return this.userContentService.completeContent(id, data);
+  }
+
+  @Patch('favorite-notes/:id')
+  @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
+  @UseGuards(SelfGuard)
+  @ApiResponse({
+    status: 200,
+    description: 'Success',
+    example:
+      httpMessages_EN.userProgress.fetchCurrentChapterProgress.status_200,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request',
+    example: 'Validation failed (numeric string is expected)',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Not Found',
+    example: httpMessages_EN.userContent.saveFavoriteAndNotes.status_404,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal Server Error',
+    example: httpMessages_EN.general.status_500,
+  })
+  async saveFavoriteAndNotes(
+    @Param('id', new ParseIntPipe()) id: number,
+    @Body() data: saveFavoriteAndNotesDTO,
+  ): Promise<Return> {
+    return this.userContentService.saveFavoriteAndNotes(id, data);
   }
 
   @Patch(':id')

@@ -728,6 +728,10 @@ const loggerMessages = {
       status_500:
         'An error occurred while fetching the progresses. Check the error log for more information.',
     },
+    saveFavoriteAndNotes: {
+      status_500:
+        'An error occurred while saving the favorite and notes. Check the error log for more information.',
+    },
     unlockNextContent: {
       status_500:
         'An error occurred while unlocking the next content. Check the error log for more information.',
@@ -735,6 +739,10 @@ const loggerMessages = {
     updateUserContent: {
       status_500:
         'An error occurred while updating the progress. Check the error log for more information.',
+    },
+    updateUserContentRelation: {
+      status_500:
+        'An error occurred while updating the user-content relationship table. Check the error log for more information.',
     },
   },
   userNotification: {

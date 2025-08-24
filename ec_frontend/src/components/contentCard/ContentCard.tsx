@@ -1,43 +1,33 @@
-import type { ReactElement } from "react";
+import { type ReactElement } from "react";
 import styles from "./styles/ContentCard.module.scss";
 import type ContentCardProps from "./ContentCard.types";
 import { icons } from "./icons";
 import { useNavigate } from "react-router-dom";
-import { useCurrentContentStore } from "../../stores/currentContentStore";
+import type { ContentType } from "./ContentCard.types";
+import { useCurrentChapterStore } from "../../stores/currentChapterStore";
 
 export default function ContentCard({
+  contentId,
   title,
   description,
   contentType,
-  id,
   isLocked,
+  interactiveContentId,
 }: ContentCardProps): ReactElement {
   function handleClick() {
-    setCurrentContent({
-      id: id,
-      type: contentType,
-      title: title,
-      description: description,
-    });
-    sessionStorage.setItem(
-      "currentContent",
-      JSON.stringify({
-        id: id,
-        type: contentType,
-        title: title,
-        description: description,
-      })
-    );
-    navigate(`${link[contentType]}?id=${id}`);
+    setCurrentContentId(contentId);
+    navigate(`${link[contentType]}?id=${interactiveContentId}`);
   }
 
+  const setCurrentContentId = useCurrentChapterStore(
+    (state) => state.setCurrentContentId
+  );
   const navigate = useNavigate();
-  const setCurrentContent = useCurrentContentStore((state) => state.setContent);
-  const link: Record<string, string> = {
-    VIDEO: "/video",
+  const link: Record<ContentType, string> = {
+    VIDEO: "/hub/video",
     QUIZ: "/quiz",
     TEST: "/quiz",
-    SLIDESHOW: "/slides",
+    SLIDESHOW: "/hub/slideshow",
   };
 
   const cardStyle: Record<string, unknown> = {

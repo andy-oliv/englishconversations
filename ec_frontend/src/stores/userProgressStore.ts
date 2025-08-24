@@ -8,7 +8,13 @@ interface UserProgressStoreState {
 }
 
 export const useUserProgressStore = create<UserProgressStoreState>((set) => ({
-  data: null,
-  setData: (progress: UserProgress) => set({ data: progress }),
-  resetData: () => set({ data: null }),
+  data: JSON.parse(sessionStorage.getItem("userProgress") ?? "null"),
+  setData: (progressData: UserProgress) => {
+    set({ data: progressData });
+    sessionStorage.setItem("userProgress", JSON.stringify(progressData));
+  },
+  resetData: () => {
+    set({ data: null });
+    sessionStorage.removeItem("userProgress");
+  },
 }));

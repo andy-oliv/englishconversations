@@ -1,7 +1,10 @@
 export default interface ContentCardProps {
-  id: string;
+  contentId: number;
   title: string;
   description: string;
-  contentType: string;
+  contentType: ContentType;
   isLocked: boolean;
+  interactiveContentId: string;
 }
+
+export type ContentType = "VIDEO" | "QUIZ" | "SLIDESHOW" | "TEST";

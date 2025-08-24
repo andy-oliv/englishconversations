@@ -1,37 +1,35 @@
 import axios from "axios";
 import { UserSchema } from "../../schemas/user.schema";
-import { UserStore } from "../../stores/userStore";
+import { useUserStore } from "../../stores/userStore";
+import * as Sentry from "@sentry/react";
 
 export async function fetchUser(id: string): Promise<void> {
-  const cachedUser: string | null = sessionStorage.getItem("user");
-  if (cachedUser) {
-    const parsedUser = UserSchema.safeParse(JSON.parse(cachedUser));
-
-    if (parsedUser.success) {
-      UserStore.getState().setUser(parsedUser.data);
-      return;
-    }
-  }
-
   try {
     const response = await axios.get(`http://localhost:3000/api/users/${id}`, {
       withCredentials: true,
     });
 
-    console.log(response);
     const parsedResponse = UserSchema.safeParse(response.data.data);
 
     if (parsedResponse.success) {
-      UserStore.getState().setUser(parsedResponse.data);
-      sessionStorage.setItem("user", JSON.stringify(parsedResponse.data));
+      useUserStore.getState().setUser(parsedResponse.data);
       return;
     }
 
-    console.log(
-      "An error occurred while parsing the user data in LoggedUserStore: ",
-      parsedResponse.error.issues
-    );
+    Sentry.captureException(parsedResponse.error.message, {
+      extra: {
+        context: "helper/functions/fetchUser",
+        action: "fetchUser",
+        zodParseIssues: parsedResponse.error.issues,
+      },
+    });
   } catch (error) {
-    console.log(error);
+    Sentry.captureException(error, {
+      extra: {
+        context: "helper/functions/fetchUser",
+        action: "fetchUser",
+        error,
+      },
+    });
   }
 }

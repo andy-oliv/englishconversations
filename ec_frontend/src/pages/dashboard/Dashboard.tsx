@@ -2,74 +2,54 @@ import { useEffect, useState, type ReactElement } from "react";
 import styles from "./styles/Dashboard.module.scss";
 import axios, { AxiosError } from "axios";
 import { environment } from "../../environment/environment";
-import { UserStore } from "../../stores/userStore";
-import {
-  type UnitProgress,
-  UnitProgressSchemas,
-} from "../../schemas/unitProgress.schema";
 import * as Sentry from "@sentry/react";
 import UnitCard from "../../components/unitCard/UnitCard";
 import ContentCard from "../../components/contentCard/ContentCard";
-import { useUnitProgressesStore } from "../../stores/unitProgressesStore";
-import { useCurrentUnitStore } from "../../stores/currentUnitStore";
+import type { ContentType } from "../../components/contentCard/ContentCard.types";
+import { useUserStore } from "../../stores/userStore";
+import { useCurrentChapterStore } from "../../stores/currentChapterStore";
+import { CurrentChapterSchema } from "../../schemas/currentChapter.schema";
+import type { Unit } from "../../schemas/unit.schema";
 
 export default function Dashboard(): ReactElement {
   function handleCardClick(title: string): void {
     setClickedCard(title);
-    if (units) {
-      const unit: UnitProgress = units.find((unit) => unit.name === title)!;
+    const unit: Unit | undefined = units?.find((unit) => unit.name === title);
+    if (unit) {
+      setCurrentUnitId(unit.id);
       setSelectedUnit(unit);
-      setCurrentUnit({
-        id: unit.id,
-        title: unit.name,
-        description: unit.description,
-        unitNumber: unit.order,
-      });
-      sessionStorage.setItem(
-        "currentUnit",
-        JSON.stringify({
-          id: unit.id,
-          title: unit.name,
-          description: unit.description,
-          unitNumber: unit.order,
-        })
-      );
     }
   }
 
-  const user = UserStore((state) => state.data);
-  const setData = useUnitProgressesStore((state) => state.setData);
-  const units = useUnitProgressesStore((state) => state.data);
-  const setCurrentUnit = useCurrentUnitStore((state) => state.setUnit);
+  const user = useUserStore((state) => state.data);
+  const units = useCurrentChapterStore((state) => state.data?.units);
+  const [selectedUnit, setSelectedUnit] = useState<Unit | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [clickedCard, setClickedCard] = useState<string | null>(null);
-  const [selectedUnit, setSelectedUnit] = useState<UnitProgress | null>(null);
   const [noUnits, setNoUnits] = useState<boolean>(false);
+
+  const setCurrentChapter = useCurrentChapterStore(
+    (state) => state.setCurrentChapter
+  );
+  const setCurrentUnitId = useCurrentChapterStore(
+    (state) => state.setCurrentUnitId
+  );
 
   useEffect(() => {
     async function fetchProgress(): Promise<void> {
       setLoading(true);
-      const cache = sessionStorage.getItem("unitProgresses");
-      if (cache) {
-        setData(JSON.parse(cache));
-        setLoading(false);
-        return;
-      }
 
       try {
         const response = await axios.get(
           `${environment.backendApiUrl}/user-progress/units/${user?.id}`,
           { withCredentials: true }
         );
-        const parsedResponse = UnitProgressSchemas.safeParse(
-          response.data.data.units
+
+        const parsedResponse = CurrentChapterSchema.safeParse(
+          response.data.data
         );
         if (parsedResponse.success) {
-          setData(parsedResponse.data);
-          sessionStorage.setItem(
-            "unitProgresses",
-            JSON.stringify(parsedResponse.data)
-          );
+          setCurrentChapter(parsedResponse.data);
           setLoading(false);
           return;
         }
@@ -101,7 +81,7 @@ export default function Dashboard(): ReactElement {
     }
 
     fetchProgress();
-  }, [user, setData]);
+  }, [user?.id, setCurrentChapter]);
 
   return (
     <>
@@ -150,10 +130,10 @@ export default function Dashboard(): ReactElement {
             className={`${styles.contentContainer} ${selectedUnit ? styles.show : null}`}
           >
             <h2 className={styles.contentCardTitle}>Conteúdo</h2>
-            {selectedUnit && selectedUnit.contents?.length > 0 ? (
+            {selectedUnit && selectedUnit.contents?.length ? (
               selectedUnit.contents.map((content) => {
                 const contentMap: Record<
-                  string,
+                  ContentType,
                   {
                     id: string;
                     title: string;
@@ -172,8 +152,9 @@ export default function Dashboard(): ReactElement {
                 return (
                   <ContentCard
                     key={content.id}
+                    contentId={content.id}
                     contentType={content.contentType}
-                    id={`${currentContent?.id}`}
+                    interactiveContentId={`${currentContent?.id}`}
                     title={currentContent?.title ?? ""}
                     description={currentContent?.description ?? ""}
                     isLocked={content.contentProgress.status === "LOCKED"}

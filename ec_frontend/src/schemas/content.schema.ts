@@ -1,4 +1,5 @@
 import * as z from "zod";
+import { contentProgressSchema } from "./contentProgress.schema";
 
 export const ContentSchema = z.object({
   id: z.number(),
@@ -26,12 +27,7 @@ export const ContentSchema = z.object({
       description: z.string(),
     })
     .nullable(),
-  contentProgress: z.object({
-    id: z.number(),
-    contentId: z.number(),
-    progress: z.number(),
-    status: z.enum(["LOCKED", "IN_PROGRESS", "COMPLETED"]),
-  }),
+  contentProgress: contentProgressSchema,
 });
 
 export type Content = z.infer<typeof ContentSchema>;

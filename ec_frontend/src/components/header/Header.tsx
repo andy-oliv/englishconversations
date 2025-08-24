@@ -27,17 +27,6 @@ export default function Header(): ReactElement {
       return;
     }
 
-    const cached = sessionStorage.getItem("userProgress");
-    if (cached) {
-      const parsed = UserProgressSchema.safeParse(JSON.parse(cached));
-      if (parsed.success) {
-        setData(parsed.data);
-        setLoading(false);
-        return;
-      }
-      sessionStorage.removeItem("userProgress");
-    }
-
     async function fetchProgressData(): Promise<void> {
       try {
         const response = await axios.get(
@@ -49,10 +38,6 @@ export default function Header(): ReactElement {
         const parsedResponse = UserProgressSchema.safeParse(response.data.data);
         if (parsedResponse.success) {
           setData(parsedResponse.data);
-          sessionStorage.setItem(
-            "userProgress",
-            JSON.stringify(parsedResponse.data)
-          );
           setLoading(false);
           return;
         }

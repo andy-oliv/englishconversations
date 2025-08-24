@@ -3,7 +3,7 @@ import { LoggedUserStore } from "../../stores/loggedUserStore";
 import styles from "./styles/UserMenu.module.scss";
 import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../../helper/functions/logout";
-import { UserStore } from "../../stores/userStore";
+import { useUserStore } from "../../stores/userStore";
 
 export default function UserMenu(): ReactElement {
   function mouseEnter(): void {
@@ -15,7 +15,7 @@ export default function UserMenu(): ReactElement {
   }
 
   const loggedUser = LoggedUserStore().data;
-  const user = UserStore().data;
+  const user = useUserStore().data;
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState<boolean>(false);
   const resetUser = LoggedUserStore((state) => state.resetUser);

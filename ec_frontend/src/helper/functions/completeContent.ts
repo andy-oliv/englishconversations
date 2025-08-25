@@ -8,11 +8,14 @@ import {
   CurrentChapterSchema,
   type CurrentChapter,
 } from "../../schemas/currentChapter.schema";
+import type { Unit } from "../../schemas/unit.schema";
 
 export default async function completeContent(
   id: number | null,
   userContentId: number | null,
   setCurrentChapter: (data: CurrentChapter) => void,
+  getCurrentUnit: () => Unit | null,
+  setCurrentUnitId: (unitId: number) => void,
   data?: CompletedContentData
 ): Promise<void> {
   if (!userContentId || !id) {
@@ -29,7 +32,22 @@ export default async function completeContent(
 
     if (parsedResponse.success) {
       setCurrentChapter(parsedResponse.data);
+      const currentUnit: Unit | null = getCurrentUnit();
+
+      if (currentUnit && currentUnit.unitProgress.status === "COMPLETED") {
+        const nextUnit: Unit | undefined = parsedResponse.data.units.find(
+          (unit) => unit.unitProgress.status === "IN_PROGRESS"
+        );
+
+        if (nextUnit) {
+          setCurrentUnitId(nextUnit.id);
+        }
+      }
     }
+
+    toast.error(toastMessages.completeContent.zodParsing, {
+      autoClose: 3000,
+    });
 
     Sentry.captureException(parsedResponse.error, {
       extra: {
@@ -39,6 +57,10 @@ export default async function completeContent(
       },
     });
   } catch (error) {
+    toast.error(toastMessages.completeContent.error, {
+      autoClose: 3000,
+    });
+
     Sentry.captureException(error, {
       extra: {
         context: "helper/completeContent.ts",

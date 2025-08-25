@@ -25,7 +25,9 @@ export default function CompletedQuiz(): ReactElement {
       completeContent(
         currentContent.id,
         currentContent.contentProgress.id,
-        setCurrentChapter
+        setCurrentChapter,
+        getCurrentUnit,
+        setCurrentUnitId
       );
     }
     navigate("/", { replace: true });
@@ -38,6 +40,12 @@ export default function CompletedQuiz(): ReactElement {
   );
   const setCurrentChapter = useCurrentChapterStore(
     (state) => state.setCurrentChapter
+  );
+  const getCurrentUnit = useCurrentChapterStore(
+    (state) => state.getCurrentUnit
+  );
+  const setCurrentUnitId = useCurrentChapterStore(
+    (state) => state.setCurrentUnitId
   );
   const answers: Record<number, Answer> = useQuizAnswerStore(
     (state) => state.answers
@@ -98,7 +106,10 @@ export default function CompletedQuiz(): ReactElement {
               <MetricsCard
                 value={`${Math.floor(elapsedTime / 1000 / 60)
                   .toString()
-                  .padStart(2, "0")}:${(elapsedTime / 1000) % 60}`}
+                  .padStart(
+                    2,
+                    "0"
+                  )}:${((elapsedTime / 1000) % 60).toString().padStart(2, "0")}`}
                 label="Tempo"
               />
             </div>

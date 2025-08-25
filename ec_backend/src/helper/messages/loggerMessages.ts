@@ -744,6 +744,10 @@ const loggerMessages = {
       status_500:
         'An error occurred while updating the progress. Check the error log for more information.',
     },
+    updateUnitProgress: {
+      status_500:
+        'An error occurred while updating the progress. Check the error log for more information.',
+    },
     updateUserContentRelation: {
       status_500:
         'An error occurred while updating the user-content relationship table. Check the error log for more information.',

@@ -62,18 +62,11 @@ export class UserContentService {
     private readonly userProgressService: UserProgressService,
   ) {}
 
-  private async updateUserContentRelation(
-    contentType: ContentTypes,
+  private async updateUnitProgress(
     userId: string,
     userContentId: number,
-    data: CompleteContentDTO,
   ): Promise<void> {
     try {
-      await this.supportedContents[contentType]({
-        ...data,
-        userId,
-        userContentId,
-      });
       const userContent: UserContent =
         await this.prismaService.userContent.findFirstOrThrow({
           where: {
@@ -120,6 +113,30 @@ export class UserContentService {
           progress: updatedProgress,
         },
       });
+    } catch (error) {
+      handleInternalErrorException(
+        'UserContentService',
+        'updateUnitProgress',
+        loggerMessages.userContent.updateUnitProgress.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  private async updateUserContentRelation(
+    contentType: ContentTypes,
+    userId: string,
+    userContentId: number,
+    data: CompleteContentDTO,
+  ): Promise<void> {
+    try {
+      await this.supportedContents[contentType]({
+        ...data,
+        userId,
+        userContentId,
+      });
+      await this.updateUnitProgress(userId, userContentId);
     } catch (error) {
       handleInternalErrorException(
         'UserContentService',

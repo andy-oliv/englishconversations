@@ -11,14 +11,29 @@ import {
 import styles from "./styles/Slideshow.module.scss";
 import { useCurrentChapterStore } from "../../stores/currentChapterStore";
 import ContentDescription from "../../components/contentDescription/ContentDescription";
+import type { Unit } from "../../schemas/unit.schema";
+import type { Content } from "../../schemas/content.schema";
+import type { CurrentChapter } from "../../schemas/currentChapter.schema";
 
 export default function Slideshow(): ReactElement {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const slideshowId = searchParams.get("id");
   const [slides, setSlides] = useState<Slideshow | null>(null);
+  const currentChapter: CurrentChapter | null = useCurrentChapterStore(
+    (state) => state.data
+  );
   const currentContent = useCurrentChapterStore((state) =>
     state.getCurrentContent()
+  );
+  const activeUnit: Unit | undefined = currentChapter?.units.find((unit) =>
+    unit.contents.some((content) => {
+      const ids = [content.video?.id, content.slideshow?.id, content.quiz?.id];
+      return ids.includes(slideshowId ?? "");
+    })
+  );
+  const activeContent: Content | undefined = activeUnit?.contents.find(
+    (content) => content?.video?.id === slideshowId
   );
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -77,9 +92,9 @@ export default function Slideshow(): ReactElement {
             ))}
           </Swiper>
           <ContentDescription
-            key={currentContent?.id}
-            content={currentContent}
-            contentType={currentContent?.contentType ?? "VIDEO"}
+            key={activeContent?.id}
+            content={activeContent ? activeContent : currentContent}
+            contentType={"SLIDESHOW"}
           />
         </div>
       )}

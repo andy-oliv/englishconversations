@@ -19,7 +19,7 @@ export default function Quiz(): ReactElement {
 
     if (nextIndex === activeQuiz.lastQuestion) {
       activeQuiz.setElapsedTime(time);
-      navigate("/completed-quiz", { replace: true });
+      navigate(`/completed-quiz?id=${quizId}`, { replace: true });
     }
     activeQuiz.increaseCurrentExerciseIndex();
   }
@@ -61,7 +61,6 @@ export default function Quiz(): ReactElement {
           setExercises(parsedResponse.data.exercises);
           prepareAnswers(parsedResponse.data.exercises);
           setLoading(false);
-          console.log(parsedResponse.data.exercises);
           return;
         }
 

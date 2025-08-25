@@ -43,6 +43,8 @@ export default async function completeContent(
           setCurrentUnitId(nextUnit.id);
         }
       }
+
+      return;
     }
 
     toast.error(toastMessages.completeContent.zodParsing, {

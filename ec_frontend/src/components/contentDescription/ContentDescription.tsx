@@ -22,13 +22,9 @@ export default function ContentDescription({
       setCurrentUnitId,
       contentType === "VIDEO"
         ? {
-            isFavorite,
-            notes,
             videoId: content?.video?.id,
           }
         : {
-            isFavorite,
-            notes,
             slideshowId: content?.slideshow?.id,
           }
     );
@@ -49,7 +45,6 @@ export default function ContentDescription({
   }
 
   async function saveNote(): Promise<void> {
-    setNotes(notesRef.current ? notesRef.current.value : "");
     if (content && notesRef.current) {
       await saveNotes(
         content?.id ?? null,
@@ -64,9 +59,6 @@ export default function ContentDescription({
   const [saving, setSaving] = useState<boolean>(false);
   const [isFavorite, setIsFavorite] = useState<boolean>(
     (content && content.contentProgress?.isFavorite) ?? false
-  );
-  const [notes, setNotes] = useState<string>(
-    (content && content.contentProgress.notes) ?? ""
   );
   const [openNotes, setOpenNotes] = useState<boolean>(false);
   const notesRef = useRef<HTMLTextAreaElement | null>(null);

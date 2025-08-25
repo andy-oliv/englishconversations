@@ -1,5 +1,5 @@
 import { useEffect, type ReactElement } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import styles from "./styles/QuizResults.module.scss";
 import type { Exercise } from "../../schemas/exercise.schema";
 import { useActiveQuizStore } from "../../stores/activeQuizStore";
@@ -7,11 +7,20 @@ import { useQuizAnswerStore, type Answer } from "../../stores/quizAnswerStore";
 import _ from "lodash";
 
 export default function QuizResults(): ReactElement {
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const quizId = searchParams.get("id");
   const navigate = useNavigate();
   const questions: Exercise[] = useActiveQuizStore((state) => state.exercises);
   const answers: Record<number, Answer> = useQuizAnswerStore(
     (state) => state.answers
   );
+
+  useEffect(() => {
+    if (!quizId) {
+      navigate("/");
+    }
+  });
 
   useEffect(() => {
     if (questions.length === 0) {

@@ -23,38 +23,6 @@ type UserContentRelationData = CompleteContentDTO & {
 
 @Injectable()
 export class UserContentService {
-  private supportedContents: Record<
-    ContentTypes,
-    (data: UserContentRelationData) => any
-  > = {
-    QUIZ: async () => {},
-    SLIDESHOW: async (data) =>
-      await this.prismaService.slideshowProgress.create({
-        data: {
-          userId: data.userId,
-          slideshowId: data.slideshowId,
-          status: Status.COMPLETED,
-          progress: 1,
-          userContentId: data.userContentId,
-        },
-      }),
-    TEST: async () => {},
-    VIDEO: async (data) =>
-      await this.prismaService.videoProgress.create({
-        data: {
-          userId: data.userId,
-          videoId: data.videoId,
-          progress: 100,
-          watchedDuration: data.watchedDuration,
-          watchedCount: 1,
-          lastWatchedAt: dayjs().toISOString(),
-          startedAt: data.startedAt,
-          completedAt: dayjs().toISOString(),
-          completed: true,
-          userContentId: data.userContentId,
-        },
-      }),
-  };
   constructor(
     private readonly prismaService: PrismaService,
     private readonly logger: Logger,
@@ -118,30 +86,6 @@ export class UserContentService {
         'UserContentService',
         'updateUnitProgress',
         loggerMessages.userContent.updateUnitProgress.status_500,
-        this.logger,
-        error,
-      );
-    }
-  }
-
-  private async updateUserContentRelation(
-    contentType: ContentTypes,
-    userId: string,
-    userContentId: number,
-    data: CompleteContentDTO,
-  ): Promise<void> {
-    try {
-      await this.supportedContents[contentType]({
-        ...data,
-        userId,
-        userContentId,
-      });
-      await this.updateUnitProgress(userId, userContentId);
-    } catch (error) {
-      handleInternalErrorException(
-        'UserContentService',
-        'updateUserContentRelation',
-        loggerMessages.userContent.updateUserContentRelation.status_500,
         this.logger,
         error,
       );
@@ -353,8 +297,6 @@ export class UserContentService {
         data: {
           progress: 1,
           status: Status.COMPLETED,
-          isFavorite: data.isFavorite,
-          notes: data.notes,
         },
         include: {
           content: {
@@ -366,12 +308,6 @@ export class UserContentService {
       });
 
       await this.unlockNextContent(updatedUserContent);
-      await this.updateUserContentRelation(
-        updatedUserContent.content.contentType,
-        updatedUserContent.userId,
-        id,
-        data,
-      );
 
       return await this.userProgressService.fetchCurrentChapterProgress(
         updatedUserContent.userId,

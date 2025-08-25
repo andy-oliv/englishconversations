@@ -6831,16 +6831,6 @@
             "type": "string",
             "title": "SlideshowID",
             "example": "716e52b9-824b-419e-afa2-f02f2e5808c3"
-          },
-          "isFavorite": {
-            "type": "boolean",
-            "title": "isFavorite",
-            "example": true
-          },
-          "notes": {
-            "type": "string",
-            "title": "Notes",
-            "example": "my notes"
           }
         }
       },

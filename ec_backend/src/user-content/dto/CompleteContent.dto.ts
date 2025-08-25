@@ -63,31 +63,4 @@ export default class CompleteContentDTO {
       validationMessages_EN.userContent.completeContentDTO.slideshowId.isUUID,
   })
   slideshowId?: string;
-
-  @ApiProperty({
-    title: 'isFavorite',
-    required: false,
-    type: 'boolean',
-    example: true,
-  })
-  @IsOptional()
-  @IsBoolean({
-    message:
-      validationMessages_EN.userContent.updateUserContentDTO.isFavorite
-        .isBoolean,
-  })
-  isFavorite?: boolean;
-
-  @ApiProperty({
-    title: 'Notes',
-    required: false,
-    type: 'string',
-    example: 'my notes',
-  })
-  @IsOptional()
-  @IsString({
-    message:
-      validationMessages_EN.userContent.updateUserContentDTO.notes.isString,
-  })
-  notes?: string;
 }

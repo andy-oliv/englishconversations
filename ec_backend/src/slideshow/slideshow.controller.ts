@@ -7,6 +7,7 @@ import {
   ParseIntPipe,
   ParseUUIDPipe,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SlideshowService } from './slideshow.service';
@@ -15,6 +16,7 @@ import { UserRoles } from '@prisma/client';
 import { AuthType } from '../common/decorators/authType.decorator';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
 import GenerateSlideShowDTO from './dto/generateSlideshow.dto';
+import { RoleGuard } from 'src/auth/guards/role/role.guard';
 
 @ApiTags('Slideshow')
 @Controller('api/slideshow')
@@ -23,6 +25,7 @@ export class SlideshowController {
 
   @Post()
   @AuthType(UserRoles.ADMIN)
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 201,
     description: 'Created',
@@ -45,7 +48,7 @@ export class SlideshowController {
   }
 
   @Get(':slideshowId')
-  @AuthType(UserRoles.ADMIN)
+  @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -74,6 +77,7 @@ export class SlideshowController {
 
   @Get()
   @AuthType(UserRoles.ADMIN)
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',
@@ -95,6 +99,7 @@ export class SlideshowController {
 
   @Delete(':slideshowId')
   @AuthType(UserRoles.ADMIN)
+  @UseGuards(RoleGuard)
   @ApiResponse({
     status: 200,
     description: 'Success',

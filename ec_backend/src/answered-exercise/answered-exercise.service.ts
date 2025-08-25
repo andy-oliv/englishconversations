@@ -12,6 +12,7 @@ import { isEqual } from 'lodash';
 import generateExceptionMessage from '../helper/functions/generateExceptionMessage';
 import { UserService } from '../user/user.service';
 import { AnsweredQuizService } from '../answered-quiz/answered-quiz.service';
+import CreateBatchExercisesDTO from './dto/createBatchExercises.dto';
 
 @Injectable()
 export class AnsweredExerciseService {
@@ -62,6 +63,31 @@ export class AnsweredExerciseService {
         'answeredExerciseService',
         'checkIfAnswered',
         loggerMessages.answeredExercise.checkIfAnswered.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  async createBatchExerciseAnswers(
+    data: CreateBatchExercisesDTO[],
+  ): Promise<{ message: string }> {
+    try {
+      await this.prismaService.answeredExercise.createMany({
+        data: data,
+        skipDuplicates: true,
+      });
+
+      return {
+        message:
+          httpMessages_EN.answeredExercise.createBatchExerciseAnswers
+            .status_201,
+      };
+    } catch (error) {
+      handleInternalErrorException(
+        'AnsweredExerciseService',
+        'createBatchExercises',
+        loggerMessages.answeredExercise.createBatchExerciseAnswers.status_500,
         this.logger,
         error,
       );

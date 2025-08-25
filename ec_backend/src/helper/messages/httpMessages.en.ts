@@ -3,6 +3,9 @@ const httpMessages_EN = {
     saveAnswer: {
       status_201: 'The answer has been successfully saved.',
     },
+    createBatchExerciseAnswers: {
+      status_201: 'The answers have been successfully saved.',
+    },
     deleteAnswer: {
       status_200: 'The answer was successfully deleted.',
       status_404: 'The answer was not found or the ID is invalid.',

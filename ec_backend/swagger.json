@@ -915,6 +915,60 @@
         ]
       }
     },
+    "/api/answers/e/answeredQuizId": {
+      "put": {
+        "operationId": "AnsweredExerciseController_createBatchExerciseAnswers",
+        "parameters": [
+          {
+            "name": "answeredQuizId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBatchExercisesArrayDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "The answer has been successfully saved."
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": "The answeredQuizId is not a valid UUID."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "AnsweredExercise"
+        ]
+      }
+    },
     "/api/answers/e/query": {
       "get": {
         "operationId": "AnsweredExerciseController_fetchAnswersByUser",
@@ -6106,6 +6160,10 @@
           "userId",
           "elapsedTime"
         ]
+      },
+      "CreateBatchExercisesArrayDTO": {
+        "type": "object",
+        "properties": {}
       },
       "UpdateFeedbackDTO": {
         "type": "object",

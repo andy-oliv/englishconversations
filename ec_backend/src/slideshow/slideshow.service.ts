@@ -87,6 +87,9 @@ export class SlideshowService {
                 url: true,
                 order: true,
               },
+              orderBy: {
+                order: 'asc',
+              },
             },
           },
         });

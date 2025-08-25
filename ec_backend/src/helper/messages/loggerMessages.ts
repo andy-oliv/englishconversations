@@ -4,6 +4,10 @@ const loggerMessages = {
       status_500:
         'An internal error occurred while checking for previous answers to the exercise. Check the error log for more information.',
     },
+    createBatchExerciseAnswers: {
+      status_500:
+        'An internal error occurred while generating the answer answers. Check the error log for more information.',
+    },
     saveAnswer: {
       status_500:
         'An internal error occurred while generating the answer to the exercise. Check the error log for more information.',

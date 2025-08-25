@@ -7,6 +7,7 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -21,6 +22,8 @@ import { SelfGuard } from '../auth/guards/self/self.guard';
 import { RoleGuard } from '../auth/guards/role/role.guard';
 import { AuthType } from '../common/decorators/authType.decorator';
 import { UserRoles } from '@prisma/client';
+import CreateBatchExercisesDTO from './dto/createBatchExercises.dto';
+import { CreateBatchExercisesArrayDTO } from './dto/createBatchExercisesArray.dto';
 
 @ApiTags('AnsweredExercise')
 @Controller('api/answers/e')
@@ -51,6 +54,35 @@ export class AnsweredExerciseController {
   })
   async saveAnswer(@Body() data: SaveAnswerDTO): Promise<Return> {
     return this.answeredExerciseService.saveAnswer(data);
+  }
+
+  @Put('answeredQuizId')
+  @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
+  @UseGuards(SelfGuard)
+  @ApiResponse({
+    status: 201,
+    description: 'Success',
+    example: httpMessages_EN.answeredExercise.saveAnswer.status_201,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request',
+    example:
+      validationMessages_EN.answeredExercise.saveAnswerDTO.answeredQuizId
+        .isUUID,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal Server Error',
+    example: httpMessages_EN.general.status_500,
+  })
+  async createBatchExerciseAnswers(
+    @Param('answeredQuizId', new ParseUUIDPipe()) answeredQuizId: string,
+    @Body() data: CreateBatchExercisesArrayDTO,
+  ): Promise<{ message: string }> {
+    return this.answeredExerciseService.createBatchExerciseAnswers(
+      data.exercises,
+    );
   }
 
   @Get('query')

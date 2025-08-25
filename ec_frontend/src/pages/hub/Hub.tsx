@@ -1,10 +1,11 @@
-import { useEffect, type ReactElement } from "react";
+import { useEffect, useState, type ReactElement } from "react";
 import styles from "./styles/Hub.module.scss";
 import UserMenu from "../../components/userMenu/UserMenu";
 import { useUserProgressStore } from "../../stores/userProgressStore";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import ContentCard from "../../components/contentCard/ContentCard";
 import { useCurrentChapterStore } from "../../stores/currentChapterStore";
+import type { Unit } from "../../schemas/unit.schema";
 
 export default function Hub(): ReactElement {
   const location = useLocation();
@@ -13,15 +14,32 @@ export default function Hub(): ReactElement {
   const imgUrl = useUserProgressStore(
     (state) => state.data?.currentChapter.chapter.imageUrl
   );
-  const currentUnit = useCurrentChapterStore((state) => state.getCurrentUnit());
-
+  const currentChapter = useCurrentChapterStore((state) => state.data);
+  const [contentUnit, setContentUnit] = useState<Unit | undefined>(undefined);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!queryId) {
       navigate("/dashboard", { replace: true });
     }
-  });
+  }, [queryId, navigate]);
+
+  useEffect(() => {
+    if (queryId) {
+      const currentUnit: Unit | undefined = currentChapter?.units.find((unit) =>
+        unit.contents.find((content) => {
+          const ids = [
+            content.quiz?.id,
+            content.slideshow?.id,
+            content.video?.id,
+          ];
+
+          return ids.includes(queryId ?? null);
+        })
+      );
+      setContentUnit(currentUnit);
+    }
+  }, [queryId, currentChapter]);
 
   return (
     <>
@@ -35,7 +53,7 @@ export default function Hub(): ReactElement {
               <img className={styles.img} src={imgUrl} />
             </div>
             <h2 className={styles.unitName}>
-              Unidade {currentUnit?.order}: <strong>{currentUnit?.name}</strong>{" "}
+              Unidade {contentUnit?.order}: <strong>{contentUnit?.name}</strong>{" "}
             </h2>
           </div>
           <div className={styles.userMenuContainer}>
@@ -50,8 +68,8 @@ export default function Hub(): ReactElement {
           </div>
           <aside className={styles.contentMenu}>
             <h2 className={styles.contentCardTitle}>Conteúdos</h2>
-            {currentUnit && currentUnit.contents?.length > 0 ? (
-              currentUnit.contents.map((content) => {
+            {contentUnit && contentUnit.contents?.length > 0 ? (
+              contentUnit.contents.map((content) => {
                 const contentMap: Record<
                   string,
                   {

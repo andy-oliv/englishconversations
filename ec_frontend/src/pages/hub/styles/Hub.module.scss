@@ -63,6 +63,8 @@
   padding: 2em;
   width: 100%;
   height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
 
   .content {
     width: 100%;

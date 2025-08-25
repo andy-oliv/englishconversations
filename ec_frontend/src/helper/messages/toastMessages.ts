@@ -8,6 +8,7 @@ export const toastMessages = {
   },
   completeContent: {
     error: "Houve um erro interno ao concluir o conteúdo.",
+    zodParsing: "Houve um erro na verificação zod.",
   },
   editProfile: {
     error: "Houve um erro ao conectar com o serviço de localidades",

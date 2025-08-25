@@ -1,6 +1,10 @@
 @use "../../../styles/variables" as var;
 
-.videoTitleWrapper {
+.info {
+  margin-top: 1em;
+}
+
+.titleWrapper {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -15,14 +19,10 @@
   cursor: pointer;
 }
 
-.notesContainer {
-  position: relative;
-}
-
 .notesWrapper {
   position: absolute;
-  right: -23em;
-  top: -5em;
+  right: 2em;
+  bottom: 2em;
   display: flex;
   flex-direction: column;
   gap: 0.5em;
@@ -68,17 +68,17 @@
   transform: translateX(0);
 }
 
-.videoTitle {
+.contentTitle {
   font-family: var.$poppins;
   font-weight: 700;
 }
 
-.videoDescription {
+.contentDescription {
   font-family: var.$poppins;
   font-weight: 500;
 }
 
-.videoDuration {
+.duration {
   font-family: var.$poppins;
   font-weight: 500;
 }

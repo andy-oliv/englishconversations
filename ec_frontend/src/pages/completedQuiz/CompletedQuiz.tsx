@@ -6,6 +6,9 @@ import type { Exercise } from "../../schemas/exercise.schema";
 import { useQuizAnswerStore, type Answer } from "../../stores/quizAnswerStore";
 import _ from "lodash";
 import { Link, useNavigate } from "react-router-dom";
+import completeContent from "../../helper/functions/completeContent";
+import { useCurrentChapterStore } from "../../stores/currentChapterStore";
+import type { Content } from "../../schemas/content.schema";
 
 export default function CompletedQuiz(): ReactElement {
   async function saveQuizProgress(): Promise<void> {
@@ -18,11 +21,32 @@ export default function CompletedQuiz(): ReactElement {
 
   function finishQuiz(): void {
     saveQuizProgress();
+    if (currentContent) {
+      completeContent(
+        currentContent.id,
+        currentContent.contentProgress.id,
+        setCurrentChapter,
+        getCurrentUnit,
+        setCurrentUnitId
+      );
+    }
     navigate("/", { replace: true });
   }
 
   const questions: Exercise[] = useActiveQuizStore((state) => state.exercises);
   const elapsedTime: number = useActiveQuizStore((state) => state.elapsedTime);
+  const currentContent: Content | null = useCurrentChapterStore((state) =>
+    state.getCurrentContent()
+  );
+  const setCurrentChapter = useCurrentChapterStore(
+    (state) => state.setCurrentChapter
+  );
+  const getCurrentUnit = useCurrentChapterStore(
+    (state) => state.getCurrentUnit
+  );
+  const setCurrentUnitId = useCurrentChapterStore(
+    (state) => state.setCurrentUnitId
+  );
   const answers: Record<number, Answer> = useQuizAnswerStore(
     (state) => state.answers
   );
@@ -82,7 +106,10 @@ export default function CompletedQuiz(): ReactElement {
               <MetricsCard
                 value={`${Math.floor(elapsedTime / 1000 / 60)
                   .toString()
-                  .padStart(2, "0")}:${(elapsedTime / 1000) % 60}`}
+                  .padStart(
+                    2,
+                    "0"
+                  )}:${((elapsedTime / 1000) % 60).toString().padStart(2, "0")}`}
                 label="Tempo"
               />
             </div>

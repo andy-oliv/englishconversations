@@ -6,6 +6,9 @@ import type { Exercise } from "../../schemas/exercise.schema";
 import { useQuizAnswerStore, type Answer } from "../../stores/quizAnswerStore";
 import _ from "lodash";
 import { Link, useNavigate } from "react-router-dom";
+import completeContent from "../../helper/functions/completeContent";
+import { useCurrentChapterStore } from "../../stores/currentChapterStore";
+import type { Content } from "../../schemas/content.schema";
 
 export default function CompletedQuiz(): ReactElement {
   async function saveQuizProgress(): Promise<void> {
@@ -18,11 +21,24 @@ export default function CompletedQuiz(): ReactElement {
 
   function finishQuiz(): void {
     saveQuizProgress();
+    if (currentContent) {
+      completeContent(
+        currentContent.id,
+        currentContent.contentProgress.id,
+        setCurrentChapter
+      );
+    }
     navigate("/", { replace: true });
   }
 
   const questions: Exercise[] = useActiveQuizStore((state) => state.exercises);
   const elapsedTime: number = useActiveQuizStore((state) => state.elapsedTime);
+  const currentContent: Content | null = useCurrentChapterStore((state) =>
+    state.getCurrentContent()
+  );
+  const setCurrentChapter = useCurrentChapterStore(
+    (state) => state.setCurrentChapter
+  );
   const answers: Record<number, Answer> = useQuizAnswerStore(
     (state) => state.answers
   );

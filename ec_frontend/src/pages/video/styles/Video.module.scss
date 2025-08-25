@@ -140,6 +140,7 @@
 
 .completeContent {
   background-color: var.$blue;
+  pointer-events: none;
 }
 
 @keyframes loader {

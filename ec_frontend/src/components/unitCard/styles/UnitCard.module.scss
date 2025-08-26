@@ -80,8 +80,16 @@
   .inactive {
     color: var.$inactive;
   }
+  .completed {
+    color: black;
+  }
 }
 
 .description {
   font-weight: 400;
+}
+
+.completedUnit {
+  background: var.$signatureGradient;
+  border-radius: 0 1em 1em 0;
 }

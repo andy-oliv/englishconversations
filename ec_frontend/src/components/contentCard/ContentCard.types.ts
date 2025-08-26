@@ -5,6 +5,7 @@ export default interface ContentCardProps {
   contentType: ContentType;
   isLocked: boolean;
   interactiveContentId: string;
+  isCompleted: boolean;
 }
 
 export type ContentType = "VIDEO" | "QUIZ" | "SLIDESHOW" | "TEST";

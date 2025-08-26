@@ -96,6 +96,7 @@ export default function Hub(): ReactElement {
                     title={currentContent?.title ?? ""}
                     description={currentContent?.description ?? ""}
                     isLocked={content.contentProgress.status === "LOCKED"}
+                    isCompleted={content.contentProgress.status === "COMPLETED"}
                   />
                 );
               })

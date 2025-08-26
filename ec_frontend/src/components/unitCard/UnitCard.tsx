@@ -9,6 +9,7 @@ export default function UnitCard({
   imgUrl,
   isActive,
   isLocked,
+  isCompleted,
   handleClick,
 }: UnitCardProps): ReactElement {
   return (
@@ -43,13 +44,15 @@ export default function UnitCard({
             src={imgUrl}
           />
         </div>
-        <div className={styles.content}>
+        <div
+          className={`${styles.content} ${isCompleted ? styles.completedUnit : null}`}
+        >
           <div className={styles.header}>
             <h2 className={styles.title}>{title}</h2>
             <div className={styles.totalContents}>
               <p className={styles.contentValue}>{totalContents}</p>
               <div
-                className={`${styles.icon} ${isLocked ? styles.inactive : null}`}
+                className={`${styles.icon} ${isLocked ? styles.inactive : null} ${isCompleted ? styles.completed : null}`}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

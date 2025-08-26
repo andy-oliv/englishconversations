@@ -122,6 +122,7 @@ export default function Dashboard(): ReactElement {
                 imgUrl={unit.imageUrl}
                 isActive={clickedCard === unit.name}
                 isLocked={unit.unitProgress.status === "LOCKED"}
+                isCompleted={unit.unitProgress.status === "COMPLETED"}
                 handleClick={handleCardClick}
               />
             ))}
@@ -158,6 +159,7 @@ export default function Dashboard(): ReactElement {
                     title={currentContent?.title ?? ""}
                     description={currentContent?.description ?? ""}
                     isLocked={content.contentProgress.status === "LOCKED"}
+                    isCompleted={content.contentProgress.status === "COMPLETED"}
                   />
                 );
               })

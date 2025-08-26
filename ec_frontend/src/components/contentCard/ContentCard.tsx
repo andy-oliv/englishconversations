@@ -41,7 +41,7 @@ export default function ContentCard({
   return (
     <>
       <div
-        className={`${styles.card} ${cardStyle[contentType]} ${isLocked ? styles.locked : ""} ${isLocked ? styles.lockedBackground : ""} ${isCompleted ? styles.completeContent : ""}`}
+        className={`${styles.card} ${cardStyle[contentType]} ${isLocked ? styles.locked : ""} ${isLocked ? styles.lockedBackground : ""}`}
         onClick={() => handleClick()}
       >
         {isCompleted ? (

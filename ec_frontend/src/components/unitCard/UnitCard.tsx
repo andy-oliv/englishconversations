@@ -44,9 +44,7 @@ export default function UnitCard({
             src={imgUrl}
           />
         </div>
-        <div
-          className={`${styles.content} ${isCompleted ? styles.completedUnit : null}`}
-        >
+        <div className={`${styles.content}`}>
           <div className={styles.header}>
             <h2 className={styles.title}>{title}</h2>
             <div className={styles.totalContents}>
@@ -75,6 +73,7 @@ export default function UnitCard({
           </div>
           <p className={styles.description}>{description}</p>
         </div>
+        <div className={`${isCompleted ? styles.completedUnit : null}`}></div>
       </div>
     </>
   );

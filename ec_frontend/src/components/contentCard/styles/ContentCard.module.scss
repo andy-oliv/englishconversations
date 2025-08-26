@@ -29,8 +29,9 @@
 .completeIcon {
   display: flex;
   color: rgb(21, 21, 21);
-  margin-top: -1em; //this was done due to the card padding
-  margin-left: -1em; //this was done due to the card padding
+  margin-top: -1em;
+  margin-left: -1em;
+  opacity: 0.7;
 }
 .header {
   display: flex;
@@ -72,8 +73,4 @@
 
 .lockedBackground {
   background-color: rgb(151, 151, 151);
-}
-
-.completeContent {
-  background: var.$signatureGradient;
 }

@@ -87,11 +87,22 @@
 
 .description {
   font-weight: 400;
+  height: 65%;
 }
 
-.completedUnit {
-  width: 1.5%;
-  height: 100%;
-  background-color: rgb(137, 205, 137);
-  border-radius: 0 1em 1em 0;
+.progressBar {
+  height: 10%;
+  width: 100%;
+  background-color: rgb(228, 228, 228);
+  border-radius: 0.2em;
+
+  .progressBarFiller {
+    height: 100%;
+    background: var.$signatureGradient;
+    border-radius: 0.2em;
+  }
+}
+
+.lockedProgressBar {
+  filter: saturate(0);
 }

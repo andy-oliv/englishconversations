@@ -34,39 +34,6 @@ export default function MainMenu(): ReactElement {
             <p>Início</p>
           </NavLink>
           <NavLink
-            to="/chapters"
-            className={({ isActive }) =>
-              isActive ? styles.active : styles.menuOption
-            }
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="lucide lucide-boxes-icon lucide-boxes"
-            >
-              <path d="M2.97 12.92A2 2 0 0 0 2 14.63v3.24a2 2 0 0 0 .97 1.71l3 1.8a2 2 0 0 0 2.06 0L12 19v-5.5l-5-3-4.03 2.42Z" />
-              <path d="m7 16.5-4.74-2.85" />
-              <path d="m7 16.5 5-3" />
-              <path d="M7 16.5v5.17" />
-              <path d="M12 13.5V19l3.97 2.38a2 2 0 0 0 2.06 0l3-1.8a2 2 0 0 0 .97-1.71v-3.24a2 2 0 0 0-.97-1.71L17 10.5l-5 3Z" />
-              <path d="m17 16.5-5-3" />
-              <path d="m17 16.5 4.74-2.85" />
-              <path d="M17 16.5v5.17" />
-              <path d="M7.97 4.42A2 2 0 0 0 7 6.13v4.37l5 3 5-3V6.13a2 2 0 0 0-.97-1.71l-3-1.8a2 2 0 0 0-2.06 0l-3 1.8Z" />
-              <path d="M12 8 7.26 5.15" />
-              <path d="m12 8 4.74-2.85" />
-              <path d="M12 13.5V8" />
-            </svg>
-            <p>Trilhas</p>
-          </NavLink>
-          <NavLink
             to="/library"
             className={({ isActive }) =>
               isActive ? styles.active : styles.menuOption
@@ -90,6 +57,31 @@ export default function MainMenu(): ReactElement {
               <path d="M4 4v16" />
             </svg>
             <p>Biblioteca</p>
+          </NavLink>
+          <NavLink
+            to="/settings"
+            className={({ isActive }) =>
+              isActive ? styles.active : styles.menuOption
+            }
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width={24}
+              height={24}
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="size-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75"
+              />
+            </svg>
+
+            <p>Configurações</p>
           </NavLink>
         </nav>
       </div>

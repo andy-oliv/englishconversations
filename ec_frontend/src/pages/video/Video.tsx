@@ -100,6 +100,7 @@ export default function Video(): ReactElement {
             key={activeContent?.id}
             content={activeContent ? activeContent : currentContent}
             contentType={"VIDEO"}
+            videoDuration={video ? video.duration / 60 : undefined}
           />
         </div>
       )}

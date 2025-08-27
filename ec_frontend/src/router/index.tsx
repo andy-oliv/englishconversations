@@ -5,7 +5,6 @@ import CompletedQuiz from "../pages/completedQuiz/CompletedQuiz";
 import QuizResults from "../pages/quizResults/QuizResults";
 import Login from "../pages/login/Login";
 import PrivateRoutes from "../components/auth/privateRoutes/PrivateRoutes";
-import Chapter from "../pages/chapter/Chapter";
 import Dashboard from "../pages/dashboard/Dashboard";
 import Library from "../pages/library/Library";
 import IsLogged from "../components/auth/isLogged/IsLogged";
@@ -17,6 +16,7 @@ import ChangePassword from "../pages/changePassword/ChangePassword";
 import Hub from "../pages/hub/Hub";
 import Video from "../pages/video/Video";
 import Slideshow from "../pages/slideshow/Slideshow";
+import Settings from "../pages/settings/Settings";
 
 export const router = createBrowserRouter([
   {
@@ -48,12 +48,12 @@ export const router = createBrowserRouter([
             element: <Dashboard />,
           },
           {
-            path: "/chapters",
-            element: <Chapter />,
-          },
-          {
             path: "/library",
             element: <Library />,
+          },
+          {
+            path: "/settings",
+            element: <Settings />,
           },
         ],
       },

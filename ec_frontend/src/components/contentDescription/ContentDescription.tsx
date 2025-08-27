@@ -161,7 +161,7 @@ export default function ContentDescription({
           {allowedContents[contentType]?.description}
         </h3>
         {videoDuration ? (
-          <p className={styles.duration}>Duração: {videoDuration}</p>
+          <p className={styles.duration}>Duração: {videoDuration} min</p>
         ) : null}
         <button
           className={`${styles.btn} ${saving ? styles.saving : ""} ${content?.contentProgress.status === "COMPLETED" ? styles.completeContent : ""}`}

@@ -10,6 +10,7 @@ export default function UnitCard({
   isActive,
   isLocked,
   isCompleted,
+  currentProgress,
   handleClick,
 }: UnitCardProps): ReactElement {
   return (
@@ -72,8 +73,15 @@ export default function UnitCard({
             </div>
           </div>
           <p className={styles.description}>{description}</p>
+          <div
+            className={`${styles.progressBar} ${isLocked ? styles.lockedProgressBar : null}`}
+          >
+            <div
+              className={styles.progressBarFiller}
+              style={{ width: `${currentProgress}%` }}
+            ></div>
+          </div>
         </div>
-        <div className={`${isCompleted ? styles.completedUnit : null}`}></div>
       </div>
     </>
   );

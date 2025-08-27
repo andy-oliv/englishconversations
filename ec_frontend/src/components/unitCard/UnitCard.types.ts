@@ -6,5 +6,6 @@ export default interface UnitCardProps {
   isActive: boolean;
   isLocked: boolean;
   isCompleted: boolean;
+  currentProgress: number;
   handleClick: (name: string) => void;
 }

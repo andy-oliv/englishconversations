@@ -113,19 +113,32 @@ export default function Dashboard(): ReactElement {
       ) : (
         <div className={styles.mainContent}>
           <div className={styles.unitContainer}>
-            {units?.map((unit) => (
-              <UnitCard
-                key={unit.id}
-                title={unit.name}
-                description={unit.description}
-                totalContents={unit.contents.length}
-                imgUrl={unit.imageUrl}
-                isActive={clickedCard === unit.name}
-                isLocked={unit.unitProgress.status === "LOCKED"}
-                isCompleted={unit.unitProgress.status === "COMPLETED"}
-                handleClick={handleCardClick}
-              />
-            ))}
+            {units?.map((unit) => {
+              const totalContents: number = unit.contents.length;
+              const progress: number = unit.contents.reduce((acc, content) => {
+                if (content.contentProgress.status === "COMPLETED") {
+                  return acc + 1;
+                }
+                return acc;
+              }, 0);
+
+              const totalProgress: number = (progress / totalContents) * 100;
+
+              return (
+                <UnitCard
+                  key={unit.id}
+                  title={unit.name}
+                  description={unit.description}
+                  totalContents={unit.contents.length}
+                  imgUrl={unit.imageUrl}
+                  isActive={clickedCard === unit.name}
+                  isLocked={unit.unitProgress.status === "LOCKED"}
+                  isCompleted={unit.unitProgress.status === "COMPLETED"}
+                  currentProgress={totalProgress > 0 ? totalProgress : 0}
+                  handleClick={handleCardClick}
+                />
+              );
+            })}
           </div>
           <div
             className={`${styles.contentContainer} ${selectedUnit ? styles.show : null}`}

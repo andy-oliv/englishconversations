@@ -38,6 +38,7 @@
 .picture {
   width: 7.5em;
   height: 5em;
+  animation: slideIn 0.2s ease-in-out forwards;
 
   .img {
     width: 100%;
@@ -50,6 +51,7 @@
   font-family: var.$poppins;
   font-weight: 400;
   font-size: 1.7rem;
+  animation: slideIn 0.3s ease-in-out forwards;
 }
 
 .splitScreen {
@@ -84,5 +86,16 @@
 
   .contentCardTitle {
     color: var.$backgroundColor;
+  }
+}
+
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(2em);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

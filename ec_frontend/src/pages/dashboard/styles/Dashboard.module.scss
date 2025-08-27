@@ -23,16 +23,16 @@
   gap: 1em;
   overflow-y: auto;
   box-shadow: 0 0 8px -1px rgba(0, 0, 0, 0.412);
-  transition: all 0.5s ease-in-out;
+  transition: all 0.2s ease-in-out;
   visibility: hidden;
   opacity: 0;
-  transform: translateX(2em);
+  transform: scale(0);
 }
 
 .show {
   visibility: visible;
   opacity: 1;
-  transform: translateX(0);
+  transform: scale(1);
 }
 
 .contentCardTitle {

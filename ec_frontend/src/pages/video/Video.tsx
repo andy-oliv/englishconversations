@@ -87,7 +87,7 @@ export default function Video(): ReactElement {
           </div>
         </div>
       ) : (
-        <div>
+        <div className={styles.videoContainer}>
           {video ? (
             <VideoFrame
               title={video.title}

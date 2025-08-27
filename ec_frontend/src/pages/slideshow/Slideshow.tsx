@@ -76,7 +76,7 @@ export default function Slideshow(): ReactElement {
           </div>
         </div>
       ) : (
-        <div>
+        <div className={styles.slideshowContainer}>
           <Swiper
             modules={[Navigation, Pagination]}
             slidesPerView={1}

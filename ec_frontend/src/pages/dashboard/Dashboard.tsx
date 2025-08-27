@@ -133,7 +133,6 @@ export default function Dashboard(): ReactElement {
                   imgUrl={unit.imageUrl}
                   isActive={clickedCard === unit.name}
                   isLocked={unit.unitProgress.status === "LOCKED"}
-                  isCompleted={unit.unitProgress.status === "COMPLETED"}
                   currentProgress={totalProgress > 0 ? totalProgress : 0}
                   handleClick={handleCardClick}
                 />

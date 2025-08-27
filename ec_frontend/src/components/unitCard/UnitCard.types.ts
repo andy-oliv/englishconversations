@@ -5,7 +5,6 @@ export default interface UnitCardProps {
   imgUrl: string;
   isActive: boolean;
   isLocked: boolean;
-  isCompleted: boolean;
   currentProgress: number;
   handleClick: (name: string) => void;
 }

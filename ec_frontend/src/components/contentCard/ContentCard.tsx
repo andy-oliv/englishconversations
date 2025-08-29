@@ -46,21 +46,7 @@ export default function ContentCard({
       >
         {isCompleted ? (
           <div className={styles.completeIcon}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width={30}
-              height={30}
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="lucide lucide-circle-check-big-icon lucide-circle-check-big"
-            >
-              <path d="M21.801 10A10 10 0 1 1 17 3.335" />
-              <path d="m9 11 3 3L22 4" />
-            </svg>
+            <img className={styles.checkMark} src="/checkmark.png" />
           </div>
         ) : null}
         {isLocked ? (

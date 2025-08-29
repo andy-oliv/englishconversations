@@ -10,6 +10,7 @@ import { QuizService } from '../quiz/quiz.service';
 import { UserService } from '../user/user.service';
 import CompleteQuizDTO from './dto/CompleteQuiz.dto';
 import AnsweredExercise from '../entities/AnsweredExercise';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class AnsweredQuizService {
@@ -160,6 +161,32 @@ export class AnsweredQuizService {
       await this.prismaService.answeredExercise.createMany({
         data: answers,
         skipDuplicates: true,
+      });
+
+      const quizTries: number = await this.prismaService.quizHistory.count({
+        where: {
+          AND: [{ userId: data.userId }, { quizId: data.quizId }],
+        },
+      });
+
+      const jsonAnswers: Prisma.JsonValue = answers.map((answer) => ({
+        exerciseId: answer.exerciseId,
+        selectedAnswers: answer.selectedAnswers,
+        elapsedTime: answer.elapsedTime,
+        isCorrect: answer.isCorrectAnswer,
+      }));
+
+      await this.prismaService.quizHistory.create({
+        data: {
+          userId: data.userId,
+          quizId: data.quizId,
+          score: data.score,
+          answers: jsonAnswers,
+          attemptNumber: quizTries + 1,
+          elapsedTime: data.elapsedTime,
+          isTest: data.isTest,
+          isPassed: data.isPassed,
+        },
       });
 
       return { message: httpMessages_EN.answeredQuiz.completeQuiz.status_201 };

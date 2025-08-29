@@ -1,4 +1,12 @@
-import { IsArray, IsInt, IsNotEmpty, IsUUID } from 'class-validator';
+import {
+  IsArray,
+  IsBoolean,
+  IsIn,
+  IsInt,
+  IsNotEmpty,
+  IsOptional,
+  IsUUID,
+} from 'class-validator';
 import QuizAnswer from '../../common/types/QuizAnswer';
 import validationMessages_EN from '../../helper/messages/validationMessages.en';
 
@@ -59,4 +67,21 @@ export default class CompleteQuizDTO {
     message: validationMessages_EN.answeredQuiz.completeQuizDTO.answers.isArray,
   })
   answers: QuizAnswer[];
+
+  @IsOptional()
+  @IsBoolean({
+    message:
+      validationMessages_EN.answeredQuiz.completeQuizDTO.isTest.isBoolean,
+  })
+  isTest?: boolean;
+
+  @IsNotEmpty({
+    message:
+      validationMessages_EN.answeredQuiz.completeQuizDTO.isPassed.isNotEmpty,
+  })
+  @IsBoolean({
+    message:
+      validationMessages_EN.answeredQuiz.completeQuizDTO.isPassed.isBoolean,
+  })
+  isPassed: boolean;
 }

@@ -9,10 +9,9 @@ import loggerMessages from 'src/helper/messages/loggerMessages';
 import httpMessages_EN from 'src/helper/messages/httpMessages.en';
 import UpdateUserContentDTO from './dto/UpdateUserContent.dto';
 import Content from 'src/entities/Content';
-import { ContentTypes, Status, Unit, UserUnit } from '@prisma/client';
+import { Status, UserUnit } from '@prisma/client';
 import { UserUnitService } from 'src/user-unit/user-unit.service';
 import { UserProgressService } from 'src/user-progress/user-progress.service';
-import * as dayjs from 'dayjs';
 import CompleteContentDTO from './dto/CompleteContent.dto';
 import saveFavoriteAndNotesDTO from './dto/SaveFavoriteAndNotes.dto';
 

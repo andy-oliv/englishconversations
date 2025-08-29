@@ -40,7 +40,9 @@ model User {
   contentProgresses UserContent[]
   answeredExercises AnsweredExercise[]
   answeredQuizzes AnsweredQuiz[]
+  quizHistory QuizHistory[]
   videoProgresses VideoProgress[]
+  watchHistory VideoHistory[]
   slideshowProgresses SlideshowProgress []
   notifications UserNotification[]
   createdAt DateTime @default(now())
@@ -109,6 +111,7 @@ model Quiz {
   content Content?
   exercises Exercise[]
   answers AnsweredQuiz[]
+  answerHistory QuizHistory[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   
@@ -135,6 +138,23 @@ model AnsweredQuiz {
   @@index([userId])
   @@index([quizId])
   @@index([userId, quizId])
+}
+
+model QuizHistory {
+  id String @id @default(uuid())
+  quiz Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  quizId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String
+  isTest Boolean @default(false)
+  answers Json
+  score Int 
+  isPassed Boolean @default(false)
+  feedback String? @db.Text
+  elapsedTime Int @default(0)
+  attemptNumber Int @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Tag {
@@ -257,6 +277,7 @@ model Video {
   videoTags VideoTag[]
   content Content?
   videoProgresses VideoProgress[]
+  watchHistory VideoHistory[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -282,6 +303,21 @@ model VideoProgress {
   updatedAt DateTime @updatedAt 
   
   @@unique([userId, videoId])
+}
+
+model VideoHistory {
+  id String @id @default(uuid())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String
+  video Video @relation(fields: [videoId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  videoId String
+  progress Int @default(0)
+  watchedDuration Int @default(0)
+  watchedCount Int @default(0)
+  lastWatchedAt DateTime? @db.DateTime()
+  startedAt DateTime? @db.DateTime()
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt 
 }
 
 model Notification {

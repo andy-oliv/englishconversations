@@ -74,6 +74,13 @@ const validationMessages_EN = {
         isNotEmpty: 'The answers field must not be empty.',
         isArray: 'The answers field must be an array.',
       },
+      isTest: {
+        isBoolean: 'The isTest field must be a boolean.',
+      },
+      isPassed: {
+        isNotEmpty: 'The isPassed field must not be empty.',
+        isBoolean: 'The isPassed field must be a boolean.',
+      },
     },
     quizId: {
       isNotEmpty: 'The quizId field must not be empty.',

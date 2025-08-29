@@ -3,7 +3,7 @@ import type { CurrentChapter } from "../schemas/currentChapter.schema";
 import type { Unit } from "../schemas/unit.schema";
 import type { Content } from "../schemas/content.schema";
 
-interface CurrentChapterStoreState {
+export interface CurrentChapterStoreState {
   data: CurrentChapter | null;
   currentUnitId: number | null;
   currentContentId: number | null;

@@ -7,82 +7,111 @@ import { useQuizAnswerStore, type Answer } from "../../stores/quizAnswerStore";
 import _ from "lodash";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import completeContent from "../../helper/functions/completeContent";
-import { useCurrentChapterStore } from "../../stores/currentChapterStore";
+import {
+  useCurrentChapterStore,
+  type CurrentChapterStoreState,
+} from "../../stores/currentChapterStore";
 import type { Content } from "../../schemas/content.schema";
 import type { CurrentChapter } from "../../schemas/currentChapter.schema";
 import type { Unit } from "../../schemas/unit.schema";
+import * as Sentry from "@sentry/react";
+import { toast } from "react-toastify";
+import { toastMessages } from "../../helper/messages/toastMessages";
+import type ExerciseProgress from "../../helper/types/ExerciseProgress";
+import type QuizProgress from "../../helper/types/QuizProgress";
+import { useUserStore } from "../../stores/userStore";
+import axios from "axios";
+import { environment } from "../../environment/environment";
+import { isEqual } from "lodash";
+import goNextcontent from "../../helper/functions/goNextContent";
 
 export default function CompletedQuiz(): ReactElement {
   async function saveQuizProgress(): Promise<void> {
     try {
-      console.log(answers);
+      const exerciseAnswers: ExerciseProgress[] = Object.values(answers).map(
+        (answer) => {
+          const question: Exercise | undefined = questions.find(
+            (question) => question.id === answer.exerciseId
+          );
+
+          return {
+            exerciseId: answer.exerciseId,
+            selectedAnswers: answer.answer,
+            elapsedTime: answer.elapsedTime,
+            isCorrectAnswer: question
+              ? isEqual(
+                  answer.answer.map((answer) => answer.toLowerCase()),
+                  question.correctAnswer.map((question) =>
+                    question.toLowerCase()
+                  )
+                )
+              : false,
+          };
+        }
+      );
+
+      const answeredQuiz: QuizProgress = {
+        userId: user?.id,
+        quizId,
+        answers: exerciseAnswers,
+        score: Math.floor((totalCorrectAnswers / questions.length) * 100),
+        elapsedTime,
+        userContentId: activeContent?.contentProgress.id,
+      };
+
+      await axios.post(
+        `${environment.backendApiUrl}/answers/q/complete`,
+        answeredQuiz,
+        { withCredentials: true }
+      );
     } catch (error) {
-      console.log(error);
+      toast.error(toastMessages.content.error, { autoClose: 3000 });
+
+      Sentry.captureException(error, {
+        extra: {
+          context: "CompletedQuiz",
+          action: "saveQuizProgress",
+          error,
+        },
+      });
     }
-  }
-
-  function goNextContent(): void {
-    if (activeContent) {
-      const currentContentIndex: number | undefined =
-        activeUnit?.contents.indexOf(activeContent);
-      const nextContent: Content | undefined =
-        activeUnit?.contents[currentContentIndex ? currentContentIndex + 1 : 0];
-
-      if (nextContent) {
-        const contentType: string = nextContent.contentType.toLowerCase();
-        const allowedTypes: Record<string, string | undefined> = {
-          video: nextContent.video?.id,
-          slideshow: nextContent.slideshow?.id,
-          quiz: nextContent.quiz?.id,
-          test: nextContent.quiz?.id,
-        };
-        navigate(`/hub/${contentType}?id=${allowedTypes[contentType]}`, {
-          replace: true,
-        });
-
-        return;
-      }
-    }
-
-    if (activeUnit) {
-      const currentUnitIndex: number | undefined =
-        currentChapter?.units.indexOf(activeUnit);
-      const nextUnit: Unit | undefined =
-        currentChapter?.units[currentUnitIndex ? currentUnitIndex + 1 : 0];
-
-      if (nextUnit) {
-        const firstContent: Content | null = nextUnit.contents[0];
-        const contentType: string = firstContent.contentType.toLowerCase();
-        const allowedTypes: Record<string, string | undefined> = {
-          video: firstContent.video?.id,
-          slideshow: firstContent.slideshow?.id,
-          quiz: firstContent.quiz?.id,
-          test: firstContent.quiz?.id,
-        };
-        navigate(`/hub/${contentType}?id=${allowedTypes[contentType]}`, {
-          replace: true,
-        });
-
-        return;
-      }
-    }
-
-    navigate("/");
   }
 
   async function finishQuiz(): Promise<void> {
-    saveQuizProgress();
+    try {
+      saveQuizProgress();
 
-    if (activeContent) {
-      await completeContent(
-        activeContent.id,
-        activeContent.contentProgress.id,
-        setCurrentChapter,
-        getCurrentUnit,
-        setCurrentUnitId
-      );
+      if (activeContent && quizId) {
+        await completeContent(
+          activeContent.id,
+          activeContent.contentProgress.id,
+          quizId,
+          "QUIZ",
+          navigate,
+          currentChapterStore
+        );
 
-      goNextContent();
+        if (currentChapter && activeContent && activeContent.quiz) {
+          goNextcontent(
+            currentChapter,
+            activeContent.quiz.id,
+            activeContent.contentType,
+            navigate,
+            toast,
+            Sentry
+          );
+        }
+      }
+    } catch (error) {
+      toast.error(toastMessages.content.error, { autoClose: 3000 });
+
+      Sentry.captureException(error, {
+        extra: {
+          context: "CompletedQuiz",
+          action: "finishQuiz",
+          error,
+        },
+      });
     }
   }
 
@@ -90,11 +119,18 @@ export default function CompletedQuiz(): ReactElement {
   const searchParams = new URLSearchParams(location.search);
   const quizId = searchParams.get("id");
   const questions: Exercise[] = useActiveQuizStore((state) => state.exercises);
+  const user = useUserStore((state) => state.data);
+  const answers: Record<number, Answer> = useQuizAnswerStore(
+    (state) => state.answers
+  );
   const elapsedTime: number = useActiveQuizStore((state) => state.elapsedTime);
 
   const currentChapter: CurrentChapter | null = useCurrentChapterStore(
     (state) => state.data
   );
+
+  const currentChapterStore: CurrentChapterStoreState =
+    useCurrentChapterStore();
 
   const activeUnit: Unit | undefined = currentChapter?.units.find((unit) =>
     unit.contents.some((content) => {
@@ -106,19 +142,6 @@ export default function CompletedQuiz(): ReactElement {
     (content) => content?.quiz?.id === quizId
   );
 
-  const setCurrentChapter = useCurrentChapterStore(
-    (state) => state.setCurrentChapter
-  );
-
-  const getCurrentUnit = useCurrentChapterStore(
-    (state) => state.getCurrentUnit
-  );
-  const setCurrentUnitId = useCurrentChapterStore(
-    (state) => state.setCurrentUnitId
-  );
-  const answers: Record<number, Answer> = useQuizAnswerStore(
-    (state) => state.answers
-  );
   const [totalCorrectAnswers, setTotalCorrectAnswers] = useState<number>(0);
   const [isReady, setIsReady] = useState<boolean>(false);
   const navigate = useNavigate();

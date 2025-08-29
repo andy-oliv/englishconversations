@@ -4,31 +4,119 @@ import type ContentDescriptionProps from "./ContentDescription.types";
 import saveFavorite from "../../helper/functions/saveFavorite";
 import saveNotes from "../../helper/functions/saveNotes";
 import type { ContentType } from "../contentCard/ContentCard.types";
-import { useCurrentChapterStore } from "../../stores/currentChapterStore";
+import {
+  useCurrentChapterStore,
+  type CurrentChapterStoreState,
+} from "../../stores/currentChapterStore";
 import completeContent from "../../helper/functions/completeContent";
+import axios from "axios";
+import { environment } from "../../environment/environment";
+import type VideoProgress from "../../helper/types/VideoProgress";
+import dayjs from "dayjs";
+import { useUserStore } from "../../stores/userStore";
+import type SlideshowProgress from "../../helper/types/SlideshowProgress";
+import * as Sentry from "@sentry/react";
+import { toast } from "react-toastify";
+import { toastMessages } from "../../helper/messages/toastMessages";
+import { useNavigate } from "react-router-dom";
 
 export default function ContentDescription({
   content,
   contentType,
   videoDuration,
 }: ContentDescriptionProps): ReactElement {
-  async function complete(): Promise<void> {
+  async function saveVideoProgress(data: VideoProgress): Promise<void> {
+    try {
+      await axios.post(`${environment.backendApiUrl}/videos/progress`, data, {
+        withCredentials: true,
+      });
+    } catch (error) {
+      toast.error(toastMessages.content.error, { autoClose: 3000 });
+
+      Sentry.captureException(error, {
+        extra: {
+          context: "ContentDescription",
+          action: "saveVideoProgress",
+          error,
+        },
+      });
+    }
+  }
+
+  async function saveSlideshowProgress(data: SlideshowProgress): Promise<void> {
+    try {
+      const response = await axios.post(
+        `${environment.backendApiUrl}/slideshow/progress`,
+        data,
+        { withCredentials: true }
+      );
+      console.log(response);
+    } catch (error) {
+      toast.error(toastMessages.content.error, { autoClose: 3000 });
+
+      Sentry.captureException(error, {
+        extra: {
+          context: "ContentDescription",
+          action: "saveslideshowProgress",
+          error,
+        },
+      });
+    }
+  }
+
+  async function finish(): Promise<void> {
     setSaving(true);
-    await completeContent(
-      content?.id ?? null,
-      content?.contentProgress.id ?? null,
-      setCurrentChapter,
-      getCurrentUnit,
-      setCurrentUnitId,
-      contentType === "VIDEO"
-        ? {
-            videoId: content?.video?.id,
-          }
-        : {
-            slideshowId: content?.slideshow?.id,
-          }
-    );
-    setSaving(false);
+    try {
+      if (currentChapter && contentType && content) {
+        if (contentType === "VIDEO" && user && content.video) {
+          await saveVideoProgress({
+            userId: user.id,
+            videoId: content.video.id,
+            userContentId: content.contentProgress.id,
+            progress: 100,
+            completed: true,
+            completedAt: dayjs().toDate(),
+          });
+        }
+
+        if (contentType === "SLIDESHOW" && user && content.slideshow) {
+          await saveSlideshowProgress({
+            userId: user.id,
+            slideshowId: content.slideshow.id,
+            userContentId: content.contentProgress.id,
+            progress: 1,
+            status: "COMPLETED",
+          });
+        }
+
+        await completeContent(
+          content.id,
+          content.contentProgress.id,
+          contentType === "VIDEO" ? content.video?.id : content.slideshow?.id,
+          contentType,
+          navigate,
+          currentChapter,
+          contentType === "VIDEO"
+            ? {
+                videoId: content.video?.id,
+              }
+            : {
+                slideshowId: content.slideshow?.id,
+              }
+        );
+        setSaving(false);
+      }
+    } catch (error) {
+      toast.error(toastMessages.content.error, { autoClose: 3000 });
+
+      Sentry.captureException(error, {
+        extra: {
+          context: "ContentDescription",
+          action: "complete",
+          error,
+        },
+      });
+    }
   }
 
   async function saveFavorites(): Promise<void> {
@@ -62,15 +150,12 @@ export default function ContentDescription({
   );
   const [openNotes, setOpenNotes] = useState<boolean>(false);
   const notesRef = useRef<HTMLTextAreaElement | null>(null);
+  const currentChapter: CurrentChapterStoreState = useCurrentChapterStore();
   const setCurrentChapter = useCurrentChapterStore(
     (state) => state.setCurrentChapter
   );
-  const getCurrentUnit = useCurrentChapterStore(
-    (state) => state.getCurrentUnit
-  );
-  const setCurrentUnitId = useCurrentChapterStore(
-    (state) => state.setCurrentUnitId
-  );
+  const user = useUserStore((state) => state.data);
+  const navigate = useNavigate();
 
   const allowedContents: Record<
     ContentType,
@@ -165,7 +250,7 @@ export default function ContentDescription({
         ) : null}
         <button
           className={`${styles.btn} ${saving ? styles.saving : ""} ${content?.contentProgress.status === "COMPLETED" ? styles.completeContent : ""}`}
-          onClick={() => complete()}
+          onClick={() => finish()}
         >
           {content?.contentProgress.status === "COMPLETED"
             ? "Concluído"

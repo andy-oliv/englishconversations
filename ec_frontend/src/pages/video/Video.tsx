@@ -61,7 +61,6 @@ export default function Video(): ReactElement {
         });
       } catch (error) {
         setLoading(false);
-        console.log(error);
         Sentry.captureException(error, {
           extra: {
             context: "Video",

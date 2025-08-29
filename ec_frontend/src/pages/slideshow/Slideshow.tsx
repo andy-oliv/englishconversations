@@ -14,6 +14,7 @@ import ContentDescription from "../../components/contentDescription/ContentDescr
 import type { Unit } from "../../schemas/unit.schema";
 import type { Content } from "../../schemas/content.schema";
 import type { CurrentChapter } from "../../schemas/currentChapter.schema";
+import * as Sentry from "@sentry/react";
 
 export default function Slideshow(): ReactElement {
   const location = useLocation();
@@ -53,11 +54,16 @@ export default function Slideshow(): ReactElement {
           return;
         }
 
-        console.log(parsedResponse.error.issues);
         setLoading(false);
       } catch (error) {
-        console.log(error);
         setLoading(false);
+        Sentry.captureException(error, {
+          extra: {
+            context: "Slideshow",
+            action: "fetchSlideshow",
+            error,
+          },
+        });
       }
     }
 
@@ -80,8 +86,6 @@ export default function Slideshow(): ReactElement {
           <Swiper
             modules={[Navigation, Pagination]}
             slidesPerView={1}
-            onSlideChange={() => console.log("slide change")}
-            onSwiper={(swiper) => console.log(swiper)}
             navigation
             pagination={{ clickable: true }}
           >

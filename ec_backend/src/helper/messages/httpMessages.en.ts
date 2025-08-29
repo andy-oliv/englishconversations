@@ -32,6 +32,9 @@ const httpMessages_EN = {
       status_200: 'The answer has been successfully updated!',
       status_404: 'The answer was not found or the ID is invalid.',
     },
+    completeQuiz: {
+      status_201: 'The quiz has been successfully completed!',
+    },
     deleteAnswer: {
       status_200: 'The answer has been successfully deleted.',
       status_404: 'The answer was not found or the ID is invalid.',

@@ -56,11 +56,7 @@ export class VideoProgressController {
   async generateVideoProgress(
     @Body() data: GenerateVideoProgressDTO,
   ): Promise<Return> {
-    return this.videoProgressService.generateVideoProgress(
-      data.userId,
-      data.videoId,
-      data.userContentId,
-    );
+    return this.videoProgressService.generateVideoProgress(data);
   }
 
   @Get('user/:userId')

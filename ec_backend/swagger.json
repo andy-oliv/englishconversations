@@ -915,60 +915,6 @@
         ]
       }
     },
-    "/api/answers/e/answeredQuizId": {
-      "put": {
-        "operationId": "AnsweredExerciseController_createBatchExerciseAnswers",
-        "parameters": [
-          {
-            "name": "answeredQuizId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateBatchExercisesArrayDTO"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "example": "The answer has been successfully saved."
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "example": "The answeredQuizId is not a valid UUID."
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "example": "An unexpected error occurred. Please check the error log for more information."
-              }
-            }
-          }
-        },
-        "tags": [
-          "AnsweredExercise"
-        ]
-      }
-    },
     "/api/answers/e/query": {
       "get": {
         "operationId": "AnsweredExerciseController_fetchAnswersByUser",
@@ -1454,6 +1400,51 @@
         },
         "tags": [
           "Users"
+        ]
+      }
+    },
+    "/api/answers/q/complete": {
+      "post": {
+        "operationId": "AnsweredQuizController_completeQuiz",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CompleteQuizDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "The quiz has been successfully completed!"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": "The answers field must be an array."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "AnsweredQuizzes"
         ]
       }
     },
@@ -6161,10 +6152,6 @@
           "elapsedTime"
         ]
       },
-      "CreateBatchExercisesArrayDTO": {
-        "type": "object",
-        "properties": {}
-      },
       "UpdateFeedbackDTO": {
         "type": "object",
         "properties": {
@@ -6177,6 +6164,10 @@
         "required": [
           "feedback"
         ]
+      },
+      "CompleteQuizDTO": {
+        "type": "object",
+        "properties": {}
       },
       "SaveQuizAnswerDTO": {
         "type": "object",
@@ -6522,6 +6513,51 @@
             "type": "number",
             "title": "UserContentId",
             "example": 2
+          },
+          "progress": {
+            "type": "number",
+            "title": "Progress",
+            "example": 50
+          },
+          "watchedDuration": {
+            "type": "number",
+            "title": "WatchedDuration",
+            "example": 120
+          },
+          "watchedCount": {
+            "type": "number",
+            "title": "WatchedCount",
+            "example": 3
+          },
+          "lastWatchedAt": {
+            "type": "string",
+            "title": "LastWatchedAt",
+            "example": "2025-06-28"
+          },
+          "startedAt": {
+            "type": "string",
+            "title": "StartedAt",
+            "example": "2025-06-10"
+          },
+          "completedAt": {
+            "type": "string",
+            "title": "CompletedAt",
+            "example": "2025-06-10"
+          },
+          "completed": {
+            "type": "boolean",
+            "title": "Completed",
+            "example": true
+          },
+          "isFavorite": {
+            "type": "string",
+            "title": "VideoID",
+            "example": "47d96219-e87a-4089-8718-93b469eeb40b"
+          },
+          "note": {
+            "type": "string",
+            "title": "VideoID",
+            "example": "great video!"
           }
         },
         "required": [

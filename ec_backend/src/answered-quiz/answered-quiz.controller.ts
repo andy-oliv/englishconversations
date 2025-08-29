@@ -21,11 +21,36 @@ import { SelfGuard } from '../auth/guards/self/self.guard';
 import { RoleGuard } from '../auth/guards/role/role.guard';
 import { AuthType } from '../common/decorators/authType.decorator';
 import { UserRoles } from '@prisma/client';
+import CompleteQuizDTO from './dto/CompleteQuiz.dto';
 
 @ApiTags('AnsweredQuizzes')
 @Controller('api/answers/q')
 export class AnsweredQuizController {
   constructor(private readonly answerQuizService: AnsweredQuizService) {}
+
+  @Post('complete')
+  @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
+  @UseGuards(SelfGuard)
+  @ApiResponse({
+    status: 201,
+    description: 'Success',
+    example: httpMessages_EN.answeredQuiz.completeQuiz.status_201,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request',
+    example: validationMessages_EN.answeredQuiz.completeQuizDTO.answers.isArray,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal Server Error',
+    example: httpMessages_EN.general.status_500,
+  })
+  async completeQuiz(
+    @Body() data: CompleteQuizDTO,
+  ): Promise<{ message: string }> {
+    return this.answerQuizService.completeQuiz(data);
+  }
 
   @Post()
   @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)

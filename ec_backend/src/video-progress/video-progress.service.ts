@@ -12,6 +12,7 @@ import httpMessages_EN from '../helper/messages/httpMessages.en';
 import handleInternalErrorException from '../helper/functions/handleErrorException';
 import loggerMessages from '../helper/messages/loggerMessages';
 import UpdateVideoProgressDTO from './dto/updateVideoProgress';
+import GenerateVideoProgressDTO from './dto/generateVideoProgress';
 
 @Injectable()
 export class VideoProgressService {
@@ -50,20 +51,14 @@ export class VideoProgressService {
   }
 
   async generateVideoProgress(
-    userId: string,
-    videoId: string,
-    userContentId: number,
+    videoData: GenerateVideoProgressDTO,
   ): Promise<Return> {
-    await this.throwIfProgressExists(userId, videoId);
+    await this.throwIfProgressExists(videoData.userId, videoData.videoId);
 
     try {
       const videoProgress: VideoProgress =
         await this.prismaService.videoProgress.create({
-          data: {
-            userId,
-            videoId,
-            userContentId,
-          },
+          data: videoData,
         });
       return {
         message: httpMessages_EN.videoProgress.generateVideoProgress.status_201,

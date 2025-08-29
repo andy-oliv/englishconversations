@@ -8,6 +8,8 @@ import handleInternalErrorException from '../helper/functions/handleErrorExcepti
 import loggerMessages from '../helper/messages/loggerMessages';
 import { QuizService } from '../quiz/quiz.service';
 import { UserService } from '../user/user.service';
+import CompleteQuizDTO from './dto/CompleteQuiz.dto';
+import AnsweredExercise from '../entities/AnsweredExercise';
 
 @Injectable()
 export class AnsweredQuizService {
@@ -105,6 +107,67 @@ export class AnsweredQuizService {
         'answeredQuizService',
         'saveAnswer',
         loggerMessages.answeredQuiz.saveAnswer.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  async completeQuiz(data: CompleteQuizDTO): Promise<{ message: string }> {
+    try {
+      const retry: boolean = await this.answerValidation(
+        data.quizId,
+        data.userId,
+      );
+
+      if (retry) {
+        const foundProgress: AnsweredQuiz =
+          await this.prismaService.answeredQuiz.findFirstOrThrow({
+            where: {
+              AND: [{ userId: data.userId }, { quizId: data.quizId }],
+            },
+          });
+
+        await this.prismaService.answeredQuiz.delete({
+          where: {
+            id: foundProgress.id,
+          },
+        });
+      }
+
+      const quizProgress: AnsweredQuiz =
+        await this.prismaService.answeredQuiz.create({
+          data: {
+            quizId: data.quizId,
+            userId: data.userId,
+            score: data.score,
+            isRetry: retry,
+            elapsedTime: data.elapsedTime,
+            userContentId: data.userContentId,
+          },
+        });
+
+      const answers: AnsweredExercise[] = data.answers.map((answer) => ({
+        userId: data.userId,
+        exerciseId: answer.exerciseId,
+        elapsedTime: answer.elapsedTime,
+        answeredQuizId: quizProgress.id,
+        selectedAnswers: answer.selectedAnswers,
+        isCorrectAnswer: answer.isCorrectAnswer,
+        isRetry: retry,
+      }));
+
+      await this.prismaService.answeredExercise.createMany({
+        data: answers,
+        skipDuplicates: true,
+      });
+
+      return { message: httpMessages_EN.answeredQuiz.completeQuiz.status_201 };
+    } catch (error) {
+      handleInternalErrorException(
+        'AnsweredQuizService',
+        'completeQuiz',
+        loggerMessages.answeredQuiz.completeQuiz.status_500,
         this.logger,
         error,
       );

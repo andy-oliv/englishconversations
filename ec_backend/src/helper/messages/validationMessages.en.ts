@@ -49,6 +49,32 @@ const validationMessages_EN = {
         isString: 'The feedback field must be a string.',
       },
     },
+    completeQuizDTO: {
+      quizId: {
+        isNotEmpty: 'The quizId field must not be empty.',
+        isUUID: 'The quizId field must be a valid UUID.',
+      },
+      userId: {
+        isNotEmpty: 'The userId field must not be empty.',
+        isUUID: 'The userId field must be a valid UUID.',
+      },
+      score: {
+        isNotEmpty: 'The score field must not be empty.',
+        isInt: 'The score field must be a number.',
+      },
+      userContentId: {
+        isNotEmpty: 'The userContentId field must not be empty.',
+        isInt: 'The userContentId field must be a number.',
+      },
+      elapsedTime: {
+        isNotEmpty: 'The elapsedTime field must not be empty.',
+        isInt: 'The elapsedTime field must be a number.',
+      },
+      answers: {
+        isNotEmpty: 'The answers field must not be empty.',
+        isArray: 'The answers field must be an array.',
+      },
+    },
     quizId: {
       isNotEmpty: 'The quizId field must not be empty.',
       isUUID: 'The quizId field must be a valid UUID.',

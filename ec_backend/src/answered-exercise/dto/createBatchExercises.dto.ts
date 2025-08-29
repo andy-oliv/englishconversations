@@ -59,19 +59,6 @@ export default class CreateBatchExercisesDTO {
   answeredQuizId?: string;
 
   @ApiProperty({
-    title: 'IsRetry',
-    required: false,
-    type: 'boolean',
-    example: true,
-  })
-  @IsOptional()
-  @IsBoolean({
-    message:
-      validationMessages_EN.answeredExercise.saveAnswerDTO.isRetry.isBoolean,
-  })
-  isRetry?: boolean;
-
-  @ApiProperty({
     title: 'selectedAnswers',
     required: false,
     type: 'array',
@@ -86,19 +73,6 @@ export default class CreateBatchExercisesDTO {
   selectedAnswers?: Prisma.JsonValue;
 
   @ApiProperty({
-    title: 'TextAnswer',
-    required: false,
-    type: 'string',
-    example: 'jump',
-  })
-  @IsOptional()
-  @IsString({
-    message:
-      validationMessages_EN.answeredExercise.saveAnswerDTO.textAnswer.isString,
-  })
-  textAnswer?: string;
-
-  @ApiProperty({
     title: 'IsCorrectAnswer',
     required: false,
     type: 'boolean',
@@ -111,19 +85,6 @@ export default class CreateBatchExercisesDTO {
         .isBoolean,
   })
   isCorrectAnswer?: boolean;
-
-  @ApiProperty({
-    title: 'Feedback',
-    required: false,
-    type: 'string',
-    example: 'Great job!',
-  })
-  @IsOptional()
-  @IsString({
-    message:
-      validationMessages_EN.answeredExercise.saveAnswerDTO.feedback.isString,
-  })
-  feedback?: string;
 
   @ApiProperty({
     title: 'ElapsedTime',

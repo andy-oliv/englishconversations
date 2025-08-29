@@ -44,6 +44,10 @@ const loggerMessages = {
       status_500:
         'An internal error occurred while checking if the student has answered the quiz before. Check the error log for more information.',
     },
+    completeQuiz: {
+      status_500:
+        'An internal error occurred while processing the quiz. Check the error log for more information.',
+    },
     deleteAnswer: {
       status_500:
         'An internal error occurred while deleting the answer. Check the error log for more information.',

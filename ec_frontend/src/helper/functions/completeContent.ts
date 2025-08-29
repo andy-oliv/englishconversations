@@ -4,18 +4,18 @@ import { environment } from "../../environment/environment";
 import * as Sentry from "@sentry/react";
 import { toastMessages } from "../messages/toastMessages";
 import { toast } from "react-toastify";
-import {
-  CurrentChapterSchema,
-  type CurrentChapter,
-} from "../../schemas/currentChapter.schema";
+import { CurrentChapterSchema } from "../../schemas/currentChapter.schema";
 import type { Unit } from "../../schemas/unit.schema";
+import goNextcontent from "./goNextContent";
+import type { CurrentChapterStoreState } from "../../stores/currentChapterStore";
 
 export default async function completeContent(
   id: number | null,
   userContentId: number | null,
-  setCurrentChapter: (data: CurrentChapter) => void,
-  getCurrentUnit: () => Unit | null,
-  setCurrentUnitId: (unitId: number) => void,
+  contentId: string | undefined,
+  contentType: string,
+  navigate: (url: string, additionalInfo: { replace: boolean }) => void,
+  currentChapter: CurrentChapterStoreState,
   data?: CompletedContentData
 ): Promise<void> {
   if (!userContentId || !id) {
@@ -31,8 +31,8 @@ export default async function completeContent(
     const parsedResponse = CurrentChapterSchema.safeParse(response.data.data);
 
     if (parsedResponse.success) {
-      setCurrentChapter(parsedResponse.data);
-      const currentUnit: Unit | null = getCurrentUnit();
+      currentChapter.setCurrentChapter(parsedResponse.data);
+      const currentUnit: Unit | null = currentChapter.getCurrentUnit();
 
       if (currentUnit && currentUnit.unitProgress.status === "COMPLETED") {
         const nextUnit: Unit | undefined = parsedResponse.data.units.find(
@@ -40,8 +40,19 @@ export default async function completeContent(
         );
 
         if (nextUnit) {
-          setCurrentUnitId(nextUnit.id);
+          currentChapter.setCurrentUnitId(nextUnit.id);
         }
+      }
+
+      if (currentChapter.data) {
+        goNextcontent(
+          currentChapter.data,
+          contentId,
+          contentType,
+          navigate,
+          toast,
+          Sentry
+        );
       }
 
       return;

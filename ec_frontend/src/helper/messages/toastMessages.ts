@@ -16,12 +16,18 @@ export const toastMessages = {
   forgotPassword: {
     success: "Verifique a sua caixa de email",
   },
+  goNextContent: {
+    error: "Um erro inesperado ocorreu ao prosseguir para o próximo conteúdo",
+  },
   internalError: "Um erro interno ocorreu",
   login: {
     badRequest: "Verifique o email ou senha",
   },
   saveFavoriteAndNotes: {
     error: "Um erro interno ocorreu ao salvar as informações.",
+  },
+  content: {
+    error: "Um erro interno ocorreu ao concluir o conteúdo",
   },
   updateEmail: {
     error: "O token está expirado ou é inválido",

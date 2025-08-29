@@ -23,7 +23,7 @@ import { useUserStore } from "../../stores/userStore";
 import axios from "axios";
 import { environment } from "../../environment/environment";
 import { isEqual } from "lodash";
-import goNextcontent from "../../helper/functions/goNextContent";
+import type { Quiz } from "../../schemas/quiz.schema";
 
 export default function CompletedQuiz(): ReactElement {
   async function saveQuizProgress(): Promise<void> {
@@ -57,6 +57,8 @@ export default function CompletedQuiz(): ReactElement {
         score: Math.floor((totalCorrectAnswers / questions.length) * 100),
         elapsedTime,
         userContentId: activeContent?.contentProgress.id,
+        isTest: quiz?.isTest ?? false,
+        isPassed,
       };
 
       await axios.post(
@@ -79,8 +81,8 @@ export default function CompletedQuiz(): ReactElement {
 
   async function finishQuiz(): Promise<void> {
     try {
-      saveQuizProgress();
-
+      setIsSaving(true);
+      await saveQuizProgress();
       if (activeContent && quizId) {
         await completeContent(
           activeContent.id,
@@ -90,18 +92,8 @@ export default function CompletedQuiz(): ReactElement {
           navigate,
           currentChapterStore
         );
-
-        if (currentChapter && activeContent && activeContent.quiz) {
-          goNextcontent(
-            currentChapter,
-            activeContent.quiz.id,
-            activeContent.contentType,
-            navigate,
-            toast,
-            Sentry
-          );
-        }
       }
+      setIsSaving(false);
     } catch (error) {
       toast.error(toastMessages.content.error, { autoClose: 3000 });
 
@@ -119,12 +111,15 @@ export default function CompletedQuiz(): ReactElement {
   const searchParams = new URLSearchParams(location.search);
   const quizId = searchParams.get("id");
   const questions: Exercise[] = useActiveQuizStore((state) => state.exercises);
+  const [totalCorrectAnswers, setTotalCorrectAnswers] = useState<number>(0);
+  const [isPassed, setIsPassed] = useState<boolean>(false);
+  const [tryAgain, setTryAgain] = useState<boolean>(false);
   const user = useUserStore((state) => state.data);
   const answers: Record<number, Answer> = useQuizAnswerStore(
     (state) => state.answers
   );
   const elapsedTime: number = useActiveQuizStore((state) => state.elapsedTime);
-
+  const quiz: Quiz | null = useActiveQuizStore((state) => state.quiz);
   const currentChapter: CurrentChapter | null = useCurrentChapterStore(
     (state) => state.data
   );
@@ -142,8 +137,8 @@ export default function CompletedQuiz(): ReactElement {
     (content) => content?.quiz?.id === quizId
   );
 
-  const [totalCorrectAnswers, setTotalCorrectAnswers] = useState<number>(0);
   const [isReady, setIsReady] = useState<boolean>(false);
+  const [saving, setIsSaving] = useState<boolean>(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -175,9 +170,13 @@ export default function CompletedQuiz(): ReactElement {
       },
       0
     );
+
+    const passed: boolean = (total / questions.length) * 100 >= 60;
     setTotalCorrectAnswers(total);
+    setIsPassed(passed);
+    if (quiz?.isTest) setTryAgain(!passed);
     setIsReady(true);
-  }, [answers, questions, navigate]);
+  }, [answers, questions, navigate, quiz?.isTest]);
 
   return (
     <>
@@ -187,7 +186,9 @@ export default function CompletedQuiz(): ReactElement {
         <div className={styles.screen}>
           <div className={styles.decorativeLine}></div>
           <div className={styles.mainContainer}>
-            <h1 className={styles.title}>Quiz finalizado!</h1>
+            <h1 className={styles.title}>
+              {tryAgain ? "Você não passou!" : "Quiz finalizado!"}
+            </h1>
             <div className={styles.metricsWrapper}>
               <MetricsCard
                 value={`${questions.length}`}
@@ -211,14 +212,41 @@ export default function CompletedQuiz(): ReactElement {
                 label="Tempo"
               />
             </div>
-            <div className={styles.btnWrapper}>
-              <Link to={`/quiz-results?id=${quizId}`}>
-                <button className={styles.btn}>Ver respostas</button>
-              </Link>
-              <button className={styles.btn} onClick={() => finishQuiz()}>
-                Finalizar
-              </button>
-            </div>
+            {tryAgain ? (
+              <div className={styles.btnWrapper}>
+                <Link to={"/"}>
+                  <button className={`${styles.btn}`}>
+                    Voltar para a página inicial
+                  </button>
+                </Link>
+                <Link to={`/quiz?id=${quizId}`}>
+                  <button className={styles.btn}>Tentar de novo</button>
+                </Link>
+              </div>
+            ) : (
+              <div className={styles.btnWrapper}>
+                {quiz?.isTest ? (
+                  <button
+                    className={`${styles.btn} ${quiz?.isTest ? styles.inactiveBtn : null}`}
+                  >
+                    Ver respostas
+                  </button>
+                ) : (
+                  <button
+                    className={`${styles.btn} ${quiz?.isTest ? styles.inactiveBtn : null}`}
+                    onClick={() => navigate(`/quiz-results?id=${quizId}`)}
+                  >
+                    Ver respostas
+                  </button>
+                )}
+                <button
+                  className={`${styles.btn} ${saving ? styles.saving : null}`}
+                  onClick={() => finishQuiz()}
+                >
+                  {saving ? "Salvando..." : "Salvar"}
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}

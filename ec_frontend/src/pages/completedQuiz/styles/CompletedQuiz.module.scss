@@ -60,6 +60,28 @@
   background-color: var.$btnHover;
 }
 
+.inactiveBtn {
+  pointer-events: none;
+  background-color: var.$inactive;
+}
+
+.saving {
+  pointer-events: none;
+  animation: blink 0.5s ease-in-out infinite;
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
 @keyframes transitionWidth {
   0% {
     width: 0%;

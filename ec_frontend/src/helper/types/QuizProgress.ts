@@ -7,4 +7,6 @@ export default interface QuizProgress {
   elapsedTime: number;
   userContentId: number | undefined;
   answers: ExerciseProgress[];
+  isTest: boolean;
+  isPassed: boolean;
 }

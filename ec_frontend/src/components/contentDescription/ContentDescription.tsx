@@ -45,12 +45,11 @@ export default function ContentDescription({
 
   async function saveSlideshowProgress(data: SlideshowProgress): Promise<void> {
     try {
-      const response = await axios.post(
+      await axios.post(
         `${environment.backendApiUrl}/slideshow/progress`,
         data,
         { withCredentials: true }
       );
-      console.log(response);
     } catch (error) {
       toast.error(toastMessages.content.error, { autoClose: 3000 });
 

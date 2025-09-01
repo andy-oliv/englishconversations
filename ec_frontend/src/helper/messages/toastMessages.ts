@@ -13,6 +13,9 @@ export const toastMessages = {
   editProfile: {
     error: "Houve um erro ao conectar com o serviço de localidades",
   },
+  emailConfirmation: {
+    badRequest: "O token é inválido ou está expirado",
+  },
   forgotPassword: {
     success: "Verifique a sua caixa de email",
   },
@@ -24,6 +27,7 @@ export const toastMessages = {
     badRequest: "Verifique o email ou senha",
   },
   register: {
+    badRequest: "Verifique as informações enviadas e tente novamente",
     conflict: "O email já está em uso.",
     error: "Houve um erro ao conectar com o serviço de localidades",
     success: "Um email foi enviado com mais informações",

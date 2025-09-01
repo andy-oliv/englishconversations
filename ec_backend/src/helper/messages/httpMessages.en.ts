@@ -70,7 +70,7 @@ const httpMessages_EN = {
       status_409: 'The email is already in use.',
     },
     emailConfirmed: {
-      status_400: 'The token is expired.',
+      status_400: 'The token is expired or invalid.',
     },
     fetchUser: {
       status_401: 'Unauthorized: You must login to see this content.',

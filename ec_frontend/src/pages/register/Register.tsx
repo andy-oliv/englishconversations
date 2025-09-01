@@ -27,8 +27,8 @@ export default function Register(): ReactElement {
       "metadata",
       JSON.stringify({
         name: data.name,
-        state: data.state,
-        city: data.city,
+        state: data.state === "" ? "AC" : data.state,
+        city: data.city === "" ? "Acrelândia" : data.city,
         birthdate: data.birthdate,
         email: data.email,
         password: data.password,
@@ -43,6 +43,12 @@ export default function Register(): ReactElement {
     } catch (error) {
       if (error instanceof AxiosError && error.status === 409) {
         toast.error(toastMessages.register.conflict, { autoClose: 3000 });
+      }
+
+      console.log(error);
+
+      if (error instanceof AxiosError && error.status === 400) {
+        toast.error(toastMessages.register.badRequest, { autoClose: 4000 });
       }
 
       Sentry.captureException(error, {
@@ -167,6 +173,7 @@ export default function Register(): ReactElement {
               <select
                 className={styles.formInput}
                 id="state"
+                defaultValue={"AC"}
                 {...register("state")}
                 onChange={(event) => fetchCities(event.currentTarget.value)}
               >
@@ -187,6 +194,7 @@ export default function Register(): ReactElement {
               <select
                 className={styles.formInput}
                 id="city"
+                defaultValue={"Acrelândia"}
                 {...register("city")}
               >
                 {cities.length > 0

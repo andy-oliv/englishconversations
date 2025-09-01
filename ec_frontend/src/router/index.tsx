@@ -18,6 +18,7 @@ import Video from "../pages/video/Video";
 import Slideshow from "../pages/slideshow/Slideshow";
 import Settings from "../pages/settings/Settings";
 import Register from "../pages/register/Register";
+import EmailConfirmation from "../pages/emailConfirmation/EmailConfirmation";
 
 export const router = createBrowserRouter([
   {
@@ -105,5 +106,9 @@ export const router = createBrowserRouter([
   {
     path: "password-reset",
     element: <ChangePassword />,
+  },
+  {
+    path: "confirm",
+    element: <EmailConfirmation />,
   },
 ]);

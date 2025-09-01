@@ -4161,7 +4161,7 @@
             "description": "Bad Request",
             "content": {
               "application/json": {
-                "example": "The token is expired."
+                "example": "The token is expired or invalid."
               }
             }
           },

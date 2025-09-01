@@ -79,6 +79,15 @@ export class AuthService {
         );
       }
 
+      if (
+        error.name === 'TokenExpiredError' ||
+        error.name === 'JsonWebTokenError'
+      ) {
+        throw new BadRequestException(
+          httpMessages_EN.auth.emailConfirmed.status_400,
+        );
+      }
+
       handleInternalErrorException(
         'authService',
         'emailConfirmed',

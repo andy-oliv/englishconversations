@@ -9,6 +9,8 @@ import { CitiesSchema, type City } from "../../schemas/city.schema";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RegisterSchema, type Register } from "../../schemas/registerSchema";
+import { Link } from "react-router-dom";
+import { environment } from "../../environment/environment";
 
 export default function Register(): ReactElement {
   const [states, setStates] = useState<State[]>([]);
@@ -19,7 +21,39 @@ export default function Register(): ReactElement {
     formState: { errors },
   } = useForm<Register>({ resolver: zodResolver(RegisterSchema) });
 
-  const onSubmit: SubmitHandler<Register> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<Register> = async (data) => {
+    const formData = new FormData();
+    formData.append(
+      "metadata",
+      JSON.stringify({
+        name: data.name,
+        state: data.state,
+        city: data.city,
+        birthdate: data.birthdate,
+        email: data.email,
+        password: data.password,
+      })
+    );
+    try {
+      await axios.post(`${environment.backendAuthUrl}/register`, formData, {
+        withCredentials: true,
+      });
+
+      toast.success(toastMessages.register.success, { autoClose: 4000 });
+    } catch (error) {
+      if (error instanceof AxiosError && error.status === 409) {
+        toast.error(toastMessages.register.conflict, { autoClose: 3000 });
+      }
+
+      Sentry.captureException(error, {
+        extra: {
+          context: "Register",
+          action: "onSubmit",
+          error,
+        },
+      });
+    }
+  };
 
   const fetchCities = useCallback(
     async (selectedState: string): Promise<void> => {
@@ -102,6 +136,9 @@ export default function Register(): ReactElement {
           <img className={styles.logo} src="register_background_full.png" />
         </div>
         <div className={styles.mainContent}>
+          <Link to={"/login"} className={styles.returnBtn}>
+            voltar
+          </Link>
           <div className={styles.titleContainer}>
             <h1 className={styles.title}>WELCOME!</h1>
             <p className={styles.info}>

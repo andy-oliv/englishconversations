@@ -24,7 +24,9 @@ export const toastMessages = {
     badRequest: "Verifique o email ou senha",
   },
   register: {
+    conflict: "O email já está em uso.",
     error: "Houve um erro ao conectar com o serviço de localidades",
+    success: "Um email foi enviado com mais informações",
   },
   saveFavoriteAndNotes: {
     error: "Um erro interno ocorreu ao salvar as informações.",

@@ -27,7 +27,20 @@
   flex-direction: column;
   gap: 2em;
   align-items: center;
-  padding: 4em;
+  padding: 2em 4em;
+}
+
+.returnBtn {
+  color: white;
+  font-family: var.$poppins;
+  font-weight: 300;
+  cursor: pointer;
+  width: max-content;
+  text-decoration: none;
+
+  &:hover {
+    color: rgb(206, 206, 206);
+  }
 }
 
 .titleContainer {
@@ -51,12 +64,12 @@
   flex-direction: column;
   gap: 1em;
   width: 65%;
-  height: 82%;
   border-radius: 1em;
   padding: 2em;
   background-color: rgba(0, 0, 0, 0.221);
   backdrop-filter: blur(1px);
   box-shadow: 0 0 10px 2px black;
+  animation: slideIn 1s ease-in-out forwards;
 }
 
 .inputWrapper {

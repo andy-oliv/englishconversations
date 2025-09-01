@@ -537,6 +537,20 @@ const loggerMessages = {
         'An internal error occurred while fetching the student. Check the error log for more information.',
     },
   },
+  subject: {
+    createSubject: {
+      status_500:
+        'An internal error occurred while creating the subject. Check the error log for more information.',
+    },
+    deleteSubject: {
+      status_500:
+        'An internal error occurred while deleting the subject. Check the error log for more information.',
+    },
+    fetchSubjects: {
+      status_500:
+        'An internal error occurred while fetching the subjects. Check the error log for more information.',
+    },
+  },
   s3: {
     deleteFileFromS3: {
       status_500:

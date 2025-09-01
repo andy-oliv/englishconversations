@@ -412,6 +412,14 @@ const validationMessages_EN = {
       },
     },
   },
+  subject: {
+    createSubjectDTO: {
+      title: {
+        isNotEmpty: 'The title field must not be empty.',
+        isString: 'The title field must be a string.',
+      },
+    },
+  },
   tag: {
     addOrRemoveTagDTO: {
       contentType: {

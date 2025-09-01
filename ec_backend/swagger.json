@@ -6081,6 +6081,136 @@
           "UserContent"
         ]
       }
+    },
+    "/api/subjects": {
+      "post": {
+        "operationId": "SubjectController_createSubject",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSubjectDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "example": "The subject has been successfully created!"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": "The title field must not be empty."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "Subjects"
+        ]
+      },
+      "get": {
+        "operationId": "SubjectController_fetchSubjects",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "The subjects were successfully found."
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "example": "There are no subjects to show."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "Subjects"
+        ]
+      }
+    },
+    "/api/subjects/{subjectId}": {
+      "delete": {
+        "operationId": "SubjectController_deleteSubject",
+        "parameters": [
+          {
+            "name": "subjectId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "The subject has been successfully deleted."
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": "Validation failed (numeric string is expected)"
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "example": "The subject was not found or the ID is invalid."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "Subjects"
+        ]
+      }
     }
   },
   "info": {
@@ -6904,6 +7034,19 @@
             "example": "my notes"
           }
         }
+      },
+      "CreateSubjectDTO": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "example": "past simple"
+          }
+        },
+        "required": [
+          "title"
+        ]
       }
     }
   }

@@ -43,6 +43,7 @@ model User {
   quizHistory QuizHistory[]
   videoProgresses VideoProgress[]
   watchHistory VideoHistory[]
+  recordedClasses UserRecordings[]
   slideshowProgresses SlideshowProgress []
   notifications UserNotification[]
   createdAt DateTime @default(now())
@@ -331,6 +332,56 @@ model Notification {
   notifications UserNotification[]
 }
 
+model RecordedClass {
+  id String @id @default(uuid())
+  title String @db.VarChar(100)
+  recordedAt DateTime @db.DateTime()
+  subject Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  subjectId Int
+  materials ClassMaterial[]
+  url String @db.VarChar(250)
+  users UserRecordings[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserRecordings {
+  id String @id @default(uuid())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  userId String
+  recording RecordedClass @relation(fields: [recordedClassId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  recordedClassId String
+}
+
+model ClassMaterial {
+  id String @id @default(uuid())
+  material Material @relation(fields: [materialId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  materialId String
+  recording RecordedClass @relation(fields: [recordedClassId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  recordedClassId String
+}
+
+model Material {
+  id String @id @default(uuid())
+  title String @db.VarChar(100)
+  type MaterialTypes
+  subject Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  subjectId Int
+  url String @db.VarChar(250)
+  classes ClassMaterial[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Subject {
+  id Int @id @default(autoincrement())
+  title String @db.VarChar(100)
+  classes RecordedClass[]
+  materials Material[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model UserNotification {
   id String @id @default(uuid())
   user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -478,4 +529,11 @@ enum ContentTypes {
   SLIDESHOW
   QUIZ
   TEST
+}
+
+enum MaterialTypes {
+  PDF
+  SLIDESHOW
+  AUDIO
+  OTHER
 }

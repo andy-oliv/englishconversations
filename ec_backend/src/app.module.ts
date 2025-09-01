@@ -36,6 +36,9 @@ import { SlideModule } from './slide/slide.module';
 import { SlideshowProgressModule } from './slideshow-progress/slideshow-progress.module';
 import { ContentModule } from './content/content.module';
 import { UserContentModule } from './user-content/user-content.module';
+import { RecordedClassModule } from './recorded-class/recorded-class.module';
+import { MaterialModule } from './material/material.module';
+import { SubjectModule } from './subject/subject.module';
 
 @Module({
   imports: [
@@ -105,6 +108,9 @@ import { UserContentModule } from './user-content/user-content.module';
     SlideshowProgressModule,
     ContentModule,
     UserContentModule,
+    RecordedClassModule,
+    MaterialModule,
+    SubjectModule,
   ],
   controllers: [AppController],
   providers: [

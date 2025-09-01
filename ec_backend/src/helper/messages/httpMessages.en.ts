@@ -436,6 +436,19 @@ const httpMessages_EN = {
       status_404: "There's no student to show or the ID is invalid.",
     },
   },
+  subject: {
+    createSubject: {
+      status_201: 'The subject has been successfully created!',
+    },
+    deleteSubject: {
+      status_200: 'The subject has been successfully deleted.',
+      status_404: 'The subject was not found or the ID is invalid.',
+    },
+    fetchSubjects: {
+      status_200: 'The subjects were successfully found.',
+      status_404: 'There are no subjects to show.',
+    },
+  },
   s3: {
     deleteObject: {
       status_200: 'The object has been successfully deleted.',

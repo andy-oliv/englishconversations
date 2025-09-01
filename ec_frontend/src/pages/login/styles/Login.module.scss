@@ -4,7 +4,7 @@
   display: flex;
   overflow: hidden;
   height: 100vh;
-  background: linear-gradient(to right, #4f504f, #08222f);
+  background: linear-gradient(120deg, #153b50, rgb(13, 13, 13));
 }
 
 .loginImageFrame {
@@ -16,13 +16,13 @@
   height: 100%;
   object-fit: cover;
   object-position: 0px 0em;
-  border-radius: 0 16em 0 0;
 }
 .loginFormWrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   max-width: 60%;
+  box-shadow: 0 0 10px 4px rgba(0, 0, 0, 0.766);
 }
 
 .formBackground {
@@ -30,10 +30,10 @@
   flex-direction: column;
   align-items: center;
   gap: 4em;
-  background-color: rgba(0, 0, 0, 0.175);
+  background-color: rgba(0, 0, 0, 0.156);
   padding: 6em 0;
   border-radius: 1em;
-  box-shadow: 0px 0px 10px -2px rgba(0, 0, 0, 0.744);
+  box-shadow: 0px 0px 8px 4px rgba(0, 0, 0, 0.34);
   visibility: hidden;
   opacity: 0;
   pointer-events: none;
@@ -101,16 +101,36 @@
   background-color: var.$btnHover;
 }
 
+.options {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .forgotPasswordBtn {
   text-align: center;
   color: white;
   font-family: var.$poppins;
   font-weight: 300;
   cursor: pointer;
+  width: max-content;
 }
 
 .forgotPasswordBtn:hover {
   color: rgb(206, 206, 206);
+}
+
+.registerBtn {
+  color: white;
+  font-family: var.$poppins;
+  font-weight: 300;
+  cursor: pointer;
+  width: max-content;
+  text-decoration: none;
+
+  &:hover {
+    color: rgb(206, 206, 206);
+  }
 }
 
 .error {

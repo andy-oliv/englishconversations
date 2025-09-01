@@ -4,7 +4,7 @@ import styles from "./styles/Login.module.scss";
 import { LoginSchema, type Login } from "../../schemas/login.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios, { AxiosError } from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ForgotPassword from "../../components/forgotPassword/ForgotPassword";
 import * as Sentry from "@sentry/react";
 import { environment } from "../../environment/environment";
@@ -111,12 +111,17 @@ export default function Login(): ReactElement {
               >
                 {isLoading ? "Enviando..." : "Enviar"}
               </button>
-              <p
-                className={styles.forgotPasswordBtn}
-                onClick={() => setLoginActive(false)}
-              >
-                esqueci minha senha
-              </p>
+              <div className={styles.options}>
+                <p
+                  className={styles.forgotPasswordBtn}
+                  onClick={() => setLoginActive(false)}
+                >
+                  esqueci minha senha
+                </p>
+                <Link to={"/register"} className={styles.registerBtn}>
+                  registrar
+                </Link>
+              </div>
             </form>
           </div>
           <div

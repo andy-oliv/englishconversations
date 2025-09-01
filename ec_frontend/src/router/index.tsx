@@ -17,6 +17,7 @@ import Hub from "../pages/hub/Hub";
 import Video from "../pages/video/Video";
 import Slideshow from "../pages/slideshow/Slideshow";
 import Settings from "../pages/settings/Settings";
+import Register from "../pages/register/Register";
 
 export const router = createBrowserRouter([
   {
@@ -96,6 +97,10 @@ export const router = createBrowserRouter([
         ],
       },
     ],
+  },
+  {
+    path: "register",
+    element: <Register />,
   },
   {
     path: "password-reset",

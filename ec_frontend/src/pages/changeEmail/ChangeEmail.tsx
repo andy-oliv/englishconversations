@@ -98,6 +98,7 @@ export default function ChangeEmail(): ReactElement {
               <button
                 type="button"
                 onClick={() => logout(user, resetUser, navigate)}
+                className={styles.link}
               >
                 Clique aqui
               </button>

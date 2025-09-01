@@ -187,7 +187,11 @@ export default function CompletedQuiz(): ReactElement {
           <div className={styles.decorativeLine}></div>
           <div className={styles.mainContainer}>
             <h1 className={styles.title}>
-              {tryAgain ? "Você não passou!" : "Quiz finalizado!"}
+              {tryAgain
+                ? "Você não passou!"
+                : quiz?.isTest
+                  ? "Teste finalizado"
+                  : "Quiz finalizado!"}
             </h1>
             <div className={styles.metricsWrapper}>
               <MetricsCard

@@ -79,6 +79,9 @@
   text-decoration: none;
   margin-top: 2em;
   opacity: 0;
+}
+
+.active {
   animation: fadeIn 1s ease-in-out forwards;
   animation-delay: 1s;
   box-shadow: 0 0 10px 2px var.$blue;
@@ -86,6 +89,13 @@
   &:hover {
     background-color: var.$btnHover;
   }
+}
+
+.inactive {
+  background-color: var.$inactive;
+  box-shadow: none;
+  pointer-events: none;
+  opacity: 1;
 }
 
 @keyframes slideIn {

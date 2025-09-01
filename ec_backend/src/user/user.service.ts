@@ -309,6 +309,7 @@ export class UserService {
           bio: userData.bio,
           city: userData.city,
           state: userData.state,
+          birthdate: userData.birthdate,
           country: userData.country,
           avatarUrl: userData.avatarUrl,
           email: userData.email,

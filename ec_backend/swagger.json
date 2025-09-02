@@ -3470,6 +3470,453 @@
         ]
       }
     },
+    "/auth/admin/login": {
+      "post": {
+        "operationId": "AuthController_adminLogin",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "Administrator successfully logged in."
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": "Please check the request. Either the user or the password are incorrect."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "User successfully logged in!"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": "Please check the request. Either the user or the password are incorrect."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/register": {
+      "post": {
+        "operationId": "AuthController_register",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "We have sent you an email with a link to confirm your email address."
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "example": "The user already exists."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/registered": {
+      "patch": {
+        "operationId": "AuthController_emailConfirmed",
+        "parameters": [
+          {
+            "name": "token",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "title": "Token",
+              "example": "#hd)@jl4k019d0KKL",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "User successfully logged in!"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": "The token is expired or invalid."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/logout": {
+      "get": {
+        "operationId": "AuthController_logout",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "User successfully logged out."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/reset/password": {
+      "patch": {
+        "operationId": "AuthController_updatePassword",
+        "parameters": [
+          {
+            "name": "token",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/updatePasswordDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "Your password has been successfully updated. If you were logged in, for security reasons, you have been logged out."
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": "The token is invalid."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      },
+      "post": {
+        "operationId": "AuthController_generatePasswordResetToken",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateResetTokenDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "If the email is correctly registered, you should have received a link to reset your password."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/reset/email": {
+      "patch": {
+        "operationId": "AuthController_updateEmail",
+        "parameters": [
+          {
+            "name": "token",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "Your email has been successfully updated. For security reasons, you have been logged out."
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": "Invalid email. Check the request."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      },
+      "post": {
+        "operationId": "AuthController_generateEmailResetToken",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateResetTokenDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "If the email is correct, you should have received a link to reset your email."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/refresh": {
+      "get": {
+        "operationId": "AuthController_refreshConnection",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "Connection refreshed."
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "example": "Unauthorized: Please make sure you are logged in and have the required permissions to access this resource."
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/student-session": {
+      "get": {
+        "operationId": "AuthController_checkStudentSession",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "user is logged"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "example": "Unauthorized: Please make sure you are logged in and have the required permissions to access this resource."
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
+    "/auth/admin-session": {
+      "get": {
+        "operationId": "AuthController_checkAdminSession",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "admin is logged"
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "example": "Unauthorized: Please make sure you are logged in and have the required permissions to access this resource."
+              }
+            }
+          }
+        },
+        "tags": [
+          "Auth"
+        ]
+      }
+    },
     "/api/users/notifications": {
       "post": {
         "operationId": "UserNotificationController_generateUserNotification",
@@ -4005,400 +4452,6 @@
         },
         "tags": [
           "UserUnits"
-        ]
-      }
-    },
-    "/auth/admin/login": {
-      "post": {
-        "operationId": "AuthController_adminLogin",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginDTO"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "example": "Administrator successfully logged in."
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "example": "Please check the request. Either the user or the password are incorrect."
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "example": "An unexpected error occurred. Please check the error log for more information."
-              }
-            }
-          }
-        },
-        "tags": [
-          "Auth"
-        ]
-      }
-    },
-    "/auth/login": {
-      "post": {
-        "operationId": "AuthController_login",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginDTO"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "example": "User successfully logged in!"
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "example": "Please check the request. Either the user or the password are incorrect."
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "example": "An unexpected error occurred. Please check the error log for more information."
-              }
-            }
-          }
-        },
-        "tags": [
-          "Auth"
-        ]
-      }
-    },
-    "/auth/register": {
-      "post": {
-        "operationId": "AuthController_register",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "example": "We have sent you an email with a link to confirm your email address."
-              }
-            }
-          },
-          "409": {
-            "description": "Conflict",
-            "content": {
-              "application/json": {
-                "example": "The user already exists."
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "example": "An unexpected error occurred. Please check the error log for more information."
-              }
-            }
-          }
-        },
-        "tags": [
-          "Auth"
-        ]
-      }
-    },
-    "/auth/registered": {
-      "patch": {
-        "operationId": "AuthController_emailConfirmed",
-        "parameters": [
-          {
-            "name": "token",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "title": "Token",
-              "example": "#hd)@jl4k019d0KKL",
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "example": "User successfully logged in!"
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "example": "The token is expired or invalid."
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "example": "An unexpected error occurred. Please check the error log for more information."
-              }
-            }
-          }
-        },
-        "tags": [
-          "Auth"
-        ]
-      }
-    },
-    "/auth/logout": {
-      "get": {
-        "operationId": "AuthController_logout",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "example": "User successfully logged out."
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "example": "An unexpected error occurred. Please check the error log for more information."
-              }
-            }
-          }
-        },
-        "tags": [
-          "Auth"
-        ]
-      }
-    },
-    "/auth/reset/password": {
-      "patch": {
-        "operationId": "AuthController_updatePassword",
-        "parameters": [
-          {
-            "name": "token",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/updatePasswordDTO"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "example": "Your password has been successfully updated. If you were logged in, for security reasons, you have been logged out."
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "example": "The token is invalid."
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "example": "An unexpected error occurred. Please check the error log for more information."
-              }
-            }
-          }
-        },
-        "tags": [
-          "Auth"
-        ]
-      },
-      "post": {
-        "operationId": "AuthController_generatePasswordResetToken",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/GenerateResetTokenDTO"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "example": "If the email is correctly registered, you should have received a link to reset your password."
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "example": "An unexpected error occurred. Please check the error log for more information."
-              }
-            }
-          }
-        },
-        "tags": [
-          "Auth"
-        ]
-      }
-    },
-    "/auth/reset/email": {
-      "patch": {
-        "operationId": "AuthController_updateEmail",
-        "parameters": [
-          {
-            "name": "token",
-            "required": true,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "example": "Your email has been successfully updated. For security reasons, you have been logged out."
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request",
-            "content": {
-              "application/json": {
-                "example": "Invalid email. Check the request."
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "example": "An unexpected error occurred. Please check the error log for more information."
-              }
-            }
-          }
-        },
-        "tags": [
-          "Auth"
-        ]
-      },
-      "post": {
-        "operationId": "AuthController_generateEmailResetToken",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/GenerateResetTokenDTO"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "example": "If the email is correct, you should have received a link to reset your email."
-              }
-            }
-          },
-          "500": {
-            "description": "Internal Server Error",
-            "content": {
-              "application/json": {
-                "example": "An unexpected error occurred. Please check the error log for more information."
-              }
-            }
-          }
-        },
-        "tags": [
-          "Auth"
-        ]
-      }
-    },
-    "/auth/student-session": {
-      "get": {
-        "operationId": "AuthController_checkStudentSession",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Auth"
-        ]
-      }
-    },
-    "/auth/admin-session": {
-      "get": {
-        "operationId": "AuthController_checkAdminSession",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Auth"
         ]
       }
     },
@@ -6982,6 +7035,57 @@
           "title"
         ]
       },
+      "LoginDTO": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "title": "Email",
+            "example": "john.doe@mail.com"
+          },
+          "password": {
+            "type": "string",
+            "title": "IsTest",
+            "example": "#i8NNhl10@%"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "updatePasswordDTO": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "title": "Email",
+            "example": "john.doe@mail.com"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password",
+            "example": "Em85*&kl31rD"
+          }
+        },
+        "required": [
+          "email",
+          "password"
+        ]
+      },
+      "GenerateResetTokenDTO": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "title": "Email",
+            "example": "john.doe@mail.com"
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
       "generateUserNotificationDTO": {
         "type": "object",
         "properties": {
@@ -7054,57 +7158,6 @@
             "example": 0.5
           }
         }
-      },
-      "LoginDTO": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "title": "Email",
-            "example": "john.doe@mail.com"
-          },
-          "password": {
-            "type": "string",
-            "title": "IsTest",
-            "example": "#i8NNhl10@%"
-          }
-        },
-        "required": [
-          "email",
-          "password"
-        ]
-      },
-      "updatePasswordDTO": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "title": "Email",
-            "example": "john.doe@mail.com"
-          },
-          "password": {
-            "type": "string",
-            "title": "Password",
-            "example": "Em85*&kl31rD"
-          }
-        },
-        "required": [
-          "email",
-          "password"
-        ]
-      },
-      "GenerateResetTokenDTO": {
-        "type": "object",
-        "properties": {
-          "email": {
-            "type": "string",
-            "title": "Email",
-            "example": "john.doe@mail.com"
-          }
-        },
-        "required": [
-          "email"
-        ]
       },
       "GenerateVideoProgressDTO": {
         "type": "object",

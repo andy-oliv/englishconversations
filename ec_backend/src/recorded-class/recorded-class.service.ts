@@ -7,12 +7,14 @@ import loggerMessages from '../helper/messages/loggerMessages';
 import RecordedClass from '../entities/RecordedClass';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
 import UpdateRecordedClassDTO from './dto/UpdateRecordedClass.dto';
+import { NotificationGateway } from '../notification/notification.gateway';
 
 @Injectable()
 export class RecordedClassService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly logger: Logger,
+    private readonly notificationGateway: NotificationGateway,
   ) {}
 
   async createRecordedClass(

@@ -345,12 +345,48 @@ export class AuthController {
     return this.authService.generatePasswordResetToken(data.email);
   }
 
+  @ApiResponse({
+    status: 200,
+    description: 'Success',
+    example: httpMessages_EN.auth.refreshConnection.status_200,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized',
+    example: httpMessages_EN.authGuard.status_401,
+  })
+  @AuthType(UserRoles.STUDENT)
+  @Get('refresh')
+  async refreshConnection(): Promise<{ message: string }> {
+    return { message: httpMessages_EN.auth.refreshConnection.status_200 };
+  }
+
+  @ApiResponse({
+    status: 200,
+    description: 'Success',
+    example: 'user is logged',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized',
+    example: httpMessages_EN.authGuard.status_401,
+  })
   @Get('student-session')
   @AuthType(UserRoles.STUDENT)
   async checkStudentSession(@Req() req: RequestWithUser): Promise<Return> {
     return { message: 'user is logged', data: req.user };
   }
 
+  @ApiResponse({
+    status: 200,
+    description: 'Success',
+    example: 'admin is logged',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized',
+    example: httpMessages_EN.authGuard.status_401,
+  })
   @Get('admin-session')
   @AuthType(UserRoles.ADMIN)
   @UseGuards(RoleGuard)

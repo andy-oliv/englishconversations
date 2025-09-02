@@ -98,6 +98,9 @@ const httpMessages_EN = {
     logout: {
       status_200: 'User successfully logged out.',
     },
+    refreshConnection: {
+      status_200: 'Connection refreshed.',
+    },
     updateEmail: {
       status_200:
         'Your email has been successfully updated. For security reasons, you have been logged out.',

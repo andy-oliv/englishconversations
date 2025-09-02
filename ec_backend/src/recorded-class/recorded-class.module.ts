@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { RecordedClassController } from './recorded-class.controller';
 import { RecordedClassService } from './recorded-class.service';
+import { PrismaModule } from '../prisma/prisma.module';
 
 @Module({
+  imports: [PrismaModule],
   controllers: [RecordedClassController],
-  providers: [RecordedClassService]
+  providers: [RecordedClassService],
 })
 export class RecordedClassModule {}

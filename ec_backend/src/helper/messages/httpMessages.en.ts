@@ -280,6 +280,27 @@ const httpMessages_EN = {
       status_404: 'There are no logs to show or the userId is invalid.',
     },
   },
+  material: {
+    createMaterial: {
+      status_201: 'Material successfully created.',
+    },
+    fetchMaterials: {
+      status_200: 'The materials have been successfully fetched.',
+      status_404: 'There are no materials to show.',
+    },
+    fetchMaterial: {
+      status_200: 'The material has been successfully fetched.',
+      status_404: 'The material was not found or the ID is invalid.',
+    },
+    updateMaterial: {
+      status_200: 'The material has been successfully updated.',
+      status_404: 'The material was not found or the ID is invalid.',
+    },
+    deleteMaterial: {
+      status_200: 'The material has been successfully deleted.',
+      status_404: 'The material was not found or the ID is invalid.',
+    },
+  },
   notification: {
     deleteNotification: {
       status_200: 'The notification has been deleted.',
@@ -347,6 +368,27 @@ const httpMessages_EN = {
       status_400: 'The request must not be empty.',
       status_4002: 'The metadata must not be empty.',
       status_404: 'The quiz was not found or the ID is invalid.',
+    },
+  },
+  recordedClass: {
+    createRecordedClass: {
+      status_201: 'The class has been successfully created.',
+    },
+    fetchRecordedClasses: {
+      status_200: 'The classes have been successfully fetched.',
+      status_404: 'There are no classes to show.',
+    },
+    fetchRecordedClass: {
+      status_200: 'The class has been successfully fetched.',
+      status_404: 'The class was not found or the ID is invalid.',
+    },
+    updateRecordedClass: {
+      status_200: 'The class has been successfully updated.',
+      status_404: 'The class was not found or the ID is invalid.',
+    },
+    deleteRecordedClass: {
+      status_200: 'The class has been successfully deleted.',
+      status_404: 'The class was not found or the ID is invalid.',
     },
   },
   selfGuard: {

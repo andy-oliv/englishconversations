@@ -1,6 +1,3 @@
-import { isNotEmpty } from 'class-validator';
-import CreateUserContentDTO from 'src/user-content/dto/CreateUserContent.dto';
-
 const validationMessages_EN = {
   answeredExercise: {
     saveAnswerDTO: {
@@ -236,23 +233,23 @@ const validationMessages_EN = {
       },
     },
   },
-  file: {
-    generateFileDTO: {
-      name: {
-        isNotEmpty: 'The name field must not be empty.',
-        isString: 'The name field must be a string.',
+  material: {
+    createMaterialDTO: {
+      title: {
+        isNotEmpty: 'The title field must not be empty.',
+        isString: 'The title must be a string.',
       },
       type: {
         isNotEmpty: 'The type field must not be empty.',
-        isIn: 'The type is invalid.',
+        isIn: 'The type field is invalid.',
+      },
+      subjectId: {
+        isNotEmpty: 'The subjectId field must not be empty.',
+        isInt: 'The subjectId field must be a number.',
       },
       url: {
         isNotEmpty: 'The url field must not be empty.',
         isUrl: 'The url field must be a valid URL.',
-      },
-      size: {
-        isNotEmpty: 'The size field must not be empty.',
-        isNumber: 'The size field must be a number in MB',
       },
     },
   },
@@ -316,6 +313,34 @@ const validationMessages_EN = {
       },
       difficulty: {
         isIn: 'The difficulty is invalid.',
+      },
+    },
+  },
+  recordedClass: {
+    createRecordedClassDTO: {
+      title: {
+        isNotEmpty: 'The title field must not be empty.',
+        isString: 'The title must be a string.',
+      },
+      recordedAt: {
+        isNotEmpty: 'The recordedAt field must not be empty.',
+        isDate: 'The type recordedAt field must be a date.',
+      },
+      subjectId: {
+        isNotEmpty: 'The subjectId field must not be empty.',
+        isInt: 'The subjectId field must be a number.',
+      },
+      url: {
+        isNotEmpty: 'The url field must not be empty.',
+        isUrl: 'The url field must be a valid URL.',
+      },
+      userIds: {
+        isNotEmpty: 'The userIds field must not be empty.',
+        isArray: 'The userIds field must be an array.',
+      },
+      materialIds: {
+        isNotEmpty: 'The materialIds field must not be empty.',
+        isArray: 'The materialIds field must be an array.',
       },
     },
   },

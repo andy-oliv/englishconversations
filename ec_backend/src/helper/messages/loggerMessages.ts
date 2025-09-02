@@ -361,6 +361,28 @@ const loggerMessages = {
         'An internal error occurred while generating the log. Check the error log for more information. ',
     },
   },
+  material: {
+    createMaterial: {
+      status_500:
+        'An internal error occurred while creating the material. Check the error log for more information.',
+    },
+    fetchMaterials: {
+      status_500:
+        'An internal error occurred while fetching the materials. Check the error log for more information.',
+    },
+    fetchMaterial: {
+      status_500:
+        'An internal error occurred while fetching the material. Check the error log for more information.',
+    },
+    updateMaterial: {
+      status_500:
+        'An internal error occurred while updating the material. Check the error log for more information.',
+    },
+    deleteMaterial: {
+      status_500:
+        'An internal error occurred while deleting the material. Check the error log for more information.',
+    },
+  },
   notification: {
     deleteNotification: {
       status_500:
@@ -438,6 +460,28 @@ const loggerMessages = {
       status_200: 'A quiz has been updated.',
       status_500:
         'An internal error occurred while updating the quiz. Check the error log for more information.',
+    },
+  },
+  recordedClass: {
+    createRecordedClass: {
+      status_500:
+        'An internal error occurred while creating the recordedClass. Check the error log for more information.',
+    },
+    fetchRecordedClasses: {
+      status_500:
+        'An internal error occurred while fetching the recordedClasses. Check the error log for more information.',
+    },
+    fetchRecordedClass: {
+      status_500:
+        'An internal error occurred while fetching the recordedClass. Check the error log for more information.',
+    },
+    updateRecordedClass: {
+      status_500:
+        'An internal error occurred while updating the recordedClass. Check the error log for more information.',
+    },
+    deleteRecordedClass: {
+      status_500:
+        'An internal error occurred while deleting the recordedClass. Check the error log for more information.',
     },
   },
   selfGuard: {

@@ -6082,6 +6082,486 @@
         ]
       }
     },
+    "/api/classes/recordings": {
+      "post": {
+        "operationId": "RecordedClassController_createRecordedClass",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRecordedClassDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "example": "The class has been successfully created."
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": "The title field must not be empty."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "RecordedClasses"
+        ]
+      },
+      "get": {
+        "operationId": "RecordedClassController_fetchRecordedClasses",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "The classes have been successfully fetched."
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "example": "There are no classes to show."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "RecordedClasses"
+        ]
+      }
+    },
+    "/api/classes/recordings/{id}": {
+      "get": {
+        "operationId": "RecordedClassController_fetchRecordedClass",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "The class has been successfully fetched."
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": "Validation failed (uuid is expected)"
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "example": "The class was not found or the ID is invalid."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "RecordedClasses"
+        ]
+      },
+      "patch": {
+        "operationId": "RecordedClassController_updateRecordedClass",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRecordedClassDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "The class has been successfully updated."
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": "Validation failed (uuid is expected)"
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "example": "The class was not found or the ID is invalid."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "RecordedClasses"
+        ]
+      },
+      "delete": {
+        "operationId": "RecordedClassController_deleteRecordedClass",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "The class has been successfully deleted."
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": "Validation failed (uuid is expected)"
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "example": "The class was not found or the ID is invalid."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "RecordedClasses"
+        ]
+      }
+    },
+    "/api/materials": {
+      "post": {
+        "operationId": "MaterialController_createMaterial",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMaterialDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created",
+            "content": {
+              "application/json": {
+                "example": "Material successfully created."
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": "The title field must not be empty."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "Material"
+        ]
+      },
+      "get": {
+        "operationId": "MaterialController_fetchMaterials",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "The materials have been successfully fetched."
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "example": "There are no materials to show."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "Material"
+        ]
+      }
+    },
+    "/api/materials/{id}": {
+      "get": {
+        "operationId": "MaterialController_fetchMaterial",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "The material has been successfully fetched."
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": "Validation failed (uuid is expected)"
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "example": "The material was not found or the ID is invalid."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "Material"
+        ]
+      },
+      "patch": {
+        "operationId": "MaterialController_updateMaterial",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateMaterialDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "The material has been successfully updated."
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": "Validation failed (uuid is expected)"
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "example": "The material was not found or the ID is invalid."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "Material"
+        ]
+      },
+      "delete": {
+        "operationId": "MaterialController_deleteMaterial",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "The material has been successfully deleted."
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": "Validation failed (uuid is expected)"
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "example": "The material was not found or the ID is invalid."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "Material"
+        ]
+      }
+    },
     "/api/subjects": {
       "post": {
         "operationId": "SubjectController_createSubject",
@@ -7032,6 +7512,138 @@
             "type": "string",
             "title": "Notes",
             "example": "my notes"
+          }
+        }
+      },
+      "CreateRecordedClassDTO": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "example": "2025-10-01 class"
+          },
+          "recordedAt": {
+            "type": "string",
+            "title": "RecordedAt",
+            "example": "2025-10-01"
+          },
+          "subjectId": {
+            "type": "number",
+            "title": "SubjectID",
+            "example": 2
+          },
+          "url": {
+            "type": "string",
+            "title": "URL",
+            "example": "http://google.com"
+          },
+          "userIds": {
+            "type": "string",
+            "title": "UserIDs",
+            "example": "[\"2c932cc1-5137-4b48-9787-742064f2b554\", \"5dc5c5ba-6ccb-446b-b61a-eef8ab7720ce\"]"
+          },
+          "materialIds": {
+            "type": "string",
+            "title": "MaterialIDs",
+            "example": "[\"2c932cc1-5137-4b48-9787-742064f2b554\", \"5dc5c5ba-6ccb-446b-b61a-eef8ab7720ce\"]"
+          }
+        },
+        "required": [
+          "title",
+          "recordedAt",
+          "subjectId",
+          "url",
+          "userIds",
+          "materialIds"
+        ]
+      },
+      "UpdateRecordedClassDTO": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "example": "2025-10-01 class"
+          },
+          "recordedAt": {
+            "type": "string",
+            "title": "RecordedAt",
+            "example": "2025-10-01"
+          },
+          "subjectId": {
+            "type": "number",
+            "title": "SubjectID",
+            "example": 2
+          },
+          "url": {
+            "type": "string",
+            "title": "URL",
+            "example": "http://google.com"
+          },
+          "userIds": {
+            "type": "string",
+            "title": "UserIDs",
+            "example": "[\"2c932cc1-5137-4b48-9787-742064f2b554\", \"5dc5c5ba-6ccb-446b-b61a-eef8ab7720ce\"]"
+          }
+        },
+        "required": [
+          "userIds"
+        ]
+      },
+      "CreateMaterialDTO": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "example": "Class canvas"
+          },
+          "type": {
+            "type": "string",
+            "title": "Type",
+            "example": "PDF"
+          },
+          "subjectId": {
+            "type": "number",
+            "title": "SubjectID",
+            "example": 2
+          },
+          "url": {
+            "type": "string",
+            "title": "URL",
+            "example": "http://google.com"
+          }
+        },
+        "required": [
+          "title",
+          "type",
+          "subjectId",
+          "url"
+        ]
+      },
+      "UpdateMaterialDTO": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "example": "Class canvas"
+          },
+          "type": {
+            "type": "string",
+            "title": "Type",
+            "example": "PDF"
+          },
+          "subjectId": {
+            "type": "number",
+            "title": "SubjectID",
+            "example": 2
+          },
+          "url": {
+            "type": "string",
+            "title": "URL",
+            "example": "http://google.com"
           }
         }
       },

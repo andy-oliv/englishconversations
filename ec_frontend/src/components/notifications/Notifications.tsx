@@ -68,7 +68,7 @@ export default function Notifications(): ReactElement {
     }
   }
 
-  const [showMenu, setShowMenu] = useState<boolean>(true);
+  const [showMenu, setShowMenu] = useState<boolean>(false);
   const addNotification = useNotificationStore(
     (state) => state.addNotification
   );

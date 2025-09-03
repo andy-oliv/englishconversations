@@ -48,6 +48,7 @@ export default function Quiz(): ReactElement {
   const [isTest, setIsTest] = useState<boolean>(false);
   const testMaxDuration: number = 1000 * 60 * 1; //test time limit in miliseconds (miliseconds * seconds * desired minutes)
   const [showInstructions, setShowInstructions] = useState<boolean>(false);
+  const [start, setStart] = useState<boolean>(false);
 
   useEffect(() => {
     setLoading(true);
@@ -101,13 +102,13 @@ export default function Quiz(): ReactElement {
   useEffect(() => {
     const interval = setInterval(() => setTime((time) => time + 1000), 1000);
 
-    if (isTest && time >= testMaxDuration) {
+    if (isTest && time >= testMaxDuration && start) {
       setElapsedTime(time);
       navigate(`/completed-quiz?id=${quizId}`, { replace: true });
     }
 
     return () => clearInterval(interval);
-  }, [time, setElapsedTime, quizId, navigate, isTest, testMaxDuration]);
+  }, [time, setElapsedTime, quizId, navigate, isTest, testMaxDuration, start]);
 
   return (
     <>
@@ -133,7 +134,10 @@ export default function Quiz(): ReactElement {
                 </ul>
               </div>
               <button
-                onClick={() => setShowInstructions(false)}
+                onClick={() => {
+                  setShowInstructions(false);
+                  setStart(true);
+                }}
                 className={styles.testStart}
               >
                 Iniciar

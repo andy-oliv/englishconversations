@@ -1,5 +1,96 @@
 @use "../../../styles/variables" as var;
 
+.screen {
+  width: 100%;
+  overflow-y: auto;
+
+  /* Chrome, Edge, Safari */
+  &::-webkit-scrollbar {
+    width: 12px;
+  }
+  &::-webkit-scrollbar-track {
+    background: #5f5f5f;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: var.$blue;
+    border-radius: 10px;
+  }
+}
+
 .title {
   font-family: var.$outfit;
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  height: 100%;
+  gap: 1em;
+  padding: 1em;
+
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: #5f5f5f var.$blue;
+  }
+}
+
+.classCard {
+  background-color: rgb(55, 55, 55);
+  width: 22em;
+  height: 21em;
+  padding: 1em;
+  border-radius: 0.5em;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.03);
+    transition: all 0.2s ease-in-out;
+  }
+}
+
+.picture {
+  width: 100%;
+  height: 60%;
+
+  .thumbnail {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0.5em;
+  }
+}
+
+.classInfo {
+  background-color: rgba(128, 128, 128, 0.3);
+  padding: 0.8em;
+  border-radius: 0.3em;
+  border: 2px solid rgba(0, 0, 0, 0.373);
+}
+
+.classTitle {
+  color: white;
+  font-family: var.$poppins;
+  font-weight: 500;
+}
+
+.date {
+  color: rgb(192, 192, 192);
+  font-family: var.$poppins;
+  font-size: 0.8rem;
+  font-weight: 300;
+}
+
+.tag {
+  background-color: var.$yellow;
+  width: max-content;
+  padding: 0em 1em;
+  border-radius: 1em;
+  font-family: var.$poppins;
+  font-weight: 600;
+  font-size: 0.7rem;
+  margin-top: 1em;
 }

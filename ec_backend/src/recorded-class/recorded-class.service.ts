@@ -70,8 +70,8 @@ export class RecordedClassService {
       await this.notificationService.createAndSendBatchNotificationsViaApp(
         {
           type: 'INFO',
-          title: 'New recorded class',
-          content: `The ${dayjs(recordedAt).format('YYYY-MM-DD')} class is available now.`,
+          title: 'Nova aula adicionada',
+          content: `A aula do dia ${dayjs(recordedAt).format('DD/MM/YYYY')} está disponível.`,
           actionUrl: this.configService.get<string>('RECORDINGS_URL'),
         },
         userIds,
@@ -128,6 +128,11 @@ export class RecordedClassService {
         where: {
           userId,
         },
+        orderBy: {
+          recording: {
+            recordedAt: 'asc',
+          },
+        },
         include: {
           recording: {
             select: {
@@ -135,6 +140,7 @@ export class RecordedClassService {
               title: true,
               url: true,
               thumbnailUrl: true,
+              recordedAt: true,
               subject: {
                 select: {
                   id: true,

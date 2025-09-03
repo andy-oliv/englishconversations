@@ -687,6 +687,10 @@ const httpMessages_EN = {
       status_404:
         'Please, check the request. Either the user or the desired notification do not exist',
     },
+    markAllAsRead: {
+      status_200: 'Notifications successfully updated.',
+      status_404: 'One or more notifications were not found.',
+    },
     updateUserNotification: {
       status_200: 'The notification has been updated!',
       status_404:

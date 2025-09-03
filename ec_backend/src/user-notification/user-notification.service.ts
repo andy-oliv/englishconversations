@@ -8,6 +8,7 @@ import httpMessages_EN from '../helper/messages/httpMessages.en';
 import loggerMessages from '../helper/messages/loggerMessages';
 import generateUserNotificationDTO from './dto/generateUserNotification.dto';
 import UpdateUserNotificationDTO from './dto/updateuUserNotification.dto';
+import * as dayjs from 'dayjs';
 
 @Injectable()
 export class UserNotificationService {
@@ -58,11 +59,12 @@ export class UserNotificationService {
           where: {
             userId,
           },
+          orderBy: {
+            deliveredAt: 'desc',
+          },
           include: {
             notification: {
               select: {
-                id: true,
-                type: true,
                 title: true,
                 content: true,
                 actionUrl: true,
@@ -128,6 +130,44 @@ export class UserNotificationService {
         'userNotificationService',
         'updateUserNotification',
         loggerMessages.userNotification.updateUserNotification.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  async markAllAsRead(
+    userId: string,
+    id: string[],
+  ): Promise<{ message: string }> {
+    try {
+      await this.prismaService.userNotification.updateMany({
+        where: {
+          id: {
+            in: id.map((id) => id),
+          },
+          userId,
+        },
+        data: {
+          isRead: true,
+          readAt: dayjs().toDate(),
+        },
+      });
+
+      return {
+        message: httpMessages_EN.userNotification.markAllAsRead.status_200,
+      };
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(
+          httpMessages_EN.userNotification.markAllAsRead.status_404,
+        );
+      }
+
+      handleInternalErrorException(
+        'userNotificationService',
+        'markAllAsRead',
+        loggerMessages.userNotification.markAllAsRead.status_500,
         this.logger,
         error,
       );

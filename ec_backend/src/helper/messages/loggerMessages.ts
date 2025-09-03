@@ -828,6 +828,10 @@ const loggerMessages = {
       status_500:
         'An internal error occurred while generating the notification. Check the error log for more information.',
     },
+    markAllAsRead: {
+      status_500:
+        'An internal error occurred while updating the notifications. Check the error log for more information.',
+    },
     updateUserNotification: {
       status_500:
         'An internal error occurred while updating the notification. Check the error log for more information.',

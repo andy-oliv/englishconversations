@@ -5,14 +5,13 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Logger } from 'nestjs-pino';
-import { Socket } from 'socket.io';
 import loggerMessages from '../../../helper/messages/loggerMessages';
 import httpMessages_EN from '../../../helper/messages/httpMessages.en';
 import Cookies from '../../../common/types/cookies';
 import getCookies from '../../../helper/functions/getCookies';
-import * as cookie from 'cookie';
 import { AuthService } from '../../auth.service';
 import Payload from '../../../common/types/Payload';
+import AuthSocket from '../../../common/types/AuthSocket';
 
 @Injectable()
 export class WebsocketGuard implements CanActivate {
@@ -22,7 +21,7 @@ export class WebsocketGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const client: Socket = context.switchToWs().getClient<Socket>();
+    const client: AuthSocket = context.switchToWs().getClient<AuthSocket>();
     const cookieHeader = client.handshake.headers.cookie;
 
     if (!cookieHeader) {
@@ -37,7 +36,7 @@ export class WebsocketGuard implements CanActivate {
         cookies.ec_admin_access,
       );
 
-      (client as any).user = payload;
+      client.user = payload;
 
       this.logger.log(loggerMessages.authGuard.userHasAdminToken);
 
@@ -49,7 +48,7 @@ export class WebsocketGuard implements CanActivate {
         cookies.ec_accessToken,
       );
 
-      (client as any).user = payload;
+      client.user = payload;
 
       this.logger.log(loggerMessages.authGuard.userHasAccessToken);
 

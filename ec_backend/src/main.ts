@@ -10,12 +10,15 @@ import * as fs from 'fs';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
-    cors: {
-      origin: ['http://localhost:4200', 'http://localhost:5173'],
-      credentials: true,
-    },
   });
+
   const configService = app.get(ConfigService);
+
+  app.enableCors({
+    origin: [configService.get<string>('FRONTEND_URL')],
+    credentials: true,
+  });
+
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,

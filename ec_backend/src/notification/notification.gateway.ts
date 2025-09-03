@@ -1,30 +1,53 @@
-import { UseGuards } from '@nestjs/common';
+import { ExecutionContext, UseGuards } from '@nestjs/common';
 import {
-  SubscribeMessage,
+  OnGatewayConnection,
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
-import { Server, Socket } from 'socket.io';
+import { Server } from 'socket.io';
 import { WebsocketGuard } from '../auth/guards/websocket/websocket.guard';
 import AuthSocket from '../common/types/AuthSocket';
-import Payload from '../common/types/Payload';
 import { Logger } from 'nestjs-pino';
 
 @WebSocketGateway({
-  cors: { origin: 'http://localhost:5173', credentials: true },
-  namespace: 'notifications',
+  cors: {
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+  },
+  namespace: 'api/notifications',
 })
-@UseGuards(WebsocketGuard)
-export class NotificationGateway {
-  constructor(private readonly logger: Logger) {}
+export class NotificationGateway implements OnGatewayConnection {
+  constructor(
+    private readonly logger: Logger,
+    private readonly websocketGuard: WebsocketGuard,
+  ) {}
 
   @WebSocketServer()
   server: Server;
 
-  @SubscribeMessage('notification')
-  handleMessage(client: AuthSocket, payload: any) {
-    const user: Payload = client.user;
+  async handleConnection(client: AuthSocket, ...args: any[]) {
+    const context = {
+      switchToWs: () => ({
+        getClient: () => client,
+      }),
+    } as unknown as ExecutionContext;
 
-    return { message: `Olá, ${user.name}, recebemos a sua notificação` };
+    try {
+      const canActivate = await this.websocketGuard.canActivate(context);
+
+      if (!canActivate) {
+        client.disconnect();
+        return;
+      }
+
+      const user = client.user;
+      if (user?.id) {
+        client.join(user.id);
+      } else {
+        client.disconnect();
+      }
+    } catch (err) {
+      client.disconnect();
+    }
   }
 }

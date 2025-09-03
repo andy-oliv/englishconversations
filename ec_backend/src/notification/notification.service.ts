@@ -7,12 +7,16 @@ import httpMessages_EN from '../helper/messages/httpMessages.en';
 import handleInternalErrorException from '../helper/functions/handleErrorException';
 import loggerMessages from '../helper/messages/loggerMessages';
 import UpdateNotificationDTO from './dto/updateNotification.dto';
+import * as dayjs from 'dayjs';
+import { UserNotification } from '../../generated/prisma';
+import { NotificationGateway } from './notification.gateway';
 
 @Injectable()
 export class NotificationService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly logger: Logger,
+    private readonly notificationGateway: NotificationGateway,
   ) {}
 
   async generateNotification(data: Notification): Promise<Return> {
@@ -30,6 +34,54 @@ export class NotificationService {
       handleInternalErrorException(
         'notificationService',
         'generateNotification',
+        loggerMessages.notification.generateNotification.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
+  async createAndSendNotificationViaApp(
+    data: Notification,
+    userId: string,
+  ): Promise<Return> {
+    try {
+      const notification: Notification =
+        await this.prismaService.notification.create({
+          data,
+        });
+
+      const newNotification: UserNotification =
+        await this.prismaService.userNotification.create({
+          data: {
+            notificationId: notification.id,
+            userId,
+            deliveredAt: dayjs().toDate(),
+            deliveredViaApp: true,
+          },
+          include: {
+            notification: {
+              select: {
+                title: true,
+                actionUrl: true,
+                content: true,
+              },
+            },
+          },
+        });
+
+      this.notificationGateway.server
+        .to(userId)
+        .emit('privateNotification', newNotification);
+
+      return {
+        message: httpMessages_EN.notification.generateNotification.status_200,
+        data: newNotification,
+      };
+    } catch (error) {
+      handleInternalErrorException(
+        'notificationService',
+        'createAndSendNotificationViaApp',
         loggerMessages.notification.generateNotification.status_500,
         this.logger,
         error,

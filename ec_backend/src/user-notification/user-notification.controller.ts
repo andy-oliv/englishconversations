@@ -78,6 +78,33 @@ export class UserNotificationController {
     return this.userNotificationService.fetchUserNotifications(userId);
   }
 
+  @Patch('update/all')
+  @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
+  @UseGuards(SelfGuard)
+  @ApiResponse({
+    status: 200,
+    description: 'Success',
+    example: httpMessages_EN.userNotification.markAllAsRead.status_200,
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Not Found',
+    example: httpMessages_EN.userNotification.markAllAsRead.status_404,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal Server Error',
+    example: httpMessages_EN.general.status_500,
+  })
+  async markAllAsRead(
+    @Body() data: { userId: string; notificationIds: string[] },
+  ): Promise<{ message: string }> {
+    return this.userNotificationService.markAllAsRead(
+      data.userId,
+      data.notificationIds,
+    );
+  }
+
   @Patch('update')
   @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
   @UseGuards(SelfGuard)

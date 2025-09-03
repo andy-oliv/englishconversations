@@ -7,6 +7,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UserModule } from '../user/user.module';
 import { EmailModule } from '../email/email.module';
 import { S3Module } from '../s3/s3.module';
+import { WebsocketGuard } from './guards/websocket/websocket.guard';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { S3Module } from '../s3/s3.module';
     S3Module,
   ],
   controllers: [AuthController],
-  providers: [AuthService],
-  exports: [AuthService],
+  providers: [AuthService, WebsocketGuard],
+  exports: [AuthService, WebsocketGuard],
 })
 export class AuthModule {}

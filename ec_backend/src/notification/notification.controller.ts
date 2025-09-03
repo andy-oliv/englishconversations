@@ -5,6 +5,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  ParseUUIDPipe,
   Patch,
   Post,
   UseGuards,
@@ -26,6 +27,32 @@ import { UserRoles } from '@prisma/client';
 @UseGuards(RoleGuard)
 export class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}
+
+  @Post('send/:userId')
+  @ApiResponse({
+    status: 201,
+    description: 'Success',
+    example: httpMessages_EN.notification.generateNotification.status_200,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request',
+    example: validationMessages_EN.notification.type.isIn,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal Server Error',
+    example: httpMessages_EN.general.status_500,
+  })
+  async createAndSendNotificationViaApp(
+    @Body() data: GenerateNotificationDTO,
+    @Param('userId', new ParseUUIDPipe()) userId: string,
+  ): Promise<Return> {
+    return this.notificationService.createAndSendNotificationViaApp(
+      data,
+      userId,
+    );
+  }
 
   @Post()
   @ApiResponse({

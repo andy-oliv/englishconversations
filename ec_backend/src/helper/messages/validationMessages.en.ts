@@ -272,6 +272,10 @@ const validationMessages_EN = {
     expirationDate: {
       isDate: 'The expirationDate field must be a valid date.',
     },
+    userIds: {
+      isNotEmpty: 'The userIds field must not be empty.',
+      isArray: 'The userIds field must be an array',
+    },
   },
   quizzes: {
     addOrRemoveExerciseDTO: {

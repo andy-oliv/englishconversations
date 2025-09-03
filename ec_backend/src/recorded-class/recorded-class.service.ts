@@ -7,14 +7,17 @@ import loggerMessages from '../helper/messages/loggerMessages';
 import RecordedClass from '../entities/RecordedClass';
 import httpMessages_EN from '../helper/messages/httpMessages.en';
 import UpdateRecordedClassDTO from './dto/UpdateRecordedClass.dto';
-import { NotificationGateway } from '../notification/notification.gateway';
+import { NotificationService } from '../notification/notification.service';
+import { ConfigService } from '@nestjs/config';
+import * as dayjs from 'dayjs';
 
 @Injectable()
 export class RecordedClassService {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly logger: Logger,
-    private readonly notificationGateway: NotificationGateway,
+    private readonly notificationService: NotificationService,
+    private readonly configService: ConfigService,
   ) {}
 
   async createRecordedClass(
@@ -23,7 +26,7 @@ export class RecordedClassService {
     recordedAt: Date,
     url: string,
     userIds: string[],
-    materials: string[],
+    materialIds: string[],
   ): Promise<Return> {
     try {
       const recordedClass: RecordedClass =
@@ -44,21 +47,33 @@ export class RecordedClassService {
 
       await this.prismaService.userRecordings.createMany({
         data: userRecordings,
+        skipDuplicates: true,
       });
 
-      if (materials) {
+      if (materialIds && materialIds.length > 0) {
         const classMaterials: {
           materialId: string;
           recordedClassId: string;
-        }[] = materials.map((material) => ({
-          materialId: material,
+        }[] = materialIds.map((materialId) => ({
+          materialId: materialId,
           recordedClassId: recordedClass.id,
         }));
 
         await this.prismaService.classMaterial.createMany({
           data: classMaterials,
+          skipDuplicates: true,
         });
       }
+
+      await this.notificationService.createAndSendBatchNotificationsViaApp(
+        {
+          type: 'INFO',
+          title: 'New recorded class',
+          content: `The ${dayjs(recordedAt).format('YYYY-MM-DD')} class is available now.`,
+          actionUrl: this.configService.get<string>('RECORDINGS_URL'),
+        },
+        userIds,
+      );
 
       return {
         message: httpMessages_EN.recordedClass.createRecordedClass.status_201,

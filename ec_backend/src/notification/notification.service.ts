@@ -89,6 +89,67 @@ export class NotificationService {
     }
   }
 
+  async createAndSendBatchNotificationsViaApp(
+    data: Notification,
+    userIds: string[],
+  ): Promise<{ message: string }> {
+    try {
+      const notification: Notification =
+        await this.prismaService.notification.create({
+          data,
+        });
+
+      const userNotifications = userIds.map((userId) => ({
+        notificationId: notification.id,
+        userId,
+        deliveredAt: dayjs().toDate(),
+        deliveredViaApp: true,
+      }));
+
+      await this.prismaService.userNotification.createMany({
+        data: userNotifications,
+        skipDuplicates: true,
+      });
+
+      const notifications: UserNotification[] =
+        await this.prismaService.userNotification.findMany({
+          where: {
+            userId: {
+              in: userIds.map((userId) => userId),
+            },
+            notificationId: notification.id,
+          },
+          include: {
+            notification: {
+              select: {
+                title: true,
+                actionUrl: true,
+                content: true,
+              },
+            },
+          },
+        });
+
+      notifications.forEach((notification) => {
+        this.notificationGateway.server
+          .to(notification.userId)
+          .emit('privateNotification', notification);
+      });
+
+      return {
+        message: httpMessages_EN.notification.generateNotification.status_200,
+      };
+    } catch (error) {
+      handleInternalErrorException(
+        'notificationService',
+        'createAndSendBatchNotificationsViaApp',
+        loggerMessages.notification.generateNotification.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
   async fetchNotifications(): Promise<Return> {
     try {
       const notifications: Notification[] =

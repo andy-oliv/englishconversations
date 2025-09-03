@@ -3230,6 +3230,51 @@
         ]
       }
     },
+    "/api/notifications/send/batch": {
+      "post": {
+        "operationId": "NotificationController_createAndSendBatchNotificationsViaApp",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateBatchNotificationsDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "A new notification has been generated!"
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": "The type field is invalid."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "Notifications"
+        ]
+      }
+    },
     "/api/notifications/send/{userId}": {
       "post": {
         "operationId": "NotificationController_createAndSendNotificationViaApp",
@@ -7055,6 +7100,46 @@
       "UpdateUserChapterDTO": {
         "type": "object",
         "properties": {}
+      },
+      "GenerateBatchNotificationsDTO": {
+        "type": "object",
+        "properties": {
+          "userIds": {
+            "type": "string",
+            "title": "UserIDs",
+            "example": "[\"fd33f425-0ba3-4d2f-9a81-42a340dba747\"]"
+          },
+          "type": {
+            "type": "string",
+            "title": "Type",
+            "example": "INFO"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "example": "Congratulations!"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content",
+            "example": "You have just completed chapter A1!"
+          },
+          "actionUrl": {
+            "type": "string",
+            "title": "ActionURL",
+            "example": "https://google.com"
+          },
+          "expirationDate": {
+            "type": "string",
+            "title": "ExpirationDate",
+            "example": "2025-07-16"
+          }
+        },
+        "required": [
+          "userIds",
+          "type",
+          "title"
+        ]
       },
       "GenerateNotificationDTO": {
         "type": "object",

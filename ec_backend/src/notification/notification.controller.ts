@@ -20,6 +20,7 @@ import UpdateNotificationDTO from './dto/updateNotification.dto';
 import { RoleGuard } from '../auth/guards/role/role.guard';
 import { AuthType } from '../common/decorators/authType.decorator';
 import { UserRoles } from '@prisma/client';
+import GenerateBatchNotificationsDTO from './dto/generateBatchNotifications.dto';
 
 @ApiTags('Notifications')
 @Controller('api/notifications')
@@ -27,6 +28,37 @@ import { UserRoles } from '@prisma/client';
 @UseGuards(RoleGuard)
 export class NotificationController {
   constructor(private readonly notificationService: NotificationService) {}
+
+  @Post('send/batch')
+  @ApiResponse({
+    status: 201,
+    description: 'Success',
+    example: httpMessages_EN.notification.generateNotification.status_200,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request',
+    example: validationMessages_EN.notification.type.isIn,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal Server Error',
+    example: httpMessages_EN.general.status_500,
+  })
+  async createAndSendBatchNotificationsViaApp(
+    @Body() data: GenerateBatchNotificationsDTO,
+  ): Promise<{ message: string }> {
+    return this.notificationService.createAndSendBatchNotificationsViaApp(
+      {
+        type: data.type,
+        title: data.title,
+        content: data.content,
+        expirationDate: data.expirationDate,
+        actionUrl: data.actionUrl,
+      },
+      data.userIds,
+    );
+  }
 
   @Post('send/:userId')
   @ApiResponse({

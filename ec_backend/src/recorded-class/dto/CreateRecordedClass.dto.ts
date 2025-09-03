@@ -71,8 +71,7 @@ export default class CreateRecordedClassDTO {
   })
   @IsNotEmpty({
     message:
-      validationMessages_EN.recordedClass.createRecordedClassDTO.title
-        .isNotEmpty,
+      validationMessages_EN.recordedClass.createRecordedClassDTO.url.isNotEmpty,
   })
   @IsUrl(
     {},
@@ -82,6 +81,27 @@ export default class CreateRecordedClassDTO {
     },
   )
   url: string;
+
+  @ApiProperty({
+    title: 'URL',
+    required: true,
+    type: 'string',
+    example: 'http://google.com',
+  })
+  @IsNotEmpty({
+    message:
+      validationMessages_EN.recordedClass.createRecordedClassDTO.thumbnailUrl
+        .isNotEmpty,
+  })
+  @IsUrl(
+    {},
+    {
+      message:
+        validationMessages_EN.recordedClass.createRecordedClassDTO.thumbnailUrl
+          .isUrl,
+    },
+  )
+  thumbnailUrl: string;
 
   @ApiProperty({
     title: 'UserIDs',

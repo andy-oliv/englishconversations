@@ -4,4 +4,5 @@ export default interface RecordedClass {
   recordedAt: Date;
   subjectId: number;
   url: string;
+  thumbnailUrl: string;
 }

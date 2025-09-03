@@ -7817,6 +7817,11 @@
             "title": "URL",
             "example": "http://google.com"
           },
+          "thumbnailUrl": {
+            "type": "string",
+            "title": "URL",
+            "example": "http://google.com"
+          },
           "userIds": {
             "type": "string",
             "title": "UserIDs",
@@ -7833,6 +7838,7 @@
           "recordedAt",
           "subjectId",
           "url",
+          "thumbnailUrl",
           "userIds",
           "materialIds"
         ]

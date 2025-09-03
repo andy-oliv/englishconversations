@@ -56,6 +56,7 @@ export class RecordedClassController {
       url,
       userIds,
       materialIds,
+      thumbnailUrl,
     }: CreateRecordedClassDTO,
   ): Promise<Return> {
     return this.recordedClassService.createRecordedClass(
@@ -63,6 +64,7 @@ export class RecordedClassController {
       subjectId,
       recordedAt,
       url,
+      thumbnailUrl,
       userIds,
       materialIds,
     );

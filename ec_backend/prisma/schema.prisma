@@ -340,6 +340,7 @@ model RecordedClass {
   subjectId Int
   materials ClassMaterial[]
   url String @db.VarChar(250)
+  thumbnailUrl String @db.VarChar(250)
   users UserRecordings[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

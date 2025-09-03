@@ -25,6 +25,7 @@ export class RecordedClassService {
     subjectId: number,
     recordedAt: Date,
     url: string,
+    thumbnailUrl: string,
     userIds: string[],
     materialIds: string[],
   ): Promise<Return> {
@@ -36,6 +37,7 @@ export class RecordedClassService {
             subjectId,
             recordedAt,
             url,
+            thumbnailUrl,
           },
         });
 
@@ -132,6 +134,7 @@ export class RecordedClassService {
               id: true,
               title: true,
               url: true,
+              thumbnailUrl: true,
               subject: {
                 select: {
                   id: true,

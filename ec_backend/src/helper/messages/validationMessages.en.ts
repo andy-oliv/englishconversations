@@ -338,6 +338,10 @@ const validationMessages_EN = {
         isNotEmpty: 'The url field must not be empty.',
         isUrl: 'The url field must be a valid URL.',
       },
+      thumbnailUrl: {
+        isNotEmpty: 'The thumbnailUrl field must not be empty.',
+        isUrl: 'The thumbnailUrl field must be a valid URL.',
+      },
       userIds: {
         isNotEmpty: 'The userIds field must not be empty.',
         isArray: 'The userIds field must be an array.',

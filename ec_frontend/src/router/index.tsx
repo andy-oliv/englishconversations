@@ -19,6 +19,7 @@ import Slideshow from "../pages/slideshow/Slideshow";
 import Settings from "../pages/settings/Settings";
 import Register from "../pages/register/Register";
 import EmailConfirmation from "../pages/emailConfirmation/EmailConfirmation";
+import RecordedClasses from "../pages/recordedClasses/RecordedClasses";
 
 export const router = createBrowserRouter([
   {
@@ -52,6 +53,10 @@ export const router = createBrowserRouter([
           {
             path: "/library",
             element: <Library />,
+          },
+          {
+            path: "/recordings",
+            element: <RecordedClasses />,
           },
           {
             path: "/settings",

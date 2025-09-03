@@ -11,6 +11,7 @@ import {
 } from "../../schemas/userProgress.schema";
 import { useUserProgressStore } from "../../stores/userProgressStore";
 import * as Sentry from "@sentry/react";
+import Notifications from "../notifications/Notifications";
 
 export default function Header(): ReactElement {
   const user: LoggedUser | null = LoggedUserStore((state) => state.data);
@@ -150,6 +151,7 @@ export default function Header(): ReactElement {
             </div>
           </div>
           <div className={styles.userMenuContainer}>
+            <Notifications />
             <UserMenu />
           </div>
         </div>

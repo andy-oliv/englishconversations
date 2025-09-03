@@ -1,8 +1,9 @@
 @use "../../../styles/variables" as var;
 
 .container {
-  width: 10%;
   position: relative;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .wrapper {

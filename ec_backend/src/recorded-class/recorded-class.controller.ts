@@ -7,6 +7,7 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -65,6 +66,37 @@ export class RecordedClassController {
       userIds,
       materialIds,
     );
+  }
+
+  @Get('get-by')
+  @AuthType(UserRoles.ADMIN, UserRoles.STUDENT)
+  @UseGuards(SelfGuard)
+  @ApiResponse({
+    status: 200,
+    description: 'Success',
+    example:
+      httpMessages_EN.recordedClass.fetchRecordedClassesByUser.status_200,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request',
+    example: 'Validation failed (uuid is expected)',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Not Found',
+    example:
+      httpMessages_EN.recordedClass.fetchRecordedClassesByUser.status_404,
+  })
+  @ApiResponse({
+    status: 500,
+    description: 'Internal Server Error',
+    example: httpMessages_EN.general.status_500,
+  })
+  async fetchRecordedClassesByUser(
+    @Query('userId', new ParseUUIDPipe()) userId: string,
+  ): Promise<Return> {
+    return this.recordedClassService.fetchRecordedClassesByUser(userId);
   }
 
   @Get(':id')

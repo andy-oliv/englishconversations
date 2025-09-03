@@ -385,6 +385,10 @@ const httpMessages_EN = {
       status_200: 'The class has been successfully fetched.',
       status_404: 'The class was not found or the ID is invalid.',
     },
+    fetchRecordedClassesByUser: {
+      status_200: 'The classes have been successfully fetched.',
+      status_404: 'There are no classes to show or the userId is invalid.',
+    },
     updateRecordedClass: {
       status_200: 'The class has been successfully updated.',
       status_404: 'The class was not found or the ID is invalid.',

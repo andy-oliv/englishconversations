@@ -465,23 +465,27 @@ const loggerMessages = {
   recordedClass: {
     createRecordedClass: {
       status_500:
-        'An internal error occurred while creating the recordedClass. Check the error log for more information.',
+        'An internal error occurred while creating the recorded class. Check the error log for more information.',
     },
     fetchRecordedClasses: {
       status_500:
-        'An internal error occurred while fetching the recordedClasses. Check the error log for more information.',
+        'An internal error occurred while fetching the recorded classes. Check the error log for more information.',
     },
     fetchRecordedClass: {
       status_500:
-        'An internal error occurred while fetching the recordedClass. Check the error log for more information.',
+        'An internal error occurred while fetching the recorded class. Check the error log for more information.',
+    },
+    fetchRecordedClassesByUser: {
+      status_500:
+        'An internal error occurred while fetching the recorded classes. Check the error log for more information.',
     },
     updateRecordedClass: {
       status_500:
-        'An internal error occurred while updating the recordedClass. Check the error log for more information.',
+        'An internal error occurred while updating the recorded class. Check the error log for more information.',
     },
     deleteRecordedClass: {
       status_500:
-        'An internal error occurred while deleting the recordedClass. Check the error log for more information.',
+        'An internal error occurred while deleting the recorded class. Check the error log for more information.',
     },
   },
   selfGuard: {

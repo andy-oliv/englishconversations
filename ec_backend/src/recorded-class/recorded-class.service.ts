@@ -120,6 +120,63 @@ export class RecordedClassService {
     }
   }
 
+  async fetchRecordedClassesByUser(userId: string): Promise<Return> {
+    try {
+      const recording = await this.prismaService.userRecordings.findMany({
+        where: {
+          userId,
+        },
+        include: {
+          recording: {
+            select: {
+              id: true,
+              title: true,
+              url: true,
+              subject: {
+                select: {
+                  id: true,
+                  title: true,
+                },
+              },
+              materials: {
+                select: {
+                  material: {
+                    select: {
+                      id: true,
+                      type: true,
+                      title: true,
+                      url: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      return {
+        message:
+          httpMessages_EN.recordedClass.fetchRecordedClassesByUser.status_200,
+        data: recording,
+      };
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(
+          httpMessages_EN.recordedClass.fetchRecordedClassesByUser.status_404,
+        );
+      }
+
+      handleInternalErrorException(
+        'RecordedClassService',
+        'fetchRecordedClass',
+        loggerMessages.recordedClass.fetchRecordedClassesByUser.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
   async fetchRecordedClass(id: string): Promise<Return> {
     try {
       const recording: RecordedClass =

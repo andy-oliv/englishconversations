@@ -6347,6 +6347,58 @@
         ]
       }
     },
+    "/api/classes/recordings/get-by": {
+      "get": {
+        "operationId": "RecordedClassController_fetchRecordedClassesByUser",
+        "parameters": [
+          {
+            "name": "userId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "example": "The classes have been successfully fetched."
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "example": "Validation failed (uuid is expected)"
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "example": "There are no classes to show or the userId is invalid."
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "example": "An unexpected error occurred. Please check the error log for more information."
+              }
+            }
+          }
+        },
+        "tags": [
+          "RecordedClasses"
+        ]
+      }
+    },
     "/api/classes/recordings/{id}": {
       "get": {
         "operationId": "RecordedClassController_fetchRecordedClass",

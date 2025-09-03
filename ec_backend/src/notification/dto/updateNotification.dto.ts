@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDate, IsIn, IsOptional, IsString, IsUrl } from 'class-validator';
+import { IsDate, IsIn, IsOptional, IsString } from 'class-validator';
 import validationMessages_EN from '../../helper/messages/validationMessages.en';
 import { NotificationTypes } from '@prisma/client';
 
@@ -47,12 +47,9 @@ export default class UpdateNotificationDTO {
     example: 'https://google.com',
   })
   @IsOptional()
-  @IsUrl(
-    {},
-    {
-      message: validationMessages_EN.notification.actionUrl.isUrl,
-    },
-  )
+  @IsString({
+    message: validationMessages_EN.notification.actionUrl.isUrl,
+  })
   actionUrl?: string;
 
   @ApiProperty({

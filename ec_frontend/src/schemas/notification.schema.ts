@@ -10,7 +10,7 @@ export const NotificationSchema = z.object({
   deliveredViaApp: z.boolean().nullable(),
   deliveredViaEmail: z.boolean().nullable(),
   notification: z.object({
-    actionUrl: z.url().nullable(),
+    actionUrl: z.string().nullable(),
     title: z.string(),
     content: z.string(),
   }),

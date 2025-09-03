@@ -12,8 +12,17 @@ import type { User } from "../../schemas/user.schema";
 import { useUserStore } from "../../stores/userStore";
 import dayjs from "dayjs";
 import * as Sentry from "@sentry/react";
+import { useNavigate } from "react-router-dom";
 
 export default function Notifications(): ReactElement {
+  async function handleToContentClick(
+    url: string,
+    notificationId: string
+  ): Promise<void> {
+    await handleSetIsRead(notificationId);
+    navigate(`${url}`);
+  }
+
   async function handleSetIsRead(notificationId: string): Promise<void> {
     setIsRead(notificationId);
 
@@ -59,7 +68,7 @@ export default function Notifications(): ReactElement {
     }
   }
 
-  const [showMenu, setShowMenu] = useState<boolean>(false);
+  const [showMenu, setShowMenu] = useState<boolean>(true);
   const addNotification = useNotificationStore(
     (state) => state.addNotification
   );
@@ -73,6 +82,7 @@ export default function Notifications(): ReactElement {
     (state) => state.notifications
   );
   const user: User | null = useUserStore((state) => state.data);
+  const navigate = useNavigate();
 
   useEffect(() => {
     let socket: Socket;
@@ -181,12 +191,27 @@ export default function Notifications(): ReactElement {
                   <p className={styles.notificationContent}>
                     {notification.notification.content}
                   </p>
-                  <button
-                    className={`${styles.btn} ${notification.isRead ? styles.isRead : null}`}
-                    onClick={() => handleSetIsRead(notification.id)}
-                  >
-                    {notification.isRead ? "Lida" : "Marcar como lida"}
-                  </button>
+                  <div className={styles.btnWrapper}>
+                    <button
+                      className={`${styles.btn} ${notification.isRead ? styles.isRead : null}`}
+                      onClick={() => handleSetIsRead(notification.id)}
+                    >
+                      {notification.isRead ? "Lida" : "Marcar como lida"}
+                    </button>
+                    <button
+                      className={`${notification.notification.actionUrl ? styles.btn : styles.noUrl}`}
+                      onClick={() =>
+                        notification.notification.actionUrl
+                          ? handleToContentClick(
+                              notification.notification.actionUrl,
+                              notification.id
+                            )
+                          : null
+                      }
+                    >
+                      Ver
+                    </button>
+                  </div>
                 </div>
               ))
             : null}

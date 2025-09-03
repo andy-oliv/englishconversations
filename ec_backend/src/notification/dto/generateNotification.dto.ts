@@ -60,12 +60,9 @@ export default class GenerateNotificationDTO {
     example: 'https://google.com',
   })
   @IsOptional()
-  @IsUrl(
-    {},
-    {
-      message: validationMessages_EN.notification.actionUrl.isUrl,
-    },
-  )
+  @IsString({
+    message: validationMessages_EN.notification.actionUrl.isUrl,
+  })
   actionUrl?: string;
 
   @ApiProperty({

@@ -101,33 +101,52 @@
   .notificationContent {
     font-size: 0.8rem;
   }
-
-  .btn {
-    background-color: var.$blue;
-    border: none;
-    padding: 0.3em 0.5em;
-    border-radius: 0.5em;
-    color: white;
-    margin-top: 0.5em;
-    cursor: pointer;
-
-    &:hover {
-      background-color: var.$btnHover;
-    }
-  }
 }
 
 .readWrapper {
   background-color: rgb(106, 106, 106);
   color: rgb(187, 186, 186);
+}
 
-  .isRead {
+.btnWrapper {
+  display: flex;
+  gap: 1em;
+}
+
+.btn {
+  background-color: var.$blue;
+  border: none;
+  padding: 0.3em 1em;
+  border-radius: 0.5em;
+  color: white;
+  margin-top: 0.5em;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var.$btnHover;
+  }
+}
+
+.isRead {
+  background-color: grey;
+  color: var.$blue;
+  pointer-events: none;
+
+  &:hover {
     background-color: grey;
-    color: var.$blue;
-    pointer-events: none;
+  }
+}
 
-    &:hover {
-      background-color: grey;
-    }
+.noUrl {
+  background-color: grey;
+  border: none;
+  padding: 0.3em 1em;
+  border-radius: 0.5em;
+  color: rgb(170, 169, 169);
+  margin-top: 0.5em;
+  pointer-events: none;
+
+  &:hover {
+    background-color: grey;
   }
 }

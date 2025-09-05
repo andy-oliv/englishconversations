@@ -68,10 +68,4 @@ export default class CreateContentDTO {
     message: validationMessages_EN.content.createContentDTO.quizId.isUUID,
   })
   quizId?: string;
-
-  @IsOptional()
-  @IsInt({
-    message: validationMessages_EN.content.createContentDTO.order.isInt,
-  })
-  order?: number;
 }

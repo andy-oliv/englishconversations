@@ -451,6 +451,9 @@ const httpMessages_EN = {
       status_200: 'The progress has been fetched.',
       status_404: 'The ID is invalid or the progress does not exist.',
     },
+    throwIfProgressExists: {
+      status_409: 'The progress already exists',
+    },
     updateProgress: {
       status_200: 'The progress has been updated.',
       status_404: 'The ID is invalid or the progress does not exist.',

@@ -545,6 +545,10 @@ const loggerMessages = {
       status_500:
         'An internal error occurred while fetching the progress. Check the error log for more information.',
     },
+    throwIfProgressExists: {
+      status_500:
+        'An internal error occurred while checking the progress. Check the error log for more information.',
+    },
     updateProgress: {
       status_500:
         'An internal error occurred while updating the progress. Check the error log for more information.',

@@ -43,6 +43,11 @@ export class SlideshowProgressController {
         .isNotEmpty,
   })
   @ApiResponse({
+    status: 409,
+    description: 'Conflict',
+    example: httpMessages_EN.slideshowProgress.throwIfProgressExists.status_409,
+  })
+  @ApiResponse({
     status: 500,
     description: 'Internal Server Error',
     example: httpMessages_EN.general.status_500,

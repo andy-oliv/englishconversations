@@ -6,8 +6,8 @@ export const VideoSchema = z.object({
   description: z.string(),
   url: z.url(),
   duration: z.int(),
-  thumbnailUrl: z.url(),
-  feedback: z.number(),
+  thumbnailUrl: z.url().nullable(),
+  feedback: z.number().nullable(),
 });
 
 export type Video = z.infer<typeof VideoSchema>;

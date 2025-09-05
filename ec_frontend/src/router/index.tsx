@@ -20,6 +20,7 @@ import Settings from "../pages/settings/Settings";
 import Register from "../pages/register/Register";
 import EmailConfirmation from "../pages/emailConfirmation/EmailConfirmation";
 import RecordedClasses from "../pages/recordedClasses/RecordedClasses";
+import RecordedClassView from "../pages/recordedClassView/RecordedClassView";
 
 export const router = createBrowserRouter([
   {
@@ -101,6 +102,10 @@ export const router = createBrowserRouter([
             element: <Slideshow />,
           },
         ],
+      },
+      {
+        path: "watch",
+        element: <RecordedClassView />,
       },
     ],
   },

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { Logger } from 'nestjs-pino';
 import GenerateProgressDTO from './dto/generateProgress.dto';
@@ -16,7 +20,41 @@ export class SlideshowProgressService {
     private readonly logger: Logger,
   ) {}
 
+  async throwIfProgressExists(
+    userId: string,
+    slideshowId: string,
+  ): Promise<void> {
+    try {
+      const progressExists: SlideshowProgress =
+        await this.prismaService.slideshowProgress.findFirst({
+          where: {
+            AND: [{ userId }, { slideshowId }],
+          },
+        });
+
+      if (progressExists) {
+        throw new ConflictException(
+          httpMessages_EN.slideshowProgress.throwIfProgressExists.status_409,
+        );
+      }
+    } catch (error) {
+      if (error instanceof ConflictException) {
+        throw error;
+      }
+
+      handleInternalErrorException(
+        'slideshowProgressService',
+        'throwIfProgressExists',
+        loggerMessages.slideshowProgress.throwIfProgressExists.status_500,
+        this.logger,
+        error,
+      );
+    }
+  }
+
   async generateProgress(data: GenerateProgressDTO): Promise<Return> {
+    await this.throwIfProgressExists(data.userId, data.slideshowId);
+
     try {
       const newProgress: SlideshowProgress =
         await this.prismaService.slideshowProgress.create({
@@ -28,6 +66,10 @@ export class SlideshowProgressService {
         data: newProgress,
       };
     } catch (error) {
+      if (error instanceof ConflictException) {
+        throw error;
+      }
+
       handleInternalErrorException(
         'SlideshowProgressService',
         'generateProgress',

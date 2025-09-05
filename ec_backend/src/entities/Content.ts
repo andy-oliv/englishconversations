@@ -7,5 +7,5 @@ export default interface Content {
   videoId?: string;
   slideshowId?: string;
   quizId?: string;
-  order: number;
+  order?: number;
 }

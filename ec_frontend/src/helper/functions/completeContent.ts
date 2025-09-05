@@ -1,5 +1,4 @@
 import axios from "axios";
-import type CompletedContentData from "../types/completedContentData";
 import { environment } from "../../environment/environment";
 import * as Sentry from "@sentry/react";
 import { toastMessages } from "../messages/toastMessages";
@@ -15,8 +14,7 @@ export default async function completeContent(
   contentId: string | undefined,
   contentType: string,
   navigate: (url: string, additionalInfo: { replace: boolean }) => void,
-  currentChapter: CurrentChapterStoreState,
-  data?: CompletedContentData
+  currentChapter: CurrentChapterStoreState
 ): Promise<void> {
   if (!userContentId || !id) {
     toast.error(toastMessages.completeContent.error, { autoClose: 3000 });
@@ -25,7 +23,7 @@ export default async function completeContent(
   try {
     const response = await axios.patch(
       `${environment.backendApiUrl}/user/contents/complete/${userContentId}`,
-      data,
+      {},
       { withCredentials: true }
     );
     const parsedResponse = CurrentChapterSchema.safeParse(response.data.data);

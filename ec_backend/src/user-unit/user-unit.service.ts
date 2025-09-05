@@ -33,8 +33,8 @@ export class UserUnitService {
       const firstContent: Content = await this.prismaService.content.findFirst({
         where: {
           unitId: userUnitProgress.unitId,
-          order: 1,
         },
+        orderBy: { order: 'asc' },
       });
 
       //if the first content doesn't exist then it means the unit doesn't have any contents
@@ -72,10 +72,7 @@ export class UserUnitService {
     currentUnitProgress: UserUnit,
   ): Promise<void> {
     try {
-      if (
-        currentUnitProgress.status !== Status.COMPLETED ||
-        !currentUnitProgress.completedAt
-      ) {
+      if (currentUnitProgress.status === Status.IN_PROGRESS) {
         await this.prismaService.userUnit.update({
           where: {
             id: currentUnitProgress.id,
@@ -94,7 +91,10 @@ export class UserUnitService {
       });
 
       const nextUnit: Unit = await this.prismaService.unit.findFirst({
-        where: { order: { gt: currentUnit.order } },
+        where: {
+          chapterId: currentUnit.chapterId,
+          order: { gt: currentUnit.order },
+        },
         orderBy: { order: 'asc' },
       });
 
@@ -107,16 +107,18 @@ export class UserUnitService {
             },
           });
 
-        const updatedProgress = await this.prismaService.userUnit.update({
-          where: {
-            id: userNextUnitProgress.id,
-          },
-          data: {
-            status: Status.IN_PROGRESS,
-          },
-        });
+        if (userNextUnitProgress.status === Status.LOCKED) {
+          const updatedProgress = await this.prismaService.userUnit.update({
+            where: {
+              id: userNextUnitProgress.id,
+            },
+            data: {
+              status: Status.IN_PROGRESS,
+            },
+          });
 
-        await this.unlockFirstContent(updatedProgress);
+          await this.unlockFirstContent(updatedProgress);
+        }
       } else {
         //if there isn't another unit to unlock, it unlocks the next chapter
         await this.userChapterService.unlockNextChapter(

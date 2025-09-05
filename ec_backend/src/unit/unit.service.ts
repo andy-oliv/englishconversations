@@ -9,6 +9,7 @@ import Return from '../common/types/Return';
 import UpdateUnitDTO from './dto/updateUnit.dto';
 import { S3Service } from '../s3/s3.service';
 import Chapter from 'src/entities/Chapter';
+import { Status } from '@prisma/client';
 
 @Injectable()
 export class UnitService {
@@ -48,7 +49,7 @@ export class UnitService {
       const progresses: { userId: string; unitId: number }[] = users.map(
         (user) =>
           unitId === firstChapterFirstUnit.id
-            ? { userId: user.id, unitId: unitId, status: 'IN_PROGRESS' }
+            ? { userId: user.id, unitId: unitId, status: Status.IN_PROGRESS }
             : { userId: user.id, unitId: unitId },
       );
 
@@ -68,7 +69,11 @@ export class UnitService {
   }
 
   async createUnit(data: Unit): Promise<Return> {
-    const unitNumber: number = await this.prismaService.unit.count();
+    const unitNumber: number = await this.prismaService.unit.count({
+      where: {
+        chapterId: data.chapterId,
+      },
+    });
     data.order = unitNumber + 1;
 
     try {

@@ -5456,6 +5456,14 @@
               }
             }
           },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "example": "The progress already exists"
+              }
+            }
+          },
           "500": {
             "description": "Internal Server Error",
             "content": {

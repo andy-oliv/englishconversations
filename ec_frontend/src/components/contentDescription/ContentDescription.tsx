@@ -9,7 +9,7 @@ import {
   type CurrentChapterStoreState,
 } from "../../stores/currentChapterStore";
 import completeContent from "../../helper/functions/completeContent";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { environment } from "../../environment/environment";
 import type VideoProgress from "../../helper/types/VideoProgress";
 import dayjs from "dayjs";
@@ -31,8 +31,19 @@ export default function ContentDescription({
         withCredentials: true,
       });
     } catch (error) {
-      toast.error(toastMessages.content.error, { autoClose: 3000 });
+      if (error instanceof AxiosError && error.status === 409) {
+        Sentry.captureException(error, {
+          extra: {
+            context: "ContentDescription",
+            action: "saveslideshowProgress",
+            error,
+          },
+        });
 
+        return;
+      }
+
+      toast.error(toastMessages.content.error, { autoClose: 3000 });
       Sentry.captureException(error, {
         extra: {
           context: "ContentDescription",
@@ -51,8 +62,19 @@ export default function ContentDescription({
         { withCredentials: true }
       );
     } catch (error) {
-      toast.error(toastMessages.content.error, { autoClose: 3000 });
+      if (error instanceof AxiosError && error.status === 409) {
+        Sentry.captureException(error, {
+          extra: {
+            context: "ContentDescription",
+            action: "saveslideshowProgress",
+            error,
+          },
+        });
 
+        return;
+      }
+
+      toast.error(toastMessages.content.error, { autoClose: 3000 });
       Sentry.captureException(error, {
         extra: {
           context: "ContentDescription",
@@ -94,14 +116,7 @@ export default function ContentDescription({
           contentType === "VIDEO" ? content.video?.id : content.slideshow?.id,
           contentType,
           navigate,
-          currentChapter,
-          contentType === "VIDEO"
-            ? {
-                videoId: content.video?.id,
-              }
-            : {
-                slideshowId: content.slideshow?.id,
-              }
+          currentChapter
         );
         setSaving(false);
       }

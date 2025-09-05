@@ -63,18 +63,22 @@ export class ContentService {
   }
 
   async createContent(contentData: CreateContentDTO): Promise<Return> {
-    if (!contentData.order) {
-      const contentNumber: number = await this.prismaService.content.count({
-        where: {
-          unitId: contentData.unitId,
-        },
-      });
-      contentData.order = contentNumber + 1;
-    }
+    const contentNumber: number = await this.prismaService.content.count({
+      where: {
+        unitId: contentData.unitId,
+      },
+    });
 
     try {
       const content: Content = await this.prismaService.content.create({
-        data: contentData as Content,
+        data: {
+          unitId: contentData.unitId,
+          contentType: contentData.contentType,
+          videoId: contentData.videoId,
+          slideshowId: contentData.slideshowId,
+          quizId: contentData.quizId,
+          order: contentNumber + 1,
+        },
       });
 
       await this.generateUserContent(content.id, content.unitId);

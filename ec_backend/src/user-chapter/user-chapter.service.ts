@@ -12,10 +12,11 @@ import httpMessages_EN from '../helper/messages/httpMessages.en';
 import loggerMessages from '../helper/messages/loggerMessages';
 import UpdateUserChapterDTO from './dto/updateUserChapter.dto';
 import Chapter from 'src/entities/Chapter';
-import { CEFRLevels, Status, Unit } from '@prisma/client';
+import { CEFRLevels, Status, Unit, UserContent } from '@prisma/client';
 import UserUnit from 'src/entities/UserUnit';
 import * as dayjs from 'dayjs';
 import { UserProgressService } from 'src/user-progress/user-progress.service';
+import Content from '../entities/Content';
 
 @Injectable()
 export class UserChapterService {
@@ -72,27 +73,55 @@ export class UserChapterService {
         await this.prismaService.unit.findFirst({
           where: {
             chapterId: nextChapterId,
-            order: 1,
           },
+          orderBy: { order: 'asc' },
         });
 
       if (nextChapterFirstUnit) {
         const firstUnitProgress: UserUnit =
-          await this.prismaService.userUnit.findFirstOrThrow({
+          await this.prismaService.userUnit.findFirst({
             where: {
               unitId: nextChapterFirstUnit.id,
               userId,
             },
           });
 
-        await this.prismaService.userUnit.update({
-          where: {
-            id: firstUnitProgress.id,
-          },
-          data: {
-            status: Status.IN_PROGRESS,
-          },
-        });
+        if (firstUnitProgress.status === Status.LOCKED) {
+          await this.prismaService.userUnit.update({
+            where: {
+              id: firstUnitProgress.id,
+            },
+            data: {
+              status: Status.IN_PROGRESS,
+            },
+          });
+
+          //unlocking the first content from the unit
+          const firstContent: Content =
+            await this.prismaService.content.findFirst({
+              where: {
+                unitId: nextChapterFirstUnit.id,
+              },
+              orderBy: { order: 'asc' },
+            });
+
+          const firstContentProgress: UserContent =
+            await this.prismaService.userContent.findFirst({
+              where: {
+                contentId: firstContent.id,
+                userId,
+              },
+            });
+
+          await this.prismaService.userContent.update({
+            where: {
+              id: firstContentProgress.id,
+            },
+            data: {
+              status: Status.IN_PROGRESS,
+            },
+          });
+        }
       }
     } catch (error) {
       if (error.code === 'P2025') {
@@ -131,10 +160,7 @@ export class UserChapterService {
           },
         });
 
-      if (
-        currentChapterProgress.status !== Status.COMPLETED ||
-        !currentChapterProgress.completedAt
-      ) {
+      if (currentChapterProgress.status === Status.IN_PROGRESS) {
         await this.prismaService.userChapter.update({
           where: {
             id: currentChapterProgress.id,
@@ -160,17 +186,19 @@ export class UserChapterService {
             },
           });
 
-        await this.prismaService.userChapter.update({
-          where: {
-            id: userNextChapterProgress.id,
-          },
-          data: {
-            status: Status.IN_PROGRESS,
-          },
-        });
+        if (userNextChapterProgress.status === Status.LOCKED) {
+          await this.prismaService.userChapter.update({
+            where: {
+              id: userNextChapterProgress.id,
+            },
+            data: {
+              status: Status.IN_PROGRESS,
+            },
+          });
 
-        await this.unlockFirstUnit(userId, nextChapter.id);
-        await this.syncUserLanguageLevel(userId, nextChapter.name);
+          await this.unlockFirstUnit(userId, nextChapter.id);
+          await this.syncUserLanguageLevel(userId, nextChapter.name);
+        }
       }
     } catch (error) {
       if (error.code === 'P2025') {

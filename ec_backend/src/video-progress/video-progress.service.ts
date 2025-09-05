@@ -71,6 +71,10 @@ export class VideoProgressService {
         );
       }
 
+      if (error instanceof ConflictException) {
+        throw error;
+      }
+
       handleInternalErrorException(
         'videoProgressService',
         'generateVideoProgress',

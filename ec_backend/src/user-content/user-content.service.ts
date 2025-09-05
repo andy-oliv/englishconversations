@@ -104,6 +104,7 @@ export class UserContentService {
 
       const nextContent: Content = await this.prismaService.content.findFirst({
         where: {
+          unitId: currentContent.unitId,
           order: { gt: currentContent.order },
         },
         orderBy: { order: 'asc' },
@@ -118,14 +119,16 @@ export class UserContentService {
             },
           });
 
-        await this.prismaService.userContent.update({
-          where: {
-            id: userNextContentProgress.id,
-          },
-          data: {
-            status: Status.IN_PROGRESS,
-          },
-        });
+        if (userNextContentProgress.status === Status.LOCKED) {
+          await this.prismaService.userContent.update({
+            where: {
+              id: userNextContentProgress.id,
+            },
+            data: {
+              status: Status.IN_PROGRESS,
+            },
+          });
+        }
       } else {
         //if there isn't another content to unlock, it unlocks the next unit
         const currentUnitProgress: UserUnit =
@@ -283,7 +286,7 @@ export class UserContentService {
           },
         });
 
-      if (fetchedUserContent.status === 'COMPLETED') {
+      if (fetchedUserContent.status === Status.COMPLETED) {
         return await this.userProgressService.fetchCurrentChapterProgress(
           fetchedUserContent.userId,
         );

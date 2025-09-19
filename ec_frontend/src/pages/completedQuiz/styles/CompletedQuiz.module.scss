@@ -2,12 +2,12 @@
 
 .screen {
   height: 100vh;
-  background-color: var.$backgroundColor;
+  background-color: var.$darkBackground;
   padding-top: 3em;
 }
 
 .mainContainer {
-  background-color: var.$backgroundColor;
+  background-color: var.$darkBackground;
   padding: 3em;
   display: flex;
   height: 90%;
@@ -26,6 +26,7 @@
 
 .title {
   font-family: var.$outfit;
+  color: var.$textWhite;
   font-size: 3rem;
 }
 

@@ -212,7 +212,7 @@ export default function Register(): ReactElement {
             <div className={styles.inputWrapper}>
               <label className={styles.inputLabel}>Data de Nascimento</label>
               <input
-                className={styles.formInput}
+                className={`${styles.formInput} ${styles.birthdateInput}`}
                 type="date"
                 id="birthdate"
                 {...register("birthdate")}

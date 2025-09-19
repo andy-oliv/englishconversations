@@ -214,9 +214,6 @@ export default function EditProfile(): ReactElement {
             />
           ) : null}
 
-          <h1 className={styles.title}>
-            {edit ? "EDITAR PERFIL" : "MEU PERFIL"}
-          </h1>
           {edit ? (
             <div className={styles.infoContainer}>
               <div>

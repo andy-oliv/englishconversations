@@ -111,14 +111,14 @@
   }
 }
 
-input[type="password"] {
+.birthdateInput {
   background-color: black;
   -webkit-background-clip: text, padding-box;
   background-clip: padding-box;
   color: #fff;
 }
 
-input[type="date"] {
+.birthdateInput {
   appearance: none;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -133,7 +133,7 @@ input[type="date"] {
   background-size: 20px 20px;
 }
 
-input[type="date"]::-webkit-calendar-picker-indicator {
+.birthdateInput::-webkit-calendar-picker-indicator {
   opacity: 0;
   cursor: pointer;
   position: absolute;

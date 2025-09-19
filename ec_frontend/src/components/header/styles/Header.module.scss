@@ -11,6 +11,7 @@
 
 .progressContainer {
   background: var.$signatureGradient;
+  filter: saturate(1);
   width: 60%;
   height: 100%;
   border-radius: 1em;
@@ -60,11 +61,11 @@
   display: flex;
   align-items: center;
   font-family: var.$poppins;
-  font-weight: 300;
+  font-weight: 400;
 }
 
 .progressBarContainer {
-  width: 40%;
+  width: 50%;
   height: 100%;
   display: flex;
   gap: 0.9em;

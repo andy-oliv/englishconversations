@@ -1,13 +1,13 @@
 @use "../../../styles/variables" as var;
 
 .screen {
-  background-color: var.$backgroundColor;
+  background-color: var.$darkBackground;
   padding-top: 3em;
   min-height: 100vh;
 }
 
 .mainContainer {
-  background-color: var.$backgroundColor;
+  background-color: var.$darkBackground;
   padding: 3em;
   display: flex;
   height: 90%;
@@ -34,7 +34,7 @@
   align-items: center;
   gap: 0.5em;
   color: rgba(0, 0, 0, 0.578);
-  background-color: rgba(121, 179, 197, 0.159);
+  background-color: rgba(241, 245, 246, 0.279);
   padding: 0.2em 1em;
   border-radius: 0.5em;
 }
@@ -48,11 +48,12 @@
 .questionNumber {
   font-family: var.$poppins;
   font-size: 0.8rem;
-  color: rgba(0, 0, 0, 0.578);
+  color: rgba(0, 0, 0, 0.685);
 }
 
 .title {
   font-family: var.$outfit;
+  color: var.$textWhite;
   font-size: 3rem;
 }
 
@@ -87,7 +88,6 @@
 }
 
 .answer {
-  background-color: var.$darkBlue;
   color: black;
   padding: 1.5em;
   border-radius: 1em;
@@ -106,7 +106,7 @@
 
 .answerWrapper {
   margin-top: 1em;
-  background-color: rgba(242, 245, 246, 0.87);
+  background-color: rgba(116, 116, 116, 0.87);
   border-radius: 0.5em;
   padding: 0.5em 1em;
   box-shadow: 0 0 2px 0px rgba(0, 0, 0, 0.444);
@@ -131,16 +131,16 @@
 .rightAnswer {
   background: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0.811) 98%,
-    rgba(60, 222, 138, 0.993)
+    rgba(146, 146, 146, 0.811) 98%,
+    rgba(15, 199, 104, 0.993)
   );
 }
 
 .wrongAnswer {
   background: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0.811) 98%,
-    rgba(242, 38, 38, 0.793)
+    rgba(146, 146, 146, 0.811) 98%,
+    rgba(255, 45, 45, 0.793)
   );
 }
 

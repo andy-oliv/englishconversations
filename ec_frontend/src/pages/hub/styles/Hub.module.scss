@@ -3,7 +3,7 @@
 .window {
   width: 100%;
   height: 100vh;
-  background-color: var.$backgroundColor;
+  background-color: var.$darkBackground;
 }
 
 .header {
@@ -11,7 +11,7 @@
   justify-content: space-between;
   align-items: center;
   height: 12%;
-  background-color: var.$darkBlue;
+  background-color: var.$darkBackground;
   padding: 1.5em;
 }
 
@@ -96,14 +96,14 @@
   display: flex;
   flex-direction: column;
   gap: 1em;
-  background-color: var.$darkBlue;
+  background-color: var.$darkBackground;
   padding: 1em 1.5em 1.5em 1.5em;
   font-family: var.$poppins;
   height: 100%;
   overflow-y: auto;
 
   .contentCardTitle {
-    color: var.$backgroundColor;
+    color: var.$textWhite;
   }
 }
 

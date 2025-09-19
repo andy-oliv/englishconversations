@@ -200,7 +200,7 @@ export default function ContentDescription({
                 width={34}
                 height={34}
                 viewBox="0 0 24 24"
-                fill={isFavorite ? "#000000" : "none"}
+                fill={isFavorite ? "rgb(246, 245, 245)" : "none"}
                 stroke="currentColor"
                 strokeWidth="1.5"
                 strokeLinecap="round"

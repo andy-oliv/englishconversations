@@ -2,7 +2,8 @@
 
 .card {
   display: flex;
-  background-color: white;
+  background-color: var.$cardBackground;
+  color: var.$textWhite;
   border-radius: 1em;
   cursor: pointer;
   transition: all 0.3s ease-in-out;
@@ -10,12 +11,13 @@
 }
 
 .card:hover {
-  box-shadow: 0 0 8px -1px rgba(77, 77, 77, 0.412);
   transform: scale(1.05);
+  box-shadow: var.$shadow;
 }
 
 .locked {
-  background-color: grey;
+  background-color: var.$lockedContentBackground;
+  color: black;
   pointer-events: none;
 }
 
@@ -30,8 +32,8 @@
 }
 
 .active {
-  box-shadow: 0 0 8px -1px rgba(0, 0, 0, 0.412);
   transform: scale(1.05);
+  box-shadow: var.$shadow;
 }
 
 .picture {
@@ -43,6 +45,7 @@
     height: 100%;
     object-fit: cover;
     border-radius: 1em 0 0 1em;
+    filter: saturate(0.8);
   }
 
   .inactiveImg {
@@ -57,7 +60,7 @@
 }
 
 .title {
-  font-weight: 800;
+  font-weight: 500;
 }
 
 .header {
@@ -83,14 +86,14 @@
 }
 
 .description {
-  font-weight: 400;
+  font-weight: 300;
   height: 65%;
 }
 
 .progressBar {
   height: 10%;
   width: 100%;
-  background-color: rgb(228, 228, 228);
+  background-color: rgb(200, 200, 200);
   border-radius: 0.2em;
 
   .progressBarFiller {

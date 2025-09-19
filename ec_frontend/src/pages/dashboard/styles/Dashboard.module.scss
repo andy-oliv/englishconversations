@@ -15,18 +15,18 @@
 .contentContainer {
   width: 25%;
   height: 100%;
-  background-color: white;
+  background-color: var.$cardBackground;
   border-radius: 1em;
   padding: 2em;
   display: flex;
   flex-direction: column;
   gap: 1em;
   overflow-y: auto;
-  box-shadow: 0 0 8px -1px rgba(0, 0, 0, 0.412);
   transition: all 0.2s ease-in-out;
   visibility: hidden;
   opacity: 0;
   transform: scale(0);
+  box-shadow: var.$shadow;
 }
 
 .show {
@@ -37,7 +37,8 @@
 
 .contentCardTitle {
   font-family: var.$poppins;
-  font-weight: 800;
+  font-weight: 600;
+  color: var.$textWhite;
 }
 
 .noContentMessage {

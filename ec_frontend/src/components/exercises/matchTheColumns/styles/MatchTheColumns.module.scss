@@ -2,11 +2,13 @@
 
 .title {
   font-family: var.$outfit;
+  color: var.$textWhite;
   font-size: 2.5rem;
 }
 
 .description {
   font-family: var.$poppins;
+  color: var.$textWhite;
   font-size: 1.4rem;
   margin-top: 0.5em;
 }
@@ -28,6 +30,7 @@
 
 .option {
   font-family: var.$poppins;
+  color: rgb(169, 169, 169);
   font-size: 1.1rem;
 }
 

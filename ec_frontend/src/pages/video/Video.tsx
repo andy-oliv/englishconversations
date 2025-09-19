@@ -92,7 +92,7 @@ export default function Video(): ReactElement {
               title={video.title}
               videoSrc={video.url}
               width={1480}
-              height={640}
+              height={600}
             />
           ) : null}
           <ContentDescription

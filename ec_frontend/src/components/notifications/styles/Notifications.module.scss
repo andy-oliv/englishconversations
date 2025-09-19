@@ -22,11 +22,11 @@
   max-height: 18em;
   right: 1em;
   top: 4em;
-  background-color: var.$darkBackground;
+  background-color: var.$menuBackground;
+  box-shadow: 0 0 10px -1px black;
   color: var.$backgroundColor;
   padding: 1em;
   border-radius: 0.4em;
-  box-shadow: 0 0 4px 1px rgba(0, 0, 0, 0.74);
   opacity: 1;
   transition: all 0.3s ease-in-out;
   overflow-y: auto;
@@ -93,7 +93,7 @@
 }
 
 .readAllBtn {
-  color: rgb(204, 204, 204);
+  color: rgb(216, 216, 216);
   font-family: var.$poppins;
   cursor: pointer;
 
@@ -103,7 +103,7 @@
 }
 
 .inactiveBtn {
-  color: grey;
+  color: rgb(175, 175, 175);
   pointer-events: none;
 
   &:hover {
@@ -153,7 +153,7 @@
 
 .isRead {
   background-color: grey;
-  color: var.$blue;
+  color: black;
   pointer-events: none;
 
   &:hover {
@@ -173,4 +173,9 @@
   &:hover {
     background-color: grey;
   }
+}
+
+.noNotifications {
+  font-family: var.$poppins;
+  color: rgb(175, 175, 175);
 }

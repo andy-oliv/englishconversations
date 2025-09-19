@@ -1,7 +1,7 @@
 @use "../../../styles/variables" as var;
 
 .option {
-  background-color: white;
+  background-color: var.$textWhite;
   width: 60%;
   font-family: var.$poppins;
   font-weight: 500;

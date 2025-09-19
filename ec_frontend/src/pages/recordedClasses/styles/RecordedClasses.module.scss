@@ -35,8 +35,8 @@
 }
 
 .classCard {
-  background-color: rgb(55, 55, 55);
-  width: 22em;
+  border: 1px solid rgba(20, 20, 20, 0.775);
+  width: 20em;
   height: 21em;
   padding: 1em;
   border-radius: 0.5em;
@@ -49,6 +49,7 @@
   &:hover {
     transform: scale(1.03);
     transition: all 0.2s ease-in-out;
+    box-shadow: var.$shadow;
   }
 }
 
@@ -72,7 +73,7 @@
 }
 
 .classTitle {
-  color: white;
+  color: var.$textWhite;
   font-family: var.$poppins;
   font-weight: 500;
 }

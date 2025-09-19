@@ -158,7 +158,7 @@ export default function Notifications(): ReactElement {
             height={28}
             viewBox="0 0 24 24"
             fill="none"
-            stroke="currentColor"
+            stroke="white"
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -179,42 +179,44 @@ export default function Notifications(): ReactElement {
           >
             Marcar todas lidas{" "}
           </p>
-          {notifications.length > 0
-            ? notifications.map((notification) => (
-                <div
-                  key={notification.id}
-                  className={`${styles.notificationWrapper} ${notification.isRead ? styles.readWrapper : null}`}
-                >
-                  <h3 className={styles.notificationTitle}>
-                    {notification.notification.title}
-                  </h3>
-                  <p className={styles.notificationContent}>
-                    {notification.notification.content}
-                  </p>
-                  <div className={styles.btnWrapper}>
-                    <button
-                      className={`${styles.btn} ${notification.isRead ? styles.isRead : null}`}
-                      onClick={() => handleSetIsRead(notification.id)}
-                    >
-                      {notification.isRead ? "Lida" : "Marcar como lida"}
-                    </button>
-                    <button
-                      className={`${notification.notification.actionUrl ? styles.btn : styles.noUrl}`}
-                      onClick={() =>
-                        notification.notification.actionUrl
-                          ? handleToContentClick(
-                              notification.notification.actionUrl,
-                              notification.id
-                            )
-                          : null
-                      }
-                    >
-                      Ver
-                    </button>
-                  </div>
+          {notifications.length > 0 ? (
+            notifications.map((notification) => (
+              <div
+                key={notification.id}
+                className={`${styles.notificationWrapper} ${notification.isRead ? styles.readWrapper : null}`}
+              >
+                <h3 className={styles.notificationTitle}>
+                  {notification.notification.title}
+                </h3>
+                <p className={styles.notificationContent}>
+                  {notification.notification.content}
+                </p>
+                <div className={styles.btnWrapper}>
+                  <button
+                    className={`${styles.btn} ${notification.isRead ? styles.isRead : null}`}
+                    onClick={() => handleSetIsRead(notification.id)}
+                  >
+                    {notification.isRead ? "Lida" : "Marcar como lida"}
+                  </button>
+                  <button
+                    className={`${notification.notification.actionUrl ? styles.btn : styles.noUrl}`}
+                    onClick={() =>
+                      notification.notification.actionUrl
+                        ? handleToContentClick(
+                            notification.notification.actionUrl,
+                            notification.id
+                          )
+                        : null
+                    }
+                  >
+                    Ver
+                  </button>
                 </div>
-              ))
-            : null}
+              </div>
+            ))
+          ) : (
+            <p className={styles.noNotifications}>sem notificações</p>
+          )}
         </div>
         {notifications.length === 0 ||
         notifications.every((notification) => notification.isRead) ? null : (
